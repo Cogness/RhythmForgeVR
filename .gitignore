@@ -33,6 +33,7 @@ $RECYCLE.BIN/
 [Oo]bj/
 [Bb]uild/
 [Bb]uilds/
+[.]utmp/
 [Ll]ogs/
 [Mm]emoryCaptures/
 [Rr]ecords/

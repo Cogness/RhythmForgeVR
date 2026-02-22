@@ -1,0 +1,9271 @@
+﻿#include "pch-cpp.hpp"
+
+
+
+
+
+template <typename R>
+struct VirtualFuncInvoker0
+{
+	typedef R (*Func)(void*, const RuntimeMethod*);
+
+	static inline R Invoke (Il2CppMethodSlot slot, RuntimeObject* obj)
+	{
+		const VirtualInvokeData& invokeData = il2cpp_codegen_get_virtual_invoke_data(slot, obj);
+		return ((Func)invokeData.methodPtr)(obj, invokeData.method);
+	}
+};
+template <typename R>
+struct InterfaceFuncInvoker0
+{
+	typedef R (*Func)(void*, const RuntimeMethod*);
+
+	static inline R Invoke (Il2CppMethodSlot slot, RuntimeClass* declaringInterface, RuntimeObject* obj)
+	{
+		const VirtualInvokeData& invokeData = il2cpp_codegen_get_interface_invoke_data(slot, obj, declaringInterface);
+		return ((Func)invokeData.methodPtr)(obj, invokeData.method);
+	}
+};
+template <typename R, typename T1>
+struct InterfaceFuncInvoker1
+{
+	typedef R (*Func)(void*, T1, const RuntimeMethod*);
+
+	static inline R Invoke (Il2CppMethodSlot slot, RuntimeClass* declaringInterface, RuntimeObject* obj, T1 p1)
+	{
+		const VirtualInvokeData& invokeData = il2cpp_codegen_get_interface_invoke_data(slot, obj, declaringInterface);
+		return ((Func)invokeData.methodPtr)(obj, p1, invokeData.method);
+	}
+};
+
+struct Action_1_t10DCB0C07D0D3C565CEACADC80D1152B35A45F6C;
+struct Action_1_tD69A6DC9FBE94131E52F5A73B2A9D4AB51EEC404;
+struct Action_1_t88CC03E8C305DA991BBBCEBE79519B58D52F577F;
+struct Action_1_t10D7C827ADC73ED438E0CA8F04465BA6F2BAED7D;
+struct Action_1_t2F07B42BD085A4AC03ECE5676157E93B9A344C1C;
+struct Action_1_t23DBC2ED948A8B400F9C3FDC1145E1485442CE3D;
+struct Action_2_t4195ED8D681728C29103F36BCD591C0F089C9132;
+struct Action_2_tDBB3CA1E07CF34B6EE70F044CD209FED6BFD1D71;
+struct Action_2_tD6645913AD5AC5C01955FE6AA6F05A7A1FCA90A9;
+struct Action_2_t6D771BD476C3FDEB4610C73D99CD7D094A325829;
+struct Action_4_t68CDF52B38375A15FD07A9D61E073DAB9D9C76DC;
+struct Action_4_t540B344FD589096100128D9A1B39946413ED9AAE;
+struct Action_4_t4EDE5C99870C78676D9C651284E64891D8D4F58A;
+struct Action_6_tD8B17612932122F2ABF5C8545327C8F527403625;
+struct HashSet_1_t918EB2DA20944A28694286E926AE3B8188E10F8F;
+struct IEnumerable_1_tED602875C5D5C7BECAD2C641945DF5416536FA7B;
+struct IEnumerable_1_t352FDDEA001ABE8E1D67849D2E2F3D1D75B03D41;
+struct IEnumerable_1_t5C1E5CDFEA99062D152E83B174072FEDB9763788;
+struct IReadOnlyList_1_tC7DD1BE89315F84F5AC3EEB0F716D812AC1732CB;
+struct List_1_tB951CE80B58D1BF9650862451D8DAD8C231F207B;
+struct List_1_t05915E9237850A58106982B7FE4BC5DA4E872E73;
+struct List_1_tEBA944EB098597668737638C5527516C00F5CF52;
+struct List_1_tA239CB83DE5615F348BB0507E45F490F4F7C9A8D;
+struct List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918;
+struct List_1_t77B94703E05C519A9010DD0614F757F974E1CD8B;
+struct List_1_tA7666C6690CE2AEE97571615AD3AFCE2BB020597;
+struct List_1_tC3F021D09EFA4F3516555517B5E0D39308C9C1B4;
+struct List_1_t90832B88D7207769654164CC28440CF594CC397D;
+struct Observable_1_t8B0ED472F997DCC0EB03DB275E12BFF3D1B970F8;
+struct WeakReference_1_t08942AAA5C58B24D75314BD9594E2DE409CB9C93;
+struct ByteU5BU5D_tA6237BF417AE52AD70CFB4EF24A7A82613DF9031;
+struct CharU5BU5D_t799905CF001DD5F13F7DBB310181FC4D8B7D0AAB;
+struct GameObjectU5BU5D_tFF67550DFCE87096D7A3734EA15B75896B2722CF;
+struct Int32U5BU5D_t19C97395396A72ECAF310612F0760F165060314C;
+struct LoopSoundU5BU5D_tAF316EE3913A7674E8559227412AE12C68E150AD;
+struct ObjectU5BU5D_t8061030B0A12A55D5AD8652A20C922FE99450918;
+struct SingleU5BU5D_t89DEFE97BCEDB5857010E79ECE0F52CF6E93B87C;
+struct Vector3U5BU5D_tFF1859CCE176131B909E2044F76443064254679C;
+struct SectionU5BU5D_t9D3017555FFF42E71BE91904A2486EAF429F24C4;
+struct Action_tD00B0A84D7945E50C2DFFC28EFEE6ED44ED2AD07;
+struct AnimationCurve_tCBFFAAD05CEBB35EF8D8631BD99914BE1A6BB354;
+struct AudioClip_t5D272C4EB4F2D3ED49F1C346DEA373CF6D585F20;
+struct AudioSource_t871AC2272F896738252F04EE949AEF5B241D3299;
+struct Camera_tA92CC927D7439999BC82DBEDC0AA45B470F9E184;
+struct CancellationTokenSource_tAAE1E0033BCFC233801F8CB4CED5C852B350CB7B;
+struct Component_t39FBE53E5EFCF4409111FB22C15FF73717632EC3;
+struct GameObject_t76FEDD663AB33C991A9C9A23129337651094216F;
+struct LineDrawing_tA95DF0BD37C7F4C0EC6C561E5D3D2F0B3BCEFE08;
+struct LineRenderer_tEFEF960672DB69CB14B6D181FAE6292F0CF8B63D;
+struct LineStrokeData_t096A2E61000991AF1A1E54177DB496F7847C7C2B;
+struct LoopDetailStroke_tE17493DBF0EBF02DA61B6BF1A487624E4E08809F;
+struct LoopSound_t0F81954F3F93403FEC588C98AAD22BF92DC6E075;
+struct Material_t18053F08F347D0DCA5E1140EC7EC4533DD8A14E3;
+struct MeshRenderer_t4B7747212F0B88244BB7790C61AE124BFC15BAAE;
+struct MonoBehaviour_t532A11E69716D348D8AA7F854AFCBFCB8AD17F71;
+struct OVRBoundary_t56DFE91F758A740A34575D748FEC61959A106DAE;
+struct OVRCameraRig_t7FC2BB0D30DED2B7F0C8914AF2B66E9F4CF891A9;
+struct OVRDisplay_t1518043CC531CD088400F80558DF7A849ECA2D27;
+struct OVRManager_t21429E69CA88C5E9C6EE3AAB75EAFBE6E1B129D4;
+struct OVRMetricsCore_t5983882EB50AC06D06CC2A1039D06C6E8C828084;
+struct OVRMixedRealityCaptureSettings_tF6078D6B59F16A0EE3DEE4144FCED347444B9198;
+struct OVRProfile_tCFDDDA5EE82F0ED94671EB741B8954603D98AFC0;
+struct OVRRuntimeSettings_tC85E84DCFBF4DB2D4C3311CA39C96DEE89220EE1;
+struct OVRTracker_t5E60EE08D82308F2F8206AD43AE8CC4925938154;
+struct Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C;
+struct OculusControllerStylusHandler_tEE66C8834517A788738007FC060C786ACDD8CE78;
+struct Readme_tE17B99201D0F52BD5727638AD3F41072A65B3BBB;
+struct Renderer_t320575F223BCB177A982E5DDB5DB19FAA89E7FBF;
+struct ScriptableObject_tB3BFDB921A1B1795B38A5417D3B97A89A140436A;
+struct String_t;
+struct StyleSheet_t6FAF43FCDB45BC6BED0522A222FD4C1A9BB10428;
+struct StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A;
+struct Texture2D_tE6505BC111DD8A424A9DBE8E05D7D09E11FFFCF4;
+struct Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1;
+struct UnitySourceGeneratedAssemblyMonoScriptTypes_v1_tC95F24D0C6E6B77389433852BB389F39C692926E;
+struct Void_t4861ACF8F4594C3437BB48B6E56783494B843915;
+struct VrStylusHandler_t5EFDF8B65CF2D5BB08AA538FD3174E4F18848423;
+struct PCMReaderCallback_t3396D9613664F0AFF65FB91018FD0F901CC16F1E;
+struct PCMSetPositionCallback_t8D7135A2FB40647CAEC93F5254AD59E18DEB6072;
+struct InstantiateMrcCameraDelegate_t26D39C3003CADD2CBA4E7C5EB75333089B2F03C8;
+struct PassthroughCapabilities_t3B338539A7E4125FE79381628715BDC608471F9F;
+struct Section_t50C894D0A717C2368EBAAE5477D4E8626D0B5401;
+
+IL2CPP_EXTERN_C RuntimeClass* AnimationCurve_tCBFFAAD05CEBB35EF8D8631BD99914BE1A6BB354_il2cpp_TypeInfo_var;
+IL2CPP_EXTERN_C RuntimeClass* ByteU5BU5D_tA6237BF417AE52AD70CFB4EF24A7A82613DF9031_il2cpp_TypeInfo_var;
+IL2CPP_EXTERN_C RuntimeClass* Debug_t8394C7EEAECA3689C2C9B9DE9C7166D73596276F_il2cpp_TypeInfo_var;
+IL2CPP_EXTERN_C RuntimeClass* GameObject_t76FEDD663AB33C991A9C9A23129337651094216F_il2cpp_TypeInfo_var;
+IL2CPP_EXTERN_C RuntimeClass* IReadOnlyCollection_1_t28D5227A53A826E32FCACFE6FEED130E7F2A6ACE_il2cpp_TypeInfo_var;
+IL2CPP_EXTERN_C RuntimeClass* IReadOnlyList_1_tC7DD1BE89315F84F5AC3EEB0F716D812AC1732CB_il2cpp_TypeInfo_var;
+IL2CPP_EXTERN_C RuntimeClass* LineStrokeData_t096A2E61000991AF1A1E54177DB496F7847C7C2B_il2cpp_TypeInfo_var;
+IL2CPP_EXTERN_C RuntimeClass* List_1_t05915E9237850A58106982B7FE4BC5DA4E872E73_il2cpp_TypeInfo_var;
+IL2CPP_EXTERN_C RuntimeClass* List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918_il2cpp_TypeInfo_var;
+IL2CPP_EXTERN_C RuntimeClass* List_1_t77B94703E05C519A9010DD0614F757F974E1CD8B_il2cpp_TypeInfo_var;
+IL2CPP_EXTERN_C RuntimeClass* List_1_tB951CE80B58D1BF9650862451D8DAD8C231F207B_il2cpp_TypeInfo_var;
+IL2CPP_EXTERN_C RuntimeClass* List_1_tEBA944EB098597668737638C5527516C00F5CF52_il2cpp_TypeInfo_var;
+IL2CPP_EXTERN_C RuntimeClass* Math_tEB65DE7CA8B083C412C969C92981C030865486CE_il2cpp_TypeInfo_var;
+IL2CPP_EXTERN_C RuntimeClass* Mathf_tE284D016E3B297B72311AAD9EB8F0E643F6A4682_il2cpp_TypeInfo_var;
+IL2CPP_EXTERN_C RuntimeClass* OVRInput_t759D9CC8F14D8539AD78A0375A2306C39D77100A_il2cpp_TypeInfo_var;
+IL2CPP_EXTERN_C RuntimeClass* OVRPlugin_t0BF53CAD10A7503BB132A303469F2E0A639E696B_il2cpp_TypeInfo_var;
+IL2CPP_EXTERN_C RuntimeClass* Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C_il2cpp_TypeInfo_var;
+IL2CPP_EXTERN_C RuntimeClass* SingleU5BU5D_t89DEFE97BCEDB5857010E79ECE0F52CF6E93B87C_il2cpp_TypeInfo_var;
+IL2CPP_EXTERN_C RuntimeClass* Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2_il2cpp_TypeInfo_var;
+IL2CPP_EXTERN_C RuntimeClass* VrStylusHandler_t5EFDF8B65CF2D5BB08AA538FD3174E4F18848423_il2cpp_TypeInfo_var;
+IL2CPP_EXTERN_C RuntimeField* U3CPrivateImplementationDetailsU3E_t0F5473E849A5A5185A9F4C5246F0C32816C49FCA____894D4B1035152C17F7597AF81898FA76D0753BEF6DEA7F0BF21D6C8D5E958087_FieldInfo_var;
+IL2CPP_EXTERN_C RuntimeField* U3CPrivateImplementationDetailsU3E_t0F5473E849A5A5185A9F4C5246F0C32816C49FCA____A6C059AD484A2FB59D00FEC67257B0642A94D0C85A85E85DCF91D7A2D26E3D8E_FieldInfo_var;
+IL2CPP_EXTERN_C String_t* _stringLiteral19209A8C4F49219A7E67DA4797FBF05AB308F21D;
+IL2CPP_EXTERN_C String_t* _stringLiteral228A2375A22B5F56D4A8A63F0FBEAD959DA2BEDD;
+IL2CPP_EXTERN_C String_t* _stringLiteral32883DDBDA81F80F2B0270CCE548459A398C3118;
+IL2CPP_EXTERN_C String_t* _stringLiteral381617D1A1C0C848CBE085A3C3BF523A03E9659F;
+IL2CPP_EXTERN_C String_t* _stringLiteral4960166313998CAEAAA9147F237C2871203D823A;
+IL2CPP_EXTERN_C String_t* _stringLiteral5E90C36CB8BAA2CE12D913AA21AD9B44ADB55B55;
+IL2CPP_EXTERN_C String_t* _stringLiteral6A947C353F6C5B58572E2B5610522C121E44D3FF;
+IL2CPP_EXTERN_C String_t* _stringLiteral8DE767EE9FA0625954820697A6A8A22D9BDB4D6E;
+IL2CPP_EXTERN_C String_t* _stringLiteralA496F4F1F6657B079093C5288802EFD8F984AC62;
+IL2CPP_EXTERN_C String_t* _stringLiteralA87D8447ADA4FCBB0C1453670109D4DDFF27315D;
+IL2CPP_EXTERN_C String_t* _stringLiteralA9E17AB3E75A76F20DC59C30110BEC9F694FDC24;
+IL2CPP_EXTERN_C String_t* _stringLiteralAABA72134328E410DEFC498E16D44299EE24B905;
+IL2CPP_EXTERN_C String_t* _stringLiteralB5D7F5EAAF74F56865B1F1AE1ED31BB6750D8999;
+IL2CPP_EXTERN_C String_t* _stringLiteralB875DBD53FB546EFF8CD949FFB30E1E8D9017057;
+IL2CPP_EXTERN_C String_t* _stringLiteralB877EA1C7D1811F83E8F87E0677D13AB690D79C1;
+IL2CPP_EXTERN_C String_t* _stringLiteralC661681DF7BF85DBB5FCC315531FDF23FAFDAF2D;
+IL2CPP_EXTERN_C String_t* _stringLiteralD40A0643B9E952028112DAC686522393B8298D6E;
+IL2CPP_EXTERN_C String_t* _stringLiteralD5AEBC27419027BA6024047D67E131F2633930EC;
+IL2CPP_EXTERN_C String_t* _stringLiteralD634E44A0CB7A3257B724E80AE9ADD7CEA365C79;
+IL2CPP_EXTERN_C String_t* _stringLiteralD7F0A791F7F76A69E47443C66A443C6D81EA5B49;
+IL2CPP_EXTERN_C String_t* _stringLiteralDCCA0A2638DC60493EE63346010737BB65AC311D;
+IL2CPP_EXTERN_C String_t* _stringLiteralF4078990603F5F17CD47AEF42A2565B8887BC7E1;
+IL2CPP_EXTERN_C String_t* _stringLiteralFF357A3204662852B1452A127C14FE4AEEC36BC8;
+IL2CPP_EXTERN_C const RuntimeMethod* Component_GetComponent_TisAudioSource_t871AC2272F896738252F04EE949AEF5B241D3299_m42DA4DEA19EB60D80CBED7413ADEB27FA033C77B_RuntimeMethod_var;
+IL2CPP_EXTERN_C const RuntimeMethod* Component_GetComponent_TisOculusControllerStylusHandler_tEE66C8834517A788738007FC060C786ACDD8CE78_m6F964F4F013A5342B1705D8A713B7FB0C3656028_RuntimeMethod_var;
+IL2CPP_EXTERN_C const RuntimeMethod* Enumerator_Dispose_m07D362A07C19B36C2FD1B4DC79DD99903D4DA95D_RuntimeMethod_var;
+IL2CPP_EXTERN_C const RuntimeMethod* Enumerator_MoveNext_m96F4B0BD0A5485C8E8CC57D961DF6F1FA256AF27_RuntimeMethod_var;
+IL2CPP_EXTERN_C const RuntimeMethod* Enumerator_get_Current_m7236EBE1CFCB6533F96E030500D322B13D0CA5A4_RuntimeMethod_var;
+IL2CPP_EXTERN_C const RuntimeMethod* GameObject_AddComponent_TisLineRenderer_tEFEF960672DB69CB14B6D181FAE6292F0CF8B63D_mF8C0D953BCBFDD5A01A09ADB67EB04F0D677A056_RuntimeMethod_var;
+IL2CPP_EXTERN_C const RuntimeMethod* GameObject_AddComponent_TisLoopDetailStroke_tE17493DBF0EBF02DA61B6BF1A487624E4E08809F_m90DDB994C2585DF96132E472190F8BD0D330CD12_RuntimeMethod_var;
+IL2CPP_EXTERN_C const RuntimeMethod* GameObject_AddComponent_TisLoopSound_t0F81954F3F93403FEC588C98AAD22BF92DC6E075_m33526A3506174DDD56F6C21C2221ACBDE43A1B21_RuntimeMethod_var;
+IL2CPP_EXTERN_C const RuntimeMethod* GameObject_AddComponent_TisOculusControllerStylusHandler_tEE66C8834517A788738007FC060C786ACDD8CE78_mE5832C2322F5FE070BDB8FD59AC12D9B53465CA9_RuntimeMethod_var;
+IL2CPP_EXTERN_C const RuntimeMethod* GameObject_GetComponent_TisLoopSound_t0F81954F3F93403FEC588C98AAD22BF92DC6E075_m0CB54D899B3BF398BC29F33A378A6B3B336E2C0C_RuntimeMethod_var;
+IL2CPP_EXTERN_C const RuntimeMethod* GameObject_GetComponent_TisMeshRenderer_t4B7747212F0B88244BB7790C61AE124BFC15BAAE_m7FF948365C38BC39333D82B235A7C4EAD219960D_RuntimeMethod_var;
+IL2CPP_EXTERN_C const RuntimeMethod* List_1_AddRange_m33C111258C9CCD3FF30107B1A81472DAD342F7AF_RuntimeMethod_var;
+IL2CPP_EXTERN_C const RuntimeMethod* List_1_Add_m0248A96C5334E9A93E6994B7780478BCD994EA3D_RuntimeMethod_var;
+IL2CPP_EXTERN_C const RuntimeMethod* List_1_Add_m2F86E252D086E288E02FA1C830B7E86C0A431E51_RuntimeMethod_var;
+IL2CPP_EXTERN_C const RuntimeMethod* List_1_Add_m43FBF207375C6E06B8C45ECE614F9B8008FB686E_RuntimeMethod_var;
+IL2CPP_EXTERN_C const RuntimeMethod* List_1_Add_m79E50C4F592B1703F4B76A8BE7B4855515460CA1_RuntimeMethod_var;
+IL2CPP_EXTERN_C const RuntimeMethod* List_1_Add_mA34954E10092F642DB14666D1492C78EF211E314_RuntimeMethod_var;
+IL2CPP_EXTERN_C const RuntimeMethod* List_1_Clear_m32D399BDD753B5BD6CE27560249096418F3F0867_RuntimeMethod_var;
+IL2CPP_EXTERN_C const RuntimeMethod* List_1_Clear_m391BF836F93BEF5D0DAAE5BF67815BE73DFD28E2_RuntimeMethod_var;
+IL2CPP_EXTERN_C const RuntimeMethod* List_1_Clear_m6CD2E5AAE6552A27AECCC57936767B4DCFC902B1_RuntimeMethod_var;
+IL2CPP_EXTERN_C const RuntimeMethod* List_1_GetEnumerator_mA843D26C63E5963415DFCA6E49DFA27AFD9C75E8_RuntimeMethod_var;
+IL2CPP_EXTERN_C const RuntimeMethod* List_1_RemoveAt_m02AAC9739BBFB220DD397843A7825154D07F2C93_RuntimeMethod_var;
+IL2CPP_EXTERN_C const RuntimeMethod* List_1_RemoveAt_m3196E18C5CF157CAC58991FACEB9DFD441702260_RuntimeMethod_var;
+IL2CPP_EXTERN_C const RuntimeMethod* List_1_Remove_mEDB198A5CB82CBAF3569359E9402E9B61FE53136_RuntimeMethod_var;
+IL2CPP_EXTERN_C const RuntimeMethod* List_1_Sort_m6DA897B8E2A3434A84E3529FE9850B2773D88B65_RuntimeMethod_var;
+IL2CPP_EXTERN_C const RuntimeMethod* List_1_Sort_m80C2D113831377D60288F94CD0206605822F5C96_RuntimeMethod_var;
+IL2CPP_EXTERN_C const RuntimeMethod* List_1__ctor_m0F0ABB69F11B026B32E788D99A217A5384636C7D_RuntimeMethod_var;
+IL2CPP_EXTERN_C const RuntimeMethod* List_1__ctor_m17F501B5A5C289ECE1B4F3D6EBF05DFA421433F8_RuntimeMethod_var;
+IL2CPP_EXTERN_C const RuntimeMethod* List_1__ctor_m447372C1EF7141193B93090A77395B786C72C7BC_RuntimeMethod_var;
+IL2CPP_EXTERN_C const RuntimeMethod* List_1__ctor_m8C289AC1BF84CD8ED45F520DC3005096E1A9A37F_RuntimeMethod_var;
+IL2CPP_EXTERN_C const RuntimeMethod* List_1__ctor_mC29D3D824786832A31096310B3B3016B8B42B802_RuntimeMethod_var;
+IL2CPP_EXTERN_C const RuntimeMethod* List_1__ctor_mC54E2BCBE43279A96FC082F5CDE2D76388BD8F9C_RuntimeMethod_var;
+IL2CPP_EXTERN_C const RuntimeMethod* List_1__ctor_mC734A32FAD92BD7492907D4733032FD21348EECD_RuntimeMethod_var;
+IL2CPP_EXTERN_C const RuntimeMethod* List_1_get_Count_m46EEFFA770BE665EA0CB3A5332E941DA4B3C1D37_RuntimeMethod_var;
+IL2CPP_EXTERN_C const RuntimeMethod* List_1_get_Count_m4C37ED2D928D63B80F55AF434730C2D64EEB9F22_RuntimeMethod_var;
+IL2CPP_EXTERN_C const RuntimeMethod* List_1_get_Count_m545762F67009314D9C63DD209B42FFF950569B05_RuntimeMethod_var;
+IL2CPP_EXTERN_C const RuntimeMethod* List_1_get_Count_mEBB81A3F6DE82682216332309FBC6DF56B9BB49A_RuntimeMethod_var;
+IL2CPP_EXTERN_C const RuntimeMethod* List_1_get_Count_mF590592E32D421DE2C6E2F0D5C2F62FB14CCEFDF_RuntimeMethod_var;
+IL2CPP_EXTERN_C const RuntimeMethod* List_1_get_Item_m8F2E15FC96DA75186C51228128A0660709E4E810_RuntimeMethod_var;
+IL2CPP_EXTERN_C const RuntimeMethod* List_1_get_Item_mA00B0BFC0A755EABBFD27C39FDE58635A4DB91F7_RuntimeMethod_var;
+IL2CPP_EXTERN_C const RuntimeMethod* List_1_get_Item_mD99081BEFA1AB3526715F489192B0F7F596C183D_RuntimeMethod_var;
+IL2CPP_EXTERN_C const RuntimeMethod* List_1_get_Item_mE8DBE527F24D9CFED839C34216C475B716169979_RuntimeMethod_var;
+IL2CPP_EXTERN_C const RuntimeMethod* List_1_get_Item_mFE556F47C4CD09EAC6C898EF39D4A8EC112CFC50_RuntimeMethod_var;
+IL2CPP_EXTERN_C const RuntimeMethod* Object_FindObjectOfType_TisOVRCameraRig_t7FC2BB0D30DED2B7F0C8914AF2B66E9F4CF891A9_m1564DCD77DA806C8E84BE6808F00823EBCA88234_RuntimeMethod_var;
+IL2CPP_EXTERN_C const RuntimeMethod* Object_FindObjectOfType_TisOVRManager_t21429E69CA88C5E9C6EE3AAB75EAFBE6E1B129D4_mD54C604B88A664C7C4D817124CF11D4586970E92_RuntimeMethod_var;
+
+struct ByteU5BU5D_tA6237BF417AE52AD70CFB4EF24A7A82613DF9031;
+struct Int32U5BU5D_t19C97395396A72ECAF310612F0760F165060314C;
+struct ObjectU5BU5D_t8061030B0A12A55D5AD8652A20C922FE99450918;
+struct SingleU5BU5D_t89DEFE97BCEDB5857010E79ECE0F52CF6E93B87C;
+struct Vector3U5BU5D_tFF1859CCE176131B909E2044F76443064254679C;
+
+IL2CPP_EXTERN_C_BEGIN
+IL2CPP_EXTERN_C_END
+
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Winvalid-offsetof"
+#pragma clang diagnostic ignored "-Wunused-variable"
+#endif
+struct U3CModuleU3E_tBB65183F1134474D09FF49B95625D25472B9BA8B 
+{
+};
+struct List_1_tB951CE80B58D1BF9650862451D8DAD8C231F207B  : public RuntimeObject
+{
+	GameObjectU5BU5D_tFF67550DFCE87096D7A3734EA15B75896B2722CF* ____items;
+	int32_t ____size;
+	int32_t ____version;
+	RuntimeObject* ____syncRoot;
+};
+struct List_1_t05915E9237850A58106982B7FE4BC5DA4E872E73  : public RuntimeObject
+{
+	Int32U5BU5D_t19C97395396A72ECAF310612F0760F165060314C* ____items;
+	int32_t ____size;
+	int32_t ____version;
+	RuntimeObject* ____syncRoot;
+};
+struct List_1_tEBA944EB098597668737638C5527516C00F5CF52  : public RuntimeObject
+{
+	LoopSoundU5BU5D_tAF316EE3913A7674E8559227412AE12C68E150AD* ____items;
+	int32_t ____size;
+	int32_t ____version;
+	RuntimeObject* ____syncRoot;
+};
+struct List_1_tA239CB83DE5615F348BB0507E45F490F4F7C9A8D  : public RuntimeObject
+{
+	ObjectU5BU5D_t8061030B0A12A55D5AD8652A20C922FE99450918* ____items;
+	int32_t ____size;
+	int32_t ____version;
+	RuntimeObject* ____syncRoot;
+};
+struct List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918  : public RuntimeObject
+{
+	SingleU5BU5D_t89DEFE97BCEDB5857010E79ECE0F52CF6E93B87C* ____items;
+	int32_t ____size;
+	int32_t ____version;
+	RuntimeObject* ____syncRoot;
+};
+struct List_1_t77B94703E05C519A9010DD0614F757F974E1CD8B  : public RuntimeObject
+{
+	Vector3U5BU5D_tFF1859CCE176131B909E2044F76443064254679C* ____items;
+	int32_t ____size;
+	int32_t ____version;
+	RuntimeObject* ____syncRoot;
+};
+struct U3CPrivateImplementationDetailsU3E_t0F5473E849A5A5185A9F4C5246F0C32816C49FCA  : public RuntimeObject
+{
+};
+struct LoopSoundUtils_t112BEFFDE30FFF1933FCA310932A87F860F0C634  : public RuntimeObject
+{
+};
+struct String_t  : public RuntimeObject
+{
+	int32_t ____stringLength;
+	Il2CppChar ____firstChar;
+};
+struct UnitySourceGeneratedAssemblyMonoScriptTypes_v1_tC95F24D0C6E6B77389433852BB389F39C692926E  : public RuntimeObject
+{
+};
+struct ValueType_t6D9B272BD21782F0A9A14F2E41F85A50E97A986F  : public RuntimeObject
+{
+};
+struct ValueType_t6D9B272BD21782F0A9A14F2E41F85A50E97A986F_marshaled_pinvoke
+{
+};
+struct ValueType_t6D9B272BD21782F0A9A14F2E41F85A50E97A986F_marshaled_com
+{
+};
+struct Section_t50C894D0A717C2368EBAAE5477D4E8626D0B5401  : public RuntimeObject
+{
+	String_t* ___heading;
+	String_t* ___text;
+	String_t* ___linkText;
+	String_t* ___url;
+};
+struct Enumerator_t88BD1282EF117E59AACFC9EC55B89F0B9EDACE60 
+{
+	List_1_tB951CE80B58D1BF9650862451D8DAD8C231F207B* ____list;
+	int32_t ____index;
+	int32_t ____version;
+	GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* ____current;
+};
+struct Enumerator_t9473BAB568A27E2339D48C1F91319E0F6D244D7A 
+{
+	List_1_tA239CB83DE5615F348BB0507E45F490F4F7C9A8D* ____list;
+	int32_t ____index;
+	int32_t ____version;
+	RuntimeObject* ____current;
+};
+struct Boolean_t09A6377A54BE2F9E6985A8149F19234FD7DDFE22 
+{
+	bool ___m_value;
+};
+struct Byte_t94D9231AC217BE4D2E004C4CD32DF6D099EA41A3 
+{
+	uint8_t ___m_value;
+};
+struct Color_tD001788D726C3A7F1379BEED0260B9591F440C1F 
+{
+	float ___r;
+	float ___g;
+	float ___b;
+	float ___a;
+};
+struct Double_tE150EF3D1D43DEE85D533810AB4C742307EEDE5F 
+{
+	double ___m_value;
+};
+struct Enum_t2A1A94B24E3B776EEF4E5E485E290BB9D4D072E2  : public ValueType_t6D9B272BD21782F0A9A14F2E41F85A50E97A986F
+{
+};
+struct Enum_t2A1A94B24E3B776EEF4E5E485E290BB9D4D072E2_marshaled_pinvoke
+{
+};
+struct Enum_t2A1A94B24E3B776EEF4E5E485E290BB9D4D072E2_marshaled_com
+{
+};
+struct Int32_t680FF22E76F6EFAD4375103CBBFFA0421349384C 
+{
+	int32_t ___m_value;
+};
+struct IntPtr_t 
+{
+	void* ___m_value;
+};
+struct LayerMask_t97CB6BDADEDC3D6423C7BCFEA7F86DA2EC6241DB 
+{
+	int32_t ___m_Mask;
+};
+struct Mathf_tE284D016E3B297B72311AAD9EB8F0E643F6A4682 
+{
+	union
+	{
+		struct
+		{
+		};
+		uint8_t Mathf_tE284D016E3B297B72311AAD9EB8F0E643F6A4682__padding[1];
+	};
+};
+struct Matrix4x4_tDB70CF134A14BA38190C59AA700BCE10E2AED3E6 
+{
+	float ___m00;
+	float ___m10;
+	float ___m20;
+	float ___m30;
+	float ___m01;
+	float ___m11;
+	float ___m21;
+	float ___m31;
+	float ___m02;
+	float ___m12;
+	float ___m22;
+	float ___m32;
+	float ___m03;
+	float ___m13;
+	float ___m23;
+	float ___m33;
+};
+struct Quaternion_tDA59F214EF07D7700B26E40E562F267AF7306974 
+{
+	float ___x;
+	float ___y;
+	float ___z;
+	float ___w;
+};
+struct Single_t4530F2FF86FCB0DC29F35385CA1BD21BE294761C 
+{
+	float ___m_value;
+};
+struct Vector2_t1FD6F485C871E832B347AB2DC8CBA08B739D8DF7 
+{
+	float ___x;
+	float ___y;
+};
+struct Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 
+{
+	float ___x;
+	float ___y;
+	float ___z;
+};
+struct Void_t4861ACF8F4594C3437BB48B6E56783494B843915 
+{
+	union
+	{
+		struct
+		{
+		};
+		uint8_t Void_t4861ACF8F4594C3437BB48B6E56783494B843915__padding[1];
+	};
+};
+#pragma pack(push, tp, 1)
+struct __StaticArrayInitTypeSizeU3D241_t1E1FEF1B327090BBE49C0C9EDCCB10F7FD950223 
+{
+	union
+	{
+		struct
+		{
+			union
+			{
+			};
+		};
+		uint8_t __StaticArrayInitTypeSizeU3D241_t1E1FEF1B327090BBE49C0C9EDCCB10F7FD950223__padding[241];
+	};
+};
+#pragma pack(pop, tp)
+#pragma pack(push, tp, 1)
+struct __StaticArrayInitTypeSizeU3D397_tA3B5A78C6E69A141F846DA881723023980D86464 
+{
+	union
+	{
+		struct
+		{
+			union
+			{
+			};
+		};
+		uint8_t __StaticArrayInitTypeSizeU3D397_tA3B5A78C6E69A141F846DA881723023980D86464__padding[397];
+	};
+};
+#pragma pack(pop, tp)
+struct Quatf_t5347392804DF5326AF790F82E4EDE1578FED682A 
+{
+	float ___x;
+	float ___y;
+	float ___z;
+	float ___w;
+};
+struct Vector3f_t232AF83B4642C67BE8EFF85D8E1599D3B06BD562 
+{
+	float ___x;
+	float ___y;
+	float ___z;
+};
+struct MonoScriptData_t8F50E352855B96FFFC1D9CB07EACC90C99D73A3E 
+{
+	ByteU5BU5D_tA6237BF417AE52AD70CFB4EF24A7A82613DF9031* ___FilePathsData;
+	ByteU5BU5D_tA6237BF417AE52AD70CFB4EF24A7A82613DF9031* ___TypesData;
+	int32_t ___TotalTypes;
+	int32_t ___TotalFiles;
+	bool ___IsEditorOnly;
+};
+struct MonoScriptData_t8F50E352855B96FFFC1D9CB07EACC90C99D73A3E_marshaled_pinvoke
+{
+	Il2CppSafeArray* ___FilePathsData;
+	Il2CppSafeArray* ___TypesData;
+	int32_t ___TotalTypes;
+	int32_t ___TotalFiles;
+	int32_t ___IsEditorOnly;
+};
+struct MonoScriptData_t8F50E352855B96FFFC1D9CB07EACC90C99D73A3E_marshaled_com
+{
+	Il2CppSafeArray* ___FilePathsData;
+	Il2CppSafeArray* ___TypesData;
+	int32_t ___TotalTypes;
+	int32_t ___TotalFiles;
+	int32_t ___IsEditorOnly;
+};
+struct AnimationCurve_tCBFFAAD05CEBB35EF8D8631BD99914BE1A6BB354  : public RuntimeObject
+{
+	intptr_t ___m_Ptr;
+	bool ___m_RequiresNativeCleanup;
+};
+struct AnimationCurve_tCBFFAAD05CEBB35EF8D8631BD99914BE1A6BB354_marshaled_pinvoke
+{
+	intptr_t ___m_Ptr;
+	int32_t ___m_RequiresNativeCleanup;
+};
+struct AnimationCurve_tCBFFAAD05CEBB35EF8D8631BD99914BE1A6BB354_marshaled_com
+{
+	intptr_t ___m_Ptr;
+	int32_t ___m_RequiresNativeCleanup;
+};
+struct DepthTextureMode_t64422B6053A3474607EEBAB848B2049ECE39472D 
+{
+	int32_t ___value__;
+};
+struct LineAlignment_t25A271019A79E838049E3A2B8EE6368041E53F49 
+{
+	int32_t ___value__;
+};
+struct LineStrokeData_t096A2E61000991AF1A1E54177DB496F7847C7C2B  : public RuntimeObject
+{
+	List_1_t77B94703E05C519A9010DD0614F757F974E1CD8B* ___Points;
+	List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* ___Pressures;
+	List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* ___Tilts;
+	float ___TotalLength;
+	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___Centroid;
+	float ___AveragePressure;
+	float ___AverageTilt;
+};
+struct LoopSoundSettings_tCE8CCF7BF33FB6B89FB05D9D69B17346365EADA5 
+{
+	float ___secondsPerMeter;
+	Vector2_t1FD6F485C871E832B347AB2DC8CBA08B739D8DF7 ___loopDurationRange;
+	Vector2_t1FD6F485C871E832B347AB2DC8CBA08B739D8DF7 ___lengthRange;
+	Vector2_t1FD6F485C871E832B347AB2DC8CBA08B739D8DF7 ___frequencyRange;
+	float ___minVolume;
+	float ___maxVolume;
+	float ___beatAmplitude;
+	float ___beatDuration;
+	float ___beatFrequency;
+	float ___brightnessFromTilt;
+	float ___spatialBlend;
+	float ___minDistance;
+	float ___maxDistance;
+};
+struct Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C  : public RuntimeObject
+{
+	intptr_t ___m_CachedPtr;
+};
+struct Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C_marshaled_pinvoke
+{
+	intptr_t ___m_CachedPtr;
+};
+struct Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C_marshaled_com
+{
+	intptr_t ___m_CachedPtr;
+};
+struct Pose_t06BA69EAA6E9FAF60056D519A87D25F54AFE7971 
+{
+	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___position;
+	Quaternion_tDA59F214EF07D7700B26E40E562F267AF7306974 ___rotation;
+};
+struct RuntimeFieldHandle_t6E4C45B6D2EA12FC99185805A7E77527899B25C5 
+{
+	intptr_t ___value;
+};
+struct ShadowCastingMode_tF30806698B37CF120A1A506BD7549EAF308E7C6D 
+{
+	int32_t ___value__;
+};
+struct Axis1D_tCD2A64D577CBC508F8F4BEFF29BE0E29D5FECB3E 
+{
+	int32_t ___value__;
+};
+struct Button_tA5F6C329BA19678946F9C1B5827CA5AE3E48A5FB 
+{
+	int32_t ___value__;
+};
+struct Controller_tBCAA59EAD9BFE2381E974A48B203D044B6CE1ECB 
+{
+	int32_t ___value__;
+};
+struct CameraDevice_t081F9854C1B62EECCA3DE979BA982652042B60F6 
+{
+	int32_t ___value__;
+};
+struct ColorSpace_t7351D379D27098BE44BB70202C671C9B8A08CF7B 
+{
+	int32_t ___value__;
+};
+struct CompositionMethod_t6D3B3BE595D15686ECBAF583A082C0F316737952 
+{
+	int32_t ___value__;
+};
+struct ControllerDrivenHandPosesType_t132837DB8CC5BCCFC7F71082ED7C63C1806D3452 
+{
+	int32_t ___value__;
+};
+struct DepthQuality_t98717AD4F4A8BEFCFE10A4EB45C478EC057946B8 
+{
+	int32_t ___value__;
+};
+struct MrcActivationMode_t1782022B05CD6F45AE8DEAA9E8359BA365FD5E45 
+{
+	int32_t ___value__;
+};
+struct SystemHeadsetTheme_tE2BBC6AFDDA610A97084789F52EAF32A94EF5E64 
+{
+	int32_t ___value__;
+};
+struct TrackingOrigin_t70DDF38D879461EA2FCA43C81B5560A1558FFF8B 
+{
+	int32_t ___value__;
+};
+struct VirtualGreenScreenType_tBE7E1C8F361841113DC44D9E3AC4C9C13AAAC5EF 
+{
+	int32_t ___value__;
+};
+struct XRDevice_t01D85C9512A9CBD7AA2DC90B748928CA88E1B900 
+{
+	int32_t ___value__;
+};
+struct AppMemoryMetric_t73BDCEACEDF8D219BB4BCC26937BF84F42C5B3C6 
+{
+	int32_t ___value__;
+};
+struct AppRenderMetric_t1C4B268B79E14286751AA1DAF40F204700550607 
+{
+	int32_t ___value__;
+};
+struct EventType_t51A504495C404B904AFBCF27C6268D87802C12E1 
+{
+	int32_t ___value__;
+};
+struct Hand_tE01B70508A0BE6E237E5C1813A002C31D574113F 
+{
+	int32_t ___value__;
+};
+struct LayerSharpenType_tE15DA2381BE68252BFD99BEE55220AB819B18F24 
+{
+	int32_t ___value__;
+};
+struct Posef_t51A2C10B4094B44A8D3C1913292B839172887B61 
+{
+	Quatf_t5347392804DF5326AF790F82E4EDE1578FED682A ___Orientation;
+	Vector3f_t232AF83B4642C67BE8EFF85D8E1599D3B06BD562 ___Position;
+};
+struct Handedness_t69BCD63E4ABA48B12A5626BBE4D5A1A1AD81B7E6 
+{
+	int32_t ___value__;
+};
+struct AudioResource_t35B84706031E4F08C928B1640B804839F4B6500A  : public Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C
+{
+};
+struct Component_t39FBE53E5EFCF4409111FB22C15FF73717632EC3  : public Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C
+{
+};
+struct GameObject_t76FEDD663AB33C991A9C9A23129337651094216F  : public Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C
+{
+};
+struct Material_t18053F08F347D0DCA5E1140EC7EC4533DD8A14E3  : public Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C
+{
+};
+struct ScriptableObject_tB3BFDB921A1B1795B38A5417D3B97A89A140436A  : public Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C
+{
+};
+struct ScriptableObject_tB3BFDB921A1B1795B38A5417D3B97A89A140436A_marshaled_pinvoke : public Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C_marshaled_pinvoke
+{
+};
+struct ScriptableObject_tB3BFDB921A1B1795B38A5417D3B97A89A140436A_marshaled_com : public Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C_marshaled_com
+{
+};
+struct StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577 
+{
+	float ___tip_value;
+	bool ___cluster_front_value;
+	float ___cluster_middle_value;
+	bool ___cluster_back_value;
+	bool ___cluster_back_double_tap_value;
+	bool ___any;
+	Pose_t06BA69EAA6E9FAF60056D519A87D25F54AFE7971 ___inkingPose;
+	bool ___positionIsTracked;
+	bool ___positionIsValid;
+	float ___batteryLevel;
+	bool ___isActive;
+	bool ___isOnRightHand;
+	bool ___docked;
+};
+struct StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577_marshaled_pinvoke
+{
+	float ___tip_value;
+	int32_t ___cluster_front_value;
+	float ___cluster_middle_value;
+	int32_t ___cluster_back_value;
+	int32_t ___cluster_back_double_tap_value;
+	int32_t ___any;
+	Pose_t06BA69EAA6E9FAF60056D519A87D25F54AFE7971 ___inkingPose;
+	int32_t ___positionIsTracked;
+	int32_t ___positionIsValid;
+	float ___batteryLevel;
+	int32_t ___isActive;
+	int32_t ___isOnRightHand;
+	int32_t ___docked;
+};
+struct StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577_marshaled_com
+{
+	float ___tip_value;
+	int32_t ___cluster_front_value;
+	float ___cluster_middle_value;
+	int32_t ___cluster_back_value;
+	int32_t ___cluster_back_double_tap_value;
+	int32_t ___any;
+	Pose_t06BA69EAA6E9FAF60056D519A87D25F54AFE7971 ___inkingPose;
+	int32_t ___positionIsTracked;
+	int32_t ___positionIsValid;
+	float ___batteryLevel;
+	int32_t ___isActive;
+	int32_t ___isOnRightHand;
+	int32_t ___docked;
+};
+struct AppMetricsVisibilityConfiguration_tA2B53E72B667F86273D737C761A19F612DD87CDF 
+{
+	int32_t ___visibleMemoryMetricStats;
+	int32_t ___visibleMemoryMetricGraphs;
+	int32_t ___visibleRenderMetricStats;
+	int32_t ___visibleRenderMetricGraphs;
+};
+struct EventDataBuffer_t5836E8ECE1E094863DEDCC92818AEF39C2F646E8 
+{
+	int32_t ___EventType;
+	ByteU5BU5D_tA6237BF417AE52AD70CFB4EF24A7A82613DF9031* ___EventData;
+};
+struct EventDataBuffer_t5836E8ECE1E094863DEDCC92818AEF39C2F646E8_marshaled_pinvoke
+{
+	int32_t ___EventType;
+	uint8_t ___EventData[4000];
+};
+struct EventDataBuffer_t5836E8ECE1E094863DEDCC92818AEF39C2F646E8_marshaled_com
+{
+	int32_t ___EventType;
+	uint8_t ___EventData[4000];
+};
+struct AudioClip_t5D272C4EB4F2D3ED49F1C346DEA373CF6D585F20  : public AudioResource_t35B84706031E4F08C928B1640B804839F4B6500A
+{
+	PCMReaderCallback_t3396D9613664F0AFF65FB91018FD0F901CC16F1E* ___m_PCMReaderCallback;
+	PCMSetPositionCallback_t8D7135A2FB40647CAEC93F5254AD59E18DEB6072* ___m_PCMSetPositionCallback;
+};
+struct Behaviour_t01970CFBBA658497AE30F311C447DB0440BAB7FA  : public Component_t39FBE53E5EFCF4409111FB22C15FF73717632EC3
+{
+};
+struct Readme_tE17B99201D0F52BD5727638AD3F41072A65B3BBB  : public ScriptableObject_tB3BFDB921A1B1795B38A5417D3B97A89A140436A
+{
+	StyleSheet_t6FAF43FCDB45BC6BED0522A222FD4C1A9BB10428* ___commonStyle;
+	StyleSheet_t6FAF43FCDB45BC6BED0522A222FD4C1A9BB10428* ___darkStyle;
+	StyleSheet_t6FAF43FCDB45BC6BED0522A222FD4C1A9BB10428* ___lightStyle;
+	Texture2D_tE6505BC111DD8A424A9DBE8E05D7D09E11FFFCF4* ___icon;
+	String_t* ___title;
+	SectionU5BU5D_t9D3017555FFF42E71BE91904A2486EAF429F24C4* ___sections;
+	bool ___loadedLayout;
+};
+struct Renderer_t320575F223BCB177A982E5DDB5DB19FAA89E7FBF  : public Component_t39FBE53E5EFCF4409111FB22C15FF73717632EC3
+{
+};
+struct Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1  : public Component_t39FBE53E5EFCF4409111FB22C15FF73717632EC3
+{
+};
+struct AudioBehaviour_t2DC0BEF7B020C952F3D2DA5AAAC88501C7EEB941  : public Behaviour_t01970CFBBA658497AE30F311C447DB0440BAB7FA
+{
+};
+struct LineRenderer_tEFEF960672DB69CB14B6D181FAE6292F0CF8B63D  : public Renderer_t320575F223BCB177A982E5DDB5DB19FAA89E7FBF
+{
+};
+struct MeshRenderer_t4B7747212F0B88244BB7790C61AE124BFC15BAAE  : public Renderer_t320575F223BCB177A982E5DDB5DB19FAA89E7FBF
+{
+};
+struct MonoBehaviour_t532A11E69716D348D8AA7F854AFCBFCB8AD17F71  : public Behaviour_t01970CFBBA658497AE30F311C447DB0440BAB7FA
+{
+	CancellationTokenSource_tAAE1E0033BCFC233801F8CB4CED5C852B350CB7B* ___m_CancellationTokenSource;
+};
+struct AudioSource_t871AC2272F896738252F04EE949AEF5B241D3299  : public AudioBehaviour_t2DC0BEF7B020C952F3D2DA5AAAC88501C7EEB941
+{
+};
+struct LineDrawing_tA95DF0BD37C7F4C0EC6C561E5D3D2F0B3BCEFE08  : public MonoBehaviour_t532A11E69716D348D8AA7F854AFCBFCB8AD17F71
+{
+	List_1_tB951CE80B58D1BF9650862451D8DAD8C231F207B* ____lines;
+	List_1_tEBA944EB098597668737638C5527516C00F5CF52* ____loopSounds;
+	LineRenderer_tEFEF960672DB69CB14B6D181FAE6292F0CF8B63D* ____currentLine;
+	List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* ____currentLineWidths;
+	List_1_t77B94703E05C519A9010DD0614F757F974E1CD8B* ____currentLinePoints;
+	List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* ____currentLinePressures;
+	List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* ____currentLineTilts;
+	float ____currentLineLength;
+	float ____maxLineWidth;
+	float ____minLineWidth;
+	Material_t18053F08F347D0DCA5E1140EC7EC4533DD8A14E3* ____material;
+	Color_tD001788D726C3A7F1379BEED0260B9591F440C1F ____currentColor;
+	bool ____lineWidthIsFixed;
+	bool ____enableAudioLoops;
+	float ____closeLoopDistance;
+	int32_t ____minLoopPoints;
+	float ____detailAttachDistance;
+	LoopSoundSettings_tCE8CCF7BF33FB6B89FB05D9D69B17346365EADA5 ____loopSoundSettings;
+	bool ____applyTwistOffset;
+	float ____twistOffsetStrength;
+	Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* ____tiltReference;
+	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ____penAxis;
+	bool ____isDrawing;
+	bool ____doubleTapDetected;
+	float ___longPressDuration;
+	float ___buttonPressedTimestamp;
+	StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A* ____stylusHandler;
+	StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A* ____fallbackHandler;
+	bool ____autoCreateOculusFallback;
+	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ____previousLinePoint;
+};
+struct LoopDetailStroke_tE17493DBF0EBF02DA61B6BF1A487624E4E08809F  : public MonoBehaviour_t532A11E69716D348D8AA7F854AFCBFCB8AD17F71
+{
+	LoopSound_t0F81954F3F93403FEC588C98AAD22BF92DC6E075* ____loopSound;
+	List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* ____addedSpikes;
+};
+struct LoopSound_t0F81954F3F93403FEC588C98AAD22BF92DC6E075  : public MonoBehaviour_t532A11E69716D348D8AA7F854AFCBFCB8AD17F71
+{
+	AudioSource_t871AC2272F896738252F04EE949AEF5B241D3299* ____audioSource;
+	LineStrokeData_t096A2E61000991AF1A1E54177DB496F7847C7C2B* ____baseStroke;
+	LoopSoundSettings_tCE8CCF7BF33FB6B89FB05D9D69B17346365EADA5 ____settings;
+	List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* ____spikeTimesNormalized;
+	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ____center;
+	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ____normal;
+	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ____axisX;
+	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ____axisY;
+	float ____averageRadius;
+};
+struct OVRCameraRig_t7FC2BB0D30DED2B7F0C8914AF2B66E9F4CF891A9  : public MonoBehaviour_t532A11E69716D348D8AA7F854AFCBFCB8AD17F71
+{
+	Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* ___U3CtrackingSpaceU3Ek__BackingField;
+	Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* ___U3CleftEyeAnchorU3Ek__BackingField;
+	Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* ___U3CcenterEyeAnchorU3Ek__BackingField;
+	Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* ___U3CrightEyeAnchorU3Ek__BackingField;
+	Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* ___U3CleftHandAnchorU3Ek__BackingField;
+	Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* ___U3CrightHandAnchorU3Ek__BackingField;
+	Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* ___U3CleftHandAnchorDetachedU3Ek__BackingField;
+	Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* ___U3CrightHandAnchorDetachedU3Ek__BackingField;
+	Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* ___U3CleftControllerInHandAnchorU3Ek__BackingField;
+	Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* ___U3CleftHandOnControllerAnchorU3Ek__BackingField;
+	Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* ___U3CrightControllerInHandAnchorU3Ek__BackingField;
+	Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* ___U3CrightHandOnControllerAnchorU3Ek__BackingField;
+	Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* ___U3CleftControllerAnchorU3Ek__BackingField;
+	Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* ___U3CrightControllerAnchorU3Ek__BackingField;
+	Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* ___U3CtrackerAnchorU3Ek__BackingField;
+	Action_1_t88CC03E8C305DA991BBBCEBE79519B58D52F577F* ___UpdatedAnchors;
+	Action_1_t10D7C827ADC73ED438E0CA8F04465BA6F2BAED7D* ___TrackingSpaceChanged;
+	bool ___usePerEyeCameras;
+	bool ___useFixedUpdateForTracking;
+	bool ___disableEyeAnchorCameras;
+	bool ____skipUpdate;
+	String_t* ___trackingSpaceName;
+	String_t* ___trackerAnchorName;
+	String_t* ___leftEyeAnchorName;
+	String_t* ___centerEyeAnchorName;
+	String_t* ___rightEyeAnchorName;
+	String_t* ___leftHandAnchorName;
+	String_t* ___rightHandAnchorName;
+	String_t* ___leftControllerAnchorName;
+	String_t* ___rightControllerAnchorName;
+	String_t* ___leftHandAnchorDetachedName;
+	String_t* ___rightHandAnchorDetachedName;
+	String_t* ___leftControllerInHandAnchorName;
+	String_t* ___leftHandOnControllerAnchorName;
+	String_t* ___rightControllerInHandAnchorName;
+	String_t* ___rightHandOnControllerAnchorName;
+	Camera_tA92CC927D7439999BC82DBEDC0AA45B470F9E184* ____centerEyeCamera;
+	Camera_tA92CC927D7439999BC82DBEDC0AA45B470F9E184* ____leftEyeCamera;
+	Camera_tA92CC927D7439999BC82DBEDC0AA45B470F9E184* ____rightEyeCamera;
+	Matrix4x4_tDB70CF134A14BA38190C59AA700BCE10E2AED3E6 ____previousTrackingSpaceTransform;
+};
+struct OVRManager_t21429E69CA88C5E9C6EE3AAB75EAFBE6E1B129D4  : public MonoBehaviour_t532A11E69716D348D8AA7F854AFCBFCB8AD17F71
+{
+	RuntimeObject* ___disabledCameras;
+	bool ____monoscopic;
+	int32_t ____sharpenType;
+	int32_t ____colorGamut;
+	bool ____enableDynamicResolution;
+	float ___minDynamicResolutionScale;
+	float ___maxDynamicResolutionScale;
+	float ___quest2MinDynamicResolutionScale;
+	float ___quest2MaxDynamicResolutionScale;
+	float ___quest3MinDynamicResolutionScale;
+	float ___quest3MaxDynamicResolutionScale;
+	float ___minRenderScale;
+	float ___maxRenderScale;
+	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ____headPoseRelativeOffsetRotation;
+	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ____headPoseRelativeOffsetTranslation;
+	bool ___enableCoreMetricsRelease;
+	bool ___enableCoreMetricsDevelopment;
+	AppMetricsVisibilityConfiguration_tA2B53E72B667F86273D737C761A19F612DD87CDF ___coreMetricVisibility;
+	bool ___enableMixedReality;
+	int32_t ___compositionMethod;
+	LayerMask_t97CB6BDADEDC3D6423C7BCFEA7F86DA2EC6241DB ___extraHiddenLayers;
+	LayerMask_t97CB6BDADEDC3D6423C7BCFEA7F86DA2EC6241DB ___extraVisibleLayers;
+	bool ___dynamicCullingMask;
+	Color_tD001788D726C3A7F1379BEED0260B9591F440C1F ___externalCompositionBackdropColorRift;
+	Color_tD001788D726C3A7F1379BEED0260B9591F440C1F ___externalCompositionBackdropColorQuest;
+	int32_t ___capturingCameraDevice;
+	bool ___flipCameraFrameHorizontally;
+	bool ___flipCameraFrameVertically;
+	float ___handPoseStateLatency;
+	float ___sandwichCompositionRenderLatency;
+	int32_t ___sandwichCompositionBufferedFrames;
+	Color_tD001788D726C3A7F1379BEED0260B9591F440C1F ___chromaKeyColor;
+	float ___chromaKeySimilarity;
+	float ___chromaKeySmoothRange;
+	float ___chromaKeySpillRange;
+	bool ___useDynamicLighting;
+	int32_t ___depthQuality;
+	float ___dynamicLightingSmoothFactor;
+	float ___dynamicLightingDepthVariationClampingValue;
+	int32_t ___virtualGreenScreenType;
+	float ___virtualGreenScreenTopY;
+	float ___virtualGreenScreenBottomY;
+	bool ___virtualGreenScreenApplyDepthCulling;
+	float ___virtualGreenScreenDepthTolerance;
+	int32_t ___mrcActivationMode;
+	InstantiateMrcCameraDelegate_t26D39C3003CADD2CBA4E7C5EB75333089B2F03C8* ___instantiateMixedRealityCameraGameObject;
+	bool ___launchSimultaneousHandsControllersOnStartup;
+	bool ___isInsightPassthroughEnabled;
+	bool ___shouldBoundaryVisibilityBeSuppressed;
+	bool ___U3CisBoundaryVisibilitySuppressedU3Ek__BackingField;
+	bool ____updateBoundaryLogOnce;
+	bool ___requestBodyTrackingPermissionOnStartup;
+	bool ___requestFaceTrackingPermissionOnStartup;
+	bool ___requestEyeTrackingPermissionOnStartup;
+	bool ___requestScenePermissionOnStartup;
+	bool ___requestRecordAudioPermissionOnStartup;
+	bool ___requestPassthroughCameraAccessPermissionOnStartup;
+	bool ____localDimming;
+	int32_t ____trackingOriginType;
+	bool ___usePositionTracking;
+	bool ___useRotationTracking;
+	bool ___useIPDInPositionTracking;
+	bool ___resetTrackerOnLoad;
+	bool ___AllowRecenter;
+	bool ___LateControllerUpdate;
+	bool ___LateLatching;
+	int32_t ___controllerDrivenHandPosesType;
+	bool ___SimultaneousHandsAndControllersEnabled;
+	bool ____readOnlyWideMotionModeHandPosesEnabled;
+	bool ___wideMotionModeHandPosesEnabled;
+	bool ___U3CisSupportedPlatformU3Ek__BackingField;
+	HashSet_1_t918EB2DA20944A28694286E926AE3B8188E10F8F* ___eventListeners;
+	int32_t ___dynamicResolutionVersion;
+};
+struct StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A  : public MonoBehaviour_t532A11E69716D348D8AA7F854AFCBFCB8AD17F71
+{
+	StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577 ____stylus;
+};
+struct OculusControllerStylusHandler_tEE66C8834517A788738007FC060C786ACDD8CE78  : public StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A
+{
+	int32_t ____handedness;
+	Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* ____trackingSpaceOverride;
+	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ____positionOffset;
+	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ____rotationOffsetEuler;
+	float ____doubleTapWindow;
+	float ____lastTapTime;
+	Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* ____cachedTrackingSpace;
+};
+struct VrStylusHandler_t5EFDF8B65CF2D5BB08AA538FD3174E4F18848423  : public StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A
+{
+	GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* ____mxInk_model;
+	GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* ____tip;
+	GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* ____cluster_front;
+	GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* ____cluster_middle;
+	GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* ____cluster_back;
+	GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* ____left_touch_controller;
+	GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* ____right_touch_controller;
+	Color_tD001788D726C3A7F1379BEED0260B9591F440C1F ___active_color;
+	Color_tD001788D726C3A7F1379BEED0260B9591F440C1F ___double_tap_active_color;
+	Color_tD001788D726C3A7F1379BEED0260B9591F440C1F ___default_color;
+	float ____hapticClickDuration;
+	float ____hapticClickAmplitude;
+};
+struct List_1_tB951CE80B58D1BF9650862451D8DAD8C231F207B_StaticFields
+{
+	GameObjectU5BU5D_tFF67550DFCE87096D7A3734EA15B75896B2722CF* ___s_emptyArray;
+};
+struct List_1_t05915E9237850A58106982B7FE4BC5DA4E872E73_StaticFields
+{
+	Int32U5BU5D_t19C97395396A72ECAF310612F0760F165060314C* ___s_emptyArray;
+};
+struct List_1_tEBA944EB098597668737638C5527516C00F5CF52_StaticFields
+{
+	LoopSoundU5BU5D_tAF316EE3913A7674E8559227412AE12C68E150AD* ___s_emptyArray;
+};
+struct List_1_tA239CB83DE5615F348BB0507E45F490F4F7C9A8D_StaticFields
+{
+	ObjectU5BU5D_t8061030B0A12A55D5AD8652A20C922FE99450918* ___s_emptyArray;
+};
+struct List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918_StaticFields
+{
+	SingleU5BU5D_t89DEFE97BCEDB5857010E79ECE0F52CF6E93B87C* ___s_emptyArray;
+};
+struct List_1_t77B94703E05C519A9010DD0614F757F974E1CD8B_StaticFields
+{
+	Vector3U5BU5D_tFF1859CCE176131B909E2044F76443064254679C* ___s_emptyArray;
+};
+struct U3CPrivateImplementationDetailsU3E_t0F5473E849A5A5185A9F4C5246F0C32816C49FCA_StaticFields
+{
+	__StaticArrayInitTypeSizeU3D397_tA3B5A78C6E69A141F846DA881723023980D86464 ___894D4B1035152C17F7597AF81898FA76D0753BEF6DEA7F0BF21D6C8D5E958087;
+	__StaticArrayInitTypeSizeU3D241_t1E1FEF1B327090BBE49C0C9EDCCB10F7FD950223 ___A6C059AD484A2FB59D00FEC67257B0642A94D0C85A85E85DCF91D7A2D26E3D8E;
+};
+struct String_t_StaticFields
+{
+	String_t* ___Empty;
+};
+struct Boolean_t09A6377A54BE2F9E6985A8149F19234FD7DDFE22_StaticFields
+{
+	String_t* ___TrueString;
+	String_t* ___FalseString;
+};
+struct Mathf_tE284D016E3B297B72311AAD9EB8F0E643F6A4682_StaticFields
+{
+	float ___Epsilon;
+};
+struct Quaternion_tDA59F214EF07D7700B26E40E562F267AF7306974_StaticFields
+{
+	Quaternion_tDA59F214EF07D7700B26E40E562F267AF7306974 ___identityQuaternion;
+};
+struct Vector2_t1FD6F485C871E832B347AB2DC8CBA08B739D8DF7_StaticFields
+{
+	Vector2_t1FD6F485C871E832B347AB2DC8CBA08B739D8DF7 ___zeroVector;
+	Vector2_t1FD6F485C871E832B347AB2DC8CBA08B739D8DF7 ___oneVector;
+	Vector2_t1FD6F485C871E832B347AB2DC8CBA08B739D8DF7 ___upVector;
+	Vector2_t1FD6F485C871E832B347AB2DC8CBA08B739D8DF7 ___downVector;
+	Vector2_t1FD6F485C871E832B347AB2DC8CBA08B739D8DF7 ___leftVector;
+	Vector2_t1FD6F485C871E832B347AB2DC8CBA08B739D8DF7 ___rightVector;
+	Vector2_t1FD6F485C871E832B347AB2DC8CBA08B739D8DF7 ___positiveInfinityVector;
+	Vector2_t1FD6F485C871E832B347AB2DC8CBA08B739D8DF7 ___negativeInfinityVector;
+};
+struct Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2_StaticFields
+{
+	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___zeroVector;
+	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___oneVector;
+	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___upVector;
+	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___downVector;
+	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___leftVector;
+	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___rightVector;
+	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___forwardVector;
+	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___backVector;
+	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___positiveInfinityVector;
+	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___negativeInfinityVector;
+};
+struct Quatf_t5347392804DF5326AF790F82E4EDE1578FED682A_StaticFields
+{
+	Quatf_t5347392804DF5326AF790F82E4EDE1578FED682A ___identity;
+};
+struct Vector3f_t232AF83B4642C67BE8EFF85D8E1599D3B06BD562_StaticFields
+{
+	Vector3f_t232AF83B4642C67BE8EFF85D8E1599D3B06BD562 ___zero;
+};
+struct Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C_StaticFields
+{
+	int32_t ___OffsetOfInstanceIDInCPlusPlusObject;
+};
+struct Pose_t06BA69EAA6E9FAF60056D519A87D25F54AFE7971_StaticFields
+{
+	Pose_t06BA69EAA6E9FAF60056D519A87D25F54AFE7971 ___k_Identity;
+};
+struct Posef_t51A2C10B4094B44A8D3C1913292B839172887B61_StaticFields
+{
+	Posef_t51A2C10B4094B44A8D3C1913292B839172887B61 ___identity;
+};
+struct Material_t18053F08F347D0DCA5E1140EC7EC4533DD8A14E3_StaticFields
+{
+	int32_t ___k_ColorId;
+	int32_t ___k_MainTexId;
+};
+struct OVRCameraRig_t7FC2BB0D30DED2B7F0C8914AF2B66E9F4CF891A9_StaticFields
+{
+	OVRCameraRig_t7FC2BB0D30DED2B7F0C8914AF2B66E9F4CF891A9* ____instance;
+	bool ____isInstanceCached;
+};
+struct OVRManager_t21429E69CA88C5E9C6EE3AAB75EAFBE6E1B129D4_StaticFields
+{
+	OVRManager_t21429E69CA88C5E9C6EE3AAB75EAFBE6E1B129D4* ___U3CinstanceU3Ek__BackingField;
+	OVRDisplay_t1518043CC531CD088400F80558DF7A849ECA2D27* ___U3CdisplayU3Ek__BackingField;
+	OVRTracker_t5E60EE08D82308F2F8206AD43AE8CC4925938154* ___U3CtrackerU3Ek__BackingField;
+	OVRBoundary_t56DFE91F758A740A34575D748FEC61959A106DAE* ___U3CboundaryU3Ek__BackingField;
+	OVRRuntimeSettings_tC85E84DCFBF4DB2D4C3311CA39C96DEE89220EE1* ___U3CruntimeSettingsU3Ek__BackingField;
+	OVRProfile_tCFDDDA5EE82F0ED94671EB741B8954603D98AFC0* ____profile;
+	OVRMetricsCore_t5983882EB50AC06D06CC2A1039D06C6E8C828084* ___U3CmetricsU3Ek__BackingField;
+	Action_tD00B0A84D7945E50C2DFFC28EFEE6ED44ED2AD07* ___HMDAcquired;
+	Action_tD00B0A84D7945E50C2DFFC28EFEE6ED44ED2AD07* ___HMDLost;
+	Action_tD00B0A84D7945E50C2DFFC28EFEE6ED44ED2AD07* ___HMDMounted;
+	Action_tD00B0A84D7945E50C2DFFC28EFEE6ED44ED2AD07* ___HMDUnmounted;
+	Action_tD00B0A84D7945E50C2DFFC28EFEE6ED44ED2AD07* ___VrFocusAcquired;
+	Action_tD00B0A84D7945E50C2DFFC28EFEE6ED44ED2AD07* ___VrFocusLost;
+	Action_tD00B0A84D7945E50C2DFFC28EFEE6ED44ED2AD07* ___InputFocusAcquired;
+	Action_tD00B0A84D7945E50C2DFFC28EFEE6ED44ED2AD07* ___InputFocusLost;
+	Action_tD00B0A84D7945E50C2DFFC28EFEE6ED44ED2AD07* ___AudioOutChanged;
+	Action_tD00B0A84D7945E50C2DFFC28EFEE6ED44ED2AD07* ___AudioInChanged;
+	Action_tD00B0A84D7945E50C2DFFC28EFEE6ED44ED2AD07* ___TrackingAcquired;
+	Action_tD00B0A84D7945E50C2DFFC28EFEE6ED44ED2AD07* ___TrackingLost;
+	Action_2_t4195ED8D681728C29103F36BCD591C0F089C9132* ___DisplayRefreshRateChanged;
+	Action_4_t540B344FD589096100128D9A1B39946413ED9AAE* ___SpatialAnchorCreateComplete;
+	Action_6_tD8B17612932122F2ABF5C8545327C8F527403625* ___SpaceSetComponentStatusComplete;
+	Action_1_t2F07B42BD085A4AC03ECE5676157E93B9A344C1C* ___SpaceQueryResults;
+	Action_2_tDBB3CA1E07CF34B6EE70F044CD209FED6BFD1D71* ___SpaceQueryComplete;
+	Action_4_t4EDE5C99870C78676D9C651284E64891D8D4F58A* ___SpaceSaveComplete;
+	Action_4_t68CDF52B38375A15FD07A9D61E073DAB9D9C76DC* ___SpaceEraseComplete;
+	Action_2_tD6645913AD5AC5C01955FE6AA6F05A7A1FCA90A9* ___ShareSpacesComplete;
+	Action_2_tD6645913AD5AC5C01955FE6AA6F05A7A1FCA90A9* ___SpaceListSaveComplete;
+	Action_2_tDBB3CA1E07CF34B6EE70F044CD209FED6BFD1D71* ___SceneCaptureComplete;
+	Action_1_tD69A6DC9FBE94131E52F5A73B2A9D4AB51EEC404* ___PassthroughLayerResumed;
+	Action_1_t23DBC2ED948A8B400F9C3FDC1145E1485442CE3D* ___BoundaryVisibilityChanged;
+	Action_2_t6D771BD476C3FDEB4610C73D99CD7D094A325829* ___TrackingOriginChangePending;
+	Action_tD00B0A84D7945E50C2DFFC28EFEE6ED44ED2AD07* ___HSWDismissed;
+	int32_t ____isHmdPresentCacheFrame;
+	bool ____isHmdPresent;
+	bool ____wasHmdPresent;
+	bool ____hasVrFocusCached;
+	bool ____hasVrFocus;
+	bool ____hadVrFocus;
+	bool ____hadInputFocus;
+	String_t* ___OCULUS_UNITY_NAME_STR;
+	String_t* ___OPENVR_UNITY_NAME_STR;
+	int32_t ___loadedXRDevice;
+	bool ____isSystemHeadsetThemeCached;
+	int32_t ____cachedSystemHeadsetTheme;
+	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___OpenVRTouchRotationOffsetEulerLeft;
+	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___OpenVRTouchRotationOffsetEulerRight;
+	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___OpenVRTouchPositionOffsetLeft;
+	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___OpenVRTouchPositionOffsetRight;
+	WeakReference_1_t08942AAA5C58B24D75314BD9594E2DE409CB9C93* ___m_lastSpaceWarpCamera;
+	bool ___m_SpaceWarpEnabled;
+	Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* ___m_AppSpaceTransform;
+	int32_t ___m_CachedDepthTextureMode;
+	int32_t ____readOnlyControllerDrivenHandPosesType;
+	bool ____isUserPresentCached;
+	bool ____isUserPresent;
+	bool ____wasUserPresent;
+	bool ___prevAudioOutIdIsCached;
+	bool ___prevAudioInIdIsCached;
+	String_t* ___prevAudioOutId;
+	String_t* ___prevAudioInId;
+	bool ___wasPositionTracked;
+	EventDataBuffer_t5836E8ECE1E094863DEDCC92818AEF39C2F646E8 ___eventDataBuffer;
+	String_t* ___UnityAlphaOrBetaVersionWarningMessage;
+	int32_t ___MaxDynamicResolutionVersion;
+	bool ___OVRManagerinitialized;
+	List_1_tA7666C6690CE2AEE97571615AD3AFCE2BB020597* ___s_displaySubsystems;
+	List_1_tC3F021D09EFA4F3516555517B5E0D39308C9C1B4* ___s_displaySubsystemDescriptors;
+	List_1_t90832B88D7207769654164CC28440CF594CC397D* ___s_inputSubsystems;
+	bool ___multipleMainCameraWarningPresented;
+	bool ___suppressUnableToFindMainCameraMessage;
+	WeakReference_1_t08942AAA5C58B24D75314BD9594E2DE409CB9C93* ___lastFoundMainCamera;
+	bool ___staticMixedRealityCaptureInitialized;
+	bool ___staticPrevEnableMixedRealityCapture;
+	OVRMixedRealityCaptureSettings_tF6078D6B59F16A0EE3DEE4144FCED347444B9198* ___staticMrcSettings;
+	bool ___suppressDisableMixedRealityBecauseOfNoMainCameraWarning;
+	Action_1_t10DCB0C07D0D3C565CEACADC80D1152B35A45F6C* ___OnPassthroughInitializedStateChange;
+	Observable_1_t8B0ED472F997DCC0EB03DB275E12BFF3D1B970F8* ____passthroughInitializationState;
+	PassthroughCapabilities_t3B338539A7E4125FE79381628715BDC608471F9F* ____passthroughCapabilities;
+};
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif
+struct SingleU5BU5D_t89DEFE97BCEDB5857010E79ECE0F52CF6E93B87C  : public RuntimeArray
+{
+	ALIGN_FIELD (8) float m_Items[1];
+
+	inline float GetAt(il2cpp_array_size_t index) const
+	{
+		IL2CPP_ARRAY_BOUNDS_CHECK(index, (uint32_t)(this)->max_length);
+		return m_Items[index];
+	}
+	inline float* GetAddressAt(il2cpp_array_size_t index)
+	{
+		IL2CPP_ARRAY_BOUNDS_CHECK(index, (uint32_t)(this)->max_length);
+		return m_Items + index;
+	}
+	inline void SetAt(il2cpp_array_size_t index, float value)
+	{
+		IL2CPP_ARRAY_BOUNDS_CHECK(index, (uint32_t)(this)->max_length);
+		m_Items[index] = value;
+	}
+	inline float GetAtUnchecked(il2cpp_array_size_t index) const
+	{
+		return m_Items[index];
+	}
+	inline float* GetAddressAtUnchecked(il2cpp_array_size_t index)
+	{
+		return m_Items + index;
+	}
+	inline void SetAtUnchecked(il2cpp_array_size_t index, float value)
+	{
+		m_Items[index] = value;
+	}
+};
+struct ByteU5BU5D_tA6237BF417AE52AD70CFB4EF24A7A82613DF9031  : public RuntimeArray
+{
+	ALIGN_FIELD (8) uint8_t m_Items[1];
+
+	inline uint8_t GetAt(il2cpp_array_size_t index) const
+	{
+		IL2CPP_ARRAY_BOUNDS_CHECK(index, (uint32_t)(this)->max_length);
+		return m_Items[index];
+	}
+	inline uint8_t* GetAddressAt(il2cpp_array_size_t index)
+	{
+		IL2CPP_ARRAY_BOUNDS_CHECK(index, (uint32_t)(this)->max_length);
+		return m_Items + index;
+	}
+	inline void SetAt(il2cpp_array_size_t index, uint8_t value)
+	{
+		IL2CPP_ARRAY_BOUNDS_CHECK(index, (uint32_t)(this)->max_length);
+		m_Items[index] = value;
+	}
+	inline uint8_t GetAtUnchecked(il2cpp_array_size_t index) const
+	{
+		return m_Items[index];
+	}
+	inline uint8_t* GetAddressAtUnchecked(il2cpp_array_size_t index)
+	{
+		return m_Items + index;
+	}
+	inline void SetAtUnchecked(il2cpp_array_size_t index, uint8_t value)
+	{
+		m_Items[index] = value;
+	}
+};
+struct ObjectU5BU5D_t8061030B0A12A55D5AD8652A20C922FE99450918  : public RuntimeArray
+{
+	ALIGN_FIELD (8) RuntimeObject* m_Items[1];
+
+	inline RuntimeObject* GetAt(il2cpp_array_size_t index) const
+	{
+		IL2CPP_ARRAY_BOUNDS_CHECK(index, (uint32_t)(this)->max_length);
+		return m_Items[index];
+	}
+	inline RuntimeObject** GetAddressAt(il2cpp_array_size_t index)
+	{
+		IL2CPP_ARRAY_BOUNDS_CHECK(index, (uint32_t)(this)->max_length);
+		return m_Items + index;
+	}
+	inline void SetAt(il2cpp_array_size_t index, RuntimeObject* value)
+	{
+		IL2CPP_ARRAY_BOUNDS_CHECK(index, (uint32_t)(this)->max_length);
+		m_Items[index] = value;
+		Il2CppCodeGenWriteBarrier((void**)m_Items + index, (void*)value);
+	}
+	inline RuntimeObject* GetAtUnchecked(il2cpp_array_size_t index) const
+	{
+		return m_Items[index];
+	}
+	inline RuntimeObject** GetAddressAtUnchecked(il2cpp_array_size_t index)
+	{
+		return m_Items + index;
+	}
+	inline void SetAtUnchecked(il2cpp_array_size_t index, RuntimeObject* value)
+	{
+		m_Items[index] = value;
+		Il2CppCodeGenWriteBarrier((void**)m_Items + index, (void*)value);
+	}
+};
+struct Vector3U5BU5D_tFF1859CCE176131B909E2044F76443064254679C  : public RuntimeArray
+{
+	ALIGN_FIELD (8) Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 m_Items[1];
+
+	inline Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 GetAt(il2cpp_array_size_t index) const
+	{
+		IL2CPP_ARRAY_BOUNDS_CHECK(index, (uint32_t)(this)->max_length);
+		return m_Items[index];
+	}
+	inline Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2* GetAddressAt(il2cpp_array_size_t index)
+	{
+		IL2CPP_ARRAY_BOUNDS_CHECK(index, (uint32_t)(this)->max_length);
+		return m_Items + index;
+	}
+	inline void SetAt(il2cpp_array_size_t index, Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 value)
+	{
+		IL2CPP_ARRAY_BOUNDS_CHECK(index, (uint32_t)(this)->max_length);
+		m_Items[index] = value;
+	}
+	inline Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 GetAtUnchecked(il2cpp_array_size_t index) const
+	{
+		return m_Items[index];
+	}
+	inline Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2* GetAddressAtUnchecked(il2cpp_array_size_t index)
+	{
+		return m_Items + index;
+	}
+	inline void SetAtUnchecked(il2cpp_array_size_t index, Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 value)
+	{
+		m_Items[index] = value;
+	}
+};
+struct Int32U5BU5D_t19C97395396A72ECAF310612F0760F165060314C  : public RuntimeArray
+{
+	ALIGN_FIELD (8) int32_t m_Items[1];
+
+	inline int32_t GetAt(il2cpp_array_size_t index) const
+	{
+		IL2CPP_ARRAY_BOUNDS_CHECK(index, (uint32_t)(this)->max_length);
+		return m_Items[index];
+	}
+	inline int32_t* GetAddressAt(il2cpp_array_size_t index)
+	{
+		IL2CPP_ARRAY_BOUNDS_CHECK(index, (uint32_t)(this)->max_length);
+		return m_Items + index;
+	}
+	inline void SetAt(il2cpp_array_size_t index, int32_t value)
+	{
+		IL2CPP_ARRAY_BOUNDS_CHECK(index, (uint32_t)(this)->max_length);
+		m_Items[index] = value;
+	}
+	inline int32_t GetAtUnchecked(il2cpp_array_size_t index) const
+	{
+		return m_Items[index];
+	}
+	inline int32_t* GetAddressAtUnchecked(il2cpp_array_size_t index)
+	{
+		return m_Items + index;
+	}
+	inline void SetAtUnchecked(il2cpp_array_size_t index, int32_t value)
+	{
+		m_Items[index] = value;
+	}
+};
+
+
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR RuntimeObject* Component_GetComponent_TisRuntimeObject_m7181F81CAEC2CF53F5D2BC79B7425C16E1F80D33_gshared (Component_t39FBE53E5EFCF4409111FB22C15FF73717632EC3* __this, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR RuntimeObject* GameObject_AddComponent_TisRuntimeObject_m69B93700FACCF372F5753371C6E8FB780800B824_gshared (GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* __this, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void List_1__ctor_mC29D3D824786832A31096310B3B3016B8B42B802_gshared (List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* __this, const RuntimeMethod* method) ;
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void List_1_Add_mEBCF994CC3814631017F46A387B1A192ED6C85C7_gshared_inline (List_1_tA239CB83DE5615F348BB0507E45F490F4F7C9A8D* __this, RuntimeObject* ___0_item, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void List_1__ctor_mC54E2BCBE43279A96FC082F5CDE2D76388BD8F9C_gshared (List_1_t77B94703E05C519A9010DD0614F757F974E1CD8B* __this, const RuntimeMethod* method) ;
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void List_1_Add_m2F86E252D086E288E02FA1C830B7E86C0A431E51_gshared_inline (List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* __this, float ___0_item, const RuntimeMethod* method) ;
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void List_1_Add_m79E50C4F592B1703F4B76A8BE7B4855515460CA1_gshared_inline (List_1_t77B94703E05C519A9010DD0614F757F974E1CD8B* __this, Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___0_item, const RuntimeMethod* method) ;
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR int32_t List_1_get_Count_m545762F67009314D9C63DD209B42FFF950569B05_gshared_inline (List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* __this, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR float List_1_get_Item_mFE556F47C4CD09EAC6C898EF39D4A8EC112CFC50_gshared (List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* __this, int32_t ___0_index, const RuntimeMethod* method) ;
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR int32_t List_1_get_Count_m46EEFFA770BE665EA0CB3A5332E941DA4B3C1D37_gshared_inline (List_1_t77B94703E05C519A9010DD0614F757F974E1CD8B* __this, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 List_1_get_Item_m8F2E15FC96DA75186C51228128A0660709E4E810_gshared (List_1_t77B94703E05C519A9010DD0614F757F974E1CD8B* __this, int32_t ___0_index, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR RuntimeObject* List_1_get_Item_m33561245D64798C2AB07584C0EC4F240E4839A38_gshared (List_1_tA239CB83DE5615F348BB0507E45F490F4F7C9A8D* __this, int32_t ___0_index, const RuntimeMethod* method) ;
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR int32_t List_1_get_Count_m4407E4C389F22B8CEC282C15D56516658746C383_gshared_inline (List_1_tA239CB83DE5615F348BB0507E45F490F4F7C9A8D* __this, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void List_1_RemoveAt_m54F62297ADEE4D4FDA697F49ED807BF901201B54_gshared (List_1_tA239CB83DE5615F348BB0507E45F490F4F7C9A8D* __this, int32_t ___0_index, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR RuntimeObject* GameObject_GetComponent_TisRuntimeObject_m6EAED4AA356F0F48288F67899E5958792395563B_gshared (GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* __this, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR bool List_1_Remove_m4DFA48F4CEB9169601E75FC28517C5C06EFA5AD7_gshared (List_1_tA239CB83DE5615F348BB0507E45F490F4F7C9A8D* __this, RuntimeObject* ___0_item, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR Enumerator_t9473BAB568A27E2339D48C1F91319E0F6D244D7A List_1_GetEnumerator_mD8294A7FA2BEB1929487127D476F8EC1CDC23BFC_gshared (List_1_tA239CB83DE5615F348BB0507E45F490F4F7C9A8D* __this, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void Enumerator_Dispose_mD9DC3E3C3697830A4823047AB29A77DBBB5ED419_gshared (Enumerator_t9473BAB568A27E2339D48C1F91319E0F6D244D7A* __this, const RuntimeMethod* method) ;
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR RuntimeObject* Enumerator_get_Current_m6330F15D18EE4F547C05DF9BF83C5EB710376027_gshared_inline (Enumerator_t9473BAB568A27E2339D48C1F91319E0F6D244D7A* __this, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR bool Enumerator_MoveNext_mE921CC8F29FBBDE7CC3209A0ED0D921D58D00BCB_gshared (Enumerator_t9473BAB568A27E2339D48C1F91319E0F6D244D7A* __this, const RuntimeMethod* method) ;
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void List_1_Clear_m16C1F2C61FED5955F10EB36BC1CB2DF34B128994_gshared_inline (List_1_tA239CB83DE5615F348BB0507E45F490F4F7C9A8D* __this, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void List_1__ctor_m7F078BB342729BDF11327FD89D7872265328F690_gshared (List_1_tA239CB83DE5615F348BB0507E45F490F4F7C9A8D* __this, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void List_1__ctor_mC734A32FAD92BD7492907D4733032FD21348EECD_gshared (List_1_t77B94703E05C519A9010DD0614F757F974E1CD8B* __this, RuntimeObject* ___0_collection, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void List_1__ctor_m8C289AC1BF84CD8ED45F520DC3005096E1A9A37F_gshared (List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* __this, RuntimeObject* ___0_collection, const RuntimeMethod* method) ;
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void List_1_Clear_m6CD2E5AAE6552A27AECCC57936767B4DCFC902B1_gshared_inline (List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* __this, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void List_1_AddRange_m33C111258C9CCD3FF30107B1A81472DAD342F7AF_gshared (List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* __this, RuntimeObject* ___0_collection, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void List_1_RemoveAt_m02AAC9739BBFB220DD397843A7825154D07F2C93_gshared (List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* __this, int32_t ___0_index, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void List_1_Sort_m80C2D113831377D60288F94CD0206605822F5C96_gshared (List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* __this, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void List_1__ctor_m17F501B5A5C289ECE1B4F3D6EBF05DFA421433F8_gshared (List_1_t05915E9237850A58106982B7FE4BC5DA4E872E73* __this, const RuntimeMethod* method) ;
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void List_1_Add_m0248A96C5334E9A93E6994B7780478BCD994EA3D_gshared_inline (List_1_t05915E9237850A58106982B7FE4BC5DA4E872E73* __this, int32_t ___0_item, const RuntimeMethod* method) ;
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR int32_t List_1_get_Count_mF590592E32D421DE2C6E2F0D5C2F62FB14CCEFDF_gshared_inline (List_1_t05915E9237850A58106982B7FE4BC5DA4E872E73* __this, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void List_1_Sort_m6DA897B8E2A3434A84E3529FE9850B2773D88B65_gshared (List_1_t05915E9237850A58106982B7FE4BC5DA4E872E73* __this, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR int32_t List_1_get_Item_mD99081BEFA1AB3526715F489192B0F7F596C183D_gshared (List_1_t05915E9237850A58106982B7FE4BC5DA4E872E73* __this, int32_t ___0_index, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR RuntimeObject* Object_FindObjectOfType_TisRuntimeObject_m02DFBF011F3B59F777A5E521DB2A116DD496E968_gshared (const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_NO_INLINE IL2CPP_METHOD_ATTR void List_1_AddWithResize_m79A9BF770BEF9C06BE40D5401E55E375F2726CC4_gshared (List_1_tA239CB83DE5615F348BB0507E45F490F4F7C9A8D* __this, RuntimeObject* ___0_item, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_NO_INLINE IL2CPP_METHOD_ATTR void List_1_AddWithResize_m446487BF7F55E757E7D552B2436AD74AC354EA99_gshared (List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* __this, float ___0_item, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_NO_INLINE IL2CPP_METHOD_ATTR void List_1_AddWithResize_mCDB189127FC2EE67B5EED9DE34F837DFC6EDC212_gshared (List_1_t77B94703E05C519A9010DD0614F757F974E1CD8B* __this, Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___0_item, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_NO_INLINE IL2CPP_METHOD_ATTR void List_1_AddWithResize_m378B392086AAB6F400944FA9839516326B3F7BB8_gshared (List_1_t05915E9237850A58106982B7FE4BC5DA4E872E73* __this, int32_t ___0_item, const RuntimeMethod* method) ;
+
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR LoopSoundSettings_tCE8CCF7BF33FB6B89FB05D9D69B17346365EADA5 LoopSoundSettings_Sanitize_m326F8A4901490EC3B773E1C1CCBA4041D756465D (LoopSoundSettings_tCE8CCF7BF33FB6B89FB05D9D69B17346365EADA5 ___0_settings, const RuntimeMethod* method) ;
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 Vector3_get_zero_m0C1249C3F25B1C70EAD3CC8B31259975A457AE39_inline (const RuntimeMethod* method) ;
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR bool Vector3_op_Equality_mCDCBB8D2EDC3D3BF20F31A25ACB34705D352B479_inline (Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___0_lhs, Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___1_rhs, const RuntimeMethod* method) ;
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 Vector3_get_forward_mAA55A7034304DF8B2152EAD49AE779FC4CA2EB4A_inline (const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR bool Object_op_Equality_mB6120F782D83091EF56A198FCEBCF066DB4A9605 (Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C* ___0_x, Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C* ___1_y, const RuntimeMethod* method) ;
+inline OculusControllerStylusHandler_tEE66C8834517A788738007FC060C786ACDD8CE78* Component_GetComponent_TisOculusControllerStylusHandler_tEE66C8834517A788738007FC060C786ACDD8CE78_m6F964F4F013A5342B1705D8A713B7FB0C3656028 (Component_t39FBE53E5EFCF4409111FB22C15FF73717632EC3* __this, const RuntimeMethod* method)
+{
+	return ((  OculusControllerStylusHandler_tEE66C8834517A788738007FC060C786ACDD8CE78* (*) (Component_t39FBE53E5EFCF4409111FB22C15FF73717632EC3*, const RuntimeMethod*))Component_GetComponent_TisRuntimeObject_m7181F81CAEC2CF53F5D2BC79B7425C16E1F80D33_gshared)(__this, method);
+}
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* Component_get_gameObject_m57AEFBB14DB39EC476F740BA000E170355DE691B (Component_t39FBE53E5EFCF4409111FB22C15FF73717632EC3* __this, const RuntimeMethod* method) ;
+inline OculusControllerStylusHandler_tEE66C8834517A788738007FC060C786ACDD8CE78* GameObject_AddComponent_TisOculusControllerStylusHandler_tEE66C8834517A788738007FC060C786ACDD8CE78_mE5832C2322F5FE070BDB8FD59AC12D9B53465CA9 (GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* __this, const RuntimeMethod* method)
+{
+	return ((  OculusControllerStylusHandler_tEE66C8834517A788738007FC060C786ACDD8CE78* (*) (GameObject_t76FEDD663AB33C991A9C9A23129337651094216F*, const RuntimeMethod*))GameObject_AddComponent_TisRuntimeObject_m69B93700FACCF372F5753371C6E8FB780800B824_gshared)(__this, method);
+}
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void GameObject__ctor_m37D512B05D292F954792225E6C6EEE95293A9B88 (GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* __this, String_t* ___0_name, const RuntimeMethod* method) ;
+inline LineRenderer_tEFEF960672DB69CB14B6D181FAE6292F0CF8B63D* GameObject_AddComponent_TisLineRenderer_tEFEF960672DB69CB14B6D181FAE6292F0CF8B63D_mF8C0D953BCBFDD5A01A09ADB67EB04F0D677A056 (GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* __this, const RuntimeMethod* method)
+{
+	return ((  LineRenderer_tEFEF960672DB69CB14B6D181FAE6292F0CF8B63D* (*) (GameObject_t76FEDD663AB33C991A9C9A23129337651094216F*, const RuntimeMethod*))GameObject_AddComponent_TisRuntimeObject_m69B93700FACCF372F5753371C6E8FB780800B824_gshared)(__this, method);
+}
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void LineRenderer_set_positionCount_m2001FB4044053895ECBE897AB833284F3300B205 (LineRenderer_tEFEF960672DB69CB14B6D181FAE6292F0CF8B63D* __this, int32_t ___0_value, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void Renderer_set_material_m21E88977071E0A914D62F3D9CFF0193B3117C45A (Renderer_t320575F223BCB177A982E5DDB5DB19FAA89E7FBF* __this, Material_t18053F08F347D0DCA5E1140EC7EC4533DD8A14E3* ___0_value, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR Material_t18053F08F347D0DCA5E1140EC7EC4533DD8A14E3* Renderer_get_material_m5BA2A00816C4CC66580D4B2E409CF10718C15656 (Renderer_t320575F223BCB177A982E5DDB5DB19FAA89E7FBF* __this, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void Material_set_color_m5C32DEBB215FF9EE35E7B575297D8C2F29CC2A2D (Material_t18053F08F347D0DCA5E1140EC7EC4533DD8A14E3* __this, Color_tD001788D726C3A7F1379BEED0260B9591F440C1F ___0_value, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void LineRenderer_set_loop_mC7FBA197A227B62F11DE01264C68357FBA475058 (LineRenderer_tEFEF960672DB69CB14B6D181FAE6292F0CF8B63D* __this, bool ___0_value, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void LineRenderer_set_startWidth_m3899722E198D636DB216CB61C980214707069F4A (LineRenderer_tEFEF960672DB69CB14B6D181FAE6292F0CF8B63D* __this, float ___0_value, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void LineRenderer_set_endWidth_mC7260401655C8BE1CBDFB832009295C89613F81D (LineRenderer_tEFEF960672DB69CB14B6D181FAE6292F0CF8B63D* __this, float ___0_value, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void LineRenderer_set_useWorldSpace_m0204DB2541CC37DC4DC15DA15FD5A66EDC507CE8 (LineRenderer_tEFEF960672DB69CB14B6D181FAE6292F0CF8B63D* __this, bool ___0_value, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void LineRenderer_set_alignment_m9755D4E7B9FDB0FC455CA17AD5F0EC5F22338466 (LineRenderer_tEFEF960672DB69CB14B6D181FAE6292F0CF8B63D* __this, int32_t ___0_value, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void AnimationCurve__ctor_m0D976567166F92383307DC8EB8D7082CD34E226F (AnimationCurve_tCBFFAAD05CEBB35EF8D8631BD99914BE1A6BB354* __this, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void LineRenderer_set_widthCurve_mDB16A2CB251FE4433BD6D096CA2CB22B89ED68D0 (LineRenderer_tEFEF960672DB69CB14B6D181FAE6292F0CF8B63D* __this, AnimationCurve_tCBFFAAD05CEBB35EF8D8631BD99914BE1A6BB354* ___0_value, const RuntimeMethod* method) ;
+inline void List_1__ctor_mC29D3D824786832A31096310B3B3016B8B42B802 (List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* __this, const RuntimeMethod* method)
+{
+	((  void (*) (List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918*, const RuntimeMethod*))List_1__ctor_mC29D3D824786832A31096310B3B3016B8B42B802_gshared)(__this, method);
+}
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void Renderer_set_shadowCastingMode_mB0CD3D153E43044388AEFF7AEFDA93E80EB36D11 (Renderer_t320575F223BCB177A982E5DDB5DB19FAA89E7FBF* __this, int32_t ___0_value, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void Renderer_set_receiveShadows_mABEB4C72E96E65117B7FFFD4180247565D0C1A09 (Renderer_t320575F223BCB177A982E5DDB5DB19FAA89E7FBF* __this, bool ___0_value, const RuntimeMethod* method) ;
+inline void List_1_Add_m43FBF207375C6E06B8C45ECE614F9B8008FB686E_inline (List_1_tB951CE80B58D1BF9650862451D8DAD8C231F207B* __this, GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* ___0_item, const RuntimeMethod* method)
+{
+	((  void (*) (List_1_tB951CE80B58D1BF9650862451D8DAD8C231F207B*, GameObject_t76FEDD663AB33C991A9C9A23129337651094216F*, const RuntimeMethod*))List_1_Add_mEBCF994CC3814631017F46A387B1A192ED6C85C7_gshared_inline)(__this, ___0_item, method);
+}
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 Vector3_get_positiveInfinity_mE0C7AA87B375383EA62F6084761DAE8197147D23_inline (const RuntimeMethod* method) ;
+inline void List_1__ctor_mC54E2BCBE43279A96FC082F5CDE2D76388BD8F9C (List_1_t77B94703E05C519A9010DD0614F757F974E1CD8B* __this, const RuntimeMethod* method)
+{
+	((  void (*) (List_1_t77B94703E05C519A9010DD0614F757F974E1CD8B*, const RuntimeMethod*))List_1__ctor_mC54E2BCBE43279A96FC082F5CDE2D76388BD8F9C_gshared)(__this, method);
+}
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577 StylusHandler_get_CurrentState_m26068FA11B30F3E6A11632EF4A2C3963DE515734_inline (StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A* __this, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void VrStylusHandler_TriggerHapticPulse_mD016617556B9D67D7909496DB412ECC99D85A088 (VrStylusHandler_t5EFDF8B65CF2D5BB08AA538FD3174E4F18848423* __this, float ___0_amplitude, float ___1_duration, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* Component_get_transform_m2919A1D81931E6932C7F06D4C2F0AB8DDA9A5371 (Component_t39FBE53E5EFCF4409111FB22C15FF73717632EC3* __this, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 Transform_TransformDirection_m9BE1261DF2D48B7A4A27D31EE24D2D97F89E7757 (Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* __this, Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___0_direction, const RuntimeMethod* method) ;
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR float Vector3_get_sqrMagnitude_m43C27DEC47C4811FB30AB474FF2131A963B66FC8_inline (Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2* __this, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR bool Object_op_Inequality_mD0BE578448EAA61948F25C32F8DD55AB1F778602 (Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C* ___0_x, Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C* ___1_y, const RuntimeMethod* method) ;
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 Vector3_get_up_m128AF3FDC820BF59D5DE86D973E7DE3F20C3AEBA_inline (const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 Transform_get_up_mE47A9D9D96422224DD0539AA5524DA5440145BB2 (Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* __this, const RuntimeMethod* method) ;
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void Vector3_Normalize_mC749B887A4C74BA0A2E13E6377F17CCAEB0AADA8_inline (Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2* __this, const RuntimeMethod* method) ;
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR float Vector3_Dot_mBB86BB940AA0A32FA7D3C02AC42E5BC7095A5D52_inline (Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___0_lhs, Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___1_rhs, const RuntimeMethod* method) ;
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR float Mathf_Clamp01_mA7E048DBDA832D399A581BE4D6DED9FA44CE0F14_inline (float ___0_value, const RuntimeMethod* method) ;
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 Vector3_get_normalized_m736BBF65D5CDA7A18414370D15B4DFCC1E466F07_inline (Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2* __this, const RuntimeMethod* method) ;
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 Vector3_Cross_mF93A280558BCE756D13B6CC5DCD7DE8A43148987_inline (Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___0_lhs, Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___1_rhs, const RuntimeMethod* method) ;
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 Vector3_op_Multiply_m87BA7C578F96C8E49BB07088DAAC4649F83B0353_inline (Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___0_a, float ___1_d, const RuntimeMethod* method) ;
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 Vector3_op_Addition_m78C0EC70CB66E8DCAC225743D82B268DAEE92067_inline (Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___0_a, Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___1_b, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR int32_t LineRenderer_get_positionCount_m4A22C49D951AB145A0AB133FCEA5C10880390FE4 (LineRenderer_tEFEF960672DB69CB14B6D181FAE6292F0CF8B63D* __this, const RuntimeMethod* method) ;
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR float Vector3_Distance_m2314DB9B8BD01157E013DF87BEA557375C7F9FF9_inline (Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___0_a, Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___1_b, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void LineDrawing_TriggerHaptics_m7AC7DEE7DC040AE6BAC8ABF7D702FFA794D473F3 (LineDrawing_tA95DF0BD37C7F4C0EC6C561E5D3D2F0B3BCEFE08* __this, StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A* ___0_handler, const RuntimeMethod* method) ;
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 Vector3_op_Subtraction_mE42023FF80067CB44A1D4A27EB7CF2B24CABB828_inline (Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___0_a, Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___1_b, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 LineDrawing_ApplyTwistOffset_m79811F548DDCB501A086473148757FE8D68EE5E7 (LineDrawing_tA95DF0BD37C7F4C0EC6C561E5D3D2F0B3BCEFE08* __this, Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___0_position, Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___1_direction, float ___2_tiltNormalized, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR float Math_Max_mB55ACEA482E7F67E61496C4C7C54FE0BB7BE78EA (float ___0_val1, float ___1_val2, const RuntimeMethod* method) ;
+inline void List_1_Add_m2F86E252D086E288E02FA1C830B7E86C0A431E51_inline (List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* __this, float ___0_item, const RuntimeMethod* method)
+{
+	((  void (*) (List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918*, float, const RuntimeMethod*))List_1_Add_m2F86E252D086E288E02FA1C830B7E86C0A431E51_gshared_inline)(__this, ___0_item, method);
+}
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void LineRenderer_SetPosition_m84C4AD9ADC6AC62B33DB4D7E4C9F066DFF8440C1 (LineRenderer_tEFEF960672DB69CB14B6D181FAE6292F0CF8B63D* __this, int32_t ___0_index, Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___1_position, const RuntimeMethod* method) ;
+inline void List_1_Add_m79E50C4F592B1703F4B76A8BE7B4855515460CA1_inline (List_1_t77B94703E05C519A9010DD0614F757F974E1CD8B* __this, Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___0_item, const RuntimeMethod* method)
+{
+	((  void (*) (List_1_t77B94703E05C519A9010DD0614F757F974E1CD8B*, Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2, const RuntimeMethod*))List_1_Add_m79E50C4F592B1703F4B76A8BE7B4855515460CA1_gshared_inline)(__this, ___0_item, method);
+}
+inline int32_t List_1_get_Count_m545762F67009314D9C63DD209B42FFF950569B05_inline (List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* __this, const RuntimeMethod* method)
+{
+	return ((  int32_t (*) (List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918*, const RuntimeMethod*))List_1_get_Count_m545762F67009314D9C63DD209B42FFF950569B05_gshared_inline)(__this, method);
+}
+inline float List_1_get_Item_mFE556F47C4CD09EAC6C898EF39D4A8EC112CFC50 (List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* __this, int32_t ___0_index, const RuntimeMethod* method)
+{
+	return ((  float (*) (List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918*, int32_t, const RuntimeMethod*))List_1_get_Item_mFE556F47C4CD09EAC6C898EF39D4A8EC112CFC50_gshared)(__this, ___0_index, method);
+}
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR int32_t AnimationCurve_AddKey_mCA9B224D2D4721FB676505CEC6AA4FDCCC58C15B (AnimationCurve_tCBFFAAD05CEBB35EF8D8631BD99914BE1A6BB354* __this, float ___0_time, float ___1_value, const RuntimeMethod* method) ;
+inline int32_t List_1_get_Count_m46EEFFA770BE665EA0CB3A5332E941DA4B3C1D37_inline (List_1_t77B94703E05C519A9010DD0614F757F974E1CD8B* __this, const RuntimeMethod* method)
+{
+	return ((  int32_t (*) (List_1_t77B94703E05C519A9010DD0614F757F974E1CD8B*, const RuntimeMethod*))List_1_get_Count_m46EEFFA770BE665EA0CB3A5332E941DA4B3C1D37_gshared_inline)(__this, method);
+}
+inline Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 List_1_get_Item_m8F2E15FC96DA75186C51228128A0660709E4E810 (List_1_t77B94703E05C519A9010DD0614F757F974E1CD8B* __this, int32_t ___0_index, const RuntimeMethod* method)
+{
+	return ((  Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 (*) (List_1_t77B94703E05C519A9010DD0614F757F974E1CD8B*, int32_t, const RuntimeMethod*))List_1_get_Item_m8F2E15FC96DA75186C51228128A0660709E4E810_gshared)(__this, ___0_index, method);
+}
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void LineStrokeData__ctor_mF08E522BAAFCDACF1785489F1A6F219B175A7C95 (LineStrokeData_t096A2E61000991AF1A1E54177DB496F7847C7C2B* __this, List_1_t77B94703E05C519A9010DD0614F757F974E1CD8B* ___0_points, List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* ___1_pressures, List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* ___2_tilts, float ___3_totalLength, const RuntimeMethod* method) ;
+inline LoopSound_t0F81954F3F93403FEC588C98AAD22BF92DC6E075* GameObject_AddComponent_TisLoopSound_t0F81954F3F93403FEC588C98AAD22BF92DC6E075_m33526A3506174DDD56F6C21C2221ACBDE43A1B21 (GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* __this, const RuntimeMethod* method)
+{
+	return ((  LoopSound_t0F81954F3F93403FEC588C98AAD22BF92DC6E075* (*) (GameObject_t76FEDD663AB33C991A9C9A23129337651094216F*, const RuntimeMethod*))GameObject_AddComponent_TisRuntimeObject_m69B93700FACCF372F5753371C6E8FB780800B824_gshared)(__this, method);
+}
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void LoopSound_Initialize_mC9C88F891A6D8CF3E23990948B0DB5A532D8A466 (LoopSound_t0F81954F3F93403FEC588C98AAD22BF92DC6E075* __this, LineStrokeData_t096A2E61000991AF1A1E54177DB496F7847C7C2B* ___0_stroke, LoopSoundSettings_tCE8CCF7BF33FB6B89FB05D9D69B17346365EADA5 ___1_settings, const RuntimeMethod* method) ;
+inline void List_1_Add_mA34954E10092F642DB14666D1492C78EF211E314_inline (List_1_tEBA944EB098597668737638C5527516C00F5CF52* __this, LoopSound_t0F81954F3F93403FEC588C98AAD22BF92DC6E075* ___0_item, const RuntimeMethod* method)
+{
+	((  void (*) (List_1_tEBA944EB098597668737638C5527516C00F5CF52*, LoopSound_t0F81954F3F93403FEC588C98AAD22BF92DC6E075*, const RuntimeMethod*))List_1_Add_mEBCF994CC3814631017F46A387B1A192ED6C85C7_gshared_inline)(__this, ___0_item, method);
+}
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR LoopSound_t0F81954F3F93403FEC588C98AAD22BF92DC6E075* LineDrawing_FindClosestLoop_m92C66C323FC51B0CD29DE3E0791C8B81AB0A2D63 (LineDrawing_tA95DF0BD37C7F4C0EC6C561E5D3D2F0B3BCEFE08* __this, LineStrokeData_t096A2E61000991AF1A1E54177DB496F7847C7C2B* ___0_strokeData, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* LoopSound_AddDetailStroke_mD8C8980944D3029E0355391426A47B0F2E74C2FD (LoopSound_t0F81954F3F93403FEC588C98AAD22BF92DC6E075* __this, LineStrokeData_t096A2E61000991AF1A1E54177DB496F7847C7C2B* ___0_detailStroke, const RuntimeMethod* method) ;
+inline LoopDetailStroke_tE17493DBF0EBF02DA61B6BF1A487624E4E08809F* GameObject_AddComponent_TisLoopDetailStroke_tE17493DBF0EBF02DA61B6BF1A487624E4E08809F_m90DDB994C2585DF96132E472190F8BD0D330CD12 (GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* __this, const RuntimeMethod* method)
+{
+	return ((  LoopDetailStroke_tE17493DBF0EBF02DA61B6BF1A487624E4E08809F* (*) (GameObject_t76FEDD663AB33C991A9C9A23129337651094216F*, const RuntimeMethod*))GameObject_AddComponent_TisRuntimeObject_m69B93700FACCF372F5753371C6E8FB780800B824_gshared)(__this, method);
+}
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void LoopDetailStroke_Initialize_m3F9BB86F861C7A38D132E227A42A23FC20BDF6EC (LoopDetailStroke_tE17493DBF0EBF02DA61B6BF1A487624E4E08809F* __this, LoopSound_t0F81954F3F93403FEC588C98AAD22BF92DC6E075* ___0_loopSound, List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* ___1_addedSpikes, const RuntimeMethod* method) ;
+inline LoopSound_t0F81954F3F93403FEC588C98AAD22BF92DC6E075* List_1_get_Item_mA00B0BFC0A755EABBFD27C39FDE58635A4DB91F7 (List_1_tEBA944EB098597668737638C5527516C00F5CF52* __this, int32_t ___0_index, const RuntimeMethod* method)
+{
+	return ((  LoopSound_t0F81954F3F93403FEC588C98AAD22BF92DC6E075* (*) (List_1_tEBA944EB098597668737638C5527516C00F5CF52*, int32_t, const RuntimeMethod*))List_1_get_Item_m33561245D64798C2AB07584C0EC4F240E4839A38_gshared)(__this, ___0_index, method);
+}
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 LoopSound_get_Center_m6C8534417D76328D4F94C2AE9608C8891B06E953_inline (LoopSound_t0F81954F3F93403FEC588C98AAD22BF92DC6E075* __this, const RuntimeMethod* method) ;
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR float LoopSound_get_AverageRadius_mCA57CE0F7D8E84788E15F256B3C67AAD93E13033_inline (LoopSound_t0F81954F3F93403FEC588C98AAD22BF92DC6E075* __this, const RuntimeMethod* method) ;
+inline int32_t List_1_get_Count_mEBB81A3F6DE82682216332309FBC6DF56B9BB49A_inline (List_1_tEBA944EB098597668737638C5527516C00F5CF52* __this, const RuntimeMethod* method)
+{
+	return ((  int32_t (*) (List_1_tEBA944EB098597668737638C5527516C00F5CF52*, const RuntimeMethod*))List_1_get_Count_m4407E4C389F22B8CEC282C15D56516658746C383_gshared_inline)(__this, method);
+}
+inline int32_t List_1_get_Count_m4C37ED2D928D63B80F55AF434730C2D64EEB9F22_inline (List_1_tB951CE80B58D1BF9650862451D8DAD8C231F207B* __this, const RuntimeMethod* method)
+{
+	return ((  int32_t (*) (List_1_tB951CE80B58D1BF9650862451D8DAD8C231F207B*, const RuntimeMethod*))List_1_get_Count_m4407E4C389F22B8CEC282C15D56516658746C383_gshared_inline)(__this, method);
+}
+inline GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* List_1_get_Item_mE8DBE527F24D9CFED839C34216C475B716169979 (List_1_tB951CE80B58D1BF9650862451D8DAD8C231F207B* __this, int32_t ___0_index, const RuntimeMethod* method)
+{
+	return ((  GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* (*) (List_1_tB951CE80B58D1BF9650862451D8DAD8C231F207B*, int32_t, const RuntimeMethod*))List_1_get_Item_m33561245D64798C2AB07584C0EC4F240E4839A38_gshared)(__this, ___0_index, method);
+}
+inline void List_1_RemoveAt_m3196E18C5CF157CAC58991FACEB9DFD441702260 (List_1_tB951CE80B58D1BF9650862451D8DAD8C231F207B* __this, int32_t ___0_index, const RuntimeMethod* method)
+{
+	((  void (*) (List_1_tB951CE80B58D1BF9650862451D8DAD8C231F207B*, int32_t, const RuntimeMethod*))List_1_RemoveAt_m54F62297ADEE4D4FDA697F49ED807BF901201B54_gshared)(__this, ___0_index, method);
+}
+inline LoopSound_t0F81954F3F93403FEC588C98AAD22BF92DC6E075* GameObject_GetComponent_TisLoopSound_t0F81954F3F93403FEC588C98AAD22BF92DC6E075_m0CB54D899B3BF398BC29F33A378A6B3B336E2C0C (GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* __this, const RuntimeMethod* method)
+{
+	return ((  LoopSound_t0F81954F3F93403FEC588C98AAD22BF92DC6E075* (*) (GameObject_t76FEDD663AB33C991A9C9A23129337651094216F*, const RuntimeMethod*))GameObject_GetComponent_TisRuntimeObject_m6EAED4AA356F0F48288F67899E5958792395563B_gshared)(__this, method);
+}
+inline bool List_1_Remove_mEDB198A5CB82CBAF3569359E9402E9B61FE53136 (List_1_tEBA944EB098597668737638C5527516C00F5CF52* __this, LoopSound_t0F81954F3F93403FEC588C98AAD22BF92DC6E075* ___0_item, const RuntimeMethod* method)
+{
+	return ((  bool (*) (List_1_tEBA944EB098597668737638C5527516C00F5CF52*, LoopSound_t0F81954F3F93403FEC588C98AAD22BF92DC6E075*, const RuntimeMethod*))List_1_Remove_m4DFA48F4CEB9169601E75FC28517C5C06EFA5AD7_gshared)(__this, ___0_item, method);
+}
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void Object_Destroy_mE97D0A766419A81296E8D4E5C23D01D3FE91ACBB (Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C* ___0_obj, const RuntimeMethod* method) ;
+inline Enumerator_t88BD1282EF117E59AACFC9EC55B89F0B9EDACE60 List_1_GetEnumerator_mA843D26C63E5963415DFCA6E49DFA27AFD9C75E8 (List_1_tB951CE80B58D1BF9650862451D8DAD8C231F207B* __this, const RuntimeMethod* method)
+{
+	return ((  Enumerator_t88BD1282EF117E59AACFC9EC55B89F0B9EDACE60 (*) (List_1_tB951CE80B58D1BF9650862451D8DAD8C231F207B*, const RuntimeMethod*))List_1_GetEnumerator_mD8294A7FA2BEB1929487127D476F8EC1CDC23BFC_gshared)(__this, method);
+}
+inline void Enumerator_Dispose_m07D362A07C19B36C2FD1B4DC79DD99903D4DA95D (Enumerator_t88BD1282EF117E59AACFC9EC55B89F0B9EDACE60* __this, const RuntimeMethod* method)
+{
+	((  void (*) (Enumerator_t88BD1282EF117E59AACFC9EC55B89F0B9EDACE60*, const RuntimeMethod*))Enumerator_Dispose_mD9DC3E3C3697830A4823047AB29A77DBBB5ED419_gshared)(__this, method);
+}
+inline GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* Enumerator_get_Current_m7236EBE1CFCB6533F96E030500D322B13D0CA5A4_inline (Enumerator_t88BD1282EF117E59AACFC9EC55B89F0B9EDACE60* __this, const RuntimeMethod* method)
+{
+	return ((  GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* (*) (Enumerator_t88BD1282EF117E59AACFC9EC55B89F0B9EDACE60*, const RuntimeMethod*))Enumerator_get_Current_m6330F15D18EE4F547C05DF9BF83C5EB710376027_gshared_inline)(__this, method);
+}
+inline bool Enumerator_MoveNext_m96F4B0BD0A5485C8E8CC57D961DF6F1FA256AF27 (Enumerator_t88BD1282EF117E59AACFC9EC55B89F0B9EDACE60* __this, const RuntimeMethod* method)
+{
+	return ((  bool (*) (Enumerator_t88BD1282EF117E59AACFC9EC55B89F0B9EDACE60*, const RuntimeMethod*))Enumerator_MoveNext_mE921CC8F29FBBDE7CC3209A0ED0D921D58D00BCB_gshared)(__this, method);
+}
+inline void List_1_Clear_m32D399BDD753B5BD6CE27560249096418F3F0867_inline (List_1_tB951CE80B58D1BF9650862451D8DAD8C231F207B* __this, const RuntimeMethod* method)
+{
+	((  void (*) (List_1_tB951CE80B58D1BF9650862451D8DAD8C231F207B*, const RuntimeMethod*))List_1_Clear_m16C1F2C61FED5955F10EB36BC1CB2DF34B128994_gshared_inline)(__this, method);
+}
+inline void List_1_Clear_m391BF836F93BEF5D0DAAE5BF67815BE73DFD28E2_inline (List_1_tEBA944EB098597668737638C5527516C00F5CF52* __this, const RuntimeMethod* method)
+{
+	((  void (*) (List_1_tEBA944EB098597668737638C5527516C00F5CF52*, const RuntimeMethod*))List_1_Clear_m16C1F2C61FED5955F10EB36BC1CB2DF34B128994_gshared_inline)(__this, method);
+}
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A* LineDrawing_ResolveActiveHandler_m85E54087B8161D1BF3A803D391BBB94804B53449 (LineDrawing_tA95DF0BD37C7F4C0EC6C561E5D3D2F0B3BCEFE08* __this, const RuntimeMethod* method) ;
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR float Mathf_Max_mF5379E63D2BBAC76D090748695D833934F8AD051_inline (float ___0_a, float ___1_b, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR float LineDrawing_GetTiltNormalized_m1E95D483B20DA0F97A002B8CCED5DD23BC8D9DD8 (LineDrawing_tA95DF0BD37C7F4C0EC6C561E5D3D2F0B3BCEFE08* __this, StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A* ___0_handler, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void LineDrawing_StartNewLine_m7DCD60DF944B83E83AEDE38A78E1B0384306C78F (LineDrawing_tA95DF0BD37C7F4C0EC6C561E5D3D2F0B3BCEFE08* __this, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void LineDrawing_AddPoint_m5F45EDB3398ACADF246568F788C91E5A0278A344 (LineDrawing_tA95DF0BD37C7F4C0EC6C561E5D3D2F0B3BCEFE08* __this, StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A* ___0_handler, Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___1_position, float ___2_pressureNormalized, float ___3_tiltNormalized, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void LineDrawing_FinalizeLine_m6EF04D9F7DB85BFE9E3A4D6AF8120FF59C22B1A3 (LineDrawing_tA95DF0BD37C7F4C0EC6C561E5D3D2F0B3BCEFE08* __this, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR float Time_get_time_m3A271BB1B20041144AC5B7863B71AB1F0150374B (const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void LineDrawing_RemoveLastLine_mECCA199341DEC08EED532EEFCCC4CE50AEAE664F (LineDrawing_tA95DF0BD37C7F4C0EC6C561E5D3D2F0B3BCEFE08* __this, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void LineDrawing_ClearAllLines_m6A1C7B193179C39CC53D35AFD7DBD26E9A1325F2 (LineDrawing_tA95DF0BD37C7F4C0EC6C561E5D3D2F0B3BCEFE08* __this, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR bool LineDrawing_IsHandlerActive_m866A697F1E17E8E4F3F95E33AAFF6B7F5D640ACA (LineDrawing_tA95DF0BD37C7F4C0EC6C561E5D3D2F0B3BCEFE08* __this, StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A* ___0_handler, const RuntimeMethod* method) ;
+inline void List_1__ctor_m447372C1EF7141193B93090A77395B786C72C7BC (List_1_tB951CE80B58D1BF9650862451D8DAD8C231F207B* __this, const RuntimeMethod* method)
+{
+	((  void (*) (List_1_tB951CE80B58D1BF9650862451D8DAD8C231F207B*, const RuntimeMethod*))List_1__ctor_m7F078BB342729BDF11327FD89D7872265328F690_gshared)(__this, method);
+}
+inline void List_1__ctor_m0F0ABB69F11B026B32E788D99A217A5384636C7D (List_1_tEBA944EB098597668737638C5527516C00F5CF52* __this, const RuntimeMethod* method)
+{
+	((  void (*) (List_1_tEBA944EB098597668737638C5527516C00F5CF52*, const RuntimeMethod*))List_1__ctor_m7F078BB342729BDF11327FD89D7872265328F690_gshared)(__this, method);
+}
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR LoopSoundSettings_tCE8CCF7BF33FB6B89FB05D9D69B17346365EADA5 LoopSoundSettings_CreateDefault_m3F6871635F06F5F9F80A2A7B94F84255B02775F8 (const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void MonoBehaviour__ctor_m592DB0105CA0BC97AA1C5F4AD27B12D68A3B7C1E (MonoBehaviour_t532A11E69716D348D8AA7F854AFCBFCB8AD17F71* __this, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void Object__ctor_mE837C6B9FA8C6D5D109F4B2EC885D79919AC0EA2 (RuntimeObject* __this, const RuntimeMethod* method) ;
+inline void List_1__ctor_mC734A32FAD92BD7492907D4733032FD21348EECD (List_1_t77B94703E05C519A9010DD0614F757F974E1CD8B* __this, RuntimeObject* ___0_collection, const RuntimeMethod* method)
+{
+	((  void (*) (List_1_t77B94703E05C519A9010DD0614F757F974E1CD8B*, RuntimeObject*, const RuntimeMethod*))List_1__ctor_mC734A32FAD92BD7492907D4733032FD21348EECD_gshared)(__this, ___0_collection, method);
+}
+inline void List_1__ctor_m8C289AC1BF84CD8ED45F520DC3005096E1A9A37F (List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* __this, RuntimeObject* ___0_collection, const RuntimeMethod* method)
+{
+	((  void (*) (List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918*, RuntimeObject*, const RuntimeMethod*))List_1__ctor_m8C289AC1BF84CD8ED45F520DC3005096E1A9A37F_gshared)(__this, ___0_collection, method);
+}
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 Vector3_op_Division_mCC6BB24E372AB96B8380D1678446EF6A8BAE13BB_inline (Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___0_a, float ___1_d, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void LoopSound_RemoveSpikes_mB7609F57A0FF4094EC49033AA63499058E80565D (LoopSound_t0F81954F3F93403FEC588C98AAD22BF92DC6E075* __this, List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* ___0_spikeTimesNormalized, const RuntimeMethod* method) ;
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void Vector2__ctor_m9525B79969AFFE3254B303A40997A56DEEB6F548_inline (Vector2_t1FD6F485C871E832B347AB2DC8CBA08B739D8DF7* __this, float ___0_x, float ___1_y, const RuntimeMethod* method) ;
+inline AudioSource_t871AC2272F896738252F04EE949AEF5B241D3299* Component_GetComponent_TisAudioSource_t871AC2272F896738252F04EE949AEF5B241D3299_m42DA4DEA19EB60D80CBED7413ADEB27FA033C77B (Component_t39FBE53E5EFCF4409111FB22C15FF73717632EC3* __this, const RuntimeMethod* method)
+{
+	return ((  AudioSource_t871AC2272F896738252F04EE949AEF5B241D3299* (*) (Component_t39FBE53E5EFCF4409111FB22C15FF73717632EC3*, const RuntimeMethod*))Component_GetComponent_TisRuntimeObject_m7181F81CAEC2CF53F5D2BC79B7425C16E1F80D33_gshared)(__this, method);
+}
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void LoopSound_ComputeLoopPlane_m1DC01AB87A95A27C317084F8C36963D636F67276 (LoopSound_t0F81954F3F93403FEC588C98AAD22BF92DC6E075* __this, const RuntimeMethod* method) ;
+inline void List_1_Clear_m6CD2E5AAE6552A27AECCC57936767B4DCFC902B1_inline (List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* __this, const RuntimeMethod* method)
+{
+	((  void (*) (List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918*, const RuntimeMethod*))List_1_Clear_m6CD2E5AAE6552A27AECCC57936767B4DCFC902B1_gshared_inline)(__this, method);
+}
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* LoopSoundUtils_DetectSpikeTimesByPath_m0224425C31CA995D382379FFEABECA5834120A04 (LineStrokeData_t096A2E61000991AF1A1E54177DB496F7847C7C2B* ___0_stroke, float ___1_angleThresholdDegrees, float ___2_minSegmentLength, int32_t ___3_minIndexGap, const RuntimeMethod* method) ;
+inline void List_1_AddRange_m33C111258C9CCD3FF30107B1A81472DAD342F7AF (List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* __this, RuntimeObject* ___0_collection, const RuntimeMethod* method)
+{
+	((  void (*) (List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918*, RuntimeObject*, const RuntimeMethod*))List_1_AddRange_m33C111258C9CCD3FF30107B1A81472DAD342F7AF_gshared)(__this, ___0_collection, method);
+}
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void LoopSound_NormalizeSpikeTimes_m5068C67775BB8F2948B66C61051F774EE31CF1A2 (LoopSound_t0F81954F3F93403FEC588C98AAD22BF92DC6E075* __this, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void LoopSound_BuildClip_m1801029663B00CD0DB5B6631CB3737D87A7F56F9 (LoopSound_t0F81954F3F93403FEC588C98AAD22BF92DC6E075* __this, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* LoopSoundUtils_MapDetailStrokeToTimes_mA2C52F5AD23130D13EB4387CF3D791744DD8E022 (LineStrokeData_t096A2E61000991AF1A1E54177DB496F7847C7C2B* ___0_detailStroke, Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___1_center, Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___2_axisX, Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___3_axisY, float ___4_angleThresholdDegrees, float ___5_minSegmentLength, int32_t ___6_minIndexGap, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR int32_t LineStrokeData_get_Count_mF86DFB2B4C0DF8BDDCE856B495E04C959E8B4407 (LineStrokeData_t096A2E61000991AF1A1E54177DB496F7847C7C2B* __this, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR float LoopSoundUtils_MapPointToLoopTime_mDD69ECAC6D9A375A9A225DFE7DFD774CACE00BD9 (Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___0_point, Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___1_center, Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___2_axisX, Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___3_axisY, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void LoopSound_AddSpikes_m7400FEC5582798E35210C260F5F1B8A0D86256A3 (LoopSound_t0F81954F3F93403FEC588C98AAD22BF92DC6E075* __this, List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* ___0_spikeTimesNormalized, const RuntimeMethod* method) ;
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR float Mathf_Repeat_m6F1560A163481BB311D685294E1B463C3E4EB3BA_inline (float ___0_t, float ___1_length, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR bool LoopSound_ContainsSpike_m60CC6FE18D73447F11924B69B2C4E332FB2BD2BE (LoopSound_t0F81954F3F93403FEC588C98AAD22BF92DC6E075* __this, float ___0_normalizedTime, const RuntimeMethod* method) ;
+inline void List_1_RemoveAt_m02AAC9739BBFB220DD397843A7825154D07F2C93 (List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* __this, int32_t ___0_index, const RuntimeMethod* method)
+{
+	((  void (*) (List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918*, int32_t, const RuntimeMethod*))List_1_RemoveAt_m02AAC9739BBFB220DD397843A7825154D07F2C93_gshared)(__this, ___0_index, method);
+}
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 LoopSoundUtils_ComputePlaneNormal_m19A5E73EA9E82F211C25F7489745225E5D011711 (RuntimeObject* ___0_points, const RuntimeMethod* method) ;
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 Vector3_ProjectOnPlane_m68FB895F6E9FCC45676BB8B95857D091C0D78794_inline (Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___0_vector, Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___1_planeNormal, const RuntimeMethod* method) ;
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 Vector3_get_right_mFF573AFBBB2186E7AFA1BA7CA271A78DF67E4EA0_inline (const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void Transform_set_position_mA1A817124BB41B685043DED2A9BA48CDF37C4156 (Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* __this, Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___0_value, const RuntimeMethod* method) ;
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR float Mathf_Clamp_mEB9AEA827D27D20FCC787F7375156AF46BB12BBF_inline (float ___0_value, float ___1_min, float ___2_max, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR int32_t AudioSettings_get_outputSampleRate_mEACF8FD7BFDFBD76EB8FC7E438B3AF19DB57BC6D (const RuntimeMethod* method) ;
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR int32_t Mathf_CeilToInt_mF2BF9F4261B3431DC20E10A46CFEEED103C48963_inline (float ___0_f, const RuntimeMethod* method) ;
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR int32_t Mathf_Max_m7FA442918DE37E3A00106D1F2E789D65829792B8_inline (int32_t ___0_a, int32_t ___1_b, const RuntimeMethod* method) ;
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR float Mathf_InverseLerp_mBD7EC6A7173CE082226077E1557D5BC2D2AE0D9D_inline (float ___0_a, float ___1_b, float ___2_value, const RuntimeMethod* method) ;
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR float Mathf_Lerp_m47EF2FFB7647BD0A1FDC26DC03E28B19812139B5_inline (float ___0_a, float ___1_b, float ___2_t, const RuntimeMethod* method) ;
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR float Mathf_Sign_m42EE1F0BC041AF14F89DED7F762BE996E2C50D8A_inline (float ___0_f, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR AudioClip_t5D272C4EB4F2D3ED49F1C346DEA373CF6D585F20* AudioSource_get_clip_m4F5027066F9FC44B44192713142B0C277BB418FE (AudioSource_t871AC2272F896738252F04EE949AEF5B241D3299* __this, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR AudioClip_t5D272C4EB4F2D3ED49F1C346DEA373CF6D585F20* AudioClip_Create_mE8111F06981E42666B6A9A59D0A3EBE002D2CDFB (String_t* ___0_name, int32_t ___1_lengthSamples, int32_t ___2_channels, int32_t ___3_frequency, bool ___4_stream, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR bool AudioClip_SetData_m7B473C614C11953D746770F4F89B44600B5A6AF3 (AudioClip_t5D272C4EB4F2D3ED49F1C346DEA373CF6D585F20* __this, SingleU5BU5D_t89DEFE97BCEDB5857010E79ECE0F52CF6E93B87C* ___0_data, int32_t ___1_offsetSamples, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void AudioSource_set_clip_mFF441895E274286C88D9C75ED5CA1B1B39528D70 (AudioSource_t871AC2272F896738252F04EE949AEF5B241D3299* __this, AudioClip_t5D272C4EB4F2D3ED49F1C346DEA373CF6D585F20* ___0_value, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void AudioSource_set_loop_m834A590939D8456008C0F897FD80B0ECFFB7FE56 (AudioSource_t871AC2272F896738252F04EE949AEF5B241D3299* __this, bool ___0_value, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void AudioSource_set_spatialBlend_mCEE7A3E87A8C146E048B2CA3413FDC7BDB7BE001 (AudioSource_t871AC2272F896738252F04EE949AEF5B241D3299* __this, float ___0_value, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void AudioSource_set_minDistance_m6CBE3A60C03C0F179192FBDD62095B2E9D717690 (AudioSource_t871AC2272F896738252F04EE949AEF5B241D3299* __this, float ___0_value, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void AudioSource_set_maxDistance_m4BF310D54761500A77A6C4841A0BBDBD09225813 (AudioSource_t871AC2272F896738252F04EE949AEF5B241D3299* __this, float ___0_value, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void AudioSource_Play_m95DF07111C61D0E0F00257A00384D31531D590C3 (AudioSource_t871AC2272F896738252F04EE949AEF5B241D3299* __this, const RuntimeMethod* method) ;
+inline void List_1_Sort_m80C2D113831377D60288F94CD0206605822F5C96 (List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* __this, const RuntimeMethod* method)
+{
+	((  void (*) (List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918*, const RuntimeMethod*))List_1_Sort_m80C2D113831377D60288F94CD0206605822F5C96_gshared)(__this, method);
+}
+inline void List_1__ctor_m17F501B5A5C289ECE1B4F3D6EBF05DFA421433F8 (List_1_t05915E9237850A58106982B7FE4BC5DA4E872E73* __this, const RuntimeMethod* method)
+{
+	((  void (*) (List_1_t05915E9237850A58106982B7FE4BC5DA4E872E73*, const RuntimeMethod*))List_1__ctor_m17F501B5A5C289ECE1B4F3D6EBF05DFA421433F8_gshared)(__this, method);
+}
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR float Vector3_get_magnitude_mF0D6017E90B345F1F52D1CC564C640F1A847AF2D_inline (Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2* __this, const RuntimeMethod* method) ;
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR float Vector3_Angle_mB16906B482814C140FE5BA9D041D2DC11E42A68D_inline (Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___0_from, Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___1_to, const RuntimeMethod* method) ;
+inline void List_1_Add_m0248A96C5334E9A93E6994B7780478BCD994EA3D_inline (List_1_t05915E9237850A58106982B7FE4BC5DA4E872E73* __this, int32_t ___0_item, const RuntimeMethod* method)
+{
+	((  void (*) (List_1_t05915E9237850A58106982B7FE4BC5DA4E872E73*, int32_t, const RuntimeMethod*))List_1_Add_m0248A96C5334E9A93E6994B7780478BCD994EA3D_gshared_inline)(__this, ___0_item, method);
+}
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR List_1_t05915E9237850A58106982B7FE4BC5DA4E872E73* LoopSoundUtils_DetectSpikeIndices_m101E9BF4F7FCBAB3D88862D95C509887A0DDDD05 (RuntimeObject* ___0_points, float ___1_angleThresholdDegrees, float ___2_minSegmentLength, int32_t ___3_minIndexGap, const RuntimeMethod* method) ;
+inline int32_t List_1_get_Count_mF590592E32D421DE2C6E2F0D5C2F62FB14CCEFDF_inline (List_1_t05915E9237850A58106982B7FE4BC5DA4E872E73* __this, const RuntimeMethod* method)
+{
+	return ((  int32_t (*) (List_1_t05915E9237850A58106982B7FE4BC5DA4E872E73*, const RuntimeMethod*))List_1_get_Count_mF590592E32D421DE2C6E2F0D5C2F62FB14CCEFDF_gshared_inline)(__this, method);
+}
+inline void List_1_Sort_m6DA897B8E2A3434A84E3529FE9850B2773D88B65 (List_1_t05915E9237850A58106982B7FE4BC5DA4E872E73* __this, const RuntimeMethod* method)
+{
+	((  void (*) (List_1_t05915E9237850A58106982B7FE4BC5DA4E872E73*, const RuntimeMethod*))List_1_Sort_m6DA897B8E2A3434A84E3529FE9850B2773D88B65_gshared)(__this, method);
+}
+inline int32_t List_1_get_Item_mD99081BEFA1AB3526715F489192B0F7F596C183D (List_1_t05915E9237850A58106982B7FE4BC5DA4E872E73* __this, int32_t ___0_index, const RuntimeMethod* method)
+{
+	return ((  int32_t (*) (List_1_t05915E9237850A58106982B7FE4BC5DA4E872E73*, int32_t, const RuntimeMethod*))List_1_get_Item_mD99081BEFA1AB3526715F489192B0F7F596C183D_gshared)(__this, ___0_index, method);
+}
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void OVRInput_Update_m46BEA0A1B8C6592A25FBA12F61D471770EC72076 (const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR bool OVRInput_IsControllerConnected_mC3BA5BE3D3A5642D36965D4CD82525C989F85E9A (int32_t ___0_controller, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR bool OVRInput_GetControllerPositionTracked_mA3D8C4DFC17FB1808C78A865556E394BF565CF0A (int32_t ___0_controllerType, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR bool OVRInput_GetControllerOrientationTracked_m29C61E840A641F6639492E4AD2A852A786E6EC7F (int32_t ___0_controllerType, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 OVRInput_GetLocalControllerPosition_mD8A4504C441B477AB11C92CB7FBD561ECF15E253 (int32_t ___0_controllerType, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR Quaternion_tDA59F214EF07D7700B26E40E562F267AF7306974 OVRInput_GetLocalControllerRotation_mF2ECF5F8BBB3EF1CF9D4B5E0A1BEC6CA9036515F (int32_t ___0_controllerType, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* OculusControllerStylusHandler_GetTrackingSpace_m37A2F126182483D6895315F744A85A3DB04167D0 (OculusControllerStylusHandler_tEE66C8834517A788738007FC060C786ACDD8CE78* __this, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 Transform_TransformPoint_m05BFF013DB830D7BFE44A007703694AE1062EE44 (Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* __this, Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___0_position, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR Quaternion_tDA59F214EF07D7700B26E40E562F267AF7306974 Transform_get_rotation_m32AF40CA0D50C797DA639A696F8EAEC7524C179C (Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* __this, const RuntimeMethod* method) ;
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR Quaternion_tDA59F214EF07D7700B26E40E562F267AF7306974 Quaternion_op_Multiply_mCB375FCCC12A2EC8F9EB824A1BFB4453B58C2012_inline (Quaternion_tDA59F214EF07D7700B26E40E562F267AF7306974 ___0_lhs, Quaternion_tDA59F214EF07D7700B26E40E562F267AF7306974 ___1_rhs, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void Transform_set_rotation_m61340DE74726CF0F9946743A727C4D444397331D (Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* __this, Quaternion_tDA59F214EF07D7700B26E40E562F267AF7306974 ___0_value, const RuntimeMethod* method) ;
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR bool Vector3_op_Inequality_m9F170CDFBF1E490E559DA5D06D6547501A402BBF_inline (Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___0_lhs, Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___1_rhs, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 Transform_get_position_m69CD5FA214FDAE7BB701552943674846C220FDE1 (Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* __this, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 Quaternion_op_Multiply_mE1EBA73F9173432B50F8F17CE8190C5A7986FB8C (Quaternion_tDA59F214EF07D7700B26E40E562F267AF7306974 ___0_rotation, Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___1_point, const RuntimeMethod* method) ;
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR Quaternion_tDA59F214EF07D7700B26E40E562F267AF7306974 Quaternion_Euler_m5BCCC19216CFAD2426F15BC51A30421880D27B73_inline (Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___0_euler, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR float OVRInput_Get_m1FD85568F358C43019E09E48A7BEBD6CD7F7E5D8 (int32_t ___0_virtualMask, int32_t ___1_controllerMask, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR bool OVRInput_Get_m8CF227684F49E1C26239D78F826E11A956E909C1 (int32_t ___0_virtualMask, int32_t ___1_controllerMask, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR bool OVRInput_GetDown_mEC4F71AEC93D3AF1A041934CA4C61680C6DB9AC7 (int32_t ___0_virtualMask, int32_t ___1_controllerMask, const RuntimeMethod* method) ;
+inline OVRCameraRig_t7FC2BB0D30DED2B7F0C8914AF2B66E9F4CF891A9* Object_FindObjectOfType_TisOVRCameraRig_t7FC2BB0D30DED2B7F0C8914AF2B66E9F4CF891A9_m1564DCD77DA806C8E84BE6808F00823EBCA88234 (const RuntimeMethod* method)
+{
+	return ((  OVRCameraRig_t7FC2BB0D30DED2B7F0C8914AF2B66E9F4CF891A9* (*) (const RuntimeMethod*))Object_FindObjectOfType_TisRuntimeObject_m02DFBF011F3B59F777A5E521DB2A116DD496E968_gshared)(method);
+}
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* OVRCameraRig_get_trackingSpace_m76339871C7804C1BD14283FBF3D91268D4D87550_inline (OVRCameraRig_t7FC2BB0D30DED2B7F0C8914AF2B66E9F4CF891A9* __this, const RuntimeMethod* method) ;
+inline OVRManager_t21429E69CA88C5E9C6EE3AAB75EAFBE6E1B129D4* Object_FindObjectOfType_TisOVRManager_t21429E69CA88C5E9C6EE3AAB75EAFBE6E1B129D4_mD54C604B88A664C7C4D817124CF11D4586970E92 (const RuntimeMethod* method)
+{
+	return ((  OVRManager_t21429E69CA88C5E9C6EE3AAB75EAFBE6E1B129D4* (*) (const RuntimeMethod*))Object_FindObjectOfType_TisRuntimeObject_m02DFBF011F3B59F777A5E521DB2A116DD496E968_gshared)(method);
+}
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* Transform_Find_m3087032B0E1C5B96A2D2C27020BAEAE2DA08F932 (Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* __this, String_t* ___0_n, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void StylusHandler__ctor_mD36B13F50E27ED87A317197683C4A94C6757022C (StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A* __this, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* OVRPlugin_GetCurrentInteractionProfileName_mD5E8751B784BB81A10F86BB7ACE356514AAF07C3 (int32_t ___0_hand, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR bool String_Contains_m6D77B121FADA7CA5F397C0FABB65DA62DF03B6C3 (String_t* __this, String_t* ___0_value, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void GameObject_SetActive_m638E92E1E75E519E5B24CF150B08CA8E0CDFAB92 (GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* __this, bool ___0_value, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR bool OVRPlugin_GetActionStatePose_m6CBE651744A4D07BAB1E790FC70B34DDBF9B98BD (String_t* ___0_actionName, Posef_t51A2C10B4094B44A8D3C1913292B839172887B61* ___1_result, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 OVRExtensions_FromFlippedZVector3f_m32D17BCDA62BC3F8C9A6442F06A42BBE79140F62 (Vector3f_t232AF83B4642C67BE8EFF85D8E1599D3B06BD562 ___0_v, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void Transform_set_localPosition_mDE1C997F7D79C0885210B7732B4BA50EE7D73134 (Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* __this, Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___0_value, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR Quaternion_tDA59F214EF07D7700B26E40E562F267AF7306974 OVRExtensions_FromFlippedZQuatf_mF626F183B84EA8C08153550313227736286F2657 (Quatf_t5347392804DF5326AF790F82E4EDE1578FED682A ___0_q, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void Transform_set_localRotation_mAB4A011D134BA58AB780BECC0025CA65F16185FA (Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* __this, Quaternion_tDA59F214EF07D7700B26E40E562F267AF7306974 ___0_value, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 Transform_get_localPosition_mA9C86B990DF0685EA1061A120218993FDCC60A95 (Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* __this, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR Quaternion_tDA59F214EF07D7700B26E40E562F267AF7306974 Transform_get_localRotation_mD53D37611A5DAE93EC6C7BBCAC337408C5CACA77 (Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* __this, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR String_t* String_Concat_m8855A6DE10F84DA7F4EC113CADDB59873A25573B (String_t* ___0_str0, String_t* ___1_str1, String_t* ___2_str2, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void Debug_LogError_mB00B2B4468EF3CAF041B038D840820FB84C924B2 (RuntimeObject* ___0_message, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void VrStylusHandler_UpdatePose_m5F805CA2006EA007C1E6FCDE5636794A6865B28F (VrStylusHandler_t5EFDF8B65CF2D5BB08AA538FD3174E4F18848423* __this, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR bool OVRPlugin_GetActionStateFloat_m5FC2F0B3B7F1F2377DEA3C8F752ED4771893449E (String_t* ___0_actionName, float* ___1_result, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR bool OVRPlugin_GetActionStateBoolean_m173670791E80561162E8A97498CFCD5E1B94CF9C (String_t* ___0_actionName, bool* ___1_result, const RuntimeMethod* method) ;
+inline MeshRenderer_t4B7747212F0B88244BB7790C61AE124BFC15BAAE* GameObject_GetComponent_TisMeshRenderer_t4B7747212F0B88244BB7790C61AE124BFC15BAAE_m7FF948365C38BC39333D82B235A7C4EAD219960D (GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* __this, const RuntimeMethod* method)
+{
+	return ((  MeshRenderer_t4B7747212F0B88244BB7790C61AE124BFC15BAAE* (*) (GameObject_t76FEDD663AB33C991A9C9A23129337651094216F*, const RuntimeMethod*))GameObject_GetComponent_TisRuntimeObject_m6EAED4AA356F0F48288F67899E5958792395563B_gshared)(__this, method);
+}
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void VrStylusHandler_TriggerHapticClick_m86BB67DA5A5C0CA12FAE1A995C53930A444BBBA4 (VrStylusHandler_t5EFDF8B65CF2D5BB08AA538FD3174E4F18848423* __this, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR bool OVRPlugin_TriggerVibrationAction_mBAA4083A19B7C822C29935896D1475A032F42345 (String_t* ___0_actionName, int32_t ___1_hand, float ___2_duration, float ___3_amplitude, const RuntimeMethod* method) ;
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR Color_tD001788D726C3A7F1379BEED0260B9591F440C1F Color_get_green_mEB001F2CD8C68C6BBAEF9101990B779D3AA2A6EF_inline (const RuntimeMethod* method) ;
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR Color_tD001788D726C3A7F1379BEED0260B9591F440C1F Color_get_cyan_m182A29E7475C0A98ACC03E1CF5252BAB83F0BA31_inline (const RuntimeMethod* method) ;
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR Color_tD001788D726C3A7F1379BEED0260B9591F440C1F Color_get_white_m068F5AF879B0FCA584E3693F762EA41BB65532C6_inline (const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void ScriptableObject__ctor_mD037FDB0B487295EA47F79A4DB1BF1846C9087FF (ScriptableObject_tB3BFDB921A1B1795B38A5417D3B97A89A140436A* __this, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void RuntimeHelpers_InitializeArray_m751372AA3F24FBF6DA9B9D687CBFA2DE436CAB9B (RuntimeArray* ___0_array, RuntimeFieldHandle_t6E4C45B6D2EA12FC99185805A7E77527899B25C5 ___1_fldHandle, const RuntimeMethod* method) ;
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 Vector3_Normalize_m1DE89849FE2019B6AA0031306896F3B800849399_inline (Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2* ___0_value, const RuntimeMethod* method) ;
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR float Vector3_Dot_m9B5EBE36643126708DB3F444C59C11FA30803DBB_inline (Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2* ___0_lhs, Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2* ___1_rhs, const RuntimeMethod* method) ;
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR Quaternion_tDA59F214EF07D7700B26E40E562F267AF7306974 Quaternion_Internal_FromEulerRad_mD0C4C0EFE1D70EC0EA4A92B11F1A4D5B0A134E49 (Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2* ___0_euler, const RuntimeMethod* method) ;
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void Color__ctor_m3786F0D6E510D9CFA544523A955870BD2A514C8C_inline (Color_tD001788D726C3A7F1379BEED0260B9591F440C1F* __this, float ___0_r, float ___1_g, float ___2_b, float ___3_a, const RuntimeMethod* method) ;
+inline void List_1_AddWithResize_m79A9BF770BEF9C06BE40D5401E55E375F2726CC4 (List_1_tA239CB83DE5615F348BB0507E45F490F4F7C9A8D* __this, RuntimeObject* ___0_item, const RuntimeMethod* method)
+{
+	((  void (*) (List_1_tA239CB83DE5615F348BB0507E45F490F4F7C9A8D*, RuntimeObject*, const RuntimeMethod*))List_1_AddWithResize_m79A9BF770BEF9C06BE40D5401E55E375F2726CC4_gshared)(__this, ___0_item, method);
+}
+inline void List_1_AddWithResize_m446487BF7F55E757E7D552B2436AD74AC354EA99 (List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* __this, float ___0_item, const RuntimeMethod* method)
+{
+	((  void (*) (List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918*, float, const RuntimeMethod*))List_1_AddWithResize_m446487BF7F55E757E7D552B2436AD74AC354EA99_gshared)(__this, ___0_item, method);
+}
+inline void List_1_AddWithResize_mCDB189127FC2EE67B5EED9DE34F837DFC6EDC212 (List_1_t77B94703E05C519A9010DD0614F757F974E1CD8B* __this, Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___0_item, const RuntimeMethod* method)
+{
+	((  void (*) (List_1_t77B94703E05C519A9010DD0614F757F974E1CD8B*, Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2, const RuntimeMethod*))List_1_AddWithResize_mCDB189127FC2EE67B5EED9DE34F837DFC6EDC212_gshared)(__this, ___0_item, method);
+}
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void Array_Clear_m50BAA3751899858B097D3FF2ED31F284703FE5CB (RuntimeArray* ___0_array, int32_t ___1_index, int32_t ___2_length, const RuntimeMethod* method) ;
+inline void List_1_AddWithResize_m378B392086AAB6F400944FA9839516326B3F7BB8 (List_1_t05915E9237850A58106982B7FE4BC5DA4E872E73* __this, int32_t ___0_item, const RuntimeMethod* method)
+{
+	((  void (*) (List_1_t05915E9237850A58106982B7FE4BC5DA4E872E73*, int32_t, const RuntimeMethod*))List_1_AddWithResize_m378B392086AAB6F400944FA9839516326B3F7BB8_gshared)(__this, ___0_item, method);
+}
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Winvalid-offsetof"
+#pragma clang diagnostic ignored "-Wunused-variable"
+#endif
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Winvalid-offsetof"
+#pragma clang diagnostic ignored "-Wunused-variable"
+#endif
+// Method Definition Index: 128503
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR Color_tD001788D726C3A7F1379BEED0260B9591F440C1F LineDrawing_get_CurrentColor_mF72F05B0C09B8F07C2F14514DD36CE6BBAED39DC (LineDrawing_tA95DF0BD37C7F4C0EC6C561E5D3D2F0B3BCEFE08* __this, const RuntimeMethod* method) 
+{
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:25>
+		Color_tD001788D726C3A7F1379BEED0260B9591F440C1F L_0 = __this->____currentColor;
+		return L_0;
+	}
+}
+// Method Definition Index: 128504
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void LineDrawing_set_CurrentColor_m0325512D8D72B48E45636CE5310E93AD722F4044 (LineDrawing_tA95DF0BD37C7F4C0EC6C561E5D3D2F0B3BCEFE08* __this, Color_tD001788D726C3A7F1379BEED0260B9591F440C1F ___0_value, const RuntimeMethod* method) 
+{
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:28>
+		Color_tD001788D726C3A7F1379BEED0260B9591F440C1F L_0 = ___0_value;
+		__this->____currentColor = L_0;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:29>
+		return;
+	}
+}
+// Method Definition Index: 128505
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR float LineDrawing_get_MaxLineWidth_mFCA6D83FA657B249AA138B76061AC598E264622D (LineDrawing_tA95DF0BD37C7F4C0EC6C561E5D3D2F0B3BCEFE08* __this, const RuntimeMethod* method) 
+{
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:34>
+		float L_0 = __this->____maxLineWidth;
+		return L_0;
+	}
+}
+// Method Definition Index: 128506
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void LineDrawing_set_MaxLineWidth_mA92B8FD837DD8CF70C02CF66DE0E54DA5B66FB52 (LineDrawing_tA95DF0BD37C7F4C0EC6C561E5D3D2F0B3BCEFE08* __this, float ___0_value, const RuntimeMethod* method) 
+{
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:35>
+		float L_0 = ___0_value;
+		__this->____maxLineWidth = L_0;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:35>
+		return;
+	}
+}
+// Method Definition Index: 128507
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR bool LineDrawing_get_LineWidthIsFixed_m885E0CE2FC3608B971788DE46A6D7C7725C057E3 (LineDrawing_tA95DF0BD37C7F4C0EC6C561E5D3D2F0B3BCEFE08* __this, const RuntimeMethod* method) 
+{
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:41>
+		bool L_0 = __this->____lineWidthIsFixed;
+		return L_0;
+	}
+}
+// Method Definition Index: 128508
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void LineDrawing_set_LineWidthIsFixed_mA2A3EA26729967F3AC8E636CBA1317A024C63927 (LineDrawing_tA95DF0BD37C7F4C0EC6C561E5D3D2F0B3BCEFE08* __this, bool ___0_value, const RuntimeMethod* method) 
+{
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:42>
+		bool L_0 = ___0_value;
+		__this->____lineWidthIsFixed = L_0;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:42>
+		return;
+	}
+}
+// Method Definition Index: 128509
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void LineDrawing_Awake_mBBE1E3FD08C1F87901BBD1A9C7A3BAB155927542 (LineDrawing_tA95DF0BD37C7F4C0EC6C561E5D3D2F0B3BCEFE08* __this, const RuntimeMethod* method) 
+{
+	static bool s_Il2CppMethodInitialized;
+	if (!s_Il2CppMethodInitialized)
+	{
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&Component_GetComponent_TisOculusControllerStylusHandler_tEE66C8834517A788738007FC060C786ACDD8CE78_m6F964F4F013A5342B1705D8A713B7FB0C3656028_RuntimeMethod_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&GameObject_AddComponent_TisOculusControllerStylusHandler_tEE66C8834517A788738007FC060C786ACDD8CE78_mE5832C2322F5FE070BDB8FD59AC12D9B53465CA9_RuntimeMethod_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C_il2cpp_TypeInfo_var);
+		s_Il2CppMethodInitialized = true;
+	}
+	OculusControllerStylusHandler_tEE66C8834517A788738007FC060C786ACDD8CE78* V_0 = NULL;
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:77>
+		LoopSoundSettings_tCE8CCF7BF33FB6B89FB05D9D69B17346365EADA5 L_0 = __this->____loopSoundSettings;
+		LoopSoundSettings_tCE8CCF7BF33FB6B89FB05D9D69B17346365EADA5 L_1;
+		L_1 = LoopSoundSettings_Sanitize_m326F8A4901490EC3B773E1C1CCBA4041D756465D(L_0, NULL);
+		__this->____loopSoundSettings = L_1;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:78>
+		float L_2 = __this->____closeLoopDistance;
+		if ((!(((float)L_2) <= ((float)(0.0f)))))
+		{
+			goto IL_0029;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:80>
+		__this->____closeLoopDistance = (0.0199999996f);
+	}
+
+IL_0029:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:82>
+		int32_t L_3 = __this->____minLoopPoints;
+		if ((((int32_t)L_3) >= ((int32_t)4)))
+		{
+			goto IL_0039;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:84>
+		__this->____minLoopPoints = 4;
+	}
+
+IL_0039:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:86>
+		float L_4 = __this->____detailAttachDistance;
+		if ((!(((float)L_4) <= ((float)(0.0f)))))
+		{
+			goto IL_0051;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:88>
+		__this->____detailAttachDistance = (0.0500000007f);
+	}
+
+IL_0051:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:90>
+		float L_5 = __this->____twistOffsetStrength;
+		if ((!(((float)L_5) < ((float)(0.0f)))))
+		{
+			goto IL_0069;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:92>
+		__this->____twistOffsetStrength = (0.00300000003f);
+	}
+
+IL_0069:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:94>
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_6 = __this->____penAxis;
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_7;
+		L_7 = Vector3_get_zero_m0C1249C3F25B1C70EAD3CC8B31259975A457AE39_inline(NULL);
+		bool L_8;
+		L_8 = Vector3_op_Equality_mCDCBB8D2EDC3D3BF20F31A25ACB34705D352B479_inline(L_6, L_7, NULL);
+		if (!L_8)
+		{
+			goto IL_0086;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:96>
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_9;
+		L_9 = Vector3_get_forward_mAA55A7034304DF8B2152EAD49AE779FC4CA2EB4A_inline(NULL);
+		__this->____penAxis = L_9;
+	}
+
+IL_0086:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:99>
+		StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A* L_10 = __this->____fallbackHandler;
+		il2cpp_codegen_runtime_class_init_inline(Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C_il2cpp_TypeInfo_var);
+		bool L_11;
+		L_11 = Object_op_Equality_mB6120F782D83091EF56A198FCEBCF066DB4A9605(L_10, (Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C*)NULL, NULL);
+		if (!L_11)
+		{
+			goto IL_00bf;
+		}
+	}
+	{
+		bool L_12 = __this->____autoCreateOculusFallback;
+		if (!L_12)
+		{
+			goto IL_00bf;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:101>
+		OculusControllerStylusHandler_tEE66C8834517A788738007FC060C786ACDD8CE78* L_13;
+		L_13 = Component_GetComponent_TisOculusControllerStylusHandler_tEE66C8834517A788738007FC060C786ACDD8CE78_m6F964F4F013A5342B1705D8A713B7FB0C3656028(__this, Component_GetComponent_TisOculusControllerStylusHandler_tEE66C8834517A788738007FC060C786ACDD8CE78_m6F964F4F013A5342B1705D8A713B7FB0C3656028_RuntimeMethod_var);
+		V_0 = L_13;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:102>
+		OculusControllerStylusHandler_tEE66C8834517A788738007FC060C786ACDD8CE78* L_14 = V_0;
+		il2cpp_codegen_runtime_class_init_inline(Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C_il2cpp_TypeInfo_var);
+		bool L_15;
+		L_15 = Object_op_Equality_mB6120F782D83091EF56A198FCEBCF066DB4A9605(L_14, (Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C*)NULL, NULL);
+		if (!L_15)
+		{
+			goto IL_00b8;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:104>
+		GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* L_16;
+		L_16 = Component_get_gameObject_m57AEFBB14DB39EC476F740BA000E170355DE691B(__this, NULL);
+		NullCheck(L_16);
+		OculusControllerStylusHandler_tEE66C8834517A788738007FC060C786ACDD8CE78* L_17;
+		L_17 = GameObject_AddComponent_TisOculusControllerStylusHandler_tEE66C8834517A788738007FC060C786ACDD8CE78_mE5832C2322F5FE070BDB8FD59AC12D9B53465CA9(L_16, GameObject_AddComponent_TisOculusControllerStylusHandler_tEE66C8834517A788738007FC060C786ACDD8CE78_mE5832C2322F5FE070BDB8FD59AC12D9B53465CA9_RuntimeMethod_var);
+		V_0 = L_17;
+	}
+
+IL_00b8:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:106>
+		OculusControllerStylusHandler_tEE66C8834517A788738007FC060C786ACDD8CE78* L_18 = V_0;
+		__this->____fallbackHandler = L_18;
+		Il2CppCodeGenWriteBarrier((void**)(&__this->____fallbackHandler), (void*)L_18);
+	}
+
+IL_00bf:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:108>
+		return;
+	}
+}
+// Method Definition Index: 128510
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void LineDrawing_StartNewLine_m7DCD60DF944B83E83AEDE38A78E1B0384306C78F (LineDrawing_tA95DF0BD37C7F4C0EC6C561E5D3D2F0B3BCEFE08* __this, const RuntimeMethod* method) 
+{
+	static bool s_Il2CppMethodInitialized;
+	if (!s_Il2CppMethodInitialized)
+	{
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&AnimationCurve_tCBFFAAD05CEBB35EF8D8631BD99914BE1A6BB354_il2cpp_TypeInfo_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&GameObject_AddComponent_TisLineRenderer_tEFEF960672DB69CB14B6D181FAE6292F0CF8B63D_mF8C0D953BCBFDD5A01A09ADB67EB04F0D677A056_RuntimeMethod_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&GameObject_t76FEDD663AB33C991A9C9A23129337651094216F_il2cpp_TypeInfo_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&List_1_Add_m43FBF207375C6E06B8C45ECE614F9B8008FB686E_RuntimeMethod_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&List_1__ctor_mC29D3D824786832A31096310B3B3016B8B42B802_RuntimeMethod_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&List_1__ctor_mC54E2BCBE43279A96FC082F5CDE2D76388BD8F9C_RuntimeMethod_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918_il2cpp_TypeInfo_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&List_1_t77B94703E05C519A9010DD0614F757F974E1CD8B_il2cpp_TypeInfo_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&_stringLiteralA87D8447ADA4FCBB0C1453670109D4DDFF27315D);
+		s_Il2CppMethodInitialized = true;
+	}
+	GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* V_0 = NULL;
+	LineRenderer_tEFEF960672DB69CB14B6D181FAE6292F0CF8B63D* V_1 = NULL;
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:112>
+		GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* L_0 = (GameObject_t76FEDD663AB33C991A9C9A23129337651094216F*)il2cpp_codegen_object_new(GameObject_t76FEDD663AB33C991A9C9A23129337651094216F_il2cpp_TypeInfo_var);
+		GameObject__ctor_m37D512B05D292F954792225E6C6EEE95293A9B88(L_0, _stringLiteralA87D8447ADA4FCBB0C1453670109D4DDFF27315D, NULL);
+		V_0 = L_0;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:113>
+		GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* L_1 = V_0;
+		NullCheck(L_1);
+		LineRenderer_tEFEF960672DB69CB14B6D181FAE6292F0CF8B63D* L_2;
+		L_2 = GameObject_AddComponent_TisLineRenderer_tEFEF960672DB69CB14B6D181FAE6292F0CF8B63D_mF8C0D953BCBFDD5A01A09ADB67EB04F0D677A056(L_1, GameObject_AddComponent_TisLineRenderer_tEFEF960672DB69CB14B6D181FAE6292F0CF8B63D_mF8C0D953BCBFDD5A01A09ADB67EB04F0D677A056_RuntimeMethod_var);
+		V_1 = L_2;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:114>
+		LineRenderer_tEFEF960672DB69CB14B6D181FAE6292F0CF8B63D* L_3 = V_1;
+		__this->____currentLine = L_3;
+		Il2CppCodeGenWriteBarrier((void**)(&__this->____currentLine), (void*)L_3);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:115>
+		LineRenderer_tEFEF960672DB69CB14B6D181FAE6292F0CF8B63D* L_4 = __this->____currentLine;
+		NullCheck(L_4);
+		LineRenderer_set_positionCount_m2001FB4044053895ECBE897AB833284F3300B205(L_4, 0, NULL);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:116>
+		LineRenderer_tEFEF960672DB69CB14B6D181FAE6292F0CF8B63D* L_5 = __this->____currentLine;
+		Material_t18053F08F347D0DCA5E1140EC7EC4533DD8A14E3* L_6 = __this->____material;
+		NullCheck(L_5);
+		Renderer_set_material_m21E88977071E0A914D62F3D9CFF0193B3117C45A(L_5, L_6, NULL);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:117>
+		LineRenderer_tEFEF960672DB69CB14B6D181FAE6292F0CF8B63D* L_7 = __this->____currentLine;
+		NullCheck(L_7);
+		Material_t18053F08F347D0DCA5E1140EC7EC4533DD8A14E3* L_8;
+		L_8 = Renderer_get_material_m5BA2A00816C4CC66580D4B2E409CF10718C15656(L_7, NULL);
+		Color_tD001788D726C3A7F1379BEED0260B9591F440C1F L_9 = __this->____currentColor;
+		NullCheck(L_8);
+		Material_set_color_m5C32DEBB215FF9EE35E7B575297D8C2F29CC2A2D(L_8, L_9, NULL);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:118>
+		LineRenderer_tEFEF960672DB69CB14B6D181FAE6292F0CF8B63D* L_10 = __this->____currentLine;
+		NullCheck(L_10);
+		LineRenderer_set_loop_mC7FBA197A227B62F11DE01264C68357FBA475058(L_10, (bool)0, NULL);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:119>
+		LineRenderer_tEFEF960672DB69CB14B6D181FAE6292F0CF8B63D* L_11 = __this->____currentLine;
+		float L_12 = __this->____minLineWidth;
+		NullCheck(L_11);
+		LineRenderer_set_startWidth_m3899722E198D636DB216CB61C980214707069F4A(L_11, L_12, NULL);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:120>
+		LineRenderer_tEFEF960672DB69CB14B6D181FAE6292F0CF8B63D* L_13 = __this->____currentLine;
+		float L_14 = __this->____minLineWidth;
+		NullCheck(L_13);
+		LineRenderer_set_endWidth_mC7260401655C8BE1CBDFB832009295C89613F81D(L_13, L_14, NULL);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:121>
+		LineRenderer_tEFEF960672DB69CB14B6D181FAE6292F0CF8B63D* L_15 = __this->____currentLine;
+		NullCheck(L_15);
+		LineRenderer_set_useWorldSpace_m0204DB2541CC37DC4DC15DA15FD5A66EDC507CE8(L_15, (bool)1, NULL);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:122>
+		LineRenderer_tEFEF960672DB69CB14B6D181FAE6292F0CF8B63D* L_16 = __this->____currentLine;
+		NullCheck(L_16);
+		LineRenderer_set_alignment_m9755D4E7B9FDB0FC455CA17AD5F0EC5F22338466(L_16, 0, NULL);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:123>
+		LineRenderer_tEFEF960672DB69CB14B6D181FAE6292F0CF8B63D* L_17 = __this->____currentLine;
+		AnimationCurve_tCBFFAAD05CEBB35EF8D8631BD99914BE1A6BB354* L_18 = (AnimationCurve_tCBFFAAD05CEBB35EF8D8631BD99914BE1A6BB354*)il2cpp_codegen_object_new(AnimationCurve_tCBFFAAD05CEBB35EF8D8631BD99914BE1A6BB354_il2cpp_TypeInfo_var);
+		AnimationCurve__ctor_m0D976567166F92383307DC8EB8D7082CD34E226F(L_18, NULL);
+		NullCheck(L_17);
+		LineRenderer_set_widthCurve_mDB16A2CB251FE4433BD6D096CA2CB22B89ED68D0(L_17, L_18, NULL);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:124>
+		List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* L_19 = (List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918*)il2cpp_codegen_object_new(List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918_il2cpp_TypeInfo_var);
+		List_1__ctor_mC29D3D824786832A31096310B3B3016B8B42B802(L_19, List_1__ctor_mC29D3D824786832A31096310B3B3016B8B42B802_RuntimeMethod_var);
+		__this->____currentLineWidths = L_19;
+		Il2CppCodeGenWriteBarrier((void**)(&__this->____currentLineWidths), (void*)L_19);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:125>
+		LineRenderer_tEFEF960672DB69CB14B6D181FAE6292F0CF8B63D* L_20 = __this->____currentLine;
+		NullCheck(L_20);
+		Renderer_set_shadowCastingMode_mB0CD3D153E43044388AEFF7AEFDA93E80EB36D11(L_20, 0, NULL);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:126>
+		LineRenderer_tEFEF960672DB69CB14B6D181FAE6292F0CF8B63D* L_21 = __this->____currentLine;
+		NullCheck(L_21);
+		Renderer_set_receiveShadows_mABEB4C72E96E65117B7FFFD4180247565D0C1A09(L_21, (bool)0, NULL);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:127>
+		List_1_tB951CE80B58D1BF9650862451D8DAD8C231F207B* L_22 = __this->____lines;
+		GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* L_23 = V_0;
+		NullCheck(L_22);
+		List_1_Add_m43FBF207375C6E06B8C45ECE614F9B8008FB686E_inline(L_22, L_23, List_1_Add_m43FBF207375C6E06B8C45ECE614F9B8008FB686E_RuntimeMethod_var);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:128>
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_24;
+		L_24 = Vector3_get_positiveInfinity_mE0C7AA87B375383EA62F6084761DAE8197147D23_inline(NULL);
+		__this->____previousLinePoint = L_24;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:129>
+		List_1_t77B94703E05C519A9010DD0614F757F974E1CD8B* L_25 = (List_1_t77B94703E05C519A9010DD0614F757F974E1CD8B*)il2cpp_codegen_object_new(List_1_t77B94703E05C519A9010DD0614F757F974E1CD8B_il2cpp_TypeInfo_var);
+		List_1__ctor_mC54E2BCBE43279A96FC082F5CDE2D76388BD8F9C(L_25, List_1__ctor_mC54E2BCBE43279A96FC082F5CDE2D76388BD8F9C_RuntimeMethod_var);
+		__this->____currentLinePoints = L_25;
+		Il2CppCodeGenWriteBarrier((void**)(&__this->____currentLinePoints), (void*)L_25);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:130>
+		List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* L_26 = (List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918*)il2cpp_codegen_object_new(List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918_il2cpp_TypeInfo_var);
+		List_1__ctor_mC29D3D824786832A31096310B3B3016B8B42B802(L_26, List_1__ctor_mC29D3D824786832A31096310B3B3016B8B42B802_RuntimeMethod_var);
+		__this->____currentLinePressures = L_26;
+		Il2CppCodeGenWriteBarrier((void**)(&__this->____currentLinePressures), (void*)L_26);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:131>
+		List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* L_27 = (List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918*)il2cpp_codegen_object_new(List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918_il2cpp_TypeInfo_var);
+		List_1__ctor_mC29D3D824786832A31096310B3B3016B8B42B802(L_27, List_1__ctor_mC29D3D824786832A31096310B3B3016B8B42B802_RuntimeMethod_var);
+		__this->____currentLineTilts = L_27;
+		Il2CppCodeGenWriteBarrier((void**)(&__this->____currentLineTilts), (void*)L_27);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:132>
+		__this->____currentLineLength = (0.0f);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:133>
+		return;
+	}
+}
+// Method Definition Index: 128511
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void LineDrawing_TriggerHaptics_m7AC7DEE7DC040AE6BAC8ABF7D702FFA794D473F3 (LineDrawing_tA95DF0BD37C7F4C0EC6C561E5D3D2F0B3BCEFE08* __this, StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A* ___0_handler, const RuntimeMethod* method) 
+{
+	static bool s_Il2CppMethodInitialized;
+	if (!s_Il2CppMethodInitialized)
+	{
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C_il2cpp_TypeInfo_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&VrStylusHandler_t5EFDF8B65CF2D5BB08AA538FD3174E4F18848423_il2cpp_TypeInfo_var);
+		s_Il2CppMethodInitialized = true;
+	}
+	float V_0 = 0.0f;
+	VrStylusHandler_t5EFDF8B65CF2D5BB08AA538FD3174E4F18848423* V_1 = NULL;
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:139>
+		StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A* L_0 = ___0_handler;
+		il2cpp_codegen_runtime_class_init_inline(Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C_il2cpp_TypeInfo_var);
+		bool L_1;
+		L_1 = Object_op_Equality_mB6120F782D83091EF56A198FCEBCF066DB4A9605(L_0, (Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C*)NULL, NULL);
+		if (!L_1)
+		{
+			goto IL_000a;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:141>
+		return;
+	}
+
+IL_000a:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:143>
+		StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A* L_2 = ___0_handler;
+		NullCheck(L_2);
+		StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577 L_3;
+		L_3 = StylusHandler_get_CurrentState_m26068FA11B30F3E6A11632EF4A2C3963DE515734_inline(L_2, NULL);
+		float L_4 = L_3.___cluster_middle_value;
+		V_0 = ((float)il2cpp_codegen_multiply(L_4, (0.600000024f)));
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:144>
+		StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A* L_5 = ___0_handler;
+		V_1 = ((VrStylusHandler_t5EFDF8B65CF2D5BB08AA538FD3174E4F18848423*)IsInstClass((RuntimeObject*)L_5, VrStylusHandler_t5EFDF8B65CF2D5BB08AA538FD3174E4F18848423_il2cpp_TypeInfo_var));
+		VrStylusHandler_t5EFDF8B65CF2D5BB08AA538FD3174E4F18848423* L_6 = V_1;
+		if (!L_6)
+		{
+			goto IL_0032;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:146>
+		VrStylusHandler_t5EFDF8B65CF2D5BB08AA538FD3174E4F18848423* L_7 = V_1;
+		float L_8 = V_0;
+		NullCheck(L_7);
+		VrStylusHandler_TriggerHapticPulse_mD016617556B9D67D7909496DB412ECC99D85A088(L_7, L_8, (0.00999999978f), NULL);
+	}
+
+IL_0032:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:148>
+		return;
+	}
+}
+// Method Definition Index: 128512
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR float LineDrawing_GetTiltNormalized_m1E95D483B20DA0F97A002B8CCED5DD23BC8D9DD8 (LineDrawing_tA95DF0BD37C7F4C0EC6C561E5D3D2F0B3BCEFE08* __this, StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A* ___0_handler, const RuntimeMethod* method) 
+{
+	static bool s_Il2CppMethodInitialized;
+	if (!s_Il2CppMethodInitialized)
+	{
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C_il2cpp_TypeInfo_var);
+		s_Il2CppMethodInitialized = true;
+	}
+	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 V_0;
+	memset((&V_0), 0, sizeof(V_0));
+	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 V_1;
+	memset((&V_1), 0, sizeof(V_1));
+	float V_2 = 0.0f;
+	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 G_B7_0;
+	memset((&G_B7_0), 0, sizeof(G_B7_0));
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:152>
+		StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A* L_0 = ___0_handler;
+		il2cpp_codegen_runtime_class_init_inline(Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C_il2cpp_TypeInfo_var);
+		bool L_1;
+		L_1 = Object_op_Equality_mB6120F782D83091EF56A198FCEBCF066DB4A9605(L_0, (Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C*)NULL, NULL);
+		if (!L_1)
+		{
+			goto IL_000f;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:154>
+		return (0.0f);
+	}
+
+IL_000f:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:156>
+		StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A* L_2 = ___0_handler;
+		NullCheck(L_2);
+		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_3;
+		L_3 = Component_get_transform_m2919A1D81931E6932C7F06D4C2F0AB8DDA9A5371(L_2, NULL);
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_4 = __this->____penAxis;
+		NullCheck(L_3);
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_5;
+		L_5 = Transform_TransformDirection_m9BE1261DF2D48B7A4A27D31EE24D2D97F89E7757(L_3, L_4, NULL);
+		V_0 = L_5;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:157>
+		float L_6;
+		L_6 = Vector3_get_sqrMagnitude_m43C27DEC47C4811FB30AB474FF2131A963B66FC8_inline((&V_0), NULL);
+		if ((!(((float)L_6) <= ((float)(9.99999975E-05f)))))
+		{
+			goto IL_0035;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:159>
+		return (0.0f);
+	}
+
+IL_0035:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:161>
+		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_7 = __this->____tiltReference;
+		il2cpp_codegen_runtime_class_init_inline(Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C_il2cpp_TypeInfo_var);
+		bool L_8;
+		L_8 = Object_op_Inequality_mD0BE578448EAA61948F25C32F8DD55AB1F778602(L_7, (Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C*)NULL, NULL);
+		if (L_8)
+		{
+			goto IL_004a;
+		}
+	}
+	{
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_9;
+		L_9 = Vector3_get_up_m128AF3FDC820BF59D5DE86D973E7DE3F20C3AEBA_inline(NULL);
+		G_B7_0 = L_9;
+		goto IL_0055;
+	}
+
+IL_004a:
+	{
+		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_10 = __this->____tiltReference;
+		NullCheck(L_10);
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_11;
+		L_11 = Transform_get_up_mE47A9D9D96422224DD0539AA5524DA5440145BB2(L_10, NULL);
+		G_B7_0 = L_11;
+	}
+
+IL_0055:
+	{
+		V_1 = G_B7_0;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:162>
+		float L_12;
+		L_12 = Vector3_get_sqrMagnitude_m43C27DEC47C4811FB30AB474FF2131A963B66FC8_inline((&V_1), NULL);
+		if ((!(((float)L_12) <= ((float)(9.99999975E-05f)))))
+		{
+			goto IL_006a;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:164>
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_13;
+		L_13 = Vector3_get_up_m128AF3FDC820BF59D5DE86D973E7DE3F20C3AEBA_inline(NULL);
+		V_1 = L_13;
+	}
+
+IL_006a:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:166>
+		Vector3_Normalize_mC749B887A4C74BA0A2E13E6377F17CCAEB0AADA8_inline((&V_0), NULL);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:167>
+		Vector3_Normalize_mC749B887A4C74BA0A2E13E6377F17CCAEB0AADA8_inline((&V_1), NULL);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:168>
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_14 = V_0;
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_15 = V_1;
+		float L_16;
+		L_16 = Vector3_Dot_mBB86BB940AA0A32FA7D3C02AC42E5BC7095A5D52_inline(L_14, L_15, NULL);
+		float L_17;
+		L_17 = fabsf(L_16);
+		float L_18;
+		L_18 = Mathf_Clamp01_mA7E048DBDA832D399A581BE4D6DED9FA44CE0F14_inline(L_17, NULL);
+		V_2 = L_18;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:169>
+		float L_19 = V_2;
+		return ((float)il2cpp_codegen_subtract((1.0f), L_19));
+	}
+}
+// Method Definition Index: 128513
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 LineDrawing_ApplyTwistOffset_m79811F548DDCB501A086473148757FE8D68EE5E7 (LineDrawing_tA95DF0BD37C7F4C0EC6C561E5D3D2F0B3BCEFE08* __this, Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___0_position, Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___1_direction, float ___2_tiltNormalized, const RuntimeMethod* method) 
+{
+	static bool s_Il2CppMethodInitialized;
+	if (!s_Il2CppMethodInitialized)
+	{
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C_il2cpp_TypeInfo_var);
+		s_Il2CppMethodInitialized = true;
+	}
+	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 V_0;
+	memset((&V_0), 0, sizeof(V_0));
+	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 V_1;
+	memset((&V_1), 0, sizeof(V_1));
+	float V_2 = 0.0f;
+	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 G_B8_0;
+	memset((&G_B8_0), 0, sizeof(G_B8_0));
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:174>
+		bool L_0 = __this->____applyTwistOffset;
+		if (!L_0)
+		{
+			goto IL_0015;
+		}
+	}
+	{
+		float L_1 = __this->____twistOffsetStrength;
+		if ((!(((float)L_1) <= ((float)(0.0f)))))
+		{
+			goto IL_0017;
+		}
+	}
+
+IL_0015:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:176>
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_2 = ___0_position;
+		return L_2;
+	}
+
+IL_0017:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:178>
+		float L_3;
+		L_3 = Vector3_get_sqrMagnitude_m43C27DEC47C4811FB30AB474FF2131A963B66FC8_inline((&___1_direction), NULL);
+		if ((!(((float)L_3) <= ((float)(9.99999975E-05f)))))
+		{
+			goto IL_0027;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:180>
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_4 = ___0_position;
+		return L_4;
+	}
+
+IL_0027:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:182>
+		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_5 = __this->____tiltReference;
+		il2cpp_codegen_runtime_class_init_inline(Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C_il2cpp_TypeInfo_var);
+		bool L_6;
+		L_6 = Object_op_Inequality_mD0BE578448EAA61948F25C32F8DD55AB1F778602(L_5, (Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C*)NULL, NULL);
+		if (L_6)
+		{
+			goto IL_003c;
+		}
+	}
+	{
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_7;
+		L_7 = Vector3_get_up_m128AF3FDC820BF59D5DE86D973E7DE3F20C3AEBA_inline(NULL);
+		G_B8_0 = L_7;
+		goto IL_0047;
+	}
+
+IL_003c:
+	{
+		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_8 = __this->____tiltReference;
+		NullCheck(L_8);
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_9;
+		L_9 = Transform_get_up_mE47A9D9D96422224DD0539AA5524DA5440145BB2(L_8, NULL);
+		G_B8_0 = L_9;
+	}
+
+IL_0047:
+	{
+		V_0 = G_B8_0;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:183>
+		float L_10;
+		L_10 = Vector3_get_sqrMagnitude_m43C27DEC47C4811FB30AB474FF2131A963B66FC8_inline((&V_0), NULL);
+		if ((!(((float)L_10) <= ((float)(9.99999975E-05f)))))
+		{
+			goto IL_005c;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:185>
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_11;
+		L_11 = Vector3_get_up_m128AF3FDC820BF59D5DE86D973E7DE3F20C3AEBA_inline(NULL);
+		V_0 = L_11;
+	}
+
+IL_005c:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:187>
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_12;
+		L_12 = Vector3_get_normalized_m736BBF65D5CDA7A18414370D15B4DFCC1E466F07_inline((&___1_direction), NULL);
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_13;
+		L_13 = Vector3_get_normalized_m736BBF65D5CDA7A18414370D15B4DFCC1E466F07_inline((&V_0), NULL);
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_14;
+		L_14 = Vector3_Cross_mF93A280558BCE756D13B6CC5DCD7DE8A43148987_inline(L_12, L_13, NULL);
+		V_1 = L_14;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:188>
+		float L_15;
+		L_15 = Vector3_get_sqrMagnitude_m43C27DEC47C4811FB30AB474FF2131A963B66FC8_inline((&V_1), NULL);
+		if ((!(((float)L_15) <= ((float)(9.99999975E-05f)))))
+		{
+			goto IL_0080;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:190>
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_16 = ___0_position;
+		return L_16;
+	}
+
+IL_0080:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:192>
+		Vector3_Normalize_mC749B887A4C74BA0A2E13E6377F17CCAEB0AADA8_inline((&V_1), NULL);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:193>
+		float L_17 = ___2_tiltNormalized;
+		float L_18 = __this->____twistOffsetStrength;
+		V_2 = ((float)il2cpp_codegen_multiply(((float)il2cpp_codegen_multiply(((float)il2cpp_codegen_subtract(L_17, (0.5f))), (2.0f))), L_18));
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:194>
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_19 = ___0_position;
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_20 = V_1;
+		float L_21 = V_2;
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_22;
+		L_22 = Vector3_op_Multiply_m87BA7C578F96C8E49BB07088DAAC4649F83B0353_inline(L_20, L_21, NULL);
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_23;
+		L_23 = Vector3_op_Addition_m78C0EC70CB66E8DCAC225743D82B268DAEE92067_inline(L_19, L_22, NULL);
+		return L_23;
+	}
+}
+// Method Definition Index: 128514
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void LineDrawing_AddPoint_m5F45EDB3398ACADF246568F788C91E5A0278A344 (LineDrawing_tA95DF0BD37C7F4C0EC6C561E5D3D2F0B3BCEFE08* __this, StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A* ___0_handler, Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___1_position, float ___2_pressureNormalized, float ___3_tiltNormalized, const RuntimeMethod* method) 
+{
+	static bool s_Il2CppMethodInitialized;
+	if (!s_Il2CppMethodInitialized)
+	{
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&AnimationCurve_tCBFFAAD05CEBB35EF8D8631BD99914BE1A6BB354_il2cpp_TypeInfo_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&List_1_Add_m2F86E252D086E288E02FA1C830B7E86C0A431E51_RuntimeMethod_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&List_1_Add_m79E50C4F592B1703F4B76A8BE7B4855515460CA1_RuntimeMethod_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&List_1_get_Count_m545762F67009314D9C63DD209B42FFF950569B05_RuntimeMethod_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&List_1_get_Item_mFE556F47C4CD09EAC6C898EF39D4A8EC112CFC50_RuntimeMethod_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&Math_tEB65DE7CA8B083C412C969C92981C030865486CE_il2cpp_TypeInfo_var);
+		s_Il2CppMethodInitialized = true;
+	}
+	bool V_0 = false;
+	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 V_1;
+	memset((&V_1), 0, sizeof(V_1));
+	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 V_2;
+	memset((&V_2), 0, sizeof(V_2));
+	float V_3 = 0.0f;
+	AnimationCurve_tCBFFAAD05CEBB35EF8D8631BD99914BE1A6BB354* V_4 = NULL;
+	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 V_5;
+	memset((&V_5), 0, sizeof(V_5));
+	int32_t V_6 = 0;
+	int32_t V_7 = 0;
+	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 G_B5_0;
+	memset((&G_B5_0), 0, sizeof(G_B5_0));
+	float G_B8_0 = 0.0f;
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:199>
+		LineRenderer_tEFEF960672DB69CB14B6D181FAE6292F0CF8B63D* L_0 = __this->____currentLine;
+		NullCheck(L_0);
+		int32_t L_1;
+		L_1 = LineRenderer_get_positionCount_m4A22C49D951AB145A0AB133FCEA5C10880390FE4(L_0, NULL);
+		V_0 = (bool)((((int32_t)L_1) == ((int32_t)0))? 1 : 0);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:200>
+		bool L_2 = V_0;
+		if (L_2)
+		{
+			goto IL_0028;
+		}
+	}
+	{
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_3 = ___1_position;
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_4 = __this->____previousLinePoint;
+		float L_5;
+		L_5 = Vector3_Distance_m2314DB9B8BD01157E013DF87BEA557375C7F9FF9_inline(L_3, L_4, NULL);
+		if ((!(((float)L_5) > ((float)(0.000500000024f)))))
+		{
+			goto IL_0177;
+		}
+	}
+
+IL_0028:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:202>
+		StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A* L_6 = ___0_handler;
+		LineDrawing_TriggerHaptics_m7AC7DEE7DC040AE6BAC8ABF7D702FFA794D473F3(__this, L_6, NULL);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:203>
+		bool L_7 = V_0;
+		if (L_7)
+		{
+			goto IL_0049;
+		}
+	}
+	{
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_8 = ___1_position;
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_9 = __this->____previousLinePoint;
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_10;
+		L_10 = Vector3_op_Subtraction_mE42023FF80067CB44A1D4A27EB7CF2B24CABB828_inline(L_8, L_9, NULL);
+		V_5 = L_10;
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_11;
+		L_11 = Vector3_get_normalized_m736BBF65D5CDA7A18414370D15B4DFCC1E466F07_inline((&V_5), NULL);
+		G_B5_0 = L_11;
+		goto IL_004e;
+	}
+
+IL_0049:
+	{
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_12;
+		L_12 = Vector3_get_zero_m0C1249C3F25B1C70EAD3CC8B31259975A457AE39_inline(NULL);
+		G_B5_0 = L_12;
+	}
+
+IL_004e:
+	{
+		V_1 = G_B5_0;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:204>
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_13 = ___1_position;
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_14 = V_1;
+		float L_15 = ___3_tiltNormalized;
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_16;
+		L_16 = LineDrawing_ApplyTwistOffset_m79811F548DDCB501A086473148757FE8D68EE5E7(__this, L_13, L_14, L_15, NULL);
+		V_2 = L_16;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:205>
+		bool L_17 = V_0;
+		if (L_17)
+		{
+			goto IL_006b;
+		}
+	}
+	{
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_18 = __this->____previousLinePoint;
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_19 = V_2;
+		float L_20;
+		L_20 = Vector3_Distance_m2314DB9B8BD01157E013DF87BEA557375C7F9FF9_inline(L_18, L_19, NULL);
+		G_B8_0 = L_20;
+		goto IL_0070;
+	}
+
+IL_006b:
+	{
+		G_B8_0 = (0.0f);
+	}
+
+IL_0070:
+	{
+		V_3 = G_B8_0;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:206>
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_21 = V_2;
+		__this->____previousLinePoint = L_21;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:207>
+		LineRenderer_tEFEF960672DB69CB14B6D181FAE6292F0CF8B63D* L_22 = __this->____currentLine;
+		LineRenderer_tEFEF960672DB69CB14B6D181FAE6292F0CF8B63D* L_23 = L_22;
+		NullCheck(L_23);
+		int32_t L_24;
+		L_24 = LineRenderer_get_positionCount_m4A22C49D951AB145A0AB133FCEA5C10880390FE4(L_23, NULL);
+		V_6 = L_24;
+		int32_t L_25 = V_6;
+		NullCheck(L_23);
+		LineRenderer_set_positionCount_m2001FB4044053895ECBE897AB833284F3300B205(L_23, ((int32_t)il2cpp_codegen_add(L_25, 1)), NULL);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:208>
+		List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* L_26 = __this->____currentLineWidths;
+		float L_27 = ___2_pressureNormalized;
+		float L_28 = __this->____maxLineWidth;
+		float L_29 = __this->____minLineWidth;
+		il2cpp_codegen_runtime_class_init_inline(Math_tEB65DE7CA8B083C412C969C92981C030865486CE_il2cpp_TypeInfo_var);
+		float L_30;
+		L_30 = Math_Max_mB55ACEA482E7F67E61496C4C7C54FE0BB7BE78EA(((float)il2cpp_codegen_multiply(L_27, L_28)), L_29, NULL);
+		NullCheck(L_26);
+		List_1_Add_m2F86E252D086E288E02FA1C830B7E86C0A431E51_inline(L_26, L_30, List_1_Add_m2F86E252D086E288E02FA1C830B7E86C0A431E51_RuntimeMethod_var);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:209>
+		LineRenderer_tEFEF960672DB69CB14B6D181FAE6292F0CF8B63D* L_31 = __this->____currentLine;
+		LineRenderer_tEFEF960672DB69CB14B6D181FAE6292F0CF8B63D* L_32 = __this->____currentLine;
+		NullCheck(L_32);
+		int32_t L_33;
+		L_33 = LineRenderer_get_positionCount_m4A22C49D951AB145A0AB133FCEA5C10880390FE4(L_32, NULL);
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_34 = V_2;
+		NullCheck(L_31);
+		LineRenderer_SetPosition_m84C4AD9ADC6AC62B33DB4D7E4C9F066DFF8440C1(L_31, ((int32_t)il2cpp_codegen_subtract(L_33, 1)), L_34, NULL);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:210>
+		List_1_t77B94703E05C519A9010DD0614F757F974E1CD8B* L_35 = __this->____currentLinePoints;
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_36 = V_2;
+		NullCheck(L_35);
+		List_1_Add_m79E50C4F592B1703F4B76A8BE7B4855515460CA1_inline(L_35, L_36, List_1_Add_m79E50C4F592B1703F4B76A8BE7B4855515460CA1_RuntimeMethod_var);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:211>
+		List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* L_37 = __this->____currentLinePressures;
+		float L_38 = ___2_pressureNormalized;
+		NullCheck(L_37);
+		List_1_Add_m2F86E252D086E288E02FA1C830B7E86C0A431E51_inline(L_37, L_38, List_1_Add_m2F86E252D086E288E02FA1C830B7E86C0A431E51_RuntimeMethod_var);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:212>
+		List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* L_39 = __this->____currentLineTilts;
+		float L_40 = ___3_tiltNormalized;
+		NullCheck(L_39);
+		List_1_Add_m2F86E252D086E288E02FA1C830B7E86C0A431E51_inline(L_39, L_40, List_1_Add_m2F86E252D086E288E02FA1C830B7E86C0A431E51_RuntimeMethod_var);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:213>
+		float L_41 = __this->____currentLineLength;
+		float L_42 = V_3;
+		__this->____currentLineLength = ((float)il2cpp_codegen_add(L_41, L_42));
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:216>
+		AnimationCurve_tCBFFAAD05CEBB35EF8D8631BD99914BE1A6BB354* L_43 = (AnimationCurve_tCBFFAAD05CEBB35EF8D8631BD99914BE1A6BB354*)il2cpp_codegen_object_new(AnimationCurve_tCBFFAAD05CEBB35EF8D8631BD99914BE1A6BB354_il2cpp_TypeInfo_var);
+		AnimationCurve__ctor_m0D976567166F92383307DC8EB8D7082CD34E226F(L_43, NULL);
+		V_4 = L_43;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:219>
+		List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* L_44 = __this->____currentLineWidths;
+		NullCheck(L_44);
+		int32_t L_45;
+		L_45 = List_1_get_Count_m545762F67009314D9C63DD209B42FFF950569B05_inline(L_44, List_1_get_Count_m545762F67009314D9C63DD209B42FFF950569B05_RuntimeMethod_var);
+		if ((((int32_t)L_45) <= ((int32_t)1)))
+		{
+			goto IL_0151;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:221>
+		V_7 = 0;
+		goto IL_0140;
+	}
+
+IL_0113:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:223>
+		AnimationCurve_tCBFFAAD05CEBB35EF8D8631BD99914BE1A6BB354* L_46 = V_4;
+		int32_t L_47 = V_7;
+		List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* L_48 = __this->____currentLineWidths;
+		NullCheck(L_48);
+		int32_t L_49;
+		L_49 = List_1_get_Count_m545762F67009314D9C63DD209B42FFF950569B05_inline(L_48, List_1_get_Count_m545762F67009314D9C63DD209B42FFF950569B05_RuntimeMethod_var);
+		List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* L_50 = __this->____currentLineWidths;
+		int32_t L_51 = V_7;
+		NullCheck(L_50);
+		float L_52;
+		L_52 = List_1_get_Item_mFE556F47C4CD09EAC6C898EF39D4A8EC112CFC50(L_50, L_51, List_1_get_Item_mFE556F47C4CD09EAC6C898EF39D4A8EC112CFC50_RuntimeMethod_var);
+		NullCheck(L_46);
+		int32_t L_53;
+		L_53 = AnimationCurve_AddKey_mCA9B224D2D4721FB676505CEC6AA4FDCCC58C15B(L_46, ((float)(((float)L_47)/((float)((int32_t)il2cpp_codegen_subtract(L_49, 1))))), L_52, NULL);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:221>
+		int32_t L_54 = V_7;
+		V_7 = ((int32_t)il2cpp_codegen_add(L_54, 1));
+	}
+
+IL_0140:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:221>
+		int32_t L_55 = V_7;
+		List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* L_56 = __this->____currentLineWidths;
+		NullCheck(L_56);
+		int32_t L_57;
+		L_57 = List_1_get_Count_m545762F67009314D9C63DD209B42FFF950569B05_inline(L_56, List_1_get_Count_m545762F67009314D9C63DD209B42FFF950569B05_RuntimeMethod_var);
+		if ((((int32_t)L_55) < ((int32_t)L_57)))
+		{
+			goto IL_0113;
+		}
+	}
+	{
+		goto IL_016a;
+	}
+
+IL_0151:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:228>
+		AnimationCurve_tCBFFAAD05CEBB35EF8D8631BD99914BE1A6BB354* L_58 = V_4;
+		List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* L_59 = __this->____currentLineWidths;
+		NullCheck(L_59);
+		float L_60;
+		L_60 = List_1_get_Item_mFE556F47C4CD09EAC6C898EF39D4A8EC112CFC50(L_59, 0, List_1_get_Item_mFE556F47C4CD09EAC6C898EF39D4A8EC112CFC50_RuntimeMethod_var);
+		NullCheck(L_58);
+		int32_t L_61;
+		L_61 = AnimationCurve_AddKey_mCA9B224D2D4721FB676505CEC6AA4FDCCC58C15B(L_58, (0.0f), L_60, NULL);
+	}
+
+IL_016a:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:232>
+		LineRenderer_tEFEF960672DB69CB14B6D181FAE6292F0CF8B63D* L_62 = __this->____currentLine;
+		AnimationCurve_tCBFFAAD05CEBB35EF8D8631BD99914BE1A6BB354* L_63 = V_4;
+		NullCheck(L_62);
+		LineRenderer_set_widthCurve_mDB16A2CB251FE4433BD6D096CA2CB22B89ED68D0(L_62, L_63, NULL);
+	}
+
+IL_0177:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:234>
+		return;
+	}
+}
+// Method Definition Index: 128515
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void LineDrawing_FinalizeLine_m6EF04D9F7DB85BFE9E3A4D6AF8120FF59C22B1A3 (LineDrawing_tA95DF0BD37C7F4C0EC6C561E5D3D2F0B3BCEFE08* __this, const RuntimeMethod* method) 
+{
+	static bool s_Il2CppMethodInitialized;
+	if (!s_Il2CppMethodInitialized)
+	{
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&GameObject_AddComponent_TisLoopDetailStroke_tE17493DBF0EBF02DA61B6BF1A487624E4E08809F_m90DDB994C2585DF96132E472190F8BD0D330CD12_RuntimeMethod_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&GameObject_AddComponent_TisLoopSound_t0F81954F3F93403FEC588C98AAD22BF92DC6E075_m33526A3506174DDD56F6C21C2221ACBDE43A1B21_RuntimeMethod_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&LineStrokeData_t096A2E61000991AF1A1E54177DB496F7847C7C2B_il2cpp_TypeInfo_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&List_1_Add_mA34954E10092F642DB14666D1492C78EF211E314_RuntimeMethod_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&List_1_get_Count_m46EEFFA770BE665EA0CB3A5332E941DA4B3C1D37_RuntimeMethod_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&List_1_get_Count_m545762F67009314D9C63DD209B42FFF950569B05_RuntimeMethod_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&List_1_get_Item_m8F2E15FC96DA75186C51228128A0660709E4E810_RuntimeMethod_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C_il2cpp_TypeInfo_var);
+		s_Il2CppMethodInitialized = true;
+	}
+	bool V_0 = false;
+	float V_1 = 0.0f;
+	LineStrokeData_t096A2E61000991AF1A1E54177DB496F7847C7C2B* V_2 = NULL;
+	LoopSound_t0F81954F3F93403FEC588C98AAD22BF92DC6E075* V_3 = NULL;
+	LoopSound_t0F81954F3F93403FEC588C98AAD22BF92DC6E075* V_4 = NULL;
+	List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* V_5 = NULL;
+	int32_t G_B6_0 = 0;
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:238>
+		LineRenderer_tEFEF960672DB69CB14B6D181FAE6292F0CF8B63D* L_0 = __this->____currentLine;
+		il2cpp_codegen_runtime_class_init_inline(Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C_il2cpp_TypeInfo_var);
+		bool L_1;
+		L_1 = Object_op_Equality_mB6120F782D83091EF56A198FCEBCF066DB4A9605(L_0, (Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C*)NULL, NULL);
+		if (L_1)
+		{
+			goto IL_001c;
+		}
+	}
+	{
+		List_1_t77B94703E05C519A9010DD0614F757F974E1CD8B* L_2 = __this->____currentLinePoints;
+		NullCheck(L_2);
+		int32_t L_3;
+		L_3 = List_1_get_Count_m46EEFFA770BE665EA0CB3A5332E941DA4B3C1D37_inline(L_2, List_1_get_Count_m46EEFFA770BE665EA0CB3A5332E941DA4B3C1D37_RuntimeMethod_var);
+		if ((((int32_t)L_3) >= ((int32_t)2)))
+		{
+			goto IL_001d;
+		}
+	}
+
+IL_001c:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:240>
+		return;
+	}
+
+IL_001d:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:243>
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:244>
+		List_1_t77B94703E05C519A9010DD0614F757F974E1CD8B* L_4 = __this->____currentLinePoints;
+		NullCheck(L_4);
+		int32_t L_5;
+		L_5 = List_1_get_Count_m46EEFFA770BE665EA0CB3A5332E941DA4B3C1D37_inline(L_4, List_1_get_Count_m46EEFFA770BE665EA0CB3A5332E941DA4B3C1D37_RuntimeMethod_var);
+		int32_t L_6 = __this->____minLoopPoints;
+		if ((((int32_t)L_5) < ((int32_t)L_6)))
+		{
+			goto IL_0066;
+		}
+	}
+	{
+		List_1_t77B94703E05C519A9010DD0614F757F974E1CD8B* L_7 = __this->____currentLinePoints;
+		NullCheck(L_7);
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_8;
+		L_8 = List_1_get_Item_m8F2E15FC96DA75186C51228128A0660709E4E810(L_7, 0, List_1_get_Item_m8F2E15FC96DA75186C51228128A0660709E4E810_RuntimeMethod_var);
+		List_1_t77B94703E05C519A9010DD0614F757F974E1CD8B* L_9 = __this->____currentLinePoints;
+		List_1_t77B94703E05C519A9010DD0614F757F974E1CD8B* L_10 = __this->____currentLinePoints;
+		NullCheck(L_10);
+		int32_t L_11;
+		L_11 = List_1_get_Count_m46EEFFA770BE665EA0CB3A5332E941DA4B3C1D37_inline(L_10, List_1_get_Count_m46EEFFA770BE665EA0CB3A5332E941DA4B3C1D37_RuntimeMethod_var);
+		NullCheck(L_9);
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_12;
+		L_12 = List_1_get_Item_m8F2E15FC96DA75186C51228128A0660709E4E810(L_9, ((int32_t)il2cpp_codegen_subtract(L_11, 1)), List_1_get_Item_m8F2E15FC96DA75186C51228128A0660709E4E810_RuntimeMethod_var);
+		float L_13;
+		L_13 = Vector3_Distance_m2314DB9B8BD01157E013DF87BEA557375C7F9FF9_inline(L_8, L_12, NULL);
+		float L_14 = __this->____closeLoopDistance;
+		G_B6_0 = ((((int32_t)((!(((float)L_13) <= ((float)L_14)))? 1 : 0)) == ((int32_t)0))? 1 : 0);
+		goto IL_0067;
+	}
+
+IL_0066:
+	{
+		G_B6_0 = 0;
+	}
+
+IL_0067:
+	{
+		V_0 = (bool)G_B6_0;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:246>
+		float L_15 = __this->____currentLineLength;
+		V_1 = L_15;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:247>
+		bool L_16 = V_0;
+		if (!L_16)
+		{
+			goto IL_00aa;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:249>
+		LineRenderer_tEFEF960672DB69CB14B6D181FAE6292F0CF8B63D* L_17 = __this->____currentLine;
+		NullCheck(L_17);
+		LineRenderer_set_loop_mC7FBA197A227B62F11DE01264C68357FBA475058(L_17, (bool)1, NULL);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:250>
+		float L_18 = V_1;
+		List_1_t77B94703E05C519A9010DD0614F757F974E1CD8B* L_19 = __this->____currentLinePoints;
+		List_1_t77B94703E05C519A9010DD0614F757F974E1CD8B* L_20 = __this->____currentLinePoints;
+		NullCheck(L_20);
+		int32_t L_21;
+		L_21 = List_1_get_Count_m46EEFFA770BE665EA0CB3A5332E941DA4B3C1D37_inline(L_20, List_1_get_Count_m46EEFFA770BE665EA0CB3A5332E941DA4B3C1D37_RuntimeMethod_var);
+		NullCheck(L_19);
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_22;
+		L_22 = List_1_get_Item_m8F2E15FC96DA75186C51228128A0660709E4E810(L_19, ((int32_t)il2cpp_codegen_subtract(L_21, 1)), List_1_get_Item_m8F2E15FC96DA75186C51228128A0660709E4E810_RuntimeMethod_var);
+		List_1_t77B94703E05C519A9010DD0614F757F974E1CD8B* L_23 = __this->____currentLinePoints;
+		NullCheck(L_23);
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_24;
+		L_24 = List_1_get_Item_m8F2E15FC96DA75186C51228128A0660709E4E810(L_23, 0, List_1_get_Item_m8F2E15FC96DA75186C51228128A0660709E4E810_RuntimeMethod_var);
+		float L_25;
+		L_25 = Vector3_Distance_m2314DB9B8BD01157E013DF87BEA557375C7F9FF9_inline(L_22, L_24, NULL);
+		V_1 = ((float)il2cpp_codegen_add(L_18, L_25));
+	}
+
+IL_00aa:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:253>
+		List_1_t77B94703E05C519A9010DD0614F757F974E1CD8B* L_26 = __this->____currentLinePoints;
+		List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* L_27 = __this->____currentLinePressures;
+		List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* L_28 = __this->____currentLineTilts;
+		float L_29 = V_1;
+		LineStrokeData_t096A2E61000991AF1A1E54177DB496F7847C7C2B* L_30 = (LineStrokeData_t096A2E61000991AF1A1E54177DB496F7847C7C2B*)il2cpp_codegen_object_new(LineStrokeData_t096A2E61000991AF1A1E54177DB496F7847C7C2B_il2cpp_TypeInfo_var);
+		LineStrokeData__ctor_mF08E522BAAFCDACF1785489F1A6F219B175A7C95(L_30, L_26, L_27, L_28, L_29, NULL);
+		V_2 = L_30;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:255>
+		bool L_31 = __this->____enableAudioLoops;
+		if (!L_31)
+		{
+			goto IL_0139;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:257>
+		bool L_32 = V_0;
+		if (!L_32)
+		{
+			goto IL_00f9;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:259>
+		LineRenderer_tEFEF960672DB69CB14B6D181FAE6292F0CF8B63D* L_33 = __this->____currentLine;
+		NullCheck(L_33);
+		GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* L_34;
+		L_34 = Component_get_gameObject_m57AEFBB14DB39EC476F740BA000E170355DE691B(L_33, NULL);
+		NullCheck(L_34);
+		LoopSound_t0F81954F3F93403FEC588C98AAD22BF92DC6E075* L_35;
+		L_35 = GameObject_AddComponent_TisLoopSound_t0F81954F3F93403FEC588C98AAD22BF92DC6E075_m33526A3506174DDD56F6C21C2221ACBDE43A1B21(L_34, GameObject_AddComponent_TisLoopSound_t0F81954F3F93403FEC588C98AAD22BF92DC6E075_m33526A3506174DDD56F6C21C2221ACBDE43A1B21_RuntimeMethod_var);
+		V_3 = L_35;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:260>
+		LoopSound_t0F81954F3F93403FEC588C98AAD22BF92DC6E075* L_36 = V_3;
+		LineStrokeData_t096A2E61000991AF1A1E54177DB496F7847C7C2B* L_37 = V_2;
+		LoopSoundSettings_tCE8CCF7BF33FB6B89FB05D9D69B17346365EADA5 L_38 = __this->____loopSoundSettings;
+		NullCheck(L_36);
+		LoopSound_Initialize_mC9C88F891A6D8CF3E23990948B0DB5A532D8A466(L_36, L_37, L_38, NULL);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:261>
+		List_1_tEBA944EB098597668737638C5527516C00F5CF52* L_39 = __this->____loopSounds;
+		LoopSound_t0F81954F3F93403FEC588C98AAD22BF92DC6E075* L_40 = V_3;
+		NullCheck(L_39);
+		List_1_Add_mA34954E10092F642DB14666D1492C78EF211E314_inline(L_39, L_40, List_1_Add_mA34954E10092F642DB14666D1492C78EF211E314_RuntimeMethod_var);
+		return;
+	}
+
+IL_00f9:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:265>
+		LineStrokeData_t096A2E61000991AF1A1E54177DB496F7847C7C2B* L_41 = V_2;
+		LoopSound_t0F81954F3F93403FEC588C98AAD22BF92DC6E075* L_42;
+		L_42 = LineDrawing_FindClosestLoop_m92C66C323FC51B0CD29DE3E0791C8B81AB0A2D63(__this, L_41, NULL);
+		V_4 = L_42;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:266>
+		LoopSound_t0F81954F3F93403FEC588C98AAD22BF92DC6E075* L_43 = V_4;
+		il2cpp_codegen_runtime_class_init_inline(Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C_il2cpp_TypeInfo_var);
+		bool L_44;
+		L_44 = Object_op_Inequality_mD0BE578448EAA61948F25C32F8DD55AB1F778602(L_43, (Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C*)NULL, NULL);
+		if (!L_44)
+		{
+			goto IL_0139;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:268>
+		LoopSound_t0F81954F3F93403FEC588C98AAD22BF92DC6E075* L_45 = V_4;
+		LineStrokeData_t096A2E61000991AF1A1E54177DB496F7847C7C2B* L_46 = V_2;
+		NullCheck(L_45);
+		List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* L_47;
+		L_47 = LoopSound_AddDetailStroke_mD8C8980944D3029E0355391426A47B0F2E74C2FD(L_45, L_46, NULL);
+		V_5 = L_47;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:269>
+		List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* L_48 = V_5;
+		NullCheck(L_48);
+		int32_t L_49;
+		L_49 = List_1_get_Count_m545762F67009314D9C63DD209B42FFF950569B05_inline(L_48, List_1_get_Count_m545762F67009314D9C63DD209B42FFF950569B05_RuntimeMethod_var);
+		if ((((int32_t)L_49) <= ((int32_t)0)))
+		{
+			goto IL_0139;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:271>
+		LineRenderer_tEFEF960672DB69CB14B6D181FAE6292F0CF8B63D* L_50 = __this->____currentLine;
+		NullCheck(L_50);
+		GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* L_51;
+		L_51 = Component_get_gameObject_m57AEFBB14DB39EC476F740BA000E170355DE691B(L_50, NULL);
+		NullCheck(L_51);
+		LoopDetailStroke_tE17493DBF0EBF02DA61B6BF1A487624E4E08809F* L_52;
+		L_52 = GameObject_AddComponent_TisLoopDetailStroke_tE17493DBF0EBF02DA61B6BF1A487624E4E08809F_m90DDB994C2585DF96132E472190F8BD0D330CD12(L_51, GameObject_AddComponent_TisLoopDetailStroke_tE17493DBF0EBF02DA61B6BF1A487624E4E08809F_m90DDB994C2585DF96132E472190F8BD0D330CD12_RuntimeMethod_var);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:272>
+		LoopSound_t0F81954F3F93403FEC588C98AAD22BF92DC6E075* L_53 = V_4;
+		List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* L_54 = V_5;
+		NullCheck(L_52);
+		LoopDetailStroke_Initialize_m3F9BB86F861C7A38D132E227A42A23FC20BDF6EC(L_52, L_53, L_54, NULL);
+	}
+
+IL_0139:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:277>
+		return;
+	}
+}
+// Method Definition Index: 128516
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR LoopSound_t0F81954F3F93403FEC588C98AAD22BF92DC6E075* LineDrawing_FindClosestLoop_m92C66C323FC51B0CD29DE3E0791C8B81AB0A2D63 (LineDrawing_tA95DF0BD37C7F4C0EC6C561E5D3D2F0B3BCEFE08* __this, LineStrokeData_t096A2E61000991AF1A1E54177DB496F7847C7C2B* ___0_strokeData, const RuntimeMethod* method) 
+{
+	static bool s_Il2CppMethodInitialized;
+	if (!s_Il2CppMethodInitialized)
+	{
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&List_1_get_Count_mEBB81A3F6DE82682216332309FBC6DF56B9BB49A_RuntimeMethod_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&List_1_get_Item_mA00B0BFC0A755EABBFD27C39FDE58635A4DB91F7_RuntimeMethod_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C_il2cpp_TypeInfo_var);
+		s_Il2CppMethodInitialized = true;
+	}
+	LoopSound_t0F81954F3F93403FEC588C98AAD22BF92DC6E075* V_0 = NULL;
+	float V_1 = 0.0f;
+	int32_t V_2 = 0;
+	LoopSound_t0F81954F3F93403FEC588C98AAD22BF92DC6E075* V_3 = NULL;
+	float V_4 = 0.0f;
+	float V_5 = 0.0f;
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:281>
+		V_0 = (LoopSound_t0F81954F3F93403FEC588C98AAD22BF92DC6E075*)NULL;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:282>
+		V_1 = ((std::numeric_limits<float>::max)());
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:283>
+		V_2 = 0;
+		goto IL_0058;
+	}
+
+IL_000c:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:285>
+		List_1_tEBA944EB098597668737638C5527516C00F5CF52* L_0 = __this->____loopSounds;
+		int32_t L_1 = V_2;
+		NullCheck(L_0);
+		LoopSound_t0F81954F3F93403FEC588C98AAD22BF92DC6E075* L_2;
+		L_2 = List_1_get_Item_mA00B0BFC0A755EABBFD27C39FDE58635A4DB91F7(L_0, L_1, List_1_get_Item_mA00B0BFC0A755EABBFD27C39FDE58635A4DB91F7_RuntimeMethod_var);
+		V_3 = L_2;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:286>
+		LoopSound_t0F81954F3F93403FEC588C98AAD22BF92DC6E075* L_3 = V_3;
+		il2cpp_codegen_runtime_class_init_inline(Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C_il2cpp_TypeInfo_var);
+		bool L_4;
+		L_4 = Object_op_Equality_mB6120F782D83091EF56A198FCEBCF066DB4A9605(L_3, (Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C*)NULL, NULL);
+		if (L_4)
+		{
+			goto IL_0054;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:290>
+		LineStrokeData_t096A2E61000991AF1A1E54177DB496F7847C7C2B* L_5 = ___0_strokeData;
+		NullCheck(L_5);
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_6 = L_5->___Centroid;
+		LoopSound_t0F81954F3F93403FEC588C98AAD22BF92DC6E075* L_7 = V_3;
+		NullCheck(L_7);
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_8;
+		L_8 = LoopSound_get_Center_m6C8534417D76328D4F94C2AE9608C8891B06E953_inline(L_7, NULL);
+		float L_9;
+		L_9 = Vector3_Distance_m2314DB9B8BD01157E013DF87BEA557375C7F9FF9_inline(L_6, L_8, NULL);
+		V_4 = L_9;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:291>
+		LoopSound_t0F81954F3F93403FEC588C98AAD22BF92DC6E075* L_10 = V_3;
+		NullCheck(L_10);
+		float L_11;
+		L_11 = LoopSound_get_AverageRadius_mCA57CE0F7D8E84788E15F256B3C67AAD93E13033_inline(L_10, NULL);
+		float L_12 = __this->____detailAttachDistance;
+		V_5 = ((float)il2cpp_codegen_add(L_11, L_12));
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:292>
+		float L_13 = V_4;
+		float L_14 = V_5;
+		if ((!(((float)L_13) <= ((float)L_14))))
+		{
+			goto IL_0054;
+		}
+	}
+	{
+		float L_15 = V_4;
+		float L_16 = V_1;
+		if ((!(((float)L_15) < ((float)L_16))))
+		{
+			goto IL_0054;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:294>
+		LoopSound_t0F81954F3F93403FEC588C98AAD22BF92DC6E075* L_17 = V_3;
+		V_0 = L_17;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:295>
+		float L_18 = V_4;
+		V_1 = L_18;
+	}
+
+IL_0054:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:283>
+		int32_t L_19 = V_2;
+		V_2 = ((int32_t)il2cpp_codegen_add(L_19, 1));
+	}
+
+IL_0058:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:283>
+		int32_t L_20 = V_2;
+		List_1_tEBA944EB098597668737638C5527516C00F5CF52* L_21 = __this->____loopSounds;
+		NullCheck(L_21);
+		int32_t L_22;
+		L_22 = List_1_get_Count_mEBB81A3F6DE82682216332309FBC6DF56B9BB49A_inline(L_21, List_1_get_Count_mEBB81A3F6DE82682216332309FBC6DF56B9BB49A_RuntimeMethod_var);
+		if ((((int32_t)L_20) < ((int32_t)L_22)))
+		{
+			goto IL_000c;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:298>
+		LoopSound_t0F81954F3F93403FEC588C98AAD22BF92DC6E075* L_23 = V_0;
+		return L_23;
+	}
+}
+// Method Definition Index: 128517
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void LineDrawing_RemoveLastLine_mECCA199341DEC08EED532EEFCCC4CE50AEAE664F (LineDrawing_tA95DF0BD37C7F4C0EC6C561E5D3D2F0B3BCEFE08* __this, const RuntimeMethod* method) 
+{
+	static bool s_Il2CppMethodInitialized;
+	if (!s_Il2CppMethodInitialized)
+	{
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&GameObject_GetComponent_TisLoopSound_t0F81954F3F93403FEC588C98AAD22BF92DC6E075_m0CB54D899B3BF398BC29F33A378A6B3B336E2C0C_RuntimeMethod_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&List_1_RemoveAt_m3196E18C5CF157CAC58991FACEB9DFD441702260_RuntimeMethod_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&List_1_Remove_mEDB198A5CB82CBAF3569359E9402E9B61FE53136_RuntimeMethod_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&List_1_get_Count_m4C37ED2D928D63B80F55AF434730C2D64EEB9F22_RuntimeMethod_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&List_1_get_Item_mE8DBE527F24D9CFED839C34216C475B716169979_RuntimeMethod_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C_il2cpp_TypeInfo_var);
+		s_Il2CppMethodInitialized = true;
+	}
+	GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* V_0 = NULL;
+	LoopSound_t0F81954F3F93403FEC588C98AAD22BF92DC6E075* V_1 = NULL;
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:303>
+		List_1_tB951CE80B58D1BF9650862451D8DAD8C231F207B* L_0 = __this->____lines;
+		NullCheck(L_0);
+		int32_t L_1;
+		L_1 = List_1_get_Count_m4C37ED2D928D63B80F55AF434730C2D64EEB9F22_inline(L_0, List_1_get_Count_m4C37ED2D928D63B80F55AF434730C2D64EEB9F22_RuntimeMethod_var);
+		if (L_1)
+		{
+			goto IL_000e;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:305>
+		return;
+	}
+
+IL_000e:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:307>
+		List_1_tB951CE80B58D1BF9650862451D8DAD8C231F207B* L_2 = __this->____lines;
+		List_1_tB951CE80B58D1BF9650862451D8DAD8C231F207B* L_3 = __this->____lines;
+		NullCheck(L_3);
+		int32_t L_4;
+		L_4 = List_1_get_Count_m4C37ED2D928D63B80F55AF434730C2D64EEB9F22_inline(L_3, List_1_get_Count_m4C37ED2D928D63B80F55AF434730C2D64EEB9F22_RuntimeMethod_var);
+		NullCheck(L_2);
+		GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* L_5;
+		L_5 = List_1_get_Item_mE8DBE527F24D9CFED839C34216C475B716169979(L_2, ((int32_t)il2cpp_codegen_subtract(L_4, 1)), List_1_get_Item_mE8DBE527F24D9CFED839C34216C475B716169979_RuntimeMethod_var);
+		V_0 = L_5;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:308>
+		List_1_tB951CE80B58D1BF9650862451D8DAD8C231F207B* L_6 = __this->____lines;
+		List_1_tB951CE80B58D1BF9650862451D8DAD8C231F207B* L_7 = __this->____lines;
+		NullCheck(L_7);
+		int32_t L_8;
+		L_8 = List_1_get_Count_m4C37ED2D928D63B80F55AF434730C2D64EEB9F22_inline(L_7, List_1_get_Count_m4C37ED2D928D63B80F55AF434730C2D64EEB9F22_RuntimeMethod_var);
+		NullCheck(L_6);
+		List_1_RemoveAt_m3196E18C5CF157CAC58991FACEB9DFD441702260(L_6, ((int32_t)il2cpp_codegen_subtract(L_8, 1)), List_1_RemoveAt_m3196E18C5CF157CAC58991FACEB9DFD441702260_RuntimeMethod_var);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:310>
+		GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* L_9 = V_0;
+		il2cpp_codegen_runtime_class_init_inline(Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C_il2cpp_TypeInfo_var);
+		bool L_10;
+		L_10 = Object_op_Inequality_mD0BE578448EAA61948F25C32F8DD55AB1F778602(L_9, (Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C*)NULL, NULL);
+		if (!L_10)
+		{
+			goto IL_0065;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:312>
+		GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* L_11 = V_0;
+		NullCheck(L_11);
+		LoopSound_t0F81954F3F93403FEC588C98AAD22BF92DC6E075* L_12;
+		L_12 = GameObject_GetComponent_TisLoopSound_t0F81954F3F93403FEC588C98AAD22BF92DC6E075_m0CB54D899B3BF398BC29F33A378A6B3B336E2C0C(L_11, GameObject_GetComponent_TisLoopSound_t0F81954F3F93403FEC588C98AAD22BF92DC6E075_m0CB54D899B3BF398BC29F33A378A6B3B336E2C0C_RuntimeMethod_var);
+		V_1 = L_12;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:313>
+		LoopSound_t0F81954F3F93403FEC588C98AAD22BF92DC6E075* L_13 = V_1;
+		il2cpp_codegen_runtime_class_init_inline(Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C_il2cpp_TypeInfo_var);
+		bool L_14;
+		L_14 = Object_op_Inequality_mD0BE578448EAA61948F25C32F8DD55AB1F778602(L_13, (Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C*)NULL, NULL);
+		if (!L_14)
+		{
+			goto IL_0065;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:315>
+		List_1_tEBA944EB098597668737638C5527516C00F5CF52* L_15 = __this->____loopSounds;
+		LoopSound_t0F81954F3F93403FEC588C98AAD22BF92DC6E075* L_16 = V_1;
+		NullCheck(L_15);
+		bool L_17;
+		L_17 = List_1_Remove_mEDB198A5CB82CBAF3569359E9402E9B61FE53136(L_15, L_16, List_1_Remove_mEDB198A5CB82CBAF3569359E9402E9B61FE53136_RuntimeMethod_var);
+	}
+
+IL_0065:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:318>
+		GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* L_18 = V_0;
+		il2cpp_codegen_runtime_class_init_inline(Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C_il2cpp_TypeInfo_var);
+		Object_Destroy_mE97D0A766419A81296E8D4E5C23D01D3FE91ACBB(L_18, NULL);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:319>
+		return;
+	}
+}
+// Method Definition Index: 128518
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void LineDrawing_ClearAllLines_m6A1C7B193179C39CC53D35AFD7DBD26E9A1325F2 (LineDrawing_tA95DF0BD37C7F4C0EC6C561E5D3D2F0B3BCEFE08* __this, const RuntimeMethod* method) 
+{
+	static bool s_Il2CppMethodInitialized;
+	if (!s_Il2CppMethodInitialized)
+	{
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&Enumerator_Dispose_m07D362A07C19B36C2FD1B4DC79DD99903D4DA95D_RuntimeMethod_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&Enumerator_MoveNext_m96F4B0BD0A5485C8E8CC57D961DF6F1FA256AF27_RuntimeMethod_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&Enumerator_get_Current_m7236EBE1CFCB6533F96E030500D322B13D0CA5A4_RuntimeMethod_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&List_1_Clear_m32D399BDD753B5BD6CE27560249096418F3F0867_RuntimeMethod_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&List_1_Clear_m391BF836F93BEF5D0DAAE5BF67815BE73DFD28E2_RuntimeMethod_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&List_1_GetEnumerator_mA843D26C63E5963415DFCA6E49DFA27AFD9C75E8_RuntimeMethod_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C_il2cpp_TypeInfo_var);
+		s_Il2CppMethodInitialized = true;
+	}
+	Enumerator_t88BD1282EF117E59AACFC9EC55B89F0B9EDACE60 V_0;
+	memset((&V_0), 0, sizeof(V_0));
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:323>
+		List_1_tB951CE80B58D1BF9650862451D8DAD8C231F207B* L_0 = __this->____lines;
+		NullCheck(L_0);
+		Enumerator_t88BD1282EF117E59AACFC9EC55B89F0B9EDACE60 L_1;
+		L_1 = List_1_GetEnumerator_mA843D26C63E5963415DFCA6E49DFA27AFD9C75E8(L_0, List_1_GetEnumerator_mA843D26C63E5963415DFCA6E49DFA27AFD9C75E8_RuntimeMethod_var);
+		V_0 = L_1;
+	}
+	{
+		auto __finallyBlock = il2cpp::utils::Finally([&]
+		{
+
+FINALLY_0025:
+			{
+				Enumerator_Dispose_m07D362A07C19B36C2FD1B4DC79DD99903D4DA95D((&V_0), Enumerator_Dispose_m07D362A07C19B36C2FD1B4DC79DD99903D4DA95D_RuntimeMethod_var);
+				return;
+			}
+		});
+		try
+		{
+			{
+				goto IL_001a_1;
+			}
+
+IL_000e_1:
+			{
+				//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:323>
+				GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* L_2;
+				L_2 = Enumerator_get_Current_m7236EBE1CFCB6533F96E030500D322B13D0CA5A4_inline((&V_0), Enumerator_get_Current_m7236EBE1CFCB6533F96E030500D322B13D0CA5A4_RuntimeMethod_var);
+				//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:325>
+				il2cpp_codegen_runtime_class_init_inline(Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C_il2cpp_TypeInfo_var);
+				Object_Destroy_mE97D0A766419A81296E8D4E5C23D01D3FE91ACBB(L_2, NULL);
+			}
+
+IL_001a_1:
+			{
+				//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:323>
+				bool L_3;
+				L_3 = Enumerator_MoveNext_m96F4B0BD0A5485C8E8CC57D961DF6F1FA256AF27((&V_0), Enumerator_MoveNext_m96F4B0BD0A5485C8E8CC57D961DF6F1FA256AF27_RuntimeMethod_var);
+				if (L_3)
+				{
+					goto IL_000e_1;
+				}
+			}
+			{
+				goto IL_0033;
+			}
+		}
+		catch(Il2CppExceptionWrapper& e)
+		{
+			__finallyBlock.StoreException(e.ex);
+		}
+	}
+
+IL_0033:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:327>
+		List_1_tB951CE80B58D1BF9650862451D8DAD8C231F207B* L_4 = __this->____lines;
+		NullCheck(L_4);
+		List_1_Clear_m32D399BDD753B5BD6CE27560249096418F3F0867_inline(L_4, List_1_Clear_m32D399BDD753B5BD6CE27560249096418F3F0867_RuntimeMethod_var);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:328>
+		List_1_tEBA944EB098597668737638C5527516C00F5CF52* L_5 = __this->____loopSounds;
+		NullCheck(L_5);
+		List_1_Clear_m391BF836F93BEF5D0DAAE5BF67815BE73DFD28E2_inline(L_5, List_1_Clear_m391BF836F93BEF5D0DAAE5BF67815BE73DFD28E2_RuntimeMethod_var);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:329>
+		return;
+	}
+}
+// Method Definition Index: 128519
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void LineDrawing_Update_mA3625F2EA89F54CFC411CD3B9AE1BD89EC72CC20 (LineDrawing_tA95DF0BD37C7F4C0EC6C561E5D3D2F0B3BCEFE08* __this, const RuntimeMethod* method) 
+{
+	static bool s_Il2CppMethodInitialized;
+	if (!s_Il2CppMethodInitialized)
+	{
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&List_1_get_Count_m4C37ED2D928D63B80F55AF434730C2D64EEB9F22_RuntimeMethod_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C_il2cpp_TypeInfo_var);
+		s_Il2CppMethodInitialized = true;
+	}
+	StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A* V_0 = NULL;
+	float V_1 = 0.0f;
+	float V_2 = 0.0f;
+	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 G_B8_0;
+	memset((&G_B8_0), 0, sizeof(G_B8_0));
+	StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A* G_B8_1 = NULL;
+	LineDrawing_tA95DF0BD37C7F4C0EC6C561E5D3D2F0B3BCEFE08* G_B8_2 = NULL;
+	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 G_B7_0;
+	memset((&G_B7_0), 0, sizeof(G_B7_0));
+	StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A* G_B7_1 = NULL;
+	LineDrawing_tA95DF0BD37C7F4C0EC6C561E5D3D2F0B3BCEFE08* G_B7_2 = NULL;
+	float G_B9_0 = 0.0f;
+	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 G_B9_1;
+	memset((&G_B9_1), 0, sizeof(G_B9_1));
+	StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A* G_B9_2 = NULL;
+	LineDrawing_tA95DF0BD37C7F4C0EC6C561E5D3D2F0B3BCEFE08* G_B9_3 = NULL;
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:333>
+		StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A* L_0;
+		L_0 = LineDrawing_ResolveActiveHandler_m85E54087B8161D1BF3A803D391BBB94804B53449(__this, NULL);
+		V_0 = L_0;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:334>
+		StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A* L_1 = V_0;
+		il2cpp_codegen_runtime_class_init_inline(Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C_il2cpp_TypeInfo_var);
+		bool L_2;
+		L_2 = Object_op_Equality_mB6120F782D83091EF56A198FCEBCF066DB4A9605(L_1, (Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C*)NULL, NULL);
+		if (!L_2)
+		{
+			goto IL_0011;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:336>
+		return;
+	}
+
+IL_0011:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:339>
+		StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A* L_3 = V_0;
+		NullCheck(L_3);
+		StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577 L_4;
+		L_4 = StylusHandler_get_CurrentState_m26068FA11B30F3E6A11632EF4A2C3963DE515734_inline(L_3, NULL);
+		float L_5 = L_4.___tip_value;
+		StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A* L_6 = V_0;
+		NullCheck(L_6);
+		StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577 L_7;
+		L_7 = StylusHandler_get_CurrentState_m26068FA11B30F3E6A11632EF4A2C3963DE515734_inline(L_6, NULL);
+		float L_8 = L_7.___cluster_middle_value;
+		float L_9;
+		L_9 = Mathf_Max_mF5379E63D2BBAC76D090748695D833934F8AD051_inline(L_5, L_8, NULL);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:340>
+		float L_10;
+		L_10 = Mathf_Clamp01_mA7E048DBDA832D399A581BE4D6DED9FA44CE0F14_inline(L_9, NULL);
+		V_1 = L_10;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:341>
+		StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A* L_11 = V_0;
+		float L_12;
+		L_12 = LineDrawing_GetTiltNormalized_m1E95D483B20DA0F97A002B8CCED5DD23BC8D9DD8(__this, L_11, NULL);
+		V_2 = L_12;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:343>
+		float L_13 = V_1;
+		if ((!(((float)L_13) > ((float)(0.0f)))))
+		{
+			goto IL_0089;
+		}
+	}
+	{
+		StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A* L_14 = V_0;
+		NullCheck(L_14);
+		bool L_15;
+		L_15 = VirtualFuncInvoker0< bool >::Invoke(4, L_14);
+		if (!L_15)
+		{
+			goto IL_0089;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:345>
+		bool L_16 = __this->____isDrawing;
+		if (L_16)
+		{
+			goto IL_005f;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:347>
+		LineDrawing_StartNewLine_m7DCD60DF944B83E83AEDE38A78E1B0384306C78F(__this, NULL);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:348>
+		__this->____isDrawing = (bool)1;
+	}
+
+IL_005f:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:350>
+		StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A* L_17 = V_0;
+		StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A* L_18 = V_0;
+		NullCheck(L_18);
+		StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577 L_19;
+		L_19 = StylusHandler_get_CurrentState_m26068FA11B30F3E6A11632EF4A2C3963DE515734_inline(L_18, NULL);
+		Pose_t06BA69EAA6E9FAF60056D519A87D25F54AFE7971 L_20 = L_19.___inkingPose;
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_21 = L_20.___position;
+		bool L_22 = __this->____lineWidthIsFixed;
+		if (L_22)
+		{
+			G_B8_0 = L_21;
+			G_B8_1 = L_17;
+			G_B8_2 = __this;
+			goto IL_007c;
+		}
+		G_B7_0 = L_21;
+		G_B7_1 = L_17;
+		G_B7_2 = __this;
+	}
+	{
+		float L_23 = V_1;
+		G_B9_0 = L_23;
+		G_B9_1 = G_B7_0;
+		G_B9_2 = G_B7_1;
+		G_B9_3 = G_B7_2;
+		goto IL_0081;
+	}
+
+IL_007c:
+	{
+		G_B9_0 = (1.0f);
+		G_B9_1 = G_B8_0;
+		G_B9_2 = G_B8_1;
+		G_B9_3 = G_B8_2;
+	}
+
+IL_0081:
+	{
+		float L_24 = V_2;
+		NullCheck(G_B9_3);
+		LineDrawing_AddPoint_m5F45EDB3398ACADF246568F788C91E5A0278A344(G_B9_3, G_B9_2, G_B9_1, G_B9_0, L_24, NULL);
+		goto IL_009e;
+	}
+
+IL_0089:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:354>
+		bool L_25 = __this->____isDrawing;
+		if (!L_25)
+		{
+			goto IL_0097;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:356>
+		LineDrawing_FinalizeLine_m6EF04D9F7DB85BFE9E3A4D6AF8120FF59C22B1A3(__this, NULL);
+	}
+
+IL_0097:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:358>
+		__this->____isDrawing = (bool)0;
+	}
+
+IL_009e:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:362>
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:363>
+		StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A* L_26 = V_0;
+		NullCheck(L_26);
+		StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577 L_27;
+		L_27 = StylusHandler_get_CurrentState_m26068FA11B30F3E6A11632EF4A2C3963DE515734_inline(L_26, NULL);
+		bool L_28 = L_27.___cluster_back_double_tap_value;
+		if (L_28)
+		{
+			goto IL_00b8;
+		}
+	}
+	{
+		StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A* L_29 = V_0;
+		NullCheck(L_29);
+		StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577 L_30;
+		L_30 = StylusHandler_get_CurrentState_m26068FA11B30F3E6A11632EF4A2C3963DE515734_inline(L_29, NULL);
+		bool L_31 = L_30.___cluster_back_value;
+		if (!L_31)
+		{
+			goto IL_010f;
+		}
+	}
+
+IL_00b8:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:365>
+		List_1_tB951CE80B58D1BF9650862451D8DAD8C231F207B* L_32 = __this->____lines;
+		NullCheck(L_32);
+		int32_t L_33;
+		L_33 = List_1_get_Count_m4C37ED2D928D63B80F55AF434730C2D64EEB9F22_inline(L_32, List_1_get_Count_m4C37ED2D928D63B80F55AF434730C2D64EEB9F22_RuntimeMethod_var);
+		if ((((int32_t)L_33) <= ((int32_t)0)))
+		{
+			goto IL_00df;
+		}
+	}
+	{
+		bool L_34 = __this->____doubleTapDetected;
+		if (L_34)
+		{
+			goto IL_00df;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:367>
+		float L_35;
+		L_35 = Time_get_time_m3A271BB1B20041144AC5B7863B71AB1F0150374B(NULL);
+		__this->___buttonPressedTimestamp = L_35;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:368>
+		LineDrawing_RemoveLastLine_mECCA199341DEC08EED532EEFCCC4CE50AEAE664F(__this, NULL);
+	}
+
+IL_00df:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:370>
+		__this->____doubleTapDetected = (bool)1;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:371>
+		List_1_tB951CE80B58D1BF9650862451D8DAD8C231F207B* L_36 = __this->____lines;
+		NullCheck(L_36);
+		int32_t L_37;
+		L_37 = List_1_get_Count_m4C37ED2D928D63B80F55AF434730C2D64EEB9F22_inline(L_36, List_1_get_Count_m4C37ED2D928D63B80F55AF434730C2D64EEB9F22_RuntimeMethod_var);
+		if ((((int32_t)L_37) <= ((int32_t)0)))
+		{
+			goto IL_0116;
+		}
+	}
+	{
+		float L_38;
+		L_38 = Time_get_time_m3A271BB1B20041144AC5B7863B71AB1F0150374B(NULL);
+		float L_39 = __this->___buttonPressedTimestamp;
+		float L_40 = __this->___longPressDuration;
+		if ((!(((float)L_38) >= ((float)((float)il2cpp_codegen_add(L_39, L_40))))))
+		{
+			goto IL_0116;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:373>
+		LineDrawing_ClearAllLines_m6A1C7B193179C39CC53D35AFD7DBD26E9A1325F2(__this, NULL);
+		return;
+	}
+
+IL_010f:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:378>
+		__this->____doubleTapDetected = (bool)0;
+	}
+
+IL_0116:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:380>
+		return;
+	}
+}
+// Method Definition Index: 128520
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A* LineDrawing_ResolveActiveHandler_m85E54087B8161D1BF3A803D391BBB94804B53449 (LineDrawing_tA95DF0BD37C7F4C0EC6C561E5D3D2F0B3BCEFE08* __this, const RuntimeMethod* method) 
+{
+	static bool s_Il2CppMethodInitialized;
+	if (!s_Il2CppMethodInitialized)
+	{
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C_il2cpp_TypeInfo_var);
+		s_Il2CppMethodInitialized = true;
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:384>
+		StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A* L_0 = __this->____stylusHandler;
+		bool L_1;
+		L_1 = LineDrawing_IsHandlerActive_m866A697F1E17E8E4F3F95E33AAFF6B7F5D640ACA(__this, L_0, NULL);
+		if (!L_1)
+		{
+			goto IL_0015;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:386>
+		StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A* L_2 = __this->____stylusHandler;
+		return L_2;
+	}
+
+IL_0015:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:388>
+		StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A* L_3 = __this->____fallbackHandler;
+		bool L_4;
+		L_4 = LineDrawing_IsHandlerActive_m866A697F1E17E8E4F3F95E33AAFF6B7F5D640ACA(__this, L_3, NULL);
+		if (!L_4)
+		{
+			goto IL_002a;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:390>
+		StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A* L_5 = __this->____fallbackHandler;
+		return L_5;
+	}
+
+IL_002a:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:392>
+		StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A* L_6 = __this->____stylusHandler;
+		il2cpp_codegen_runtime_class_init_inline(Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C_il2cpp_TypeInfo_var);
+		bool L_7;
+		L_7 = Object_op_Inequality_mD0BE578448EAA61948F25C32F8DD55AB1F778602(L_6, (Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C*)NULL, NULL);
+		if (!L_7)
+		{
+			goto IL_003f;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:394>
+		StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A* L_8 = __this->____stylusHandler;
+		return L_8;
+	}
+
+IL_003f:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:396>
+		StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A* L_9 = __this->____fallbackHandler;
+		return L_9;
+	}
+}
+// Method Definition Index: 128521
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR bool LineDrawing_IsHandlerActive_m866A697F1E17E8E4F3F95E33AAFF6B7F5D640ACA (LineDrawing_tA95DF0BD37C7F4C0EC6C561E5D3D2F0B3BCEFE08* __this, StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A* ___0_handler, const RuntimeMethod* method) 
+{
+	static bool s_Il2CppMethodInitialized;
+	if (!s_Il2CppMethodInitialized)
+	{
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C_il2cpp_TypeInfo_var);
+		s_Il2CppMethodInitialized = true;
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:401>
+		StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A* L_0 = ___0_handler;
+		il2cpp_codegen_runtime_class_init_inline(Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C_il2cpp_TypeInfo_var);
+		bool L_1;
+		L_1 = Object_op_Inequality_mD0BE578448EAA61948F25C32F8DD55AB1F778602(L_0, (Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C*)NULL, NULL);
+		if (!L_1)
+		{
+			goto IL_0015;
+		}
+	}
+	{
+		StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A* L_2 = ___0_handler;
+		NullCheck(L_2);
+		StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577 L_3;
+		L_3 = StylusHandler_get_CurrentState_m26068FA11B30F3E6A11632EF4A2C3963DE515734_inline(L_2, NULL);
+		bool L_4 = L_3.___isActive;
+		return L_4;
+	}
+
+IL_0015:
+	{
+		return (bool)0;
+	}
+}
+// Method Definition Index: 128522
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void LineDrawing__ctor_mF1F52808DA4A6E6420DBD0CF5B96B2489EE95192 (LineDrawing_tA95DF0BD37C7F4C0EC6C561E5D3D2F0B3BCEFE08* __this, const RuntimeMethod* method) 
+{
+	static bool s_Il2CppMethodInitialized;
+	if (!s_Il2CppMethodInitialized)
+	{
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&List_1__ctor_m0F0ABB69F11B026B32E788D99A217A5384636C7D_RuntimeMethod_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&List_1__ctor_m447372C1EF7141193B93090A77395B786C72C7BC_RuntimeMethod_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&List_1__ctor_mC29D3D824786832A31096310B3B3016B8B42B802_RuntimeMethod_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&List_1__ctor_mC54E2BCBE43279A96FC082F5CDE2D76388BD8F9C_RuntimeMethod_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918_il2cpp_TypeInfo_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&List_1_t77B94703E05C519A9010DD0614F757F974E1CD8B_il2cpp_TypeInfo_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&List_1_tB951CE80B58D1BF9650862451D8DAD8C231F207B_il2cpp_TypeInfo_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&List_1_tEBA944EB098597668737638C5527516C00F5CF52_il2cpp_TypeInfo_var);
+		s_Il2CppMethodInitialized = true;
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:8>
+		List_1_tB951CE80B58D1BF9650862451D8DAD8C231F207B* L_0 = (List_1_tB951CE80B58D1BF9650862451D8DAD8C231F207B*)il2cpp_codegen_object_new(List_1_tB951CE80B58D1BF9650862451D8DAD8C231F207B_il2cpp_TypeInfo_var);
+		List_1__ctor_m447372C1EF7141193B93090A77395B786C72C7BC(L_0, List_1__ctor_m447372C1EF7141193B93090A77395B786C72C7BC_RuntimeMethod_var);
+		__this->____lines = L_0;
+		Il2CppCodeGenWriteBarrier((void**)(&__this->____lines), (void*)L_0);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:9>
+		List_1_tEBA944EB098597668737638C5527516C00F5CF52* L_1 = (List_1_tEBA944EB098597668737638C5527516C00F5CF52*)il2cpp_codegen_object_new(List_1_tEBA944EB098597668737638C5527516C00F5CF52_il2cpp_TypeInfo_var);
+		List_1__ctor_m0F0ABB69F11B026B32E788D99A217A5384636C7D(L_1, List_1__ctor_m0F0ABB69F11B026B32E788D99A217A5384636C7D_RuntimeMethod_var);
+		__this->____loopSounds = L_1;
+		Il2CppCodeGenWriteBarrier((void**)(&__this->____loopSounds), (void*)L_1);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:11>
+		List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* L_2 = (List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918*)il2cpp_codegen_object_new(List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918_il2cpp_TypeInfo_var);
+		List_1__ctor_mC29D3D824786832A31096310B3B3016B8B42B802(L_2, List_1__ctor_mC29D3D824786832A31096310B3B3016B8B42B802_RuntimeMethod_var);
+		__this->____currentLineWidths = L_2;
+		Il2CppCodeGenWriteBarrier((void**)(&__this->____currentLineWidths), (void*)L_2);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:12>
+		List_1_t77B94703E05C519A9010DD0614F757F974E1CD8B* L_3 = (List_1_t77B94703E05C519A9010DD0614F757F974E1CD8B*)il2cpp_codegen_object_new(List_1_t77B94703E05C519A9010DD0614F757F974E1CD8B_il2cpp_TypeInfo_var);
+		List_1__ctor_mC54E2BCBE43279A96FC082F5CDE2D76388BD8F9C(L_3, List_1__ctor_mC54E2BCBE43279A96FC082F5CDE2D76388BD8F9C_RuntimeMethod_var);
+		__this->____currentLinePoints = L_3;
+		Il2CppCodeGenWriteBarrier((void**)(&__this->____currentLinePoints), (void*)L_3);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:13>
+		List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* L_4 = (List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918*)il2cpp_codegen_object_new(List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918_il2cpp_TypeInfo_var);
+		List_1__ctor_mC29D3D824786832A31096310B3B3016B8B42B802(L_4, List_1__ctor_mC29D3D824786832A31096310B3B3016B8B42B802_RuntimeMethod_var);
+		__this->____currentLinePressures = L_4;
+		Il2CppCodeGenWriteBarrier((void**)(&__this->____currentLinePressures), (void*)L_4);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:14>
+		List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* L_5 = (List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918*)il2cpp_codegen_object_new(List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918_il2cpp_TypeInfo_var);
+		List_1__ctor_mC29D3D824786832A31096310B3B3016B8B42B802(L_5, List_1__ctor_mC29D3D824786832A31096310B3B3016B8B42B802_RuntimeMethod_var);
+		__this->____currentLineTilts = L_5;
+		Il2CppCodeGenWriteBarrier((void**)(&__this->____currentLineTilts), (void*)L_5);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:17>
+		__this->____maxLineWidth = (0.00999999978f);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:18>
+		__this->____minLineWidth = (0.000500000024f);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:46>
+		__this->____enableAudioLoops = (bool)1;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:47>
+		__this->____closeLoopDistance = (0.0199999996f);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:48>
+		__this->____minLoopPoints = ((int32_t)12);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:49>
+		__this->____detailAttachDistance = (0.0500000007f);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:50>
+		LoopSoundSettings_tCE8CCF7BF33FB6B89FB05D9D69B17346365EADA5 L_6;
+		L_6 = LoopSoundSettings_CreateDefault_m3F6871635F06F5F9F80A2A7B94F84255B02775F8(NULL);
+		__this->____loopSoundSettings = L_6;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:53>
+		__this->____applyTwistOffset = (bool)1;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:54>
+		__this->____twistOffsetStrength = (0.00300000003f);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:56>
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_7;
+		L_7 = Vector3_get_forward_mAA55A7034304DF8B2152EAD49AE779FC4CA2EB4A_inline(NULL);
+		__this->____penAxis = L_7;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:62>
+		__this->___longPressDuration = (1.0f);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineDrawing.cs:70>
+		__this->____autoCreateOculusFallback = (bool)1;
+		MonoBehaviour__ctor_m592DB0105CA0BC97AA1C5F4AD27B12D68A3B7C1E(__this, NULL);
+		return;
+	}
+}
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Winvalid-offsetof"
+#pragma clang diagnostic ignored "-Wunused-variable"
+#endif
+// Method Definition Index: 128523
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR int32_t LineStrokeData_get_Count_mF86DFB2B4C0DF8BDDCE856B495E04C959E8B4407 (LineStrokeData_t096A2E61000991AF1A1E54177DB496F7847C7C2B* __this, const RuntimeMethod* method) 
+{
+	static bool s_Il2CppMethodInitialized;
+	if (!s_Il2CppMethodInitialized)
+	{
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&List_1_get_Count_m46EEFFA770BE665EA0CB3A5332E941DA4B3C1D37_RuntimeMethod_var);
+		s_Il2CppMethodInitialized = true;
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineStrokeData.cs:14>
+		List_1_t77B94703E05C519A9010DD0614F757F974E1CD8B* L_0 = __this->___Points;
+		NullCheck(L_0);
+		int32_t L_1;
+		L_1 = List_1_get_Count_m46EEFFA770BE665EA0CB3A5332E941DA4B3C1D37_inline(L_0, List_1_get_Count_m46EEFFA770BE665EA0CB3A5332E941DA4B3C1D37_RuntimeMethod_var);
+		return L_1;
+	}
+}
+// Method Definition Index: 128524
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void LineStrokeData__ctor_mF08E522BAAFCDACF1785489F1A6F219B175A7C95 (LineStrokeData_t096A2E61000991AF1A1E54177DB496F7847C7C2B* __this, List_1_t77B94703E05C519A9010DD0614F757F974E1CD8B* ___0_points, List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* ___1_pressures, List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* ___2_tilts, float ___3_totalLength, const RuntimeMethod* method) 
+{
+	static bool s_Il2CppMethodInitialized;
+	if (!s_Il2CppMethodInitialized)
+	{
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&List_1__ctor_m8C289AC1BF84CD8ED45F520DC3005096E1A9A37F_RuntimeMethod_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&List_1__ctor_mC734A32FAD92BD7492907D4733032FD21348EECD_RuntimeMethod_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&List_1_get_Count_m46EEFFA770BE665EA0CB3A5332E941DA4B3C1D37_RuntimeMethod_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&List_1_get_Count_m545762F67009314D9C63DD209B42FFF950569B05_RuntimeMethod_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&List_1_get_Item_m8F2E15FC96DA75186C51228128A0660709E4E810_RuntimeMethod_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&List_1_get_Item_mFE556F47C4CD09EAC6C898EF39D4A8EC112CFC50_RuntimeMethod_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918_il2cpp_TypeInfo_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&List_1_t77B94703E05C519A9010DD0614F757F974E1CD8B_il2cpp_TypeInfo_var);
+		s_Il2CppMethodInitialized = true;
+	}
+	int32_t V_0 = 0;
+	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 V_1;
+	memset((&V_1), 0, sizeof(V_1));
+	float V_2 = 0.0f;
+	float V_3 = 0.0f;
+	int32_t V_4 = 0;
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineStrokeData.cs:16>
+		Object__ctor_mE837C6B9FA8C6D5D109F4B2EC885D79919AC0EA2(__this, NULL);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineStrokeData.cs:18>
+		List_1_t77B94703E05C519A9010DD0614F757F974E1CD8B* L_0 = ___0_points;
+		List_1_t77B94703E05C519A9010DD0614F757F974E1CD8B* L_1 = (List_1_t77B94703E05C519A9010DD0614F757F974E1CD8B*)il2cpp_codegen_object_new(List_1_t77B94703E05C519A9010DD0614F757F974E1CD8B_il2cpp_TypeInfo_var);
+		List_1__ctor_mC734A32FAD92BD7492907D4733032FD21348EECD(L_1, L_0, List_1__ctor_mC734A32FAD92BD7492907D4733032FD21348EECD_RuntimeMethod_var);
+		__this->___Points = L_1;
+		Il2CppCodeGenWriteBarrier((void**)(&__this->___Points), (void*)L_1);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineStrokeData.cs:19>
+		List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* L_2 = ___1_pressures;
+		List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* L_3 = (List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918*)il2cpp_codegen_object_new(List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918_il2cpp_TypeInfo_var);
+		List_1__ctor_m8C289AC1BF84CD8ED45F520DC3005096E1A9A37F(L_3, L_2, List_1__ctor_m8C289AC1BF84CD8ED45F520DC3005096E1A9A37F_RuntimeMethod_var);
+		__this->___Pressures = L_3;
+		Il2CppCodeGenWriteBarrier((void**)(&__this->___Pressures), (void*)L_3);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineStrokeData.cs:20>
+		List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* L_4 = ___2_tilts;
+		List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* L_5 = (List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918*)il2cpp_codegen_object_new(List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918_il2cpp_TypeInfo_var);
+		List_1__ctor_m8C289AC1BF84CD8ED45F520DC3005096E1A9A37F(L_5, L_4, List_1__ctor_m8C289AC1BF84CD8ED45F520DC3005096E1A9A37F_RuntimeMethod_var);
+		__this->___Tilts = L_5;
+		Il2CppCodeGenWriteBarrier((void**)(&__this->___Tilts), (void*)L_5);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineStrokeData.cs:21>
+		float L_6 = ___3_totalLength;
+		__this->___TotalLength = L_6;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineStrokeData.cs:23>
+		List_1_t77B94703E05C519A9010DD0614F757F974E1CD8B* L_7 = __this->___Points;
+		NullCheck(L_7);
+		int32_t L_8;
+		L_8 = List_1_get_Count_m46EEFFA770BE665EA0CB3A5332E941DA4B3C1D37_inline(L_7, List_1_get_Count_m46EEFFA770BE665EA0CB3A5332E941DA4B3C1D37_RuntimeMethod_var);
+		V_0 = L_8;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineStrokeData.cs:24>
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_9;
+		L_9 = Vector3_get_zero_m0C1249C3F25B1C70EAD3CC8B31259975A457AE39_inline(NULL);
+		V_1 = L_9;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineStrokeData.cs:25>
+		V_2 = (0.0f);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineStrokeData.cs:26>
+		V_3 = (0.0f);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineStrokeData.cs:28>
+		V_4 = 0;
+		goto IL_00ad;
+	}
+
+IL_0055:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineStrokeData.cs:30>
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_10 = V_1;
+		List_1_t77B94703E05C519A9010DD0614F757F974E1CD8B* L_11 = __this->___Points;
+		int32_t L_12 = V_4;
+		NullCheck(L_11);
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_13;
+		L_13 = List_1_get_Item_m8F2E15FC96DA75186C51228128A0660709E4E810(L_11, L_12, List_1_get_Item_m8F2E15FC96DA75186C51228128A0660709E4E810_RuntimeMethod_var);
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_14;
+		L_14 = Vector3_op_Addition_m78C0EC70CB66E8DCAC225743D82B268DAEE92067_inline(L_10, L_13, NULL);
+		V_1 = L_14;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineStrokeData.cs:31>
+		int32_t L_15 = V_4;
+		List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* L_16 = __this->___Pressures;
+		NullCheck(L_16);
+		int32_t L_17;
+		L_17 = List_1_get_Count_m545762F67009314D9C63DD209B42FFF950569B05_inline(L_16, List_1_get_Count_m545762F67009314D9C63DD209B42FFF950569B05_RuntimeMethod_var);
+		if ((((int32_t)L_15) >= ((int32_t)L_17)))
+		{
+			goto IL_0088;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineStrokeData.cs:33>
+		float L_18 = V_2;
+		List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* L_19 = __this->___Pressures;
+		int32_t L_20 = V_4;
+		NullCheck(L_19);
+		float L_21;
+		L_21 = List_1_get_Item_mFE556F47C4CD09EAC6C898EF39D4A8EC112CFC50(L_19, L_20, List_1_get_Item_mFE556F47C4CD09EAC6C898EF39D4A8EC112CFC50_RuntimeMethod_var);
+		V_2 = ((float)il2cpp_codegen_add(L_18, L_21));
+	}
+
+IL_0088:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineStrokeData.cs:35>
+		int32_t L_22 = V_4;
+		List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* L_23 = __this->___Tilts;
+		NullCheck(L_23);
+		int32_t L_24;
+		L_24 = List_1_get_Count_m545762F67009314D9C63DD209B42FFF950569B05_inline(L_23, List_1_get_Count_m545762F67009314D9C63DD209B42FFF950569B05_RuntimeMethod_var);
+		if ((((int32_t)L_22) >= ((int32_t)L_24)))
+		{
+			goto IL_00a7;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineStrokeData.cs:37>
+		float L_25 = V_3;
+		List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* L_26 = __this->___Tilts;
+		int32_t L_27 = V_4;
+		NullCheck(L_26);
+		float L_28;
+		L_28 = List_1_get_Item_mFE556F47C4CD09EAC6C898EF39D4A8EC112CFC50(L_26, L_27, List_1_get_Item_mFE556F47C4CD09EAC6C898EF39D4A8EC112CFC50_RuntimeMethod_var);
+		V_3 = ((float)il2cpp_codegen_add(L_25, L_28));
+	}
+
+IL_00a7:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineStrokeData.cs:28>
+		int32_t L_29 = V_4;
+		V_4 = ((int32_t)il2cpp_codegen_add(L_29, 1));
+	}
+
+IL_00ad:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineStrokeData.cs:28>
+		int32_t L_30 = V_4;
+		int32_t L_31 = V_0;
+		if ((((int32_t)L_30) < ((int32_t)L_31)))
+		{
+			goto IL_0055;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineStrokeData.cs:41>
+		int32_t L_32 = V_0;
+		if ((((int32_t)L_32) <= ((int32_t)0)))
+		{
+			goto IL_00d9;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineStrokeData.cs:43>
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_33 = V_1;
+		int32_t L_34 = V_0;
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_35;
+		L_35 = Vector3_op_Division_mCC6BB24E372AB96B8380D1678446EF6A8BAE13BB_inline(L_33, ((float)L_34), NULL);
+		__this->___Centroid = L_35;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineStrokeData.cs:44>
+		float L_36 = V_2;
+		int32_t L_37 = V_0;
+		__this->___AveragePressure = ((float)(L_36/((float)L_37)));
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineStrokeData.cs:45>
+		float L_38 = V_3;
+		int32_t L_39 = V_0;
+		__this->___AverageTilt = ((float)(L_38/((float)L_39)));
+		return;
+	}
+
+IL_00d9:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineStrokeData.cs:49>
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_40;
+		L_40 = Vector3_get_zero_m0C1249C3F25B1C70EAD3CC8B31259975A457AE39_inline(NULL);
+		__this->___Centroid = L_40;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineStrokeData.cs:50>
+		__this->___AveragePressure = (0.0f);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineStrokeData.cs:51>
+		__this->___AverageTilt = (0.0f);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LineStrokeData.cs:53>
+		return;
+	}
+}
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Winvalid-offsetof"
+#pragma clang diagnostic ignored "-Wunused-variable"
+#endif
+// Method Definition Index: 128525
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void LoopDetailStroke_Initialize_m3F9BB86F861C7A38D132E227A42A23FC20BDF6EC (LoopDetailStroke_tE17493DBF0EBF02DA61B6BF1A487624E4E08809F* __this, LoopSound_t0F81954F3F93403FEC588C98AAD22BF92DC6E075* ___0_loopSound, List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* ___1_addedSpikes, const RuntimeMethod* method) 
+{
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopDetailStroke.cs:11>
+		LoopSound_t0F81954F3F93403FEC588C98AAD22BF92DC6E075* L_0 = ___0_loopSound;
+		__this->____loopSound = L_0;
+		Il2CppCodeGenWriteBarrier((void**)(&__this->____loopSound), (void*)L_0);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopDetailStroke.cs:12>
+		List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* L_1 = ___1_addedSpikes;
+		__this->____addedSpikes = L_1;
+		Il2CppCodeGenWriteBarrier((void**)(&__this->____addedSpikes), (void*)L_1);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopDetailStroke.cs:13>
+		return;
+	}
+}
+// Method Definition Index: 128526
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void LoopDetailStroke_OnDestroy_m2B7078CD2E26B8C04A2E526B468F13CDD891F4A3 (LoopDetailStroke_tE17493DBF0EBF02DA61B6BF1A487624E4E08809F* __this, const RuntimeMethod* method) 
+{
+	static bool s_Il2CppMethodInitialized;
+	if (!s_Il2CppMethodInitialized)
+	{
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&List_1_get_Count_m545762F67009314D9C63DD209B42FFF950569B05_RuntimeMethod_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C_il2cpp_TypeInfo_var);
+		s_Il2CppMethodInitialized = true;
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopDetailStroke.cs:17>
+		LoopSound_t0F81954F3F93403FEC588C98AAD22BF92DC6E075* L_0 = __this->____loopSound;
+		il2cpp_codegen_runtime_class_init_inline(Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C_il2cpp_TypeInfo_var);
+		bool L_1;
+		L_1 = Object_op_Inequality_mD0BE578448EAA61948F25C32F8DD55AB1F778602(L_0, (Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C*)NULL, NULL);
+		if (!L_1)
+		{
+			goto IL_0035;
+		}
+	}
+	{
+		List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* L_2 = __this->____addedSpikes;
+		if (!L_2)
+		{
+			goto IL_0035;
+		}
+	}
+	{
+		List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* L_3 = __this->____addedSpikes;
+		NullCheck(L_3);
+		int32_t L_4;
+		L_4 = List_1_get_Count_m545762F67009314D9C63DD209B42FFF950569B05_inline(L_3, List_1_get_Count_m545762F67009314D9C63DD209B42FFF950569B05_RuntimeMethod_var);
+		if ((((int32_t)L_4) <= ((int32_t)0)))
+		{
+			goto IL_0035;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopDetailStroke.cs:19>
+		LoopSound_t0F81954F3F93403FEC588C98AAD22BF92DC6E075* L_5 = __this->____loopSound;
+		List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* L_6 = __this->____addedSpikes;
+		NullCheck(L_5);
+		LoopSound_RemoveSpikes_mB7609F57A0FF4094EC49033AA63499058E80565D(L_5, L_6, NULL);
+	}
+
+IL_0035:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopDetailStroke.cs:21>
+		return;
+	}
+}
+// Method Definition Index: 128527
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void LoopDetailStroke__ctor_m58793DEE2D39FAD6244C4992AA5EB9772BAA0BEB (LoopDetailStroke_tE17493DBF0EBF02DA61B6BF1A487624E4E08809F* __this, const RuntimeMethod* method) 
+{
+	{
+		MonoBehaviour__ctor_m592DB0105CA0BC97AA1C5F4AD27B12D68A3B7C1E(__this, NULL);
+		return;
+	}
+}
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Winvalid-offsetof"
+#pragma clang diagnostic ignored "-Wunused-variable"
+#endif
+// Method Definition Index: 128528
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR LoopSoundSettings_tCE8CCF7BF33FB6B89FB05D9D69B17346365EADA5 LoopSoundSettings_CreateDefault_m3F6871635F06F5F9F80A2A7B94F84255B02775F8 (const RuntimeMethod* method) 
+{
+	LoopSoundSettings_tCE8CCF7BF33FB6B89FB05D9D69B17346365EADA5 V_0;
+	memset((&V_0), 0, sizeof(V_0));
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:24>
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:25>
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:26>
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:27>
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:28>
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:29>
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:30>
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:31>
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:32>
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:33>
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:34>
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:35>
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:36>
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:37>
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:38>
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:39>
+		il2cpp_codegen_initobj((&V_0), sizeof(LoopSoundSettings_tCE8CCF7BF33FB6B89FB05D9D69B17346365EADA5));
+		(&V_0)->___secondsPerMeter = (0.600000024f);
+		Vector2_t1FD6F485C871E832B347AB2DC8CBA08B739D8DF7 L_0;
+		memset((&L_0), 0, sizeof(L_0));
+		Vector2__ctor_m9525B79969AFFE3254B303A40997A56DEEB6F548_inline((&L_0), (0.400000006f), (8.0f), NULL);
+		(&V_0)->___loopDurationRange = L_0;
+		Vector2_t1FD6F485C871E832B347AB2DC8CBA08B739D8DF7 L_1;
+		memset((&L_1), 0, sizeof(L_1));
+		Vector2__ctor_m9525B79969AFFE3254B303A40997A56DEEB6F548_inline((&L_1), (0.200000003f), (2.0f), NULL);
+		(&V_0)->___lengthRange = L_1;
+		Vector2_t1FD6F485C871E832B347AB2DC8CBA08B739D8DF7 L_2;
+		memset((&L_2), 0, sizeof(L_2));
+		Vector2__ctor_m9525B79969AFFE3254B303A40997A56DEEB6F548_inline((&L_2), (110.0f), (660.0f), NULL);
+		(&V_0)->___frequencyRange = L_2;
+		(&V_0)->___minVolume = (0.0500000007f);
+		(&V_0)->___maxVolume = (0.400000006f);
+		(&V_0)->___beatAmplitude = (0.349999994f);
+		(&V_0)->___beatDuration = (0.0599999987f);
+		(&V_0)->___beatFrequency = (800.0f);
+		(&V_0)->___brightnessFromTilt = (0.850000024f);
+		(&V_0)->___spatialBlend = (1.0f);
+		(&V_0)->___minDistance = (0.200000003f);
+		(&V_0)->___maxDistance = (3.0f);
+		LoopSoundSettings_tCE8CCF7BF33FB6B89FB05D9D69B17346365EADA5 L_3 = V_0;
+		return L_3;
+	}
+}
+// Method Definition Index: 128529
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR LoopSoundSettings_tCE8CCF7BF33FB6B89FB05D9D69B17346365EADA5 LoopSoundSettings_Sanitize_m326F8A4901490EC3B773E1C1CCBA4041D756465D (LoopSoundSettings_tCE8CCF7BF33FB6B89FB05D9D69B17346365EADA5 ___0_settings, const RuntimeMethod* method) 
+{
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:44>
+		LoopSoundSettings_tCE8CCF7BF33FB6B89FB05D9D69B17346365EADA5 L_0 = ___0_settings;
+		float L_1 = L_0.___secondsPerMeter;
+		if ((!(((float)L_1) <= ((float)(0.0f)))))
+		{
+			goto IL_0019;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:46>
+		(&___0_settings)->___secondsPerMeter = (0.600000024f);
+	}
+
+IL_0019:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:48>
+		LoopSoundSettings_tCE8CCF7BF33FB6B89FB05D9D69B17346365EADA5 L_2 = ___0_settings;
+		Vector2_t1FD6F485C871E832B347AB2DC8CBA08B739D8DF7 L_3 = L_2.___loopDurationRange;
+		float L_4 = L_3.___x;
+		if ((!(((float)L_4) <= ((float)(0.0f)))))
+		{
+			goto IL_003c;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:50>
+		Vector2_t1FD6F485C871E832B347AB2DC8CBA08B739D8DF7* L_5 = (Vector2_t1FD6F485C871E832B347AB2DC8CBA08B739D8DF7*)(&(&___0_settings)->___loopDurationRange);
+		L_5->___x = (0.400000006f);
+	}
+
+IL_003c:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:52>
+		LoopSoundSettings_tCE8CCF7BF33FB6B89FB05D9D69B17346365EADA5 L_6 = ___0_settings;
+		Vector2_t1FD6F485C871E832B347AB2DC8CBA08B739D8DF7 L_7 = L_6.___loopDurationRange;
+		float L_8 = L_7.___y;
+		LoopSoundSettings_tCE8CCF7BF33FB6B89FB05D9D69B17346365EADA5 L_9 = ___0_settings;
+		Vector2_t1FD6F485C871E832B347AB2DC8CBA08B739D8DF7 L_10 = L_9.___loopDurationRange;
+		float L_11 = L_10.___x;
+		if ((!(((float)L_8) < ((float)L_11))))
+		{
+			goto IL_0071;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:54>
+		Vector2_t1FD6F485C871E832B347AB2DC8CBA08B739D8DF7* L_12 = (Vector2_t1FD6F485C871E832B347AB2DC8CBA08B739D8DF7*)(&(&___0_settings)->___loopDurationRange);
+		LoopSoundSettings_tCE8CCF7BF33FB6B89FB05D9D69B17346365EADA5 L_13 = ___0_settings;
+		Vector2_t1FD6F485C871E832B347AB2DC8CBA08B739D8DF7 L_14 = L_13.___loopDurationRange;
+		float L_15 = L_14.___x;
+		L_12->___y = ((float)il2cpp_codegen_add(L_15, (0.100000001f)));
+	}
+
+IL_0071:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:56>
+		LoopSoundSettings_tCE8CCF7BF33FB6B89FB05D9D69B17346365EADA5 L_16 = ___0_settings;
+		Vector2_t1FD6F485C871E832B347AB2DC8CBA08B739D8DF7 L_17 = L_16.___lengthRange;
+		float L_18 = L_17.___x;
+		if ((!(((float)L_18) <= ((float)(0.0f)))))
+		{
+			goto IL_0094;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:58>
+		Vector2_t1FD6F485C871E832B347AB2DC8CBA08B739D8DF7* L_19 = (Vector2_t1FD6F485C871E832B347AB2DC8CBA08B739D8DF7*)(&(&___0_settings)->___lengthRange);
+		L_19->___x = (0.200000003f);
+	}
+
+IL_0094:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:60>
+		LoopSoundSettings_tCE8CCF7BF33FB6B89FB05D9D69B17346365EADA5 L_20 = ___0_settings;
+		Vector2_t1FD6F485C871E832B347AB2DC8CBA08B739D8DF7 L_21 = L_20.___lengthRange;
+		float L_22 = L_21.___y;
+		LoopSoundSettings_tCE8CCF7BF33FB6B89FB05D9D69B17346365EADA5 L_23 = ___0_settings;
+		Vector2_t1FD6F485C871E832B347AB2DC8CBA08B739D8DF7 L_24 = L_23.___lengthRange;
+		float L_25 = L_24.___x;
+		if ((!(((float)L_22) < ((float)L_25))))
+		{
+			goto IL_00c9;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:62>
+		Vector2_t1FD6F485C871E832B347AB2DC8CBA08B739D8DF7* L_26 = (Vector2_t1FD6F485C871E832B347AB2DC8CBA08B739D8DF7*)(&(&___0_settings)->___lengthRange);
+		LoopSoundSettings_tCE8CCF7BF33FB6B89FB05D9D69B17346365EADA5 L_27 = ___0_settings;
+		Vector2_t1FD6F485C871E832B347AB2DC8CBA08B739D8DF7 L_28 = L_27.___lengthRange;
+		float L_29 = L_28.___x;
+		L_26->___y = ((float)il2cpp_codegen_add(L_29, (0.200000003f)));
+	}
+
+IL_00c9:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:64>
+		LoopSoundSettings_tCE8CCF7BF33FB6B89FB05D9D69B17346365EADA5 L_30 = ___0_settings;
+		Vector2_t1FD6F485C871E832B347AB2DC8CBA08B739D8DF7 L_31 = L_30.___frequencyRange;
+		float L_32 = L_31.___x;
+		if ((!(((float)L_32) <= ((float)(0.0f)))))
+		{
+			goto IL_00ec;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:66>
+		Vector2_t1FD6F485C871E832B347AB2DC8CBA08B739D8DF7* L_33 = (Vector2_t1FD6F485C871E832B347AB2DC8CBA08B739D8DF7*)(&(&___0_settings)->___frequencyRange);
+		L_33->___x = (110.0f);
+	}
+
+IL_00ec:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:68>
+		LoopSoundSettings_tCE8CCF7BF33FB6B89FB05D9D69B17346365EADA5 L_34 = ___0_settings;
+		Vector2_t1FD6F485C871E832B347AB2DC8CBA08B739D8DF7 L_35 = L_34.___frequencyRange;
+		float L_36 = L_35.___y;
+		LoopSoundSettings_tCE8CCF7BF33FB6B89FB05D9D69B17346365EADA5 L_37 = ___0_settings;
+		Vector2_t1FD6F485C871E832B347AB2DC8CBA08B739D8DF7 L_38 = L_37.___frequencyRange;
+		float L_39 = L_38.___x;
+		if ((!(((float)L_36) < ((float)L_39))))
+		{
+			goto IL_0121;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:70>
+		Vector2_t1FD6F485C871E832B347AB2DC8CBA08B739D8DF7* L_40 = (Vector2_t1FD6F485C871E832B347AB2DC8CBA08B739D8DF7*)(&(&___0_settings)->___frequencyRange);
+		LoopSoundSettings_tCE8CCF7BF33FB6B89FB05D9D69B17346365EADA5 L_41 = ___0_settings;
+		Vector2_t1FD6F485C871E832B347AB2DC8CBA08B739D8DF7 L_42 = L_41.___frequencyRange;
+		float L_43 = L_42.___x;
+		L_40->___y = ((float)il2cpp_codegen_add(L_43, (110.0f)));
+	}
+
+IL_0121:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:72>
+		LoopSoundSettings_tCE8CCF7BF33FB6B89FB05D9D69B17346365EADA5 L_44 = ___0_settings;
+		float L_45 = L_44.___maxVolume;
+		if ((!(((float)L_45) <= ((float)(0.0f)))))
+		{
+			goto IL_013a;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:74>
+		(&___0_settings)->___maxVolume = (0.400000006f);
+	}
+
+IL_013a:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:76>
+		LoopSoundSettings_tCE8CCF7BF33FB6B89FB05D9D69B17346365EADA5 L_46 = ___0_settings;
+		float L_47 = L_46.___minVolume;
+		if ((!(((float)L_47) < ((float)(0.0f)))))
+		{
+			goto IL_0153;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:78>
+		(&___0_settings)->___minVolume = (0.0f);
+	}
+
+IL_0153:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:80>
+		LoopSoundSettings_tCE8CCF7BF33FB6B89FB05D9D69B17346365EADA5 L_48 = ___0_settings;
+		float L_49 = L_48.___minVolume;
+		LoopSoundSettings_tCE8CCF7BF33FB6B89FB05D9D69B17346365EADA5 L_50 = ___0_settings;
+		float L_51 = L_50.___maxVolume;
+		if ((!(((float)L_49) > ((float)L_51))))
+		{
+			goto IL_0174;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:82>
+		LoopSoundSettings_tCE8CCF7BF33FB6B89FB05D9D69B17346365EADA5 L_52 = ___0_settings;
+		float L_53 = L_52.___maxVolume;
+		(&___0_settings)->___minVolume = ((float)il2cpp_codegen_multiply(L_53, (0.5f)));
+	}
+
+IL_0174:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:84>
+		LoopSoundSettings_tCE8CCF7BF33FB6B89FB05D9D69B17346365EADA5 L_54 = ___0_settings;
+		float L_55 = L_54.___beatAmplitude;
+		if ((!(((float)L_55) < ((float)(0.0f)))))
+		{
+			goto IL_018d;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:86>
+		(&___0_settings)->___beatAmplitude = (0.349999994f);
+	}
+
+IL_018d:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:88>
+		LoopSoundSettings_tCE8CCF7BF33FB6B89FB05D9D69B17346365EADA5 L_56 = ___0_settings;
+		float L_57 = L_56.___beatDuration;
+		if ((!(((float)L_57) <= ((float)(0.00100000005f)))))
+		{
+			goto IL_01a6;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:90>
+		(&___0_settings)->___beatDuration = (0.0599999987f);
+	}
+
+IL_01a6:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:92>
+		LoopSoundSettings_tCE8CCF7BF33FB6B89FB05D9D69B17346365EADA5 L_58 = ___0_settings;
+		float L_59 = L_58.___beatFrequency;
+		if ((!(((float)L_59) <= ((float)(0.0f)))))
+		{
+			goto IL_01bf;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:94>
+		(&___0_settings)->___beatFrequency = (800.0f);
+	}
+
+IL_01bf:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:96>
+		LoopSoundSettings_tCE8CCF7BF33FB6B89FB05D9D69B17346365EADA5 L_60 = ___0_settings;
+		float L_61 = L_60.___brightnessFromTilt;
+		if ((!(((float)L_61) < ((float)(0.0f)))))
+		{
+			goto IL_01d8;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:98>
+		(&___0_settings)->___brightnessFromTilt = (0.0f);
+	}
+
+IL_01d8:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:100>
+		LoopSoundSettings_tCE8CCF7BF33FB6B89FB05D9D69B17346365EADA5 L_62 = ___0_settings;
+		float L_63 = L_62.___spatialBlend;
+		if ((!(((float)L_63) < ((float)(0.0f)))))
+		{
+			goto IL_01f1;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:102>
+		(&___0_settings)->___spatialBlend = (0.0f);
+	}
+
+IL_01f1:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:104>
+		LoopSoundSettings_tCE8CCF7BF33FB6B89FB05D9D69B17346365EADA5 L_64 = ___0_settings;
+		float L_65 = L_64.___spatialBlend;
+		if ((!(((float)L_65) > ((float)(1.0f)))))
+		{
+			goto IL_020a;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:106>
+		(&___0_settings)->___spatialBlend = (1.0f);
+	}
+
+IL_020a:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:108>
+		LoopSoundSettings_tCE8CCF7BF33FB6B89FB05D9D69B17346365EADA5 L_66 = ___0_settings;
+		float L_67 = L_66.___minDistance;
+		if ((!(((float)L_67) <= ((float)(0.0f)))))
+		{
+			goto IL_0223;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:110>
+		(&___0_settings)->___minDistance = (0.200000003f);
+	}
+
+IL_0223:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:112>
+		LoopSoundSettings_tCE8CCF7BF33FB6B89FB05D9D69B17346365EADA5 L_68 = ___0_settings;
+		float L_69 = L_68.___maxDistance;
+		LoopSoundSettings_tCE8CCF7BF33FB6B89FB05D9D69B17346365EADA5 L_70 = ___0_settings;
+		float L_71 = L_70.___minDistance;
+		if ((!(((float)L_69) < ((float)L_71))))
+		{
+			goto IL_0244;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:114>
+		LoopSoundSettings_tCE8CCF7BF33FB6B89FB05D9D69B17346365EADA5 L_72 = ___0_settings;
+		float L_73 = L_72.___minDistance;
+		(&___0_settings)->___maxDistance = ((float)il2cpp_codegen_add(L_73, (0.5f)));
+	}
+
+IL_0244:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:116>
+		LoopSoundSettings_tCE8CCF7BF33FB6B89FB05D9D69B17346365EADA5 L_74 = ___0_settings;
+		return L_74;
+	}
+}
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Winvalid-offsetof"
+#pragma clang diagnostic ignored "-Wunused-variable"
+#endif
+// Method Definition Index: 128530
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 LoopSound_get_Center_m6C8534417D76328D4F94C2AE9608C8891B06E953 (LoopSound_t0F81954F3F93403FEC588C98AAD22BF92DC6E075* __this, const RuntimeMethod* method) 
+{
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:139>
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_0 = __this->____center;
+		return L_0;
+	}
+}
+// Method Definition Index: 128531
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR float LoopSound_get_AverageRadius_mCA57CE0F7D8E84788E15F256B3C67AAD93E13033 (LoopSound_t0F81954F3F93403FEC588C98AAD22BF92DC6E075* __this, const RuntimeMethod* method) 
+{
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:140>
+		float L_0 = __this->____averageRadius;
+		return L_0;
+	}
+}
+// Method Definition Index: 128532
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void LoopSound_Awake_m0B9D9CC4016944762DEFB18BD606282F1C8E6272 (LoopSound_t0F81954F3F93403FEC588C98AAD22BF92DC6E075* __this, const RuntimeMethod* method) 
+{
+	static bool s_Il2CppMethodInitialized;
+	if (!s_Il2CppMethodInitialized)
+	{
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&Component_GetComponent_TisAudioSource_t871AC2272F896738252F04EE949AEF5B241D3299_m42DA4DEA19EB60D80CBED7413ADEB27FA033C77B_RuntimeMethod_var);
+		s_Il2CppMethodInitialized = true;
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:144>
+		AudioSource_t871AC2272F896738252F04EE949AEF5B241D3299* L_0;
+		L_0 = Component_GetComponent_TisAudioSource_t871AC2272F896738252F04EE949AEF5B241D3299_m42DA4DEA19EB60D80CBED7413ADEB27FA033C77B(__this, Component_GetComponent_TisAudioSource_t871AC2272F896738252F04EE949AEF5B241D3299_m42DA4DEA19EB60D80CBED7413ADEB27FA033C77B_RuntimeMethod_var);
+		__this->____audioSource = L_0;
+		Il2CppCodeGenWriteBarrier((void**)(&__this->____audioSource), (void*)L_0);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:145>
+		return;
+	}
+}
+// Method Definition Index: 128533
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void LoopSound_Initialize_mC9C88F891A6D8CF3E23990948B0DB5A532D8A466 (LoopSound_t0F81954F3F93403FEC588C98AAD22BF92DC6E075* __this, LineStrokeData_t096A2E61000991AF1A1E54177DB496F7847C7C2B* ___0_stroke, LoopSoundSettings_tCE8CCF7BF33FB6B89FB05D9D69B17346365EADA5 ___1_settings, const RuntimeMethod* method) 
+{
+	static bool s_Il2CppMethodInitialized;
+	if (!s_Il2CppMethodInitialized)
+	{
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&List_1_AddRange_m33C111258C9CCD3FF30107B1A81472DAD342F7AF_RuntimeMethod_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&List_1_Clear_m6CD2E5AAE6552A27AECCC57936767B4DCFC902B1_RuntimeMethod_var);
+		s_Il2CppMethodInitialized = true;
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:149>
+		LineStrokeData_t096A2E61000991AF1A1E54177DB496F7847C7C2B* L_0 = ___0_stroke;
+		__this->____baseStroke = L_0;
+		Il2CppCodeGenWriteBarrier((void**)(&__this->____baseStroke), (void*)L_0);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:150>
+		LoopSoundSettings_tCE8CCF7BF33FB6B89FB05D9D69B17346365EADA5 L_1 = ___1_settings;
+		LoopSoundSettings_tCE8CCF7BF33FB6B89FB05D9D69B17346365EADA5 L_2;
+		L_2 = LoopSoundSettings_Sanitize_m326F8A4901490EC3B773E1C1CCBA4041D756465D(L_1, NULL);
+		__this->____settings = L_2;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:152>
+		LoopSound_ComputeLoopPlane_m1DC01AB87A95A27C317084F8C36963D636F67276(__this, NULL);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:153>
+		List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* L_3 = __this->____spikeTimesNormalized;
+		NullCheck(L_3);
+		List_1_Clear_m6CD2E5AAE6552A27AECCC57936767B4DCFC902B1_inline(L_3, List_1_Clear_m6CD2E5AAE6552A27AECCC57936767B4DCFC902B1_RuntimeMethod_var);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:154>
+		List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* L_4 = __this->____spikeTimesNormalized;
+		LineStrokeData_t096A2E61000991AF1A1E54177DB496F7847C7C2B* L_5 = ___0_stroke;
+		List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* L_6;
+		L_6 = LoopSoundUtils_DetectSpikeTimesByPath_m0224425C31CA995D382379FFEABECA5834120A04(L_5, (65.0f), (0.00300000003f), 3, NULL);
+		NullCheck(L_4);
+		List_1_AddRange_m33C111258C9CCD3FF30107B1A81472DAD342F7AF(L_4, L_6, List_1_AddRange_m33C111258C9CCD3FF30107B1A81472DAD342F7AF_RuntimeMethod_var);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:155>
+		LoopSound_NormalizeSpikeTimes_m5068C67775BB8F2948B66C61051F774EE31CF1A2(__this, NULL);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:156>
+		LoopSound_BuildClip_m1801029663B00CD0DB5B6631CB3737D87A7F56F9(__this, NULL);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:157>
+		return;
+	}
+}
+// Method Definition Index: 128534
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* LoopSound_AddDetailStroke_mD8C8980944D3029E0355391426A47B0F2E74C2FD (LoopSound_t0F81954F3F93403FEC588C98AAD22BF92DC6E075* __this, LineStrokeData_t096A2E61000991AF1A1E54177DB496F7847C7C2B* ___0_detailStroke, const RuntimeMethod* method) 
+{
+	static bool s_Il2CppMethodInitialized;
+	if (!s_Il2CppMethodInitialized)
+	{
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&List_1_Add_m2F86E252D086E288E02FA1C830B7E86C0A431E51_RuntimeMethod_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&List_1_get_Count_m545762F67009314D9C63DD209B42FFF950569B05_RuntimeMethod_var);
+		s_Il2CppMethodInitialized = true;
+	}
+	List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* V_0 = NULL;
+	float V_1 = 0.0f;
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:161>
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:162>
+		LineStrokeData_t096A2E61000991AF1A1E54177DB496F7847C7C2B* L_0 = ___0_detailStroke;
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_1 = __this->____center;
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_2 = __this->____axisX;
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_3 = __this->____axisY;
+		List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* L_4;
+		L_4 = LoopSoundUtils_MapDetailStrokeToTimes_mA2C52F5AD23130D13EB4387CF3D791744DD8E022(L_0, L_1, L_2, L_3, (65.0f), (0.00300000003f), 3, NULL);
+		V_0 = L_4;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:164>
+		List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* L_5 = V_0;
+		NullCheck(L_5);
+		int32_t L_6;
+		L_6 = List_1_get_Count_m545762F67009314D9C63DD209B42FFF950569B05_inline(L_5, List_1_get_Count_m545762F67009314D9C63DD209B42FFF950569B05_RuntimeMethod_var);
+		if (L_6)
+		{
+			goto IL_005a;
+		}
+	}
+	{
+		LineStrokeData_t096A2E61000991AF1A1E54177DB496F7847C7C2B* L_7 = ___0_detailStroke;
+		NullCheck(L_7);
+		int32_t L_8;
+		L_8 = LineStrokeData_get_Count_mF86DFB2B4C0DF8BDDCE856B495E04C959E8B4407(L_7, NULL);
+		if ((((int32_t)L_8) <= ((int32_t)0)))
+		{
+			goto IL_005a;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:166>
+		LineStrokeData_t096A2E61000991AF1A1E54177DB496F7847C7C2B* L_9 = ___0_detailStroke;
+		NullCheck(L_9);
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_10 = L_9->___Centroid;
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_11 = __this->____center;
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_12 = __this->____axisX;
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_13 = __this->____axisY;
+		float L_14;
+		L_14 = LoopSoundUtils_MapPointToLoopTime_mDD69ECAC6D9A375A9A225DFE7DFD774CACE00BD9(L_10, L_11, L_12, L_13, NULL);
+		V_1 = L_14;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:167>
+		List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* L_15 = V_0;
+		float L_16 = V_1;
+		NullCheck(L_15);
+		List_1_Add_m2F86E252D086E288E02FA1C830B7E86C0A431E51_inline(L_15, L_16, List_1_Add_m2F86E252D086E288E02FA1C830B7E86C0A431E51_RuntimeMethod_var);
+	}
+
+IL_005a:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:170>
+		List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* L_17 = V_0;
+		LoopSound_AddSpikes_m7400FEC5582798E35210C260F5F1B8A0D86256A3(__this, L_17, NULL);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:171>
+		List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* L_18 = V_0;
+		return L_18;
+	}
+}
+// Method Definition Index: 128535
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void LoopSound_AddSpikes_m7400FEC5582798E35210C260F5F1B8A0D86256A3 (LoopSound_t0F81954F3F93403FEC588C98AAD22BF92DC6E075* __this, List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* ___0_spikeTimesNormalized, const RuntimeMethod* method) 
+{
+	static bool s_Il2CppMethodInitialized;
+	if (!s_Il2CppMethodInitialized)
+	{
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&List_1_Add_m2F86E252D086E288E02FA1C830B7E86C0A431E51_RuntimeMethod_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&List_1_get_Count_m545762F67009314D9C63DD209B42FFF950569B05_RuntimeMethod_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&List_1_get_Item_mFE556F47C4CD09EAC6C898EF39D4A8EC112CFC50_RuntimeMethod_var);
+		s_Il2CppMethodInitialized = true;
+	}
+	bool V_0 = false;
+	int32_t V_1 = 0;
+	float V_2 = 0.0f;
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:176>
+		List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* L_0 = ___0_spikeTimesNormalized;
+		if (!L_0)
+		{
+			goto IL_000b;
+		}
+	}
+	{
+		List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* L_1 = ___0_spikeTimesNormalized;
+		NullCheck(L_1);
+		int32_t L_2;
+		L_2 = List_1_get_Count_m545762F67009314D9C63DD209B42FFF950569B05_inline(L_1, List_1_get_Count_m545762F67009314D9C63DD209B42FFF950569B05_RuntimeMethod_var);
+		if (L_2)
+		{
+			goto IL_000c;
+		}
+	}
+
+IL_000b:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:178>
+		return;
+	}
+
+IL_000c:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:181>
+		V_0 = (bool)0;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:182>
+		V_1 = 0;
+		goto IL_003f;
+	}
+
+IL_0012:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:184>
+		List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* L_3 = ___0_spikeTimesNormalized;
+		int32_t L_4 = V_1;
+		NullCheck(L_3);
+		float L_5;
+		L_5 = List_1_get_Item_mFE556F47C4CD09EAC6C898EF39D4A8EC112CFC50(L_3, L_4, List_1_get_Item_mFE556F47C4CD09EAC6C898EF39D4A8EC112CFC50_RuntimeMethod_var);
+		float L_6;
+		L_6 = Mathf_Repeat_m6F1560A163481BB311D685294E1B463C3E4EB3BA_inline(L_5, (1.0f), NULL);
+		V_2 = L_6;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:185>
+		float L_7 = V_2;
+		bool L_8;
+		L_8 = LoopSound_ContainsSpike_m60CC6FE18D73447F11924B69B2C4E332FB2BD2BE(__this, L_7, NULL);
+		if (L_8)
+		{
+			goto IL_003b;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:187>
+		List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* L_9 = __this->____spikeTimesNormalized;
+		float L_10 = V_2;
+		NullCheck(L_9);
+		List_1_Add_m2F86E252D086E288E02FA1C830B7E86C0A431E51_inline(L_9, L_10, List_1_Add_m2F86E252D086E288E02FA1C830B7E86C0A431E51_RuntimeMethod_var);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:188>
+		V_0 = (bool)1;
+	}
+
+IL_003b:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:182>
+		int32_t L_11 = V_1;
+		V_1 = ((int32_t)il2cpp_codegen_add(L_11, 1));
+	}
+
+IL_003f:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:182>
+		int32_t L_12 = V_1;
+		List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* L_13 = ___0_spikeTimesNormalized;
+		NullCheck(L_13);
+		int32_t L_14;
+		L_14 = List_1_get_Count_m545762F67009314D9C63DD209B42FFF950569B05_inline(L_13, List_1_get_Count_m545762F67009314D9C63DD209B42FFF950569B05_RuntimeMethod_var);
+		if ((((int32_t)L_12) < ((int32_t)L_14)))
+		{
+			goto IL_0012;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:192>
+		bool L_15 = V_0;
+		if (!L_15)
+		{
+			goto IL_0057;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:194>
+		LoopSound_NormalizeSpikeTimes_m5068C67775BB8F2948B66C61051F774EE31CF1A2(__this, NULL);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:195>
+		LoopSound_BuildClip_m1801029663B00CD0DB5B6631CB3737D87A7F56F9(__this, NULL);
+	}
+
+IL_0057:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:197>
+		return;
+	}
+}
+// Method Definition Index: 128536
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void LoopSound_RemoveSpikes_mB7609F57A0FF4094EC49033AA63499058E80565D (LoopSound_t0F81954F3F93403FEC588C98AAD22BF92DC6E075* __this, List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* ___0_spikeTimesNormalized, const RuntimeMethod* method) 
+{
+	static bool s_Il2CppMethodInitialized;
+	if (!s_Il2CppMethodInitialized)
+	{
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&List_1_RemoveAt_m02AAC9739BBFB220DD397843A7825154D07F2C93_RuntimeMethod_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&List_1_get_Count_m545762F67009314D9C63DD209B42FFF950569B05_RuntimeMethod_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&List_1_get_Item_mFE556F47C4CD09EAC6C898EF39D4A8EC112CFC50_RuntimeMethod_var);
+		s_Il2CppMethodInitialized = true;
+	}
+	bool V_0 = false;
+	int32_t V_1 = 0;
+	float V_2 = 0.0f;
+	int32_t V_3 = 0;
+	float V_4 = 0.0f;
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:201>
+		List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* L_0 = ___0_spikeTimesNormalized;
+		if (!L_0)
+		{
+			goto IL_000b;
+		}
+	}
+	{
+		List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* L_1 = ___0_spikeTimesNormalized;
+		NullCheck(L_1);
+		int32_t L_2;
+		L_2 = List_1_get_Count_m545762F67009314D9C63DD209B42FFF950569B05_inline(L_1, List_1_get_Count_m545762F67009314D9C63DD209B42FFF950569B05_RuntimeMethod_var);
+		if (L_2)
+		{
+			goto IL_000c;
+		}
+	}
+
+IL_000b:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:203>
+		return;
+	}
+
+IL_000c:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:206>
+		V_0 = (bool)0;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:207>
+		List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* L_3 = __this->____spikeTimesNormalized;
+		NullCheck(L_3);
+		int32_t L_4;
+		L_4 = List_1_get_Count_m545762F67009314D9C63DD209B42FFF950569B05_inline(L_3, List_1_get_Count_m545762F67009314D9C63DD209B42FFF950569B05_RuntimeMethod_var);
+		V_1 = ((int32_t)il2cpp_codegen_subtract(L_4, 1));
+		goto IL_0073;
+	}
+
+IL_001e:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:209>
+		List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* L_5 = __this->____spikeTimesNormalized;
+		int32_t L_6 = V_1;
+		NullCheck(L_5);
+		float L_7;
+		L_7 = List_1_get_Item_mFE556F47C4CD09EAC6C898EF39D4A8EC112CFC50(L_5, L_6, List_1_get_Item_mFE556F47C4CD09EAC6C898EF39D4A8EC112CFC50_RuntimeMethod_var);
+		V_2 = L_7;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:210>
+		V_3 = 0;
+		goto IL_0066;
+	}
+
+IL_002f:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:212>
+		List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* L_8 = ___0_spikeTimesNormalized;
+		int32_t L_9 = V_3;
+		NullCheck(L_8);
+		float L_10;
+		L_10 = List_1_get_Item_mFE556F47C4CD09EAC6C898EF39D4A8EC112CFC50(L_8, L_9, List_1_get_Item_mFE556F47C4CD09EAC6C898EF39D4A8EC112CFC50_RuntimeMethod_var);
+		float L_11;
+		L_11 = Mathf_Repeat_m6F1560A163481BB311D685294E1B463C3E4EB3BA_inline(L_10, (1.0f), NULL);
+		V_4 = L_11;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:213>
+		float L_12 = V_2;
+		float L_13 = V_4;
+		float L_14;
+		L_14 = fabsf(((float)il2cpp_codegen_subtract(L_12, L_13)));
+		if ((!(((float)L_14) <= ((float)(0.00999999978f)))))
+		{
+			goto IL_0062;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:215>
+		List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* L_15 = __this->____spikeTimesNormalized;
+		int32_t L_16 = V_1;
+		NullCheck(L_15);
+		List_1_RemoveAt_m02AAC9739BBFB220DD397843A7825154D07F2C93(L_15, L_16, List_1_RemoveAt_m02AAC9739BBFB220DD397843A7825154D07F2C93_RuntimeMethod_var);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:216>
+		V_0 = (bool)1;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:217>
+		goto IL_006f;
+	}
+
+IL_0062:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:210>
+		int32_t L_17 = V_3;
+		V_3 = ((int32_t)il2cpp_codegen_add(L_17, 1));
+	}
+
+IL_0066:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:210>
+		int32_t L_18 = V_3;
+		List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* L_19 = ___0_spikeTimesNormalized;
+		NullCheck(L_19);
+		int32_t L_20;
+		L_20 = List_1_get_Count_m545762F67009314D9C63DD209B42FFF950569B05_inline(L_19, List_1_get_Count_m545762F67009314D9C63DD209B42FFF950569B05_RuntimeMethod_var);
+		if ((((int32_t)L_18) < ((int32_t)L_20)))
+		{
+			goto IL_002f;
+		}
+	}
+
+IL_006f:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:207>
+		int32_t L_21 = V_1;
+		V_1 = ((int32_t)il2cpp_codegen_subtract(L_21, 1));
+	}
+
+IL_0073:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:207>
+		int32_t L_22 = V_1;
+		if ((((int32_t)L_22) >= ((int32_t)0)))
+		{
+			goto IL_001e;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:222>
+		bool L_23 = V_0;
+		if (!L_23)
+		{
+			goto IL_0086;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:224>
+		LoopSound_NormalizeSpikeTimes_m5068C67775BB8F2948B66C61051F774EE31CF1A2(__this, NULL);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:225>
+		LoopSound_BuildClip_m1801029663B00CD0DB5B6631CB3737D87A7F56F9(__this, NULL);
+	}
+
+IL_0086:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:227>
+		return;
+	}
+}
+// Method Definition Index: 128537
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void LoopSound_ComputeLoopPlane_m1DC01AB87A95A27C317084F8C36963D636F67276 (LoopSound_t0F81954F3F93403FEC588C98AAD22BF92DC6E075* __this, const RuntimeMethod* method) 
+{
+	static bool s_Il2CppMethodInitialized;
+	if (!s_Il2CppMethodInitialized)
+	{
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&List_1_get_Item_m8F2E15FC96DA75186C51228128A0660709E4E810_RuntimeMethod_var);
+		s_Il2CppMethodInitialized = true;
+	}
+	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 V_0;
+	memset((&V_0), 0, sizeof(V_0));
+	int32_t V_1 = 0;
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:231>
+		LineStrokeData_t096A2E61000991AF1A1E54177DB496F7847C7C2B* L_0 = __this->____baseStroke;
+		NullCheck(L_0);
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_1 = L_0->___Centroid;
+		__this->____center = L_1;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:232>
+		LineStrokeData_t096A2E61000991AF1A1E54177DB496F7847C7C2B* L_2 = __this->____baseStroke;
+		NullCheck(L_2);
+		List_1_t77B94703E05C519A9010DD0614F757F974E1CD8B* L_3 = L_2->___Points;
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_4;
+		L_4 = LoopSoundUtils_ComputePlaneNormal_m19A5E73EA9E82F211C25F7489745225E5D011711(L_3, NULL);
+		__this->____normal = L_4;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:233>
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2* L_5 = (Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2*)(&__this->____normal);
+		float L_6;
+		L_6 = Vector3_get_sqrMagnitude_m43C27DEC47C4811FB30AB474FF2131A963B66FC8_inline(L_5, NULL);
+		if ((!(((float)L_6) <= ((float)(9.99999975E-05f)))))
+		{
+			goto IL_0044;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:235>
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_7;
+		L_7 = Vector3_get_up_m128AF3FDC820BF59D5DE86D973E7DE3F20C3AEBA_inline(NULL);
+		__this->____normal = L_7;
+	}
+
+IL_0044:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:237>
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2* L_8 = (Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2*)(&__this->____normal);
+		Vector3_Normalize_mC749B887A4C74BA0A2E13E6377F17CCAEB0AADA8_inline(L_8, NULL);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:239>
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_9;
+		L_9 = Vector3_get_zero_m0C1249C3F25B1C70EAD3CC8B31259975A457AE39_inline(NULL);
+		__this->____axisX = L_9;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:240>
+		LineStrokeData_t096A2E61000991AF1A1E54177DB496F7847C7C2B* L_10 = __this->____baseStroke;
+		NullCheck(L_10);
+		int32_t L_11;
+		L_11 = LineStrokeData_get_Count_mF86DFB2B4C0DF8BDDCE856B495E04C959E8B4407(L_10, NULL);
+		if ((((int32_t)L_11) <= ((int32_t)0)))
+		{
+			goto IL_0095;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:242>
+		LineStrokeData_t096A2E61000991AF1A1E54177DB496F7847C7C2B* L_12 = __this->____baseStroke;
+		NullCheck(L_12);
+		List_1_t77B94703E05C519A9010DD0614F757F974E1CD8B* L_13 = L_12->___Points;
+		NullCheck(L_13);
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_14;
+		L_14 = List_1_get_Item_m8F2E15FC96DA75186C51228128A0660709E4E810(L_13, 0, List_1_get_Item_m8F2E15FC96DA75186C51228128A0660709E4E810_RuntimeMethod_var);
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_15 = __this->____center;
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_16;
+		L_16 = Vector3_op_Subtraction_mE42023FF80067CB44A1D4A27EB7CF2B24CABB828_inline(L_14, L_15, NULL);
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_17 = __this->____normal;
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_18;
+		L_18 = Vector3_ProjectOnPlane_m68FB895F6E9FCC45676BB8B95857D091C0D78794_inline(L_16, L_17, NULL);
+		__this->____axisX = L_18;
+	}
+
+IL_0095:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:244>
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2* L_19 = (Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2*)(&__this->____axisX);
+		float L_20;
+		L_20 = Vector3_get_sqrMagnitude_m43C27DEC47C4811FB30AB474FF2131A963B66FC8_inline(L_19, NULL);
+		if ((!(((float)L_20) <= ((float)(9.99999975E-05f)))))
+		{
+			goto IL_00bd;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:246>
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_21 = __this->____normal;
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_22;
+		L_22 = Vector3_get_right_mFF573AFBBB2186E7AFA1BA7CA271A78DF67E4EA0_inline(NULL);
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_23;
+		L_23 = Vector3_Cross_mF93A280558BCE756D13B6CC5DCD7DE8A43148987_inline(L_21, L_22, NULL);
+		__this->____axisX = L_23;
+	}
+
+IL_00bd:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:248>
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2* L_24 = (Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2*)(&__this->____axisX);
+		float L_25;
+		L_25 = Vector3_get_sqrMagnitude_m43C27DEC47C4811FB30AB474FF2131A963B66FC8_inline(L_24, NULL);
+		if ((!(((float)L_25) <= ((float)(9.99999975E-05f)))))
+		{
+			goto IL_00e5;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:250>
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_26 = __this->____normal;
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_27;
+		L_27 = Vector3_get_forward_mAA55A7034304DF8B2152EAD49AE779FC4CA2EB4A_inline(NULL);
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_28;
+		L_28 = Vector3_Cross_mF93A280558BCE756D13B6CC5DCD7DE8A43148987_inline(L_26, L_27, NULL);
+		__this->____axisX = L_28;
+	}
+
+IL_00e5:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:252>
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2* L_29 = (Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2*)(&__this->____axisX);
+		Vector3_Normalize_mC749B887A4C74BA0A2E13E6377F17CCAEB0AADA8_inline(L_29, NULL);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:253>
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_30 = __this->____normal;
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_31 = __this->____axisX;
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_32;
+		L_32 = Vector3_Cross_mF93A280558BCE756D13B6CC5DCD7DE8A43148987_inline(L_30, L_31, NULL);
+		V_0 = L_32;
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_33;
+		L_33 = Vector3_get_normalized_m736BBF65D5CDA7A18414370D15B4DFCC1E466F07_inline((&V_0), NULL);
+		__this->____axisY = L_33;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:255>
+		__this->____averageRadius = (0.0f);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:256>
+		LineStrokeData_t096A2E61000991AF1A1E54177DB496F7847C7C2B* L_34 = __this->____baseStroke;
+		NullCheck(L_34);
+		int32_t L_35;
+		L_35 = LineStrokeData_get_Count_mF86DFB2B4C0DF8BDDCE856B495E04C959E8B4407(L_34, NULL);
+		if ((((int32_t)L_35) <= ((int32_t)0)))
+		{
+			goto IL_0180;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:258>
+		V_1 = 0;
+		goto IL_0159;
+	}
+
+IL_012c:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:260>
+		float L_36 = __this->____averageRadius;
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_37 = __this->____center;
+		LineStrokeData_t096A2E61000991AF1A1E54177DB496F7847C7C2B* L_38 = __this->____baseStroke;
+		NullCheck(L_38);
+		List_1_t77B94703E05C519A9010DD0614F757F974E1CD8B* L_39 = L_38->___Points;
+		int32_t L_40 = V_1;
+		NullCheck(L_39);
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_41;
+		L_41 = List_1_get_Item_m8F2E15FC96DA75186C51228128A0660709E4E810(L_39, L_40, List_1_get_Item_m8F2E15FC96DA75186C51228128A0660709E4E810_RuntimeMethod_var);
+		float L_42;
+		L_42 = Vector3_Distance_m2314DB9B8BD01157E013DF87BEA557375C7F9FF9_inline(L_37, L_41, NULL);
+		__this->____averageRadius = ((float)il2cpp_codegen_add(L_36, L_42));
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:258>
+		int32_t L_43 = V_1;
+		V_1 = ((int32_t)il2cpp_codegen_add(L_43, 1));
+	}
+
+IL_0159:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:258>
+		int32_t L_44 = V_1;
+		LineStrokeData_t096A2E61000991AF1A1E54177DB496F7847C7C2B* L_45 = __this->____baseStroke;
+		NullCheck(L_45);
+		int32_t L_46;
+		L_46 = LineStrokeData_get_Count_mF86DFB2B4C0DF8BDDCE856B495E04C959E8B4407(L_45, NULL);
+		if ((((int32_t)L_44) < ((int32_t)L_46)))
+		{
+			goto IL_012c;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:262>
+		float L_47 = __this->____averageRadius;
+		LineStrokeData_t096A2E61000991AF1A1E54177DB496F7847C7C2B* L_48 = __this->____baseStroke;
+		NullCheck(L_48);
+		int32_t L_49;
+		L_49 = LineStrokeData_get_Count_mF86DFB2B4C0DF8BDDCE856B495E04C959E8B4407(L_48, NULL);
+		__this->____averageRadius = ((float)(L_47/((float)L_49)));
+	}
+
+IL_0180:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:265>
+		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_50;
+		L_50 = Component_get_transform_m2919A1D81931E6932C7F06D4C2F0AB8DDA9A5371(__this, NULL);
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_51 = __this->____center;
+		NullCheck(L_50);
+		Transform_set_position_mA1A817124BB41B685043DED2A9BA48CDF37C4156(L_50, L_51, NULL);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:266>
+		return;
+	}
+}
+// Method Definition Index: 128538
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void LoopSound_BuildClip_m1801029663B00CD0DB5B6631CB3737D87A7F56F9 (LoopSound_t0F81954F3F93403FEC588C98AAD22BF92DC6E075* __this, const RuntimeMethod* method) 
+{
+	static bool s_Il2CppMethodInitialized;
+	if (!s_Il2CppMethodInitialized)
+	{
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&List_1_get_Count_m545762F67009314D9C63DD209B42FFF950569B05_RuntimeMethod_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&List_1_get_Item_mFE556F47C4CD09EAC6C898EF39D4A8EC112CFC50_RuntimeMethod_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C_il2cpp_TypeInfo_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&SingleU5BU5D_t89DEFE97BCEDB5857010E79ECE0F52CF6E93B87C_il2cpp_TypeInfo_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&_stringLiteralF4078990603F5F17CD47AEF42A2565B8887BC7E1);
+		s_Il2CppMethodInitialized = true;
+	}
+	float V_0 = 0.0f;
+	int32_t V_1 = 0;
+	int32_t V_2 = 0;
+	float V_3 = 0.0f;
+	float V_4 = 0.0f;
+	float V_5 = 0.0f;
+	float V_6 = 0.0f;
+	SingleU5BU5D_t89DEFE97BCEDB5857010E79ECE0F52CF6E93B87C* V_7 = NULL;
+	float V_8 = 0.0f;
+	float V_9 = 0.0f;
+	AudioClip_t5D272C4EB4F2D3ED49F1C346DEA373CF6D585F20* V_10 = NULL;
+	int32_t V_11 = 0;
+	float V_12 = 0.0f;
+	float V_13 = 0.0f;
+	float V_14 = 0.0f;
+	int32_t V_15 = 0;
+	float V_16 = 0.0f;
+	float V_17 = 0.0f;
+	float V_18 = 0.0f;
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:270>
+		AudioSource_t871AC2272F896738252F04EE949AEF5B241D3299* L_0 = __this->____audioSource;
+		il2cpp_codegen_runtime_class_init_inline(Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C_il2cpp_TypeInfo_var);
+		bool L_1;
+		L_1 = Object_op_Equality_mB6120F782D83091EF56A198FCEBCF066DB4A9605(L_0, (Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C*)NULL, NULL);
+		if (L_1)
+		{
+			goto IL_0016;
+		}
+	}
+	{
+		LineStrokeData_t096A2E61000991AF1A1E54177DB496F7847C7C2B* L_2 = __this->____baseStroke;
+		if (L_2)
+		{
+			goto IL_0017;
+		}
+	}
+
+IL_0016:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:272>
+		return;
+	}
+
+IL_0017:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:275>
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:276>
+		LineStrokeData_t096A2E61000991AF1A1E54177DB496F7847C7C2B* L_3 = __this->____baseStroke;
+		NullCheck(L_3);
+		float L_4 = L_3->___TotalLength;
+		LoopSoundSettings_tCE8CCF7BF33FB6B89FB05D9D69B17346365EADA5* L_5 = (LoopSoundSettings_tCE8CCF7BF33FB6B89FB05D9D69B17346365EADA5*)(&__this->____settings);
+		float L_6 = L_5->___secondsPerMeter;
+		LoopSoundSettings_tCE8CCF7BF33FB6B89FB05D9D69B17346365EADA5* L_7 = (LoopSoundSettings_tCE8CCF7BF33FB6B89FB05D9D69B17346365EADA5*)(&__this->____settings);
+		Vector2_t1FD6F485C871E832B347AB2DC8CBA08B739D8DF7* L_8 = (Vector2_t1FD6F485C871E832B347AB2DC8CBA08B739D8DF7*)(&L_7->___loopDurationRange);
+		float L_9 = L_8->___x;
+		LoopSoundSettings_tCE8CCF7BF33FB6B89FB05D9D69B17346365EADA5* L_10 = (LoopSoundSettings_tCE8CCF7BF33FB6B89FB05D9D69B17346365EADA5*)(&__this->____settings);
+		Vector2_t1FD6F485C871E832B347AB2DC8CBA08B739D8DF7* L_11 = (Vector2_t1FD6F485C871E832B347AB2DC8CBA08B739D8DF7*)(&L_10->___loopDurationRange);
+		float L_12 = L_11->___y;
+		float L_13;
+		L_13 = Mathf_Clamp_mEB9AEA827D27D20FCC787F7375156AF46BB12BBF_inline(((float)il2cpp_codegen_multiply(L_4, L_6)), L_9, L_12, NULL);
+		V_0 = L_13;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:277>
+		int32_t L_14;
+		L_14 = AudioSettings_get_outputSampleRate_mEACF8FD7BFDFBD76EB8FC7E438B3AF19DB57BC6D(NULL);
+		V_1 = L_14;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:278>
+		float L_15 = V_0;
+		int32_t L_16 = V_1;
+		int32_t L_17;
+		L_17 = Mathf_CeilToInt_mF2BF9F4261B3431DC20E10A46CFEEED103C48963_inline(((float)il2cpp_codegen_multiply(L_15, ((float)L_16))), NULL);
+		int32_t L_18;
+		L_18 = Mathf_Max_m7FA442918DE37E3A00106D1F2E789D65829792B8_inline(1, L_17, NULL);
+		V_2 = L_18;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:280>
+		LoopSoundSettings_tCE8CCF7BF33FB6B89FB05D9D69B17346365EADA5* L_19 = (LoopSoundSettings_tCE8CCF7BF33FB6B89FB05D9D69B17346365EADA5*)(&__this->____settings);
+		Vector2_t1FD6F485C871E832B347AB2DC8CBA08B739D8DF7* L_20 = (Vector2_t1FD6F485C871E832B347AB2DC8CBA08B739D8DF7*)(&L_19->___lengthRange);
+		float L_21 = L_20->___x;
+		LoopSoundSettings_tCE8CCF7BF33FB6B89FB05D9D69B17346365EADA5* L_22 = (LoopSoundSettings_tCE8CCF7BF33FB6B89FB05D9D69B17346365EADA5*)(&__this->____settings);
+		Vector2_t1FD6F485C871E832B347AB2DC8CBA08B739D8DF7* L_23 = (Vector2_t1FD6F485C871E832B347AB2DC8CBA08B739D8DF7*)(&L_22->___lengthRange);
+		float L_24 = L_23->___y;
+		LineStrokeData_t096A2E61000991AF1A1E54177DB496F7847C7C2B* L_25 = __this->____baseStroke;
+		NullCheck(L_25);
+		float L_26 = L_25->___TotalLength;
+		float L_27;
+		L_27 = Mathf_InverseLerp_mBD7EC6A7173CE082226077E1557D5BC2D2AE0D9D_inline(L_21, L_24, L_26, NULL);
+		V_3 = L_27;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:281>
+		LoopSoundSettings_tCE8CCF7BF33FB6B89FB05D9D69B17346365EADA5* L_28 = (LoopSoundSettings_tCE8CCF7BF33FB6B89FB05D9D69B17346365EADA5*)(&__this->____settings);
+		Vector2_t1FD6F485C871E832B347AB2DC8CBA08B739D8DF7* L_29 = (Vector2_t1FD6F485C871E832B347AB2DC8CBA08B739D8DF7*)(&L_28->___frequencyRange);
+		float L_30 = L_29->___y;
+		LoopSoundSettings_tCE8CCF7BF33FB6B89FB05D9D69B17346365EADA5* L_31 = (LoopSoundSettings_tCE8CCF7BF33FB6B89FB05D9D69B17346365EADA5*)(&__this->____settings);
+		Vector2_t1FD6F485C871E832B347AB2DC8CBA08B739D8DF7* L_32 = (Vector2_t1FD6F485C871E832B347AB2DC8CBA08B739D8DF7*)(&L_31->___frequencyRange);
+		float L_33 = L_32->___x;
+		float L_34 = V_3;
+		float L_35;
+		L_35 = Mathf_Lerp_m47EF2FFB7647BD0A1FDC26DC03E28B19812139B5_inline(L_30, L_33, L_34, NULL);
+		V_4 = L_35;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:282>
+		LineStrokeData_t096A2E61000991AF1A1E54177DB496F7847C7C2B* L_36 = __this->____baseStroke;
+		NullCheck(L_36);
+		float L_37 = L_36->___AverageTilt;
+		LoopSoundSettings_tCE8CCF7BF33FB6B89FB05D9D69B17346365EADA5* L_38 = (LoopSoundSettings_tCE8CCF7BF33FB6B89FB05D9D69B17346365EADA5*)(&__this->____settings);
+		float L_39 = L_38->___brightnessFromTilt;
+		float L_40;
+		L_40 = Mathf_Clamp01_mA7E048DBDA832D399A581BE4D6DED9FA44CE0F14_inline(((float)il2cpp_codegen_multiply(L_37, L_39)), NULL);
+		V_5 = L_40;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:283>
+		LoopSoundSettings_tCE8CCF7BF33FB6B89FB05D9D69B17346365EADA5* L_41 = (LoopSoundSettings_tCE8CCF7BF33FB6B89FB05D9D69B17346365EADA5*)(&__this->____settings);
+		float L_42 = L_41->___minVolume;
+		LoopSoundSettings_tCE8CCF7BF33FB6B89FB05D9D69B17346365EADA5* L_43 = (LoopSoundSettings_tCE8CCF7BF33FB6B89FB05D9D69B17346365EADA5*)(&__this->____settings);
+		float L_44 = L_43->___maxVolume;
+		LineStrokeData_t096A2E61000991AF1A1E54177DB496F7847C7C2B* L_45 = __this->____baseStroke;
+		NullCheck(L_45);
+		float L_46 = L_45->___AveragePressure;
+		float L_47;
+		L_47 = Mathf_Clamp01_mA7E048DBDA832D399A581BE4D6DED9FA44CE0F14_inline(L_46, NULL);
+		float L_48;
+		L_48 = Mathf_Lerp_m47EF2FFB7647BD0A1FDC26DC03E28B19812139B5_inline(L_42, L_44, L_47, NULL);
+		V_6 = L_48;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:285>
+		int32_t L_49 = V_2;
+		SingleU5BU5D_t89DEFE97BCEDB5857010E79ECE0F52CF6E93B87C* L_50 = (SingleU5BU5D_t89DEFE97BCEDB5857010E79ECE0F52CF6E93B87C*)(SingleU5BU5D_t89DEFE97BCEDB5857010E79ECE0F52CF6E93B87C*)SZArrayNew(SingleU5BU5D_t89DEFE97BCEDB5857010E79ECE0F52CF6E93B87C_il2cpp_TypeInfo_var, (uint32_t)L_49);
+		V_7 = L_50;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:286>
+		int32_t L_51 = V_1;
+		V_8 = ((float)((1.0f)/((float)L_51)));
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:287>
+		V_9 = (6.28318548f);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:289>
+		V_11 = 0;
+		goto IL_020c;
+	}
+
+IL_012f:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:291>
+		int32_t L_52 = V_11;
+		float L_53 = V_8;
+		V_12 = ((float)il2cpp_codegen_multiply(((float)L_52), L_53));
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:292>
+		float L_54 = V_9;
+		float L_55 = V_4;
+		float L_56 = V_12;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:293>
+		float L_57;
+		L_57 = sinf(((float)il2cpp_codegen_multiply(((float)il2cpp_codegen_multiply(L_54, L_55)), L_56)));
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:294>
+		float L_58 = L_57;
+		float L_59;
+		L_59 = Mathf_Sign_m42EE1F0BC041AF14F89DED7F762BE996E2C50D8A_inline(L_58, NULL);
+		V_13 = L_59;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:295>
+		float L_60 = V_13;
+		float L_61 = V_5;
+		float L_62;
+		L_62 = Mathf_Lerp_m47EF2FFB7647BD0A1FDC26DC03E28B19812139B5_inline(L_58, L_60, L_61, NULL);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:296>
+		float L_63 = V_6;
+		V_14 = ((float)il2cpp_codegen_multiply(L_62, L_63));
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:298>
+		V_15 = 0;
+		goto IL_01de;
+	}
+
+IL_015f:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:300>
+		List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* L_64 = __this->____spikeTimesNormalized;
+		int32_t L_65 = V_15;
+		NullCheck(L_64);
+		float L_66;
+		L_66 = List_1_get_Item_mFE556F47C4CD09EAC6C898EF39D4A8EC112CFC50(L_64, L_65, List_1_get_Item_mFE556F47C4CD09EAC6C898EF39D4A8EC112CFC50_RuntimeMethod_var);
+		float L_67 = V_0;
+		V_16 = ((float)il2cpp_codegen_multiply(L_66, L_67));
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:301>
+		float L_68 = V_12;
+		float L_69 = V_16;
+		V_17 = ((float)il2cpp_codegen_subtract(L_68, L_69));
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:302>
+		float L_70 = V_17;
+		if ((!(((float)L_70) < ((float)(0.0f)))))
+		{
+			goto IL_0186;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:304>
+		float L_71 = V_17;
+		float L_72 = V_0;
+		V_17 = ((float)il2cpp_codegen_add(L_71, L_72));
+	}
+
+IL_0186:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:306>
+		float L_73 = V_17;
+		LoopSoundSettings_tCE8CCF7BF33FB6B89FB05D9D69B17346365EADA5* L_74 = (LoopSoundSettings_tCE8CCF7BF33FB6B89FB05D9D69B17346365EADA5*)(&__this->____settings);
+		float L_75 = L_74->___beatDuration;
+		if ((!(((float)L_73) < ((float)L_75))))
+		{
+			goto IL_01d8;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:308>
+		float L_76 = V_17;
+		LoopSoundSettings_tCE8CCF7BF33FB6B89FB05D9D69B17346365EADA5* L_77 = (LoopSoundSettings_tCE8CCF7BF33FB6B89FB05D9D69B17346365EADA5*)(&__this->____settings);
+		float L_78 = L_77->___beatDuration;
+		V_18 = ((float)il2cpp_codegen_subtract((1.0f), ((float)(L_76/L_78))));
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:309>
+		float L_79 = V_14;
+		float L_80 = V_18;
+		float L_81 = V_9;
+		LoopSoundSettings_tCE8CCF7BF33FB6B89FB05D9D69B17346365EADA5* L_82 = (LoopSoundSettings_tCE8CCF7BF33FB6B89FB05D9D69B17346365EADA5*)(&__this->____settings);
+		float L_83 = L_82->___beatFrequency;
+		float L_84 = V_17;
+		float L_85;
+		L_85 = sinf(((float)il2cpp_codegen_multiply(((float)il2cpp_codegen_multiply(L_81, L_83)), L_84)));
+		LoopSoundSettings_tCE8CCF7BF33FB6B89FB05D9D69B17346365EADA5* L_86 = (LoopSoundSettings_tCE8CCF7BF33FB6B89FB05D9D69B17346365EADA5*)(&__this->____settings);
+		float L_87 = L_86->___beatAmplitude;
+		float L_88 = V_6;
+		V_14 = ((float)il2cpp_codegen_add(L_79, ((float)il2cpp_codegen_multiply(((float)il2cpp_codegen_multiply(((float)il2cpp_codegen_multiply(L_80, L_85)), L_87)), L_88))));
+	}
+
+IL_01d8:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:298>
+		int32_t L_89 = V_15;
+		V_15 = ((int32_t)il2cpp_codegen_add(L_89, 1));
+	}
+
+IL_01de:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:298>
+		int32_t L_90 = V_15;
+		List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* L_91 = __this->____spikeTimesNormalized;
+		NullCheck(L_91);
+		int32_t L_92;
+		L_92 = List_1_get_Count_m545762F67009314D9C63DD209B42FFF950569B05_inline(L_91, List_1_get_Count_m545762F67009314D9C63DD209B42FFF950569B05_RuntimeMethod_var);
+		if ((((int32_t)L_90) < ((int32_t)L_92)))
+		{
+			goto IL_015f;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:313>
+		SingleU5BU5D_t89DEFE97BCEDB5857010E79ECE0F52CF6E93B87C* L_93 = V_7;
+		int32_t L_94 = V_11;
+		float L_95 = V_14;
+		float L_96;
+		L_96 = Mathf_Clamp_mEB9AEA827D27D20FCC787F7375156AF46BB12BBF_inline(L_95, (-1.0f), (1.0f), NULL);
+		NullCheck(L_93);
+		(L_93)->SetAt(static_cast<il2cpp_array_size_t>(L_94), (float)L_96);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:289>
+		int32_t L_97 = V_11;
+		V_11 = ((int32_t)il2cpp_codegen_add(L_97, 1));
+	}
+
+IL_020c:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:289>
+		int32_t L_98 = V_11;
+		int32_t L_99 = V_2;
+		if ((((int32_t)L_98) < ((int32_t)L_99)))
+		{
+			goto IL_012f;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:316>
+		AudioSource_t871AC2272F896738252F04EE949AEF5B241D3299* L_100 = __this->____audioSource;
+		NullCheck(L_100);
+		AudioClip_t5D272C4EB4F2D3ED49F1C346DEA373CF6D585F20* L_101;
+		L_101 = AudioSource_get_clip_m4F5027066F9FC44B44192713142B0C277BB418FE(L_100, NULL);
+		il2cpp_codegen_runtime_class_init_inline(Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C_il2cpp_TypeInfo_var);
+		bool L_102;
+		L_102 = Object_op_Inequality_mD0BE578448EAA61948F25C32F8DD55AB1F778602(L_101, (Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C*)NULL, NULL);
+		if (!L_102)
+		{
+			goto IL_0237;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:318>
+		AudioSource_t871AC2272F896738252F04EE949AEF5B241D3299* L_103 = __this->____audioSource;
+		NullCheck(L_103);
+		AudioClip_t5D272C4EB4F2D3ED49F1C346DEA373CF6D585F20* L_104;
+		L_104 = AudioSource_get_clip_m4F5027066F9FC44B44192713142B0C277BB418FE(L_103, NULL);
+		il2cpp_codegen_runtime_class_init_inline(Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C_il2cpp_TypeInfo_var);
+		Object_Destroy_mE97D0A766419A81296E8D4E5C23D01D3FE91ACBB(L_104, NULL);
+	}
+
+IL_0237:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:321>
+		int32_t L_105 = V_2;
+		int32_t L_106 = V_1;
+		AudioClip_t5D272C4EB4F2D3ED49F1C346DEA373CF6D585F20* L_107;
+		L_107 = AudioClip_Create_mE8111F06981E42666B6A9A59D0A3EBE002D2CDFB(_stringLiteralF4078990603F5F17CD47AEF42A2565B8887BC7E1, L_105, 1, L_106, (bool)0, NULL);
+		V_10 = L_107;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:322>
+		AudioClip_t5D272C4EB4F2D3ED49F1C346DEA373CF6D585F20* L_108 = V_10;
+		SingleU5BU5D_t89DEFE97BCEDB5857010E79ECE0F52CF6E93B87C* L_109 = V_7;
+		NullCheck(L_108);
+		bool L_110;
+		L_110 = AudioClip_SetData_m7B473C614C11953D746770F4F89B44600B5A6AF3(L_108, L_109, 0, NULL);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:323>
+		AudioSource_t871AC2272F896738252F04EE949AEF5B241D3299* L_111 = __this->____audioSource;
+		AudioClip_t5D272C4EB4F2D3ED49F1C346DEA373CF6D585F20* L_112 = V_10;
+		NullCheck(L_111);
+		AudioSource_set_clip_mFF441895E274286C88D9C75ED5CA1B1B39528D70(L_111, L_112, NULL);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:324>
+		AudioSource_t871AC2272F896738252F04EE949AEF5B241D3299* L_113 = __this->____audioSource;
+		NullCheck(L_113);
+		AudioSource_set_loop_m834A590939D8456008C0F897FD80B0ECFFB7FE56(L_113, (bool)1, NULL);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:325>
+		AudioSource_t871AC2272F896738252F04EE949AEF5B241D3299* L_114 = __this->____audioSource;
+		LoopSoundSettings_tCE8CCF7BF33FB6B89FB05D9D69B17346365EADA5* L_115 = (LoopSoundSettings_tCE8CCF7BF33FB6B89FB05D9D69B17346365EADA5*)(&__this->____settings);
+		float L_116 = L_115->___spatialBlend;
+		NullCheck(L_114);
+		AudioSource_set_spatialBlend_mCEE7A3E87A8C146E048B2CA3413FDC7BDB7BE001(L_114, L_116, NULL);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:326>
+		AudioSource_t871AC2272F896738252F04EE949AEF5B241D3299* L_117 = __this->____audioSource;
+		LoopSoundSettings_tCE8CCF7BF33FB6B89FB05D9D69B17346365EADA5* L_118 = (LoopSoundSettings_tCE8CCF7BF33FB6B89FB05D9D69B17346365EADA5*)(&__this->____settings);
+		float L_119 = L_118->___minDistance;
+		NullCheck(L_117);
+		AudioSource_set_minDistance_m6CBE3A60C03C0F179192FBDD62095B2E9D717690(L_117, L_119, NULL);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:327>
+		AudioSource_t871AC2272F896738252F04EE949AEF5B241D3299* L_120 = __this->____audioSource;
+		LoopSoundSettings_tCE8CCF7BF33FB6B89FB05D9D69B17346365EADA5* L_121 = (LoopSoundSettings_tCE8CCF7BF33FB6B89FB05D9D69B17346365EADA5*)(&__this->____settings);
+		float L_122 = L_121->___maxDistance;
+		NullCheck(L_120);
+		AudioSource_set_maxDistance_m4BF310D54761500A77A6C4841A0BBDBD09225813(L_120, L_122, NULL);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:328>
+		AudioSource_t871AC2272F896738252F04EE949AEF5B241D3299* L_123 = __this->____audioSource;
+		NullCheck(L_123);
+		AudioSource_Play_m95DF07111C61D0E0F00257A00384D31531D590C3(L_123, NULL);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:329>
+		return;
+	}
+}
+// Method Definition Index: 128539
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR bool LoopSound_ContainsSpike_m60CC6FE18D73447F11924B69B2C4E332FB2BD2BE (LoopSound_t0F81954F3F93403FEC588C98AAD22BF92DC6E075* __this, float ___0_normalizedTime, const RuntimeMethod* method) 
+{
+	static bool s_Il2CppMethodInitialized;
+	if (!s_Il2CppMethodInitialized)
+	{
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&List_1_get_Count_m545762F67009314D9C63DD209B42FFF950569B05_RuntimeMethod_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&List_1_get_Item_mFE556F47C4CD09EAC6C898EF39D4A8EC112CFC50_RuntimeMethod_var);
+		s_Il2CppMethodInitialized = true;
+	}
+	int32_t V_0 = 0;
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:333>
+		V_0 = 0;
+		goto IL_0024;
+	}
+
+IL_0004:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:335>
+		List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* L_0 = __this->____spikeTimesNormalized;
+		int32_t L_1 = V_0;
+		NullCheck(L_0);
+		float L_2;
+		L_2 = List_1_get_Item_mFE556F47C4CD09EAC6C898EF39D4A8EC112CFC50(L_0, L_1, List_1_get_Item_mFE556F47C4CD09EAC6C898EF39D4A8EC112CFC50_RuntimeMethod_var);
+		float L_3 = ___0_normalizedTime;
+		float L_4;
+		L_4 = fabsf(((float)il2cpp_codegen_subtract(L_2, L_3)));
+		if ((!(((float)L_4) <= ((float)(0.00999999978f)))))
+		{
+			goto IL_0020;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:337>
+		return (bool)1;
+	}
+
+IL_0020:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:333>
+		int32_t L_5 = V_0;
+		V_0 = ((int32_t)il2cpp_codegen_add(L_5, 1));
+	}
+
+IL_0024:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:333>
+		int32_t L_6 = V_0;
+		List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* L_7 = __this->____spikeTimesNormalized;
+		NullCheck(L_7);
+		int32_t L_8;
+		L_8 = List_1_get_Count_m545762F67009314D9C63DD209B42FFF950569B05_inline(L_7, List_1_get_Count_m545762F67009314D9C63DD209B42FFF950569B05_RuntimeMethod_var);
+		if ((((int32_t)L_6) < ((int32_t)L_8)))
+		{
+			goto IL_0004;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:340>
+		return (bool)0;
+	}
+}
+// Method Definition Index: 128540
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void LoopSound_NormalizeSpikeTimes_m5068C67775BB8F2948B66C61051F774EE31CF1A2 (LoopSound_t0F81954F3F93403FEC588C98AAD22BF92DC6E075* __this, const RuntimeMethod* method) 
+{
+	static bool s_Il2CppMethodInitialized;
+	if (!s_Il2CppMethodInitialized)
+	{
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&List_1_RemoveAt_m02AAC9739BBFB220DD397843A7825154D07F2C93_RuntimeMethod_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&List_1_Sort_m80C2D113831377D60288F94CD0206605822F5C96_RuntimeMethod_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&List_1_get_Count_m545762F67009314D9C63DD209B42FFF950569B05_RuntimeMethod_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&List_1_get_Item_mFE556F47C4CD09EAC6C898EF39D4A8EC112CFC50_RuntimeMethod_var);
+		s_Il2CppMethodInitialized = true;
+	}
+	int32_t V_0 = 0;
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:345>
+		List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* L_0 = __this->____spikeTimesNormalized;
+		NullCheck(L_0);
+		List_1_Sort_m80C2D113831377D60288F94CD0206605822F5C96(L_0, List_1_Sort_m80C2D113831377D60288F94CD0206605822F5C96_RuntimeMethod_var);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:346>
+		List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* L_1 = __this->____spikeTimesNormalized;
+		NullCheck(L_1);
+		int32_t L_2;
+		L_2 = List_1_get_Count_m545762F67009314D9C63DD209B42FFF950569B05_inline(L_1, List_1_get_Count_m545762F67009314D9C63DD209B42FFF950569B05_RuntimeMethod_var);
+		V_0 = ((int32_t)il2cpp_codegen_subtract(L_2, 1));
+		goto IL_0052;
+	}
+
+IL_001b:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:348>
+		List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* L_3 = __this->____spikeTimesNormalized;
+		int32_t L_4 = V_0;
+		NullCheck(L_3);
+		float L_5;
+		L_5 = List_1_get_Item_mFE556F47C4CD09EAC6C898EF39D4A8EC112CFC50(L_3, L_4, List_1_get_Item_mFE556F47C4CD09EAC6C898EF39D4A8EC112CFC50_RuntimeMethod_var);
+		List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* L_6 = __this->____spikeTimesNormalized;
+		int32_t L_7 = V_0;
+		NullCheck(L_6);
+		float L_8;
+		L_8 = List_1_get_Item_mFE556F47C4CD09EAC6C898EF39D4A8EC112CFC50(L_6, ((int32_t)il2cpp_codegen_subtract(L_7, 1)), List_1_get_Item_mFE556F47C4CD09EAC6C898EF39D4A8EC112CFC50_RuntimeMethod_var);
+		float L_9;
+		L_9 = fabsf(((float)il2cpp_codegen_subtract(L_5, L_8)));
+		if ((!(((float)L_9) <= ((float)(0.00999999978f)))))
+		{
+			goto IL_004e;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:350>
+		List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* L_10 = __this->____spikeTimesNormalized;
+		int32_t L_11 = V_0;
+		NullCheck(L_10);
+		List_1_RemoveAt_m02AAC9739BBFB220DD397843A7825154D07F2C93(L_10, L_11, List_1_RemoveAt_m02AAC9739BBFB220DD397843A7825154D07F2C93_RuntimeMethod_var);
+	}
+
+IL_004e:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:346>
+		int32_t L_12 = V_0;
+		V_0 = ((int32_t)il2cpp_codegen_subtract(L_12, 1));
+	}
+
+IL_0052:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:346>
+		int32_t L_13 = V_0;
+		if ((((int32_t)L_13) > ((int32_t)0)))
+		{
+			goto IL_001b;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:353>
+		return;
+	}
+}
+// Method Definition Index: 128541
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void LoopSound_OnDestroy_m9237D3C5F5D9C1B79DC975B49B93B955A023DB33 (LoopSound_t0F81954F3F93403FEC588C98AAD22BF92DC6E075* __this, const RuntimeMethod* method) 
+{
+	static bool s_Il2CppMethodInitialized;
+	if (!s_Il2CppMethodInitialized)
+	{
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C_il2cpp_TypeInfo_var);
+		s_Il2CppMethodInitialized = true;
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:357>
+		AudioSource_t871AC2272F896738252F04EE949AEF5B241D3299* L_0 = __this->____audioSource;
+		il2cpp_codegen_runtime_class_init_inline(Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C_il2cpp_TypeInfo_var);
+		bool L_1;
+		L_1 = Object_op_Inequality_mD0BE578448EAA61948F25C32F8DD55AB1F778602(L_0, (Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C*)NULL, NULL);
+		if (!L_1)
+		{
+			goto IL_0031;
+		}
+	}
+	{
+		AudioSource_t871AC2272F896738252F04EE949AEF5B241D3299* L_2 = __this->____audioSource;
+		NullCheck(L_2);
+		AudioClip_t5D272C4EB4F2D3ED49F1C346DEA373CF6D585F20* L_3;
+		L_3 = AudioSource_get_clip_m4F5027066F9FC44B44192713142B0C277BB418FE(L_2, NULL);
+		il2cpp_codegen_runtime_class_init_inline(Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C_il2cpp_TypeInfo_var);
+		bool L_4;
+		L_4 = Object_op_Inequality_mD0BE578448EAA61948F25C32F8DD55AB1F778602(L_3, (Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C*)NULL, NULL);
+		if (!L_4)
+		{
+			goto IL_0031;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:359>
+		AudioSource_t871AC2272F896738252F04EE949AEF5B241D3299* L_5 = __this->____audioSource;
+		NullCheck(L_5);
+		AudioClip_t5D272C4EB4F2D3ED49F1C346DEA373CF6D585F20* L_6;
+		L_6 = AudioSource_get_clip_m4F5027066F9FC44B44192713142B0C277BB418FE(L_5, NULL);
+		il2cpp_codegen_runtime_class_init_inline(Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C_il2cpp_TypeInfo_var);
+		Object_Destroy_mE97D0A766419A81296E8D4E5C23D01D3FE91ACBB(L_6, NULL);
+	}
+
+IL_0031:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:361>
+		return;
+	}
+}
+// Method Definition Index: 128542
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void LoopSound__ctor_m09EC81A388FCB93F60CCEFDF48BC4D639D593B6A (LoopSound_t0F81954F3F93403FEC588C98AAD22BF92DC6E075* __this, const RuntimeMethod* method) 
+{
+	static bool s_Il2CppMethodInitialized;
+	if (!s_Il2CppMethodInitialized)
+	{
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&List_1__ctor_mC29D3D824786832A31096310B3B3016B8B42B802_RuntimeMethod_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918_il2cpp_TypeInfo_var);
+		s_Il2CppMethodInitialized = true;
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:131>
+		List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* L_0 = (List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918*)il2cpp_codegen_object_new(List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918_il2cpp_TypeInfo_var);
+		List_1__ctor_mC29D3D824786832A31096310B3B3016B8B42B802(L_0, List_1__ctor_mC29D3D824786832A31096310B3B3016B8B42B802_RuntimeMethod_var);
+		__this->____spikeTimesNormalized = L_0;
+		Il2CppCodeGenWriteBarrier((void**)(&__this->____spikeTimesNormalized), (void*)L_0);
+		MonoBehaviour__ctor_m592DB0105CA0BC97AA1C5F4AD27B12D68A3B7C1E(__this, NULL);
+		return;
+	}
+}
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Winvalid-offsetof"
+#pragma clang diagnostic ignored "-Wunused-variable"
+#endif
+// Method Definition Index: 128543
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 LoopSoundUtils_ComputePlaneNormal_m19A5E73EA9E82F211C25F7489745225E5D011711 (RuntimeObject* ___0_points, const RuntimeMethod* method) 
+{
+	static bool s_Il2CppMethodInitialized;
+	if (!s_Il2CppMethodInitialized)
+	{
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&IReadOnlyCollection_1_t28D5227A53A826E32FCACFE6FEED130E7F2A6ACE_il2cpp_TypeInfo_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&IReadOnlyList_1_tC7DD1BE89315F84F5AC3EEB0F716D812AC1732CB_il2cpp_TypeInfo_var);
+		s_Il2CppMethodInitialized = true;
+	}
+	int32_t V_0 = 0;
+	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 V_1;
+	memset((&V_1), 0, sizeof(V_1));
+	int32_t V_2 = 0;
+	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 V_3;
+	memset((&V_3), 0, sizeof(V_3));
+	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 V_4;
+	memset((&V_4), 0, sizeof(V_4));
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:368>
+		RuntimeObject* L_0 = ___0_points;
+		NullCheck(L_0);
+		int32_t L_1;
+		L_1 = InterfaceFuncInvoker0< int32_t >::Invoke(0, IReadOnlyCollection_1_t28D5227A53A826E32FCACFE6FEED130E7F2A6ACE_il2cpp_TypeInfo_var, L_0);
+		V_0 = L_1;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:369>
+		int32_t L_2 = V_0;
+		if ((((int32_t)L_2) >= ((int32_t)3)))
+		{
+			goto IL_0011;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:371>
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_3;
+		L_3 = Vector3_get_up_m128AF3FDC820BF59D5DE86D973E7DE3F20C3AEBA_inline(NULL);
+		return L_3;
+	}
+
+IL_0011:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:374>
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_4;
+		L_4 = Vector3_get_zero_m0C1249C3F25B1C70EAD3CC8B31259975A457AE39_inline(NULL);
+		V_1 = L_4;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:375>
+		V_2 = 0;
+		goto IL_00af;
+	}
+
+IL_001e:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:377>
+		RuntimeObject* L_5 = ___0_points;
+		int32_t L_6 = V_2;
+		NullCheck(L_5);
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_7;
+		L_7 = InterfaceFuncInvoker1< Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2, int32_t >::Invoke(0, IReadOnlyList_1_tC7DD1BE89315F84F5AC3EEB0F716D812AC1732CB_il2cpp_TypeInfo_var, L_5, L_6);
+		V_3 = L_7;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:378>
+		RuntimeObject* L_8 = ___0_points;
+		int32_t L_9 = V_2;
+		int32_t L_10 = V_0;
+		NullCheck(L_8);
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_11;
+		L_11 = InterfaceFuncInvoker1< Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2, int32_t >::Invoke(0, IReadOnlyList_1_tC7DD1BE89315F84F5AC3EEB0F716D812AC1732CB_il2cpp_TypeInfo_var, L_8, ((int32_t)(((int32_t)il2cpp_codegen_add(L_9, 1))%L_10)));
+		V_4 = L_11;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:379>
+		float* L_12 = (float*)(&(&V_1)->___x);
+		float* L_13 = L_12;
+		float L_14 = *((float*)L_13);
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_15 = V_3;
+		float L_16 = L_15.___y;
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_17 = V_4;
+		float L_18 = L_17.___y;
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_19 = V_3;
+		float L_20 = L_19.___z;
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_21 = V_4;
+		float L_22 = L_21.___z;
+		*((float*)L_13) = (float)((float)il2cpp_codegen_add(L_14, ((float)il2cpp_codegen_multiply(((float)il2cpp_codegen_subtract(L_16, L_18)), ((float)il2cpp_codegen_add(L_20, L_22))))));
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:380>
+		float* L_23 = (float*)(&(&V_1)->___y);
+		float* L_24 = L_23;
+		float L_25 = *((float*)L_24);
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_26 = V_3;
+		float L_27 = L_26.___z;
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_28 = V_4;
+		float L_29 = L_28.___z;
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_30 = V_3;
+		float L_31 = L_30.___x;
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_32 = V_4;
+		float L_33 = L_32.___x;
+		*((float*)L_24) = (float)((float)il2cpp_codegen_add(L_25, ((float)il2cpp_codegen_multiply(((float)il2cpp_codegen_subtract(L_27, L_29)), ((float)il2cpp_codegen_add(L_31, L_33))))));
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:381>
+		float* L_34 = (float*)(&(&V_1)->___z);
+		float* L_35 = L_34;
+		float L_36 = *((float*)L_35);
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_37 = V_3;
+		float L_38 = L_37.___x;
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_39 = V_4;
+		float L_40 = L_39.___x;
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_41 = V_3;
+		float L_42 = L_41.___y;
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_43 = V_4;
+		float L_44 = L_43.___y;
+		*((float*)L_35) = (float)((float)il2cpp_codegen_add(L_36, ((float)il2cpp_codegen_multiply(((float)il2cpp_codegen_subtract(L_38, L_40)), ((float)il2cpp_codegen_add(L_42, L_44))))));
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:375>
+		int32_t L_45 = V_2;
+		V_2 = ((int32_t)il2cpp_codegen_add(L_45, 1));
+	}
+
+IL_00af:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:375>
+		int32_t L_46 = V_2;
+		int32_t L_47 = V_0;
+		if ((((int32_t)L_46) < ((int32_t)L_47)))
+		{
+			goto IL_001e;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:383>
+		float L_48;
+		L_48 = Vector3_get_sqrMagnitude_m43C27DEC47C4811FB30AB474FF2131A963B66FC8_inline((&V_1), NULL);
+		if ((!(((float)L_48) <= ((float)(9.99999975E-05f)))))
+		{
+			goto IL_00ca;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:385>
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_49;
+		L_49 = Vector3_get_up_m128AF3FDC820BF59D5DE86D973E7DE3F20C3AEBA_inline(NULL);
+		return L_49;
+	}
+
+IL_00ca:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:387>
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_50;
+		L_50 = Vector3_get_normalized_m736BBF65D5CDA7A18414370D15B4DFCC1E466F07_inline((&V_1), NULL);
+		return L_50;
+	}
+}
+// Method Definition Index: 128544
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR List_1_t05915E9237850A58106982B7FE4BC5DA4E872E73* LoopSoundUtils_DetectSpikeIndices_m101E9BF4F7FCBAB3D88862D95C509887A0DDDD05 (RuntimeObject* ___0_points, float ___1_angleThresholdDegrees, float ___2_minSegmentLength, int32_t ___3_minIndexGap, const RuntimeMethod* method) 
+{
+	static bool s_Il2CppMethodInitialized;
+	if (!s_Il2CppMethodInitialized)
+	{
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&IReadOnlyCollection_1_t28D5227A53A826E32FCACFE6FEED130E7F2A6ACE_il2cpp_TypeInfo_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&IReadOnlyList_1_tC7DD1BE89315F84F5AC3EEB0F716D812AC1732CB_il2cpp_TypeInfo_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&List_1_Add_m0248A96C5334E9A93E6994B7780478BCD994EA3D_RuntimeMethod_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&List_1__ctor_m17F501B5A5C289ECE1B4F3D6EBF05DFA421433F8_RuntimeMethod_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&List_1_t05915E9237850A58106982B7FE4BC5DA4E872E73_il2cpp_TypeInfo_var);
+		s_Il2CppMethodInitialized = true;
+	}
+	List_1_t05915E9237850A58106982B7FE4BC5DA4E872E73* V_0 = NULL;
+	int32_t V_1 = 0;
+	int32_t V_2 = 0;
+	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 V_3;
+	memset((&V_3), 0, sizeof(V_3));
+	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 V_4;
+	memset((&V_4), 0, sizeof(V_4));
+	float V_5 = 0.0f;
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:392>
+		List_1_t05915E9237850A58106982B7FE4BC5DA4E872E73* L_0 = (List_1_t05915E9237850A58106982B7FE4BC5DA4E872E73*)il2cpp_codegen_object_new(List_1_t05915E9237850A58106982B7FE4BC5DA4E872E73_il2cpp_TypeInfo_var);
+		List_1__ctor_m17F501B5A5C289ECE1B4F3D6EBF05DFA421433F8(L_0, List_1__ctor_m17F501B5A5C289ECE1B4F3D6EBF05DFA421433F8_RuntimeMethod_var);
+		V_0 = L_0;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:393>
+		RuntimeObject* L_1 = ___0_points;
+		NullCheck(L_1);
+		int32_t L_2;
+		L_2 = InterfaceFuncInvoker0< int32_t >::Invoke(0, IReadOnlyCollection_1_t28D5227A53A826E32FCACFE6FEED130E7F2A6ACE_il2cpp_TypeInfo_var, L_1);
+		if ((((int32_t)L_2) >= ((int32_t)3)))
+		{
+			goto IL_0011;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:395>
+		List_1_t05915E9237850A58106982B7FE4BC5DA4E872E73* L_3 = V_0;
+		return L_3;
+	}
+
+IL_0011:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:398>
+		int32_t L_4 = ___3_minIndexGap;
+		V_1 = ((-L_4));
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:399>
+		V_2 = 1;
+		goto IL_007b;
+	}
+
+IL_0018:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:401>
+		RuntimeObject* L_5 = ___0_points;
+		int32_t L_6 = V_2;
+		NullCheck(L_5);
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_7;
+		L_7 = InterfaceFuncInvoker1< Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2, int32_t >::Invoke(0, IReadOnlyList_1_tC7DD1BE89315F84F5AC3EEB0F716D812AC1732CB_il2cpp_TypeInfo_var, L_5, L_6);
+		RuntimeObject* L_8 = ___0_points;
+		int32_t L_9 = V_2;
+		NullCheck(L_8);
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_10;
+		L_10 = InterfaceFuncInvoker1< Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2, int32_t >::Invoke(0, IReadOnlyList_1_tC7DD1BE89315F84F5AC3EEB0F716D812AC1732CB_il2cpp_TypeInfo_var, L_8, ((int32_t)il2cpp_codegen_subtract(L_9, 1)));
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_11;
+		L_11 = Vector3_op_Subtraction_mE42023FF80067CB44A1D4A27EB7CF2B24CABB828_inline(L_7, L_10, NULL);
+		V_3 = L_11;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:402>
+		RuntimeObject* L_12 = ___0_points;
+		int32_t L_13 = V_2;
+		NullCheck(L_12);
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_14;
+		L_14 = InterfaceFuncInvoker1< Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2, int32_t >::Invoke(0, IReadOnlyList_1_tC7DD1BE89315F84F5AC3EEB0F716D812AC1732CB_il2cpp_TypeInfo_var, L_12, ((int32_t)il2cpp_codegen_add(L_13, 1)));
+		RuntimeObject* L_15 = ___0_points;
+		int32_t L_16 = V_2;
+		NullCheck(L_15);
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_17;
+		L_17 = InterfaceFuncInvoker1< Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2, int32_t >::Invoke(0, IReadOnlyList_1_tC7DD1BE89315F84F5AC3EEB0F716D812AC1732CB_il2cpp_TypeInfo_var, L_15, L_16);
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_18;
+		L_18 = Vector3_op_Subtraction_mE42023FF80067CB44A1D4A27EB7CF2B24CABB828_inline(L_14, L_17, NULL);
+		V_4 = L_18;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:403>
+		float L_19;
+		L_19 = Vector3_get_magnitude_mF0D6017E90B345F1F52D1CC564C640F1A847AF2D_inline((&V_3), NULL);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:404>
+		float L_20;
+		L_20 = Vector3_get_magnitude_mF0D6017E90B345F1F52D1CC564C640F1A847AF2D_inline((&V_4), NULL);
+		V_5 = L_20;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:405>
+		float L_21 = ___2_minSegmentLength;
+		if ((((float)L_19) < ((float)L_21)))
+		{
+			goto IL_0077;
+		}
+	}
+	{
+		float L_22 = V_5;
+		float L_23 = ___2_minSegmentLength;
+		if ((((float)L_22) < ((float)L_23)))
+		{
+			goto IL_0077;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:409>
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_24 = V_3;
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_25 = V_4;
+		float L_26;
+		L_26 = Vector3_Angle_mB16906B482814C140FE5BA9D041D2DC11E42A68D_inline(L_24, L_25, NULL);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:410>
+		float L_27 = ___1_angleThresholdDegrees;
+		if ((!(((float)L_26) <= ((float)L_27))))
+		{
+			goto IL_0077;
+		}
+	}
+	{
+		int32_t L_28 = V_2;
+		int32_t L_29 = V_1;
+		int32_t L_30 = ___3_minIndexGap;
+		if ((((int32_t)((int32_t)il2cpp_codegen_subtract(L_28, L_29))) < ((int32_t)L_30)))
+		{
+			goto IL_0077;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:412>
+		List_1_t05915E9237850A58106982B7FE4BC5DA4E872E73* L_31 = V_0;
+		int32_t L_32 = V_2;
+		NullCheck(L_31);
+		List_1_Add_m0248A96C5334E9A93E6994B7780478BCD994EA3D_inline(L_31, L_32, List_1_Add_m0248A96C5334E9A93E6994B7780478BCD994EA3D_RuntimeMethod_var);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:413>
+		int32_t L_33 = V_2;
+		V_1 = L_33;
+	}
+
+IL_0077:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:399>
+		int32_t L_34 = V_2;
+		V_2 = ((int32_t)il2cpp_codegen_add(L_34, 1));
+	}
+
+IL_007b:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:399>
+		int32_t L_35 = V_2;
+		RuntimeObject* L_36 = ___0_points;
+		NullCheck(L_36);
+		int32_t L_37;
+		L_37 = InterfaceFuncInvoker0< int32_t >::Invoke(0, IReadOnlyCollection_1_t28D5227A53A826E32FCACFE6FEED130E7F2A6ACE_il2cpp_TypeInfo_var, L_36);
+		if ((((int32_t)L_35) < ((int32_t)((int32_t)il2cpp_codegen_subtract(L_37, 1)))))
+		{
+			goto IL_0018;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:416>
+		List_1_t05915E9237850A58106982B7FE4BC5DA4E872E73* L_38 = V_0;
+		return L_38;
+	}
+}
+// Method Definition Index: 128545
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* LoopSoundUtils_DetectSpikeTimesByPath_m0224425C31CA995D382379FFEABECA5834120A04 (LineStrokeData_t096A2E61000991AF1A1E54177DB496F7847C7C2B* ___0_stroke, float ___1_angleThresholdDegrees, float ___2_minSegmentLength, int32_t ___3_minIndexGap, const RuntimeMethod* method) 
+{
+	static bool s_Il2CppMethodInitialized;
+	if (!s_Il2CppMethodInitialized)
+	{
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&List_1_Add_m2F86E252D086E288E02FA1C830B7E86C0A431E51_RuntimeMethod_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&List_1_Sort_m6DA897B8E2A3434A84E3529FE9850B2773D88B65_RuntimeMethod_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&List_1__ctor_mC29D3D824786832A31096310B3B3016B8B42B802_RuntimeMethod_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&List_1_get_Count_mF590592E32D421DE2C6E2F0D5C2F62FB14CCEFDF_RuntimeMethod_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&List_1_get_Item_m8F2E15FC96DA75186C51228128A0660709E4E810_RuntimeMethod_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&List_1_get_Item_mD99081BEFA1AB3526715F489192B0F7F596C183D_RuntimeMethod_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918_il2cpp_TypeInfo_var);
+		s_Il2CppMethodInitialized = true;
+	}
+	List_1_t05915E9237850A58106982B7FE4BC5DA4E872E73* V_0 = NULL;
+	List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* V_1 = NULL;
+	float V_2 = 0.0f;
+	int32_t V_3 = 0;
+	int32_t V_4 = 0;
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:421>
+		LineStrokeData_t096A2E61000991AF1A1E54177DB496F7847C7C2B* L_0 = ___0_stroke;
+		NullCheck(L_0);
+		List_1_t77B94703E05C519A9010DD0614F757F974E1CD8B* L_1 = L_0->___Points;
+		float L_2 = ___1_angleThresholdDegrees;
+		float L_3 = ___2_minSegmentLength;
+		int32_t L_4 = ___3_minIndexGap;
+		List_1_t05915E9237850A58106982B7FE4BC5DA4E872E73* L_5;
+		L_5 = LoopSoundUtils_DetectSpikeIndices_m101E9BF4F7FCBAB3D88862D95C509887A0DDDD05(L_1, L_2, L_3, L_4, NULL);
+		V_0 = L_5;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:422>
+		List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* L_6 = (List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918*)il2cpp_codegen_object_new(List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918_il2cpp_TypeInfo_var);
+		List_1__ctor_mC29D3D824786832A31096310B3B3016B8B42B802(L_6, List_1__ctor_mC29D3D824786832A31096310B3B3016B8B42B802_RuntimeMethod_var);
+		V_1 = L_6;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:423>
+		List_1_t05915E9237850A58106982B7FE4BC5DA4E872E73* L_7 = V_0;
+		NullCheck(L_7);
+		int32_t L_8;
+		L_8 = List_1_get_Count_mF590592E32D421DE2C6E2F0D5C2F62FB14CCEFDF_inline(L_7, List_1_get_Count_mF590592E32D421DE2C6E2F0D5C2F62FB14CCEFDF_RuntimeMethod_var);
+		if (!L_8)
+		{
+			goto IL_0033;
+		}
+	}
+	{
+		LineStrokeData_t096A2E61000991AF1A1E54177DB496F7847C7C2B* L_9 = ___0_stroke;
+		NullCheck(L_9);
+		int32_t L_10;
+		L_10 = LineStrokeData_get_Count_mF86DFB2B4C0DF8BDDCE856B495E04C959E8B4407(L_9, NULL);
+		if ((((int32_t)L_10) < ((int32_t)2)))
+		{
+			goto IL_0033;
+		}
+	}
+	{
+		LineStrokeData_t096A2E61000991AF1A1E54177DB496F7847C7C2B* L_11 = ___0_stroke;
+		NullCheck(L_11);
+		float L_12 = L_11->___TotalLength;
+		if ((!(((float)L_12) <= ((float)(9.99999975E-05f)))))
+		{
+			goto IL_0035;
+		}
+	}
+
+IL_0033:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:425>
+		List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* L_13 = V_1;
+		return L_13;
+	}
+
+IL_0035:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:428>
+		List_1_t05915E9237850A58106982B7FE4BC5DA4E872E73* L_14 = V_0;
+		NullCheck(L_14);
+		List_1_Sort_m6DA897B8E2A3434A84E3529FE9850B2773D88B65(L_14, List_1_Sort_m6DA897B8E2A3434A84E3529FE9850B2773D88B65_RuntimeMethod_var);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:429>
+		V_2 = (0.0f);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:430>
+		V_3 = 0;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:431>
+		V_4 = 1;
+		goto IL_0094;
+	}
+
+IL_0048:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:433>
+		float L_15 = V_2;
+		LineStrokeData_t096A2E61000991AF1A1E54177DB496F7847C7C2B* L_16 = ___0_stroke;
+		NullCheck(L_16);
+		List_1_t77B94703E05C519A9010DD0614F757F974E1CD8B* L_17 = L_16->___Points;
+		int32_t L_18 = V_4;
+		NullCheck(L_17);
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_19;
+		L_19 = List_1_get_Item_m8F2E15FC96DA75186C51228128A0660709E4E810(L_17, ((int32_t)il2cpp_codegen_subtract(L_18, 1)), List_1_get_Item_m8F2E15FC96DA75186C51228128A0660709E4E810_RuntimeMethod_var);
+		LineStrokeData_t096A2E61000991AF1A1E54177DB496F7847C7C2B* L_20 = ___0_stroke;
+		NullCheck(L_20);
+		List_1_t77B94703E05C519A9010DD0614F757F974E1CD8B* L_21 = L_20->___Points;
+		int32_t L_22 = V_4;
+		NullCheck(L_21);
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_23;
+		L_23 = List_1_get_Item_m8F2E15FC96DA75186C51228128A0660709E4E810(L_21, L_22, List_1_get_Item_m8F2E15FC96DA75186C51228128A0660709E4E810_RuntimeMethod_var);
+		float L_24;
+		L_24 = Vector3_Distance_m2314DB9B8BD01157E013DF87BEA557375C7F9FF9_inline(L_19, L_23, NULL);
+		V_2 = ((float)il2cpp_codegen_add(L_15, L_24));
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:434>
+		int32_t L_25 = V_4;
+		List_1_t05915E9237850A58106982B7FE4BC5DA4E872E73* L_26 = V_0;
+		int32_t L_27 = V_3;
+		NullCheck(L_26);
+		int32_t L_28;
+		L_28 = List_1_get_Item_mD99081BEFA1AB3526715F489192B0F7F596C183D(L_26, L_27, List_1_get_Item_mD99081BEFA1AB3526715F489192B0F7F596C183D_RuntimeMethod_var);
+		if ((!(((uint32_t)L_25) == ((uint32_t)L_28))))
+		{
+			goto IL_008e;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:436>
+		List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* L_29 = V_1;
+		float L_30 = V_2;
+		LineStrokeData_t096A2E61000991AF1A1E54177DB496F7847C7C2B* L_31 = ___0_stroke;
+		NullCheck(L_31);
+		float L_32 = L_31->___TotalLength;
+		float L_33;
+		L_33 = Mathf_Clamp01_mA7E048DBDA832D399A581BE4D6DED9FA44CE0F14_inline(((float)(L_30/L_32)), NULL);
+		NullCheck(L_29);
+		List_1_Add_m2F86E252D086E288E02FA1C830B7E86C0A431E51_inline(L_29, L_33, List_1_Add_m2F86E252D086E288E02FA1C830B7E86C0A431E51_RuntimeMethod_var);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:437>
+		int32_t L_34 = V_3;
+		V_3 = ((int32_t)il2cpp_codegen_add(L_34, 1));
+	}
+
+IL_008e:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:431>
+		int32_t L_35 = V_4;
+		V_4 = ((int32_t)il2cpp_codegen_add(L_35, 1));
+	}
+
+IL_0094:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:431>
+		int32_t L_36 = V_4;
+		LineStrokeData_t096A2E61000991AF1A1E54177DB496F7847C7C2B* L_37 = ___0_stroke;
+		NullCheck(L_37);
+		int32_t L_38;
+		L_38 = LineStrokeData_get_Count_mF86DFB2B4C0DF8BDDCE856B495E04C959E8B4407(L_37, NULL);
+		if ((((int32_t)L_36) >= ((int32_t)L_38)))
+		{
+			goto IL_00a7;
+		}
+	}
+	{
+		int32_t L_39 = V_3;
+		List_1_t05915E9237850A58106982B7FE4BC5DA4E872E73* L_40 = V_0;
+		NullCheck(L_40);
+		int32_t L_41;
+		L_41 = List_1_get_Count_mF590592E32D421DE2C6E2F0D5C2F62FB14CCEFDF_inline(L_40, List_1_get_Count_mF590592E32D421DE2C6E2F0D5C2F62FB14CCEFDF_RuntimeMethod_var);
+		if ((((int32_t)L_39) < ((int32_t)L_41)))
+		{
+			goto IL_0048;
+		}
+	}
+
+IL_00a7:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:440>
+		List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* L_42 = V_1;
+		return L_42;
+	}
+}
+// Method Definition Index: 128546
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* LoopSoundUtils_MapDetailStrokeToTimes_mA2C52F5AD23130D13EB4387CF3D791744DD8E022 (LineStrokeData_t096A2E61000991AF1A1E54177DB496F7847C7C2B* ___0_detailStroke, Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___1_center, Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___2_axisX, Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___3_axisY, float ___4_angleThresholdDegrees, float ___5_minSegmentLength, int32_t ___6_minIndexGap, const RuntimeMethod* method) 
+{
+	static bool s_Il2CppMethodInitialized;
+	if (!s_Il2CppMethodInitialized)
+	{
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&List_1_Add_m2F86E252D086E288E02FA1C830B7E86C0A431E51_RuntimeMethod_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&List_1__ctor_mC29D3D824786832A31096310B3B3016B8B42B802_RuntimeMethod_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&List_1_get_Count_mF590592E32D421DE2C6E2F0D5C2F62FB14CCEFDF_RuntimeMethod_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&List_1_get_Item_m8F2E15FC96DA75186C51228128A0660709E4E810_RuntimeMethod_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&List_1_get_Item_mD99081BEFA1AB3526715F489192B0F7F596C183D_RuntimeMethod_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918_il2cpp_TypeInfo_var);
+		s_Il2CppMethodInitialized = true;
+	}
+	List_1_t05915E9237850A58106982B7FE4BC5DA4E872E73* V_0 = NULL;
+	List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* V_1 = NULL;
+	int32_t V_2 = 0;
+	int32_t V_3 = 0;
+	float V_4 = 0.0f;
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:446>
+		LineStrokeData_t096A2E61000991AF1A1E54177DB496F7847C7C2B* L_0 = ___0_detailStroke;
+		NullCheck(L_0);
+		List_1_t77B94703E05C519A9010DD0614F757F974E1CD8B* L_1 = L_0->___Points;
+		float L_2 = ___4_angleThresholdDegrees;
+		float L_3 = ___5_minSegmentLength;
+		int32_t L_4 = ___6_minIndexGap;
+		List_1_t05915E9237850A58106982B7FE4BC5DA4E872E73* L_5;
+		L_5 = LoopSoundUtils_DetectSpikeIndices_m101E9BF4F7FCBAB3D88862D95C509887A0DDDD05(L_1, L_2, L_3, L_4, NULL);
+		V_0 = L_5;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:447>
+		List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* L_6 = (List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918*)il2cpp_codegen_object_new(List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918_il2cpp_TypeInfo_var);
+		List_1__ctor_mC29D3D824786832A31096310B3B3016B8B42B802(L_6, List_1__ctor_mC29D3D824786832A31096310B3B3016B8B42B802_RuntimeMethod_var);
+		V_1 = L_6;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:448>
+		List_1_t05915E9237850A58106982B7FE4BC5DA4E872E73* L_7 = V_0;
+		NullCheck(L_7);
+		int32_t L_8;
+		L_8 = List_1_get_Count_mF590592E32D421DE2C6E2F0D5C2F62FB14CCEFDF_inline(L_7, List_1_get_Count_mF590592E32D421DE2C6E2F0D5C2F62FB14CCEFDF_RuntimeMethod_var);
+		if (L_8)
+		{
+			goto IL_0022;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:450>
+		List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* L_9 = V_1;
+		return L_9;
+	}
+
+IL_0022:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:453>
+		V_2 = 0;
+		goto IL_005d;
+	}
+
+IL_0026:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:455>
+		List_1_t05915E9237850A58106982B7FE4BC5DA4E872E73* L_10 = V_0;
+		int32_t L_11 = V_2;
+		NullCheck(L_10);
+		int32_t L_12;
+		L_12 = List_1_get_Item_mD99081BEFA1AB3526715F489192B0F7F596C183D(L_10, L_11, List_1_get_Item_mD99081BEFA1AB3526715F489192B0F7F596C183D_RuntimeMethod_var);
+		V_3 = L_12;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:456>
+		int32_t L_13 = V_3;
+		if ((((int32_t)L_13) < ((int32_t)0)))
+		{
+			goto IL_0059;
+		}
+	}
+	{
+		int32_t L_14 = V_3;
+		LineStrokeData_t096A2E61000991AF1A1E54177DB496F7847C7C2B* L_15 = ___0_detailStroke;
+		NullCheck(L_15);
+		int32_t L_16;
+		L_16 = LineStrokeData_get_Count_mF86DFB2B4C0DF8BDDCE856B495E04C959E8B4407(L_15, NULL);
+		if ((((int32_t)L_14) >= ((int32_t)L_16)))
+		{
+			goto IL_0059;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:458>
+		LineStrokeData_t096A2E61000991AF1A1E54177DB496F7847C7C2B* L_17 = ___0_detailStroke;
+		NullCheck(L_17);
+		List_1_t77B94703E05C519A9010DD0614F757F974E1CD8B* L_18 = L_17->___Points;
+		int32_t L_19 = V_3;
+		NullCheck(L_18);
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_20;
+		L_20 = List_1_get_Item_m8F2E15FC96DA75186C51228128A0660709E4E810(L_18, L_19, List_1_get_Item_m8F2E15FC96DA75186C51228128A0660709E4E810_RuntimeMethod_var);
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_21 = ___1_center;
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_22 = ___2_axisX;
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_23 = ___3_axisY;
+		float L_24;
+		L_24 = LoopSoundUtils_MapPointToLoopTime_mDD69ECAC6D9A375A9A225DFE7DFD774CACE00BD9(L_20, L_21, L_22, L_23, NULL);
+		V_4 = L_24;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:459>
+		List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* L_25 = V_1;
+		float L_26 = V_4;
+		NullCheck(L_25);
+		List_1_Add_m2F86E252D086E288E02FA1C830B7E86C0A431E51_inline(L_25, L_26, List_1_Add_m2F86E252D086E288E02FA1C830B7E86C0A431E51_RuntimeMethod_var);
+	}
+
+IL_0059:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:453>
+		int32_t L_27 = V_2;
+		V_2 = ((int32_t)il2cpp_codegen_add(L_27, 1));
+	}
+
+IL_005d:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:453>
+		int32_t L_28 = V_2;
+		List_1_t05915E9237850A58106982B7FE4BC5DA4E872E73* L_29 = V_0;
+		NullCheck(L_29);
+		int32_t L_30;
+		L_30 = List_1_get_Count_mF590592E32D421DE2C6E2F0D5C2F62FB14CCEFDF_inline(L_29, List_1_get_Count_mF590592E32D421DE2C6E2F0D5C2F62FB14CCEFDF_RuntimeMethod_var);
+		if ((((int32_t)L_28) < ((int32_t)L_30)))
+		{
+			goto IL_0026;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:462>
+		List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* L_31 = V_1;
+		return L_31;
+	}
+}
+// Method Definition Index: 128547
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR float LoopSoundUtils_MapPointToLoopTime_mDD69ECAC6D9A375A9A225DFE7DFD774CACE00BD9 (Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___0_point, Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___1_center, Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___2_axisX, Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___3_axisY, const RuntimeMethod* method) 
+{
+	float V_0 = 0.0f;
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:467>
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_0 = ___0_point;
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_1 = ___1_center;
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_2;
+		L_2 = Vector3_op_Subtraction_mE42023FF80067CB44A1D4A27EB7CF2B24CABB828_inline(L_0, L_1, NULL);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:468>
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_3 = L_2;
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_4 = ___2_axisX;
+		float L_5;
+		L_5 = Vector3_Dot_mBB86BB940AA0A32FA7D3C02AC42E5BC7095A5D52_inline(L_3, L_4, NULL);
+		V_0 = L_5;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:469>
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_6 = ___3_axisY;
+		float L_7;
+		L_7 = Vector3_Dot_mBB86BB940AA0A32FA7D3C02AC42E5BC7095A5D52_inline(L_3, L_6, NULL);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:470>
+		float L_8 = V_0;
+		float L_9;
+		L_9 = atan2f(L_7, L_8);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:471>
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:472>
+		float L_10;
+		L_10 = Mathf_Repeat_m6F1560A163481BB311D685294E1B463C3E4EB3BA_inline(((float)(((float)il2cpp_codegen_add(L_9, (3.14159274f)))/(6.28318548f))), (1.0f), NULL);
+		return L_10;
+	}
+}
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Winvalid-offsetof"
+#pragma clang diagnostic ignored "-Wunused-variable"
+#endif
+// Method Definition Index: 128548
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR int32_t OculusControllerStylusHandler_get_ControllerHand_mAE54C5573C406BB98FEC943BCFE88DF7C75CB6E5 (OculusControllerStylusHandler_tEE66C8834517A788738007FC060C786ACDD8CE78* __this, const RuntimeMethod* method) 
+{
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/OculusControllerStylusHandler.cs:22>
+		int32_t L_0 = __this->____handedness;
+		return L_0;
+	}
+}
+// Method Definition Index: 128549
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void OculusControllerStylusHandler_set_ControllerHand_m4A0FFA4EE99276C87A0BA592091045C25605B203 (OculusControllerStylusHandler_tEE66C8834517A788738007FC060C786ACDD8CE78* __this, int32_t ___0_value, const RuntimeMethod* method) 
+{
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/OculusControllerStylusHandler.cs:23>
+		int32_t L_0 = ___0_value;
+		__this->____handedness = L_0;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/OculusControllerStylusHandler.cs:23>
+		return;
+	}
+}
+// Method Definition Index: 128550
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR bool OculusControllerStylusHandler_CanDraw_mB83AB059360C275F96B49C0C0EC30B160EF94DFF (OculusControllerStylusHandler_tEE66C8834517A788738007FC060C786ACDD8CE78* __this, const RuntimeMethod* method) 
+{
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/OculusControllerStylusHandler.cs:28>
+		StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577* L_0 = (StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577*)(&((StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A*)__this)->____stylus);
+		bool L_1 = L_0->___isActive;
+		return L_1;
+	}
+}
+// Method Definition Index: 128551
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void OculusControllerStylusHandler_Update_m911C7AFE94930E2FFDE1FEAE2C16BFA8FC1F1329 (OculusControllerStylusHandler_tEE66C8834517A788738007FC060C786ACDD8CE78* __this, const RuntimeMethod* method) 
+{
+	static bool s_Il2CppMethodInitialized;
+	if (!s_Il2CppMethodInitialized)
+	{
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&OVRInput_t759D9CC8F14D8539AD78A0375A2306C39D77100A_il2cpp_TypeInfo_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C_il2cpp_TypeInfo_var);
+		s_Il2CppMethodInitialized = true;
+	}
+	int32_t V_0 = 0;
+	bool V_1 = false;
+	bool V_2 = false;
+	bool V_3 = false;
+	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 V_4;
+	memset((&V_4), 0, sizeof(V_4));
+	Quaternion_tDA59F214EF07D7700B26E40E562F267AF7306974 V_5;
+	memset((&V_5), 0, sizeof(V_5));
+	Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* V_6 = NULL;
+	int32_t V_7 = 0;
+	int32_t V_8 = 0;
+	bool V_9 = false;
+	float V_10 = 0.0f;
+	int32_t G_B3_0 = 0;
+	StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577* G_B5_0 = NULL;
+	StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577* G_B4_0 = NULL;
+	int32_t G_B6_0 = 0;
+	StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577* G_B6_1 = NULL;
+	Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* G_B9_0 = NULL;
+	int32_t G_B19_0 = 0;
+	int32_t G_B22_0 = 0;
+	StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577* G_B31_0 = NULL;
+	StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577* G_B27_0 = NULL;
+	StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577* G_B28_0 = NULL;
+	StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577* G_B29_0 = NULL;
+	StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577* G_B30_0 = NULL;
+	int32_t G_B32_0 = 0;
+	StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577* G_B32_1 = NULL;
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/OculusControllerStylusHandler.cs:33>
+		il2cpp_codegen_runtime_class_init_inline(OVRInput_t759D9CC8F14D8539AD78A0375A2306C39D77100A_il2cpp_TypeInfo_var);
+		OVRInput_Update_m46BEA0A1B8C6592A25FBA12F61D471770EC72076(NULL);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/OculusControllerStylusHandler.cs:35>
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/OculusControllerStylusHandler.cs:36>
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/OculusControllerStylusHandler.cs:37>
+		int32_t L_0 = __this->____handedness;
+		if ((((int32_t)L_0) == ((int32_t)1)))
+		{
+			goto IL_0011;
+		}
+	}
+	{
+		G_B3_0 = 1;
+		goto IL_0012;
+	}
+
+IL_0011:
+	{
+		G_B3_0 = 2;
+	}
+
+IL_0012:
+	{
+		V_0 = G_B3_0;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/OculusControllerStylusHandler.cs:39>
+		int32_t L_1 = V_0;
+		il2cpp_codegen_runtime_class_init_inline(OVRInput_t759D9CC8F14D8539AD78A0375A2306C39D77100A_il2cpp_TypeInfo_var);
+		bool L_2;
+		L_2 = OVRInput_IsControllerConnected_mC3BA5BE3D3A5642D36965D4CD82525C989F85E9A(L_1, NULL);
+		V_1 = L_2;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/OculusControllerStylusHandler.cs:40>
+		int32_t L_3 = V_0;
+		bool L_4;
+		L_4 = OVRInput_GetControllerPositionTracked_mA3D8C4DFC17FB1808C78A865556E394BF565CF0A(L_3, NULL);
+		V_2 = L_4;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/OculusControllerStylusHandler.cs:41>
+		int32_t L_5 = V_0;
+		bool L_6;
+		L_6 = OVRInput_GetControllerOrientationTracked_m29C61E840A641F6639492E4AD2A852A786E6EC7F(L_5, NULL);
+		V_3 = L_6;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/OculusControllerStylusHandler.cs:43>
+		StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577* L_7 = (StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577*)(&((StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A*)__this)->____stylus);
+		bool L_8 = V_1;
+		if (!L_8)
+		{
+			G_B5_0 = L_7;
+			goto IL_0036;
+		}
+		G_B4_0 = L_7;
+	}
+	{
+		bool L_9 = V_2;
+		bool L_10 = V_3;
+		G_B6_0 = ((int32_t)((int32_t)L_9|(int32_t)L_10));
+		G_B6_1 = G_B4_0;
+		goto IL_0037;
+	}
+
+IL_0036:
+	{
+		G_B6_0 = 0;
+		G_B6_1 = G_B5_0;
+	}
+
+IL_0037:
+	{
+		G_B6_1->___isActive = (bool)G_B6_0;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/OculusControllerStylusHandler.cs:44>
+		StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577* L_11 = (StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577*)(&((StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A*)__this)->____stylus);
+		int32_t L_12 = __this->____handedness;
+		L_11->___isOnRightHand = (bool)((((int32_t)L_12) == ((int32_t)1))? 1 : 0);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/OculusControllerStylusHandler.cs:45>
+		StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577* L_13 = (StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577*)(&((StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A*)__this)->____stylus);
+		bool L_14 = V_2;
+		L_13->___positionIsTracked = L_14;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/OculusControllerStylusHandler.cs:46>
+		StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577* L_15 = (StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577*)(&((StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A*)__this)->____stylus);
+		bool L_16 = V_2;
+		L_15->___positionIsValid = L_16;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/OculusControllerStylusHandler.cs:47>
+		StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577* L_17 = (StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577*)(&((StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A*)__this)->____stylus);
+		L_17->___docked = (bool)0;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/OculusControllerStylusHandler.cs:49>
+		int32_t L_18 = V_0;
+		il2cpp_codegen_runtime_class_init_inline(OVRInput_t759D9CC8F14D8539AD78A0375A2306C39D77100A_il2cpp_TypeInfo_var);
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_19;
+		L_19 = OVRInput_GetLocalControllerPosition_mD8A4504C441B477AB11C92CB7FBD561ECF15E253(L_18, NULL);
+		V_4 = L_19;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/OculusControllerStylusHandler.cs:50>
+		int32_t L_20 = V_0;
+		Quaternion_tDA59F214EF07D7700B26E40E562F267AF7306974 L_21;
+		L_21 = OVRInput_GetLocalControllerRotation_mF2ECF5F8BBB3EF1CF9D4B5E0A1BEC6CA9036515F(L_20, NULL);
+		V_5 = L_21;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/OculusControllerStylusHandler.cs:52>
+		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_22 = __this->____trackingSpaceOverride;
+		il2cpp_codegen_runtime_class_init_inline(Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C_il2cpp_TypeInfo_var);
+		bool L_23;
+		L_23 = Object_op_Inequality_mD0BE578448EAA61948F25C32F8DD55AB1F778602(L_22, (Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C*)NULL, NULL);
+		if (L_23)
+		{
+			goto IL_009a;
+		}
+	}
+	{
+		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_24;
+		L_24 = OculusControllerStylusHandler_GetTrackingSpace_m37A2F126182483D6895315F744A85A3DB04167D0(__this, NULL);
+		G_B9_0 = L_24;
+		goto IL_00a0;
+	}
+
+IL_009a:
+	{
+		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_25 = __this->____trackingSpaceOverride;
+		G_B9_0 = L_25;
+	}
+
+IL_00a0:
+	{
+		V_6 = G_B9_0;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/OculusControllerStylusHandler.cs:53>
+		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_26 = V_6;
+		il2cpp_codegen_runtime_class_init_inline(Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C_il2cpp_TypeInfo_var);
+		bool L_27;
+		L_27 = Object_op_Inequality_mD0BE578448EAA61948F25C32F8DD55AB1F778602(L_26, (Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C*)NULL, NULL);
+		if (!L_27)
+		{
+			goto IL_00db;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/OculusControllerStylusHandler.cs:55>
+		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_28;
+		L_28 = Component_get_transform_m2919A1D81931E6932C7F06D4C2F0AB8DDA9A5371(__this, NULL);
+		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_29 = V_6;
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_30 = V_4;
+		NullCheck(L_29);
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_31;
+		L_31 = Transform_TransformPoint_m05BFF013DB830D7BFE44A007703694AE1062EE44(L_29, L_30, NULL);
+		NullCheck(L_28);
+		Transform_set_position_mA1A817124BB41B685043DED2A9BA48CDF37C4156(L_28, L_31, NULL);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/OculusControllerStylusHandler.cs:56>
+		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_32;
+		L_32 = Component_get_transform_m2919A1D81931E6932C7F06D4C2F0AB8DDA9A5371(__this, NULL);
+		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_33 = V_6;
+		NullCheck(L_33);
+		Quaternion_tDA59F214EF07D7700B26E40E562F267AF7306974 L_34;
+		L_34 = Transform_get_rotation_m32AF40CA0D50C797DA639A696F8EAEC7524C179C(L_33, NULL);
+		Quaternion_tDA59F214EF07D7700B26E40E562F267AF7306974 L_35 = V_5;
+		Quaternion_tDA59F214EF07D7700B26E40E562F267AF7306974 L_36;
+		L_36 = Quaternion_op_Multiply_mCB375FCCC12A2EC8F9EB824A1BFB4453B58C2012_inline(L_34, L_35, NULL);
+		NullCheck(L_32);
+		Transform_set_rotation_m61340DE74726CF0F9946743A727C4D444397331D(L_32, L_36, NULL);
+		goto IL_00f5;
+	}
+
+IL_00db:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/OculusControllerStylusHandler.cs:60>
+		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_37;
+		L_37 = Component_get_transform_m2919A1D81931E6932C7F06D4C2F0AB8DDA9A5371(__this, NULL);
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_38 = V_4;
+		NullCheck(L_37);
+		Transform_set_position_mA1A817124BB41B685043DED2A9BA48CDF37C4156(L_37, L_38, NULL);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/OculusControllerStylusHandler.cs:61>
+		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_39;
+		L_39 = Component_get_transform_m2919A1D81931E6932C7F06D4C2F0AB8DDA9A5371(__this, NULL);
+		Quaternion_tDA59F214EF07D7700B26E40E562F267AF7306974 L_40 = V_5;
+		NullCheck(L_39);
+		Transform_set_rotation_m61340DE74726CF0F9946743A727C4D444397331D(L_39, L_40, NULL);
+	}
+
+IL_00f5:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/OculusControllerStylusHandler.cs:64>
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_41 = __this->____positionOffset;
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_42;
+		L_42 = Vector3_get_zero_m0C1249C3F25B1C70EAD3CC8B31259975A457AE39_inline(NULL);
+		bool L_43;
+		L_43 = Vector3_op_Inequality_m9F170CDFBF1E490E559DA5D06D6547501A402BBF_inline(L_41, L_42, NULL);
+		if (!L_43)
+		{
+			goto IL_0133;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/OculusControllerStylusHandler.cs:66>
+		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_44;
+		L_44 = Component_get_transform_m2919A1D81931E6932C7F06D4C2F0AB8DDA9A5371(__this, NULL);
+		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_45 = L_44;
+		NullCheck(L_45);
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_46;
+		L_46 = Transform_get_position_m69CD5FA214FDAE7BB701552943674846C220FDE1(L_45, NULL);
+		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_47;
+		L_47 = Component_get_transform_m2919A1D81931E6932C7F06D4C2F0AB8DDA9A5371(__this, NULL);
+		NullCheck(L_47);
+		Quaternion_tDA59F214EF07D7700B26E40E562F267AF7306974 L_48;
+		L_48 = Transform_get_rotation_m32AF40CA0D50C797DA639A696F8EAEC7524C179C(L_47, NULL);
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_49 = __this->____positionOffset;
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_50;
+		L_50 = Quaternion_op_Multiply_mE1EBA73F9173432B50F8F17CE8190C5A7986FB8C(L_48, L_49, NULL);
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_51;
+		L_51 = Vector3_op_Addition_m78C0EC70CB66E8DCAC225743D82B268DAEE92067_inline(L_46, L_50, NULL);
+		NullCheck(L_45);
+		Transform_set_position_mA1A817124BB41B685043DED2A9BA48CDF37C4156(L_45, L_51, NULL);
+	}
+
+IL_0133:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/OculusControllerStylusHandler.cs:68>
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_52 = __this->____rotationOffsetEuler;
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_53;
+		L_53 = Vector3_get_zero_m0C1249C3F25B1C70EAD3CC8B31259975A457AE39_inline(NULL);
+		bool L_54;
+		L_54 = Vector3_op_Inequality_m9F170CDFBF1E490E559DA5D06D6547501A402BBF_inline(L_52, L_53, NULL);
+		if (!L_54)
+		{
+			goto IL_016b;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/OculusControllerStylusHandler.cs:70>
+		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_55;
+		L_55 = Component_get_transform_m2919A1D81931E6932C7F06D4C2F0AB8DDA9A5371(__this, NULL);
+		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_56;
+		L_56 = Component_get_transform_m2919A1D81931E6932C7F06D4C2F0AB8DDA9A5371(__this, NULL);
+		NullCheck(L_56);
+		Quaternion_tDA59F214EF07D7700B26E40E562F267AF7306974 L_57;
+		L_57 = Transform_get_rotation_m32AF40CA0D50C797DA639A696F8EAEC7524C179C(L_56, NULL);
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_58 = __this->____rotationOffsetEuler;
+		Quaternion_tDA59F214EF07D7700B26E40E562F267AF7306974 L_59;
+		L_59 = Quaternion_Euler_m5BCCC19216CFAD2426F15BC51A30421880D27B73_inline(L_58, NULL);
+		Quaternion_tDA59F214EF07D7700B26E40E562F267AF7306974 L_60;
+		L_60 = Quaternion_op_Multiply_mCB375FCCC12A2EC8F9EB824A1BFB4453B58C2012_inline(L_57, L_59, NULL);
+		NullCheck(L_55);
+		Transform_set_rotation_m61340DE74726CF0F9946743A727C4D444397331D(L_55, L_60, NULL);
+	}
+
+IL_016b:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/OculusControllerStylusHandler.cs:73>
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/OculusControllerStylusHandler.cs:74>
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/OculusControllerStylusHandler.cs:75>
+		int32_t L_61 = __this->____handedness;
+		if ((((int32_t)L_61) == ((int32_t)1)))
+		{
+			goto IL_0177;
+		}
+	}
+	{
+		G_B19_0 = 2;
+		goto IL_0178;
+	}
+
+IL_0177:
+	{
+		G_B19_0 = 1;
+	}
+
+IL_0178:
+	{
+		V_7 = G_B19_0;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/OculusControllerStylusHandler.cs:76>
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/OculusControllerStylusHandler.cs:77>
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/OculusControllerStylusHandler.cs:78>
+		int32_t L_62 = __this->____handedness;
+		if ((((int32_t)L_62) == ((int32_t)1)))
+		{
+			goto IL_0186;
+		}
+	}
+	{
+		G_B22_0 = 8;
+		goto IL_0187;
+	}
+
+IL_0186:
+	{
+		G_B22_0 = 4;
+	}
+
+IL_0187:
+	{
+		V_8 = G_B22_0;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/OculusControllerStylusHandler.cs:80>
+		StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577* L_63 = (StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577*)(&((StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A*)__this)->____stylus);
+		int32_t L_64 = V_7;
+		int32_t L_65 = V_0;
+		il2cpp_codegen_runtime_class_init_inline(OVRInput_t759D9CC8F14D8539AD78A0375A2306C39D77100A_il2cpp_TypeInfo_var);
+		float L_66;
+		L_66 = OVRInput_Get_m1FD85568F358C43019E09E48A7BEBD6CD7F7E5D8(L_64, L_65, NULL);
+		L_63->___tip_value = L_66;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/OculusControllerStylusHandler.cs:81>
+		StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577* L_67 = (StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577*)(&((StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A*)__this)->____stylus);
+		int32_t L_68 = V_8;
+		int32_t L_69 = V_0;
+		float L_70;
+		L_70 = OVRInput_Get_m1FD85568F358C43019E09E48A7BEBD6CD7F7E5D8(L_68, L_69, NULL);
+		L_67->___cluster_middle_value = L_70;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/OculusControllerStylusHandler.cs:83>
+		StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577* L_71 = (StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577*)(&((StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A*)__this)->____stylus);
+		int32_t L_72 = V_0;
+		bool L_73;
+		L_73 = OVRInput_Get_m8CF227684F49E1C26239D78F826E11A956E909C1(1, L_72, NULL);
+		L_71->___cluster_front_value = L_73;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/OculusControllerStylusHandler.cs:84>
+		StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577* L_74 = (StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577*)(&((StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A*)__this)->____stylus);
+		int32_t L_75 = V_0;
+		bool L_76;
+		L_76 = OVRInput_Get_m8CF227684F49E1C26239D78F826E11A956E909C1(2, L_75, NULL);
+		L_74->___cluster_back_value = L_76;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/OculusControllerStylusHandler.cs:86>
+		V_9 = (bool)0;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/OculusControllerStylusHandler.cs:87>
+		int32_t L_77 = V_0;
+		bool L_78;
+		L_78 = OVRInput_GetDown_mEC4F71AEC93D3AF1A041934CA4C61680C6DB9AC7(2, L_77, NULL);
+		if (!L_78)
+		{
+			goto IL_0202;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/OculusControllerStylusHandler.cs:89>
+		float L_79;
+		L_79 = Time_get_time_m3A271BB1B20041144AC5B7863B71AB1F0150374B(NULL);
+		V_10 = L_79;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/OculusControllerStylusHandler.cs:90>
+		float L_80 = V_10;
+		float L_81 = __this->____lastTapTime;
+		float L_82 = __this->____doubleTapWindow;
+		if ((!(((float)((float)il2cpp_codegen_subtract(L_80, L_81))) <= ((float)L_82))))
+		{
+			goto IL_01fa;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/OculusControllerStylusHandler.cs:92>
+		V_9 = (bool)1;
+	}
+
+IL_01fa:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/OculusControllerStylusHandler.cs:94>
+		float L_83 = V_10;
+		__this->____lastTapTime = L_83;
+	}
+
+IL_0202:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/OculusControllerStylusHandler.cs:96>
+		StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577* L_84 = (StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577*)(&((StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A*)__this)->____stylus);
+		bool L_85 = V_9;
+		L_84->___cluster_back_double_tap_value = L_85;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/OculusControllerStylusHandler.cs:98>
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/OculusControllerStylusHandler.cs:99>
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/OculusControllerStylusHandler.cs:100>
+		StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577* L_86 = (StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577*)(&((StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A*)__this)->____stylus);
+		StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577* L_87 = (StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577*)(&((StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A*)__this)->____stylus);
+		float L_88 = L_87->___tip_value;
+		if ((((float)L_88) > ((float)(0.0f))))
+		{
+			G_B31_0 = L_86;
+			goto IL_0260;
+		}
+		G_B27_0 = L_86;
+	}
+	{
+		StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577* L_89 = (StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577*)(&((StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A*)__this)->____stylus);
+		float L_90 = L_89->___cluster_middle_value;
+		if ((((float)L_90) > ((float)(0.0f))))
+		{
+			G_B31_0 = G_B27_0;
+			goto IL_0260;
+		}
+		G_B28_0 = G_B27_0;
+	}
+	{
+		StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577* L_91 = (StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577*)(&((StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A*)__this)->____stylus);
+		bool L_92 = L_91->___cluster_front_value;
+		if (L_92)
+		{
+			G_B31_0 = G_B28_0;
+			goto IL_0260;
+		}
+		G_B29_0 = G_B28_0;
+	}
+	{
+		StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577* L_93 = (StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577*)(&((StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A*)__this)->____stylus);
+		bool L_94 = L_93->___cluster_back_value;
+		if (L_94)
+		{
+			G_B31_0 = G_B29_0;
+			goto IL_0260;
+		}
+		G_B30_0 = G_B29_0;
+	}
+	{
+		StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577* L_95 = (StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577*)(&((StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A*)__this)->____stylus);
+		bool L_96 = L_95->___cluster_back_double_tap_value;
+		G_B32_0 = ((int32_t)(L_96));
+		G_B32_1 = G_B30_0;
+		goto IL_0261;
+	}
+
+IL_0260:
+	{
+		G_B32_0 = 1;
+		G_B32_1 = G_B31_0;
+	}
+
+IL_0261:
+	{
+		G_B32_1->___any = (bool)G_B32_0;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/OculusControllerStylusHandler.cs:102>
+		StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577* L_97 = (StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577*)(&((StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A*)__this)->____stylus);
+		Pose_t06BA69EAA6E9FAF60056D519A87D25F54AFE7971* L_98 = (Pose_t06BA69EAA6E9FAF60056D519A87D25F54AFE7971*)(&L_97->___inkingPose);
+		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_99;
+		L_99 = Component_get_transform_m2919A1D81931E6932C7F06D4C2F0AB8DDA9A5371(__this, NULL);
+		NullCheck(L_99);
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_100;
+		L_100 = Transform_get_position_m69CD5FA214FDAE7BB701552943674846C220FDE1(L_99, NULL);
+		L_98->___position = L_100;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/OculusControllerStylusHandler.cs:103>
+		StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577* L_101 = (StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577*)(&((StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A*)__this)->____stylus);
+		Pose_t06BA69EAA6E9FAF60056D519A87D25F54AFE7971* L_102 = (Pose_t06BA69EAA6E9FAF60056D519A87D25F54AFE7971*)(&L_101->___inkingPose);
+		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_103;
+		L_103 = Component_get_transform_m2919A1D81931E6932C7F06D4C2F0AB8DDA9A5371(__this, NULL);
+		NullCheck(L_103);
+		Quaternion_tDA59F214EF07D7700B26E40E562F267AF7306974 L_104;
+		L_104 = Transform_get_rotation_m32AF40CA0D50C797DA639A696F8EAEC7524C179C(L_103, NULL);
+		L_102->___rotation = L_104;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/OculusControllerStylusHandler.cs:104>
+		return;
+	}
+}
+// Method Definition Index: 128552
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* OculusControllerStylusHandler_GetTrackingSpace_m37A2F126182483D6895315F744A85A3DB04167D0 (OculusControllerStylusHandler_tEE66C8834517A788738007FC060C786ACDD8CE78* __this, const RuntimeMethod* method) 
+{
+	static bool s_Il2CppMethodInitialized;
+	if (!s_Il2CppMethodInitialized)
+	{
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&Object_FindObjectOfType_TisOVRCameraRig_t7FC2BB0D30DED2B7F0C8914AF2B66E9F4CF891A9_m1564DCD77DA806C8E84BE6808F00823EBCA88234_RuntimeMethod_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&Object_FindObjectOfType_TisOVRManager_t21429E69CA88C5E9C6EE3AAB75EAFBE6E1B129D4_mD54C604B88A664C7C4D817124CF11D4586970E92_RuntimeMethod_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C_il2cpp_TypeInfo_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&_stringLiteral4960166313998CAEAAA9147F237C2871203D823A);
+		s_Il2CppMethodInitialized = true;
+	}
+	OVRCameraRig_t7FC2BB0D30DED2B7F0C8914AF2B66E9F4CF891A9* V_0 = NULL;
+	OVRManager_t21429E69CA88C5E9C6EE3AAB75EAFBE6E1B129D4* V_1 = NULL;
+	Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* V_2 = NULL;
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/OculusControllerStylusHandler.cs:108>
+		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_0 = __this->____cachedTrackingSpace;
+		il2cpp_codegen_runtime_class_init_inline(Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C_il2cpp_TypeInfo_var);
+		bool L_1;
+		L_1 = Object_op_Inequality_mD0BE578448EAA61948F25C32F8DD55AB1F778602(L_0, (Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C*)NULL, NULL);
+		if (!L_1)
+		{
+			goto IL_0015;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/OculusControllerStylusHandler.cs:110>
+		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_2 = __this->____cachedTrackingSpace;
+		return L_2;
+	}
+
+IL_0015:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/OculusControllerStylusHandler.cs:113>
+		il2cpp_codegen_runtime_class_init_inline(Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C_il2cpp_TypeInfo_var);
+		OVRCameraRig_t7FC2BB0D30DED2B7F0C8914AF2B66E9F4CF891A9* L_3;
+		L_3 = Object_FindObjectOfType_TisOVRCameraRig_t7FC2BB0D30DED2B7F0C8914AF2B66E9F4CF891A9_m1564DCD77DA806C8E84BE6808F00823EBCA88234(Object_FindObjectOfType_TisOVRCameraRig_t7FC2BB0D30DED2B7F0C8914AF2B66E9F4CF891A9_m1564DCD77DA806C8E84BE6808F00823EBCA88234_RuntimeMethod_var);
+		V_0 = L_3;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/OculusControllerStylusHandler.cs:114>
+		OVRCameraRig_t7FC2BB0D30DED2B7F0C8914AF2B66E9F4CF891A9* L_4 = V_0;
+		bool L_5;
+		L_5 = Object_op_Inequality_mD0BE578448EAA61948F25C32F8DD55AB1F778602(L_4, (Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C*)NULL, NULL);
+		if (!L_5)
+		{
+			goto IL_0045;
+		}
+	}
+	{
+		OVRCameraRig_t7FC2BB0D30DED2B7F0C8914AF2B66E9F4CF891A9* L_6 = V_0;
+		NullCheck(L_6);
+		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_7;
+		L_7 = OVRCameraRig_get_trackingSpace_m76339871C7804C1BD14283FBF3D91268D4D87550_inline(L_6, NULL);
+		il2cpp_codegen_runtime_class_init_inline(Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C_il2cpp_TypeInfo_var);
+		bool L_8;
+		L_8 = Object_op_Inequality_mD0BE578448EAA61948F25C32F8DD55AB1F778602(L_7, (Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C*)NULL, NULL);
+		if (!L_8)
+		{
+			goto IL_0045;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/OculusControllerStylusHandler.cs:116>
+		OVRCameraRig_t7FC2BB0D30DED2B7F0C8914AF2B66E9F4CF891A9* L_9 = V_0;
+		NullCheck(L_9);
+		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_10;
+		L_10 = OVRCameraRig_get_trackingSpace_m76339871C7804C1BD14283FBF3D91268D4D87550_inline(L_9, NULL);
+		__this->____cachedTrackingSpace = L_10;
+		Il2CppCodeGenWriteBarrier((void**)(&__this->____cachedTrackingSpace), (void*)L_10);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/OculusControllerStylusHandler.cs:117>
+		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_11 = __this->____cachedTrackingSpace;
+		return L_11;
+	}
+
+IL_0045:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/OculusControllerStylusHandler.cs:120>
+		il2cpp_codegen_runtime_class_init_inline(Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C_il2cpp_TypeInfo_var);
+		OVRManager_t21429E69CA88C5E9C6EE3AAB75EAFBE6E1B129D4* L_12;
+		L_12 = Object_FindObjectOfType_TisOVRManager_t21429E69CA88C5E9C6EE3AAB75EAFBE6E1B129D4_mD54C604B88A664C7C4D817124CF11D4586970E92(Object_FindObjectOfType_TisOVRManager_t21429E69CA88C5E9C6EE3AAB75EAFBE6E1B129D4_mD54C604B88A664C7C4D817124CF11D4586970E92_RuntimeMethod_var);
+		V_1 = L_12;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/OculusControllerStylusHandler.cs:121>
+		OVRManager_t21429E69CA88C5E9C6EE3AAB75EAFBE6E1B129D4* L_13 = V_1;
+		bool L_14;
+		L_14 = Object_op_Inequality_mD0BE578448EAA61948F25C32F8DD55AB1F778602(L_13, (Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C*)NULL, NULL);
+		if (!L_14)
+		{
+			goto IL_007c;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/OculusControllerStylusHandler.cs:123>
+		OVRManager_t21429E69CA88C5E9C6EE3AAB75EAFBE6E1B129D4* L_15 = V_1;
+		NullCheck(L_15);
+		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_16;
+		L_16 = Component_get_transform_m2919A1D81931E6932C7F06D4C2F0AB8DDA9A5371(L_15, NULL);
+		NullCheck(L_16);
+		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_17;
+		L_17 = Transform_Find_m3087032B0E1C5B96A2D2C27020BAEAE2DA08F932(L_16, _stringLiteral4960166313998CAEAAA9147F237C2871203D823A, NULL);
+		V_2 = L_17;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/OculusControllerStylusHandler.cs:124>
+		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_18 = V_2;
+		il2cpp_codegen_runtime_class_init_inline(Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C_il2cpp_TypeInfo_var);
+		bool L_19;
+		L_19 = Object_op_Inequality_mD0BE578448EAA61948F25C32F8DD55AB1F778602(L_18, (Object_tC12DECB6760A7F2CBF65D9DCF18D044C2D97152C*)NULL, NULL);
+		if (!L_19)
+		{
+			goto IL_007c;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/OculusControllerStylusHandler.cs:126>
+		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_20 = V_2;
+		__this->____cachedTrackingSpace = L_20;
+		Il2CppCodeGenWriteBarrier((void**)(&__this->____cachedTrackingSpace), (void*)L_20);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/OculusControllerStylusHandler.cs:127>
+		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_21 = __this->____cachedTrackingSpace;
+		return L_21;
+	}
+
+IL_007c:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/OculusControllerStylusHandler.cs:131>
+		return (Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1*)NULL;
+	}
+}
+// Method Definition Index: 128553
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void OculusControllerStylusHandler__ctor_m797AF33CF1BB2F104576D3D2C9DA980EF8C3368F (OculusControllerStylusHandler_tEE66C8834517A788738007FC060C786ACDD8CE78* __this, const RuntimeMethod* method) 
+{
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/OculusControllerStylusHandler.cs:11>
+		__this->____handedness = 1;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/OculusControllerStylusHandler.cs:13>
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_0;
+		L_0 = Vector3_get_zero_m0C1249C3F25B1C70EAD3CC8B31259975A457AE39_inline(NULL);
+		__this->____positionOffset = L_0;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/OculusControllerStylusHandler.cs:14>
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_1;
+		L_1 = Vector3_get_zero_m0C1249C3F25B1C70EAD3CC8B31259975A457AE39_inline(NULL);
+		__this->____rotationOffsetEuler = L_1;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/OculusControllerStylusHandler.cs:15>
+		__this->____doubleTapWindow = (0.300000012f);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/OculusControllerStylusHandler.cs:17>
+		__this->____lastTapTime = (-10.0f);
+		StylusHandler__ctor_mD36B13F50E27ED87A317197683C4A94C6757022C(__this, NULL);
+		return;
+	}
+}
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Winvalid-offsetof"
+#pragma clang diagnostic ignored "-Wunused-variable"
+#endif
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Winvalid-offsetof"
+#pragma clang diagnostic ignored "-Wunused-variable"
+#endif
+IL2CPP_EXTERN_C void StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577_marshal_pinvoke(const StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577& unmarshaled, StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577_marshaled_pinvoke& marshaled)
+{
+	marshaled.___tip_value = unmarshaled.___tip_value;
+	marshaled.___cluster_front_value = static_cast<int32_t>(unmarshaled.___cluster_front_value);
+	marshaled.___cluster_middle_value = unmarshaled.___cluster_middle_value;
+	marshaled.___cluster_back_value = static_cast<int32_t>(unmarshaled.___cluster_back_value);
+	marshaled.___cluster_back_double_tap_value = static_cast<int32_t>(unmarshaled.___cluster_back_double_tap_value);
+	marshaled.___any = static_cast<int32_t>(unmarshaled.___any);
+	marshaled.___inkingPose = unmarshaled.___inkingPose;
+	marshaled.___positionIsTracked = static_cast<int32_t>(unmarshaled.___positionIsTracked);
+	marshaled.___positionIsValid = static_cast<int32_t>(unmarshaled.___positionIsValid);
+	marshaled.___batteryLevel = unmarshaled.___batteryLevel;
+	marshaled.___isActive = static_cast<int32_t>(unmarshaled.___isActive);
+	marshaled.___isOnRightHand = static_cast<int32_t>(unmarshaled.___isOnRightHand);
+	marshaled.___docked = static_cast<int32_t>(unmarshaled.___docked);
+}
+IL2CPP_EXTERN_C void StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577_marshal_pinvoke_back(const StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577_marshaled_pinvoke& marshaled, StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577& unmarshaled)
+{
+	float unmarshaledtip_value_temp_0 = 0.0f;
+	unmarshaledtip_value_temp_0 = marshaled.___tip_value;
+	unmarshaled.___tip_value = unmarshaledtip_value_temp_0;
+	bool unmarshaledcluster_front_value_temp_1 = false;
+	unmarshaledcluster_front_value_temp_1 = static_cast<bool>(marshaled.___cluster_front_value);
+	unmarshaled.___cluster_front_value = unmarshaledcluster_front_value_temp_1;
+	float unmarshaledcluster_middle_value_temp_2 = 0.0f;
+	unmarshaledcluster_middle_value_temp_2 = marshaled.___cluster_middle_value;
+	unmarshaled.___cluster_middle_value = unmarshaledcluster_middle_value_temp_2;
+	bool unmarshaledcluster_back_value_temp_3 = false;
+	unmarshaledcluster_back_value_temp_3 = static_cast<bool>(marshaled.___cluster_back_value);
+	unmarshaled.___cluster_back_value = unmarshaledcluster_back_value_temp_3;
+	bool unmarshaledcluster_back_double_tap_value_temp_4 = false;
+	unmarshaledcluster_back_double_tap_value_temp_4 = static_cast<bool>(marshaled.___cluster_back_double_tap_value);
+	unmarshaled.___cluster_back_double_tap_value = unmarshaledcluster_back_double_tap_value_temp_4;
+	bool unmarshaledany_temp_5 = false;
+	unmarshaledany_temp_5 = static_cast<bool>(marshaled.___any);
+	unmarshaled.___any = unmarshaledany_temp_5;
+	Pose_t06BA69EAA6E9FAF60056D519A87D25F54AFE7971 unmarshaledinkingPose_temp_6;
+	memset((&unmarshaledinkingPose_temp_6), 0, sizeof(unmarshaledinkingPose_temp_6));
+	unmarshaledinkingPose_temp_6 = marshaled.___inkingPose;
+	unmarshaled.___inkingPose = unmarshaledinkingPose_temp_6;
+	bool unmarshaledpositionIsTracked_temp_7 = false;
+	unmarshaledpositionIsTracked_temp_7 = static_cast<bool>(marshaled.___positionIsTracked);
+	unmarshaled.___positionIsTracked = unmarshaledpositionIsTracked_temp_7;
+	bool unmarshaledpositionIsValid_temp_8 = false;
+	unmarshaledpositionIsValid_temp_8 = static_cast<bool>(marshaled.___positionIsValid);
+	unmarshaled.___positionIsValid = unmarshaledpositionIsValid_temp_8;
+	float unmarshaledbatteryLevel_temp_9 = 0.0f;
+	unmarshaledbatteryLevel_temp_9 = marshaled.___batteryLevel;
+	unmarshaled.___batteryLevel = unmarshaledbatteryLevel_temp_9;
+	bool unmarshaledisActive_temp_10 = false;
+	unmarshaledisActive_temp_10 = static_cast<bool>(marshaled.___isActive);
+	unmarshaled.___isActive = unmarshaledisActive_temp_10;
+	bool unmarshaledisOnRightHand_temp_11 = false;
+	unmarshaledisOnRightHand_temp_11 = static_cast<bool>(marshaled.___isOnRightHand);
+	unmarshaled.___isOnRightHand = unmarshaledisOnRightHand_temp_11;
+	bool unmarshaleddocked_temp_12 = false;
+	unmarshaleddocked_temp_12 = static_cast<bool>(marshaled.___docked);
+	unmarshaled.___docked = unmarshaleddocked_temp_12;
+}
+IL2CPP_EXTERN_C void StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577_marshal_pinvoke_cleanup(StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577_marshaled_pinvoke& marshaled)
+{
+}
+IL2CPP_EXTERN_C void StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577_marshal_com(const StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577& unmarshaled, StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577_marshaled_com& marshaled)
+{
+	marshaled.___tip_value = unmarshaled.___tip_value;
+	marshaled.___cluster_front_value = static_cast<int32_t>(unmarshaled.___cluster_front_value);
+	marshaled.___cluster_middle_value = unmarshaled.___cluster_middle_value;
+	marshaled.___cluster_back_value = static_cast<int32_t>(unmarshaled.___cluster_back_value);
+	marshaled.___cluster_back_double_tap_value = static_cast<int32_t>(unmarshaled.___cluster_back_double_tap_value);
+	marshaled.___any = static_cast<int32_t>(unmarshaled.___any);
+	marshaled.___inkingPose = unmarshaled.___inkingPose;
+	marshaled.___positionIsTracked = static_cast<int32_t>(unmarshaled.___positionIsTracked);
+	marshaled.___positionIsValid = static_cast<int32_t>(unmarshaled.___positionIsValid);
+	marshaled.___batteryLevel = unmarshaled.___batteryLevel;
+	marshaled.___isActive = static_cast<int32_t>(unmarshaled.___isActive);
+	marshaled.___isOnRightHand = static_cast<int32_t>(unmarshaled.___isOnRightHand);
+	marshaled.___docked = static_cast<int32_t>(unmarshaled.___docked);
+}
+IL2CPP_EXTERN_C void StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577_marshal_com_back(const StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577_marshaled_com& marshaled, StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577& unmarshaled)
+{
+	float unmarshaledtip_value_temp_0 = 0.0f;
+	unmarshaledtip_value_temp_0 = marshaled.___tip_value;
+	unmarshaled.___tip_value = unmarshaledtip_value_temp_0;
+	bool unmarshaledcluster_front_value_temp_1 = false;
+	unmarshaledcluster_front_value_temp_1 = static_cast<bool>(marshaled.___cluster_front_value);
+	unmarshaled.___cluster_front_value = unmarshaledcluster_front_value_temp_1;
+	float unmarshaledcluster_middle_value_temp_2 = 0.0f;
+	unmarshaledcluster_middle_value_temp_2 = marshaled.___cluster_middle_value;
+	unmarshaled.___cluster_middle_value = unmarshaledcluster_middle_value_temp_2;
+	bool unmarshaledcluster_back_value_temp_3 = false;
+	unmarshaledcluster_back_value_temp_3 = static_cast<bool>(marshaled.___cluster_back_value);
+	unmarshaled.___cluster_back_value = unmarshaledcluster_back_value_temp_3;
+	bool unmarshaledcluster_back_double_tap_value_temp_4 = false;
+	unmarshaledcluster_back_double_tap_value_temp_4 = static_cast<bool>(marshaled.___cluster_back_double_tap_value);
+	unmarshaled.___cluster_back_double_tap_value = unmarshaledcluster_back_double_tap_value_temp_4;
+	bool unmarshaledany_temp_5 = false;
+	unmarshaledany_temp_5 = static_cast<bool>(marshaled.___any);
+	unmarshaled.___any = unmarshaledany_temp_5;
+	Pose_t06BA69EAA6E9FAF60056D519A87D25F54AFE7971 unmarshaledinkingPose_temp_6;
+	memset((&unmarshaledinkingPose_temp_6), 0, sizeof(unmarshaledinkingPose_temp_6));
+	unmarshaledinkingPose_temp_6 = marshaled.___inkingPose;
+	unmarshaled.___inkingPose = unmarshaledinkingPose_temp_6;
+	bool unmarshaledpositionIsTracked_temp_7 = false;
+	unmarshaledpositionIsTracked_temp_7 = static_cast<bool>(marshaled.___positionIsTracked);
+	unmarshaled.___positionIsTracked = unmarshaledpositionIsTracked_temp_7;
+	bool unmarshaledpositionIsValid_temp_8 = false;
+	unmarshaledpositionIsValid_temp_8 = static_cast<bool>(marshaled.___positionIsValid);
+	unmarshaled.___positionIsValid = unmarshaledpositionIsValid_temp_8;
+	float unmarshaledbatteryLevel_temp_9 = 0.0f;
+	unmarshaledbatteryLevel_temp_9 = marshaled.___batteryLevel;
+	unmarshaled.___batteryLevel = unmarshaledbatteryLevel_temp_9;
+	bool unmarshaledisActive_temp_10 = false;
+	unmarshaledisActive_temp_10 = static_cast<bool>(marshaled.___isActive);
+	unmarshaled.___isActive = unmarshaledisActive_temp_10;
+	bool unmarshaledisOnRightHand_temp_11 = false;
+	unmarshaledisOnRightHand_temp_11 = static_cast<bool>(marshaled.___isOnRightHand);
+	unmarshaled.___isOnRightHand = unmarshaledisOnRightHand_temp_11;
+	bool unmarshaleddocked_temp_12 = false;
+	unmarshaleddocked_temp_12 = static_cast<bool>(marshaled.___docked);
+	unmarshaled.___docked = unmarshaleddocked_temp_12;
+}
+IL2CPP_EXTERN_C void StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577_marshal_com_cleanup(StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577_marshaled_com& marshaled)
+{
+}
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Winvalid-offsetof"
+#pragma clang diagnostic ignored "-Wunused-variable"
+#endif
+// Method Definition Index: 128554
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577 StylusHandler_get_CurrentState_m26068FA11B30F3E6A11632EF4A2C3963DE515734 (StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A* __this, const RuntimeMethod* method) 
+{
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/StylusHandler.cs:26>
+		StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577 L_0 = __this->____stylus;
+		return L_0;
+	}
+}
+// Method Definition Index: 128555
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR bool StylusHandler_CanDraw_m8B463D816E840EEED47CCEEF974334A0614C8037 (StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A* __this, const RuntimeMethod* method) 
+{
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/StylusHandler.cs:31>
+		return (bool)1;
+	}
+}
+// Method Definition Index: 128556
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void StylusHandler__ctor_mD36B13F50E27ED87A317197683C4A94C6757022C (StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A* __this, const RuntimeMethod* method) 
+{
+	{
+		MonoBehaviour__ctor_m592DB0105CA0BC97AA1C5F4AD27B12D68A3B7C1E(__this, NULL);
+		return;
+	}
+}
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Winvalid-offsetof"
+#pragma clang diagnostic ignored "-Wunused-variable"
+#endif
+// Method Definition Index: 128557
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void VrStylusHandler_UpdatePose_m5F805CA2006EA007C1E6FCDE5636794A6865B28F (VrStylusHandler_t5EFDF8B65CF2D5BB08AA538FD3174E4F18848423* __this, const RuntimeMethod* method) 
+{
+	static bool s_Il2CppMethodInitialized;
+	if (!s_Il2CppMethodInitialized)
+	{
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&Debug_t8394C7EEAECA3689C2C9B9DE9C7166D73596276F_il2cpp_TypeInfo_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&OVRPlugin_t0BF53CAD10A7503BB132A303469F2E0A639E696B_il2cpp_TypeInfo_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&_stringLiteralB5D7F5EAAF74F56865B1F1AE1ED31BB6750D8999);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&_stringLiteralB875DBD53FB546EFF8CD949FFB30E1E8D9017057);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&_stringLiteralB877EA1C7D1811F83E8F87E0677D13AB690D79C1);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&_stringLiteralD5AEBC27419027BA6024047D67E131F2633930EC);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&_stringLiteralD634E44A0CB7A3257B724E80AE9ADD7CEA365C79);
+		s_Il2CppMethodInitialized = true;
+	}
+	String_t* V_0 = NULL;
+	bool V_1 = false;
+	bool V_2 = false;
+	String_t* V_3 = NULL;
+	Posef_t51A2C10B4094B44A8D3C1913292B839172887B61 V_4;
+	memset((&V_4), 0, sizeof(V_4));
+	String_t* G_B3_0 = NULL;
+	GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* G_B5_0 = NULL;
+	GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* G_B4_0 = NULL;
+	int32_t G_B6_0 = 0;
+	GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* G_B6_1 = NULL;
+	GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* G_B8_0 = NULL;
+	GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* G_B7_0 = NULL;
+	int32_t G_B9_0 = 0;
+	GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* G_B9_1 = NULL;
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/VrStylusHandler.cs:35>
+		il2cpp_codegen_runtime_class_init_inline(OVRPlugin_t0BF53CAD10A7503BB132A303469F2E0A639E696B_il2cpp_TypeInfo_var);
+		String_t* L_0;
+		L_0 = OVRPlugin_GetCurrentInteractionProfileName_mD5E8751B784BB81A10F86BB7ACE356514AAF07C3(0, NULL);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/VrStylusHandler.cs:36>
+		String_t* L_1;
+		L_1 = OVRPlugin_GetCurrentInteractionProfileName_mD5E8751B784BB81A10F86BB7ACE356514AAF07C3(1, NULL);
+		V_0 = L_1;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/VrStylusHandler.cs:38>
+		NullCheck(L_0);
+		bool L_2;
+		L_2 = String_Contains_m6D77B121FADA7CA5F397C0FABB65DA62DF03B6C3(L_0, _stringLiteralB5D7F5EAAF74F56865B1F1AE1ED31BB6750D8999, NULL);
+		V_1 = L_2;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/VrStylusHandler.cs:39>
+		String_t* L_3 = V_0;
+		NullCheck(L_3);
+		bool L_4;
+		L_4 = String_Contains_m6D77B121FADA7CA5F397C0FABB65DA62DF03B6C3(L_3, _stringLiteralB5D7F5EAAF74F56865B1F1AE1ED31BB6750D8999, NULL);
+		V_2 = L_4;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/VrStylusHandler.cs:40>
+		StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577* L_5 = (StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577*)(&((StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A*)__this)->____stylus);
+		bool L_6 = V_1;
+		bool L_7 = V_2;
+		L_5->___isActive = (bool)((int32_t)((int32_t)L_6|(int32_t)L_7));
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/VrStylusHandler.cs:41>
+		StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577* L_8 = (StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577*)(&((StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A*)__this)->____stylus);
+		bool L_9 = V_2;
+		L_8->___isOnRightHand = L_9;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/VrStylusHandler.cs:42>
+		StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577* L_10 = (StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577*)(&((StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A*)__this)->____stylus);
+		bool L_11 = L_10->___isOnRightHand;
+		if (L_11)
+		{
+			goto IL_0052;
+		}
+	}
+	{
+		G_B3_0 = _stringLiteralB875DBD53FB546EFF8CD949FFB30E1E8D9017057;
+		goto IL_0057;
+	}
+
+IL_0052:
+	{
+		G_B3_0 = _stringLiteralD5AEBC27419027BA6024047D67E131F2633930EC;
+	}
+
+IL_0057:
+	{
+		V_3 = G_B3_0;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/VrStylusHandler.cs:44>
+		GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* L_12 = __this->____mxInk_model;
+		StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577* L_13 = (StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577*)(&((StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A*)__this)->____stylus);
+		bool L_14 = L_13->___isActive;
+		NullCheck(L_12);
+		GameObject_SetActive_m638E92E1E75E519E5B24CF150B08CA8E0CDFAB92(L_12, L_14, NULL);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/VrStylusHandler.cs:45>
+		GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* L_15 = __this->____right_touch_controller;
+		StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577* L_16 = (StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577*)(&((StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A*)__this)->____stylus);
+		bool L_17 = L_16->___isOnRightHand;
+		if (!L_17)
+		{
+			G_B5_0 = L_15;
+			goto IL_0091;
+		}
+		G_B4_0 = L_15;
+	}
+	{
+		StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577* L_18 = (StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577*)(&((StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A*)__this)->____stylus);
+		bool L_19 = L_18->___isActive;
+		G_B6_0 = ((((int32_t)L_19) == ((int32_t)0))? 1 : 0);
+		G_B6_1 = G_B4_0;
+		goto IL_0092;
+	}
+
+IL_0091:
+	{
+		G_B6_0 = 1;
+		G_B6_1 = G_B5_0;
+	}
+
+IL_0092:
+	{
+		NullCheck(G_B6_1);
+		GameObject_SetActive_m638E92E1E75E519E5B24CF150B08CA8E0CDFAB92(G_B6_1, (bool)G_B6_0, NULL);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/VrStylusHandler.cs:46>
+		GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* L_20 = __this->____left_touch_controller;
+		StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577* L_21 = (StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577*)(&((StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A*)__this)->____stylus);
+		bool L_22 = L_21->___isOnRightHand;
+		if (L_22)
+		{
+			G_B8_0 = L_20;
+			goto IL_00ba;
+		}
+		G_B7_0 = L_20;
+	}
+	{
+		StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577* L_23 = (StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577*)(&((StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A*)__this)->____stylus);
+		bool L_24 = L_23->___isActive;
+		G_B9_0 = ((((int32_t)L_24) == ((int32_t)0))? 1 : 0);
+		G_B9_1 = G_B7_0;
+		goto IL_00bb;
+	}
+
+IL_00ba:
+	{
+		G_B9_0 = 1;
+		G_B9_1 = G_B8_0;
+	}
+
+IL_00bb:
+	{
+		NullCheck(G_B9_1);
+		GameObject_SetActive_m638E92E1E75E519E5B24CF150B08CA8E0CDFAB92(G_B9_1, (bool)G_B9_0, NULL);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/VrStylusHandler.cs:48>
+		String_t* L_25 = V_3;
+		il2cpp_codegen_runtime_class_init_inline(OVRPlugin_t0BF53CAD10A7503BB132A303469F2E0A639E696B_il2cpp_TypeInfo_var);
+		bool L_26;
+		L_26 = OVRPlugin_GetActionStatePose_m6CBE651744A4D07BAB1E790FC70B34DDBF9B98BD(L_25, (&V_4), NULL);
+		if (!L_26)
+		{
+			goto IL_012f;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/VrStylusHandler.cs:50>
+		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_27;
+		L_27 = Component_get_transform_m2919A1D81931E6932C7F06D4C2F0AB8DDA9A5371(__this, NULL);
+		Posef_t51A2C10B4094B44A8D3C1913292B839172887B61 L_28 = V_4;
+		Vector3f_t232AF83B4642C67BE8EFF85D8E1599D3B06BD562 L_29 = L_28.___Position;
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_30;
+		L_30 = OVRExtensions_FromFlippedZVector3f_m32D17BCDA62BC3F8C9A6442F06A42BBE79140F62(L_29, NULL);
+		NullCheck(L_27);
+		Transform_set_localPosition_mDE1C997F7D79C0885210B7732B4BA50EE7D73134(L_27, L_30, NULL);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/VrStylusHandler.cs:51>
+		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_31;
+		L_31 = Component_get_transform_m2919A1D81931E6932C7F06D4C2F0AB8DDA9A5371(__this, NULL);
+		Posef_t51A2C10B4094B44A8D3C1913292B839172887B61 L_32 = V_4;
+		Quatf_t5347392804DF5326AF790F82E4EDE1578FED682A L_33 = L_32.___Orientation;
+		Quaternion_tDA59F214EF07D7700B26E40E562F267AF7306974 L_34;
+		L_34 = OVRExtensions_FromFlippedZQuatf_mF626F183B84EA8C08153550313227736286F2657(L_33, NULL);
+		NullCheck(L_31);
+		Transform_set_localRotation_mAB4A011D134BA58AB780BECC0025CA65F16185FA(L_31, L_34, NULL);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/VrStylusHandler.cs:52>
+		StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577* L_35 = (StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577*)(&((StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A*)__this)->____stylus);
+		Pose_t06BA69EAA6E9FAF60056D519A87D25F54AFE7971* L_36 = (Pose_t06BA69EAA6E9FAF60056D519A87D25F54AFE7971*)(&L_35->___inkingPose);
+		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_37;
+		L_37 = Component_get_transform_m2919A1D81931E6932C7F06D4C2F0AB8DDA9A5371(__this, NULL);
+		NullCheck(L_37);
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_38;
+		L_38 = Transform_get_localPosition_mA9C86B990DF0685EA1061A120218993FDCC60A95(L_37, NULL);
+		L_36->___position = L_38;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/VrStylusHandler.cs:53>
+		StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577* L_39 = (StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577*)(&((StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A*)__this)->____stylus);
+		Pose_t06BA69EAA6E9FAF60056D519A87D25F54AFE7971* L_40 = (Pose_t06BA69EAA6E9FAF60056D519A87D25F54AFE7971*)(&L_39->___inkingPose);
+		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_41;
+		L_41 = Component_get_transform_m2919A1D81931E6932C7F06D4C2F0AB8DDA9A5371(__this, NULL);
+		NullCheck(L_41);
+		Quaternion_tDA59F214EF07D7700B26E40E562F267AF7306974 L_42;
+		L_42 = Transform_get_localRotation_mD53D37611A5DAE93EC6C7BBCAC337408C5CACA77(L_41, NULL);
+		L_40->___rotation = L_42;
+		return;
+	}
+
+IL_012f:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/VrStylusHandler.cs:57>
+		String_t* L_43 = V_3;
+		String_t* L_44;
+		L_44 = String_Concat_m8855A6DE10F84DA7F4EC113CADDB59873A25573B(_stringLiteralB877EA1C7D1811F83E8F87E0677D13AB690D79C1, L_43, _stringLiteralD634E44A0CB7A3257B724E80AE9ADD7CEA365C79, NULL);
+		il2cpp_codegen_runtime_class_init_inline(Debug_t8394C7EEAECA3689C2C9B9DE9C7166D73596276F_il2cpp_TypeInfo_var);
+		Debug_LogError_mB00B2B4468EF3CAF041B038D840820FB84C924B2(L_44, NULL);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/VrStylusHandler.cs:59>
+		return;
+	}
+}
+// Method Definition Index: 128558
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void VrStylusHandler_Update_mE7118A7E01524CBCEBF64AB7B597E5A8CA2CF324 (VrStylusHandler_t5EFDF8B65CF2D5BB08AA538FD3174E4F18848423* __this, const RuntimeMethod* method) 
+{
+	static bool s_Il2CppMethodInitialized;
+	if (!s_Il2CppMethodInitialized)
+	{
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&Debug_t8394C7EEAECA3689C2C9B9DE9C7166D73596276F_il2cpp_TypeInfo_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&GameObject_GetComponent_TisMeshRenderer_t4B7747212F0B88244BB7790C61AE124BFC15BAAE_m7FF948365C38BC39333D82B235A7C4EAD219960D_RuntimeMethod_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&OVRInput_t759D9CC8F14D8539AD78A0375A2306C39D77100A_il2cpp_TypeInfo_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&OVRPlugin_t0BF53CAD10A7503BB132A303469F2E0A639E696B_il2cpp_TypeInfo_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&_stringLiteral19209A8C4F49219A7E67DA4797FBF05AB308F21D);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&_stringLiteral228A2375A22B5F56D4A8A63F0FBEAD959DA2BEDD);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&_stringLiteral32883DDBDA81F80F2B0270CCE548459A398C3118);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&_stringLiteral381617D1A1C0C848CBE085A3C3BF523A03E9659F);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&_stringLiteral5E90C36CB8BAA2CE12D913AA21AD9B44ADB55B55);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&_stringLiteral6A947C353F6C5B58572E2B5610522C121E44D3FF);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&_stringLiteral8DE767EE9FA0625954820697A6A8A22D9BDB4D6E);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&_stringLiteralA496F4F1F6657B079093C5288802EFD8F984AC62);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&_stringLiteralA9E17AB3E75A76F20DC59C30110BEC9F694FDC24);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&_stringLiteralC661681DF7BF85DBB5FCC315531FDF23FAFDAF2D);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&_stringLiteralD40A0643B9E952028112DAC686522393B8298D6E);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&_stringLiteralD7F0A791F7F76A69E47443C66A443C6D81EA5B49);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&_stringLiteralDCCA0A2638DC60493EE63346010737BB65AC311D);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&_stringLiteralFF357A3204662852B1452A127C14FE4AEEC36BC8);
+		s_Il2CppMethodInitialized = true;
+	}
+	StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577* G_B19_0 = NULL;
+	StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577* G_B15_0 = NULL;
+	StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577* G_B16_0 = NULL;
+	StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577* G_B17_0 = NULL;
+	StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577* G_B18_0 = NULL;
+	int32_t G_B20_0 = 0;
+	StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577* G_B20_1 = NULL;
+	Material_t18053F08F347D0DCA5E1140EC7EC4533DD8A14E3* G_B22_0 = NULL;
+	Material_t18053F08F347D0DCA5E1140EC7EC4533DD8A14E3* G_B21_0 = NULL;
+	Color_tD001788D726C3A7F1379BEED0260B9591F440C1F G_B23_0;
+	memset((&G_B23_0), 0, sizeof(G_B23_0));
+	Material_t18053F08F347D0DCA5E1140EC7EC4533DD8A14E3* G_B23_1 = NULL;
+	Material_t18053F08F347D0DCA5E1140EC7EC4533DD8A14E3* G_B25_0 = NULL;
+	Material_t18053F08F347D0DCA5E1140EC7EC4533DD8A14E3* G_B24_0 = NULL;
+	Color_tD001788D726C3A7F1379BEED0260B9591F440C1F G_B26_0;
+	memset((&G_B26_0), 0, sizeof(G_B26_0));
+	Material_t18053F08F347D0DCA5E1140EC7EC4533DD8A14E3* G_B26_1 = NULL;
+	Material_t18053F08F347D0DCA5E1140EC7EC4533DD8A14E3* G_B28_0 = NULL;
+	Material_t18053F08F347D0DCA5E1140EC7EC4533DD8A14E3* G_B27_0 = NULL;
+	Color_tD001788D726C3A7F1379BEED0260B9591F440C1F G_B29_0;
+	memset((&G_B29_0), 0, sizeof(G_B29_0));
+	Material_t18053F08F347D0DCA5E1140EC7EC4533DD8A14E3* G_B29_1 = NULL;
+	Material_t18053F08F347D0DCA5E1140EC7EC4533DD8A14E3* G_B32_0 = NULL;
+	Material_t18053F08F347D0DCA5E1140EC7EC4533DD8A14E3* G_B31_0 = NULL;
+	Color_tD001788D726C3A7F1379BEED0260B9591F440C1F G_B33_0;
+	memset((&G_B33_0), 0, sizeof(G_B33_0));
+	Material_t18053F08F347D0DCA5E1140EC7EC4533DD8A14E3* G_B33_1 = NULL;
+	Material_t18053F08F347D0DCA5E1140EC7EC4533DD8A14E3* G_B36_0 = NULL;
+	Material_t18053F08F347D0DCA5E1140EC7EC4533DD8A14E3* G_B35_0 = NULL;
+	Color_tD001788D726C3A7F1379BEED0260B9591F440C1F G_B37_0;
+	memset((&G_B37_0), 0, sizeof(G_B37_0));
+	Material_t18053F08F347D0DCA5E1140EC7EC4533DD8A14E3* G_B37_1 = NULL;
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/VrStylusHandler.cs:63>
+		il2cpp_codegen_runtime_class_init_inline(OVRInput_t759D9CC8F14D8539AD78A0375A2306C39D77100A_il2cpp_TypeInfo_var);
+		OVRInput_Update_m46BEA0A1B8C6592A25FBA12F61D471770EC72076(NULL);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/VrStylusHandler.cs:64>
+		VrStylusHandler_UpdatePose_m5F805CA2006EA007C1E6FCDE5636794A6865B28F(__this, NULL);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/VrStylusHandler.cs:66>
+		StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577* L_0 = (StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577*)(&((StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A*)__this)->____stylus);
+		float* L_1 = (float*)(&L_0->___tip_value);
+		il2cpp_codegen_runtime_class_init_inline(OVRPlugin_t0BF53CAD10A7503BB132A303469F2E0A639E696B_il2cpp_TypeInfo_var);
+		bool L_2;
+		L_2 = OVRPlugin_GetActionStateFloat_m5FC2F0B3B7F1F2377DEA3C8F752ED4771893449E(_stringLiteral5E90C36CB8BAA2CE12D913AA21AD9B44ADB55B55, L_1, NULL);
+		if (L_2)
+		{
+			goto IL_002c;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/VrStylusHandler.cs:68>
+		il2cpp_codegen_runtime_class_init_inline(Debug_t8394C7EEAECA3689C2C9B9DE9C7166D73596276F_il2cpp_TypeInfo_var);
+		Debug_LogError_mB00B2B4468EF3CAF041B038D840820FB84C924B2(_stringLiteral6A947C353F6C5B58572E2B5610522C121E44D3FF, NULL);
+	}
+
+IL_002c:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/VrStylusHandler.cs:71>
+		StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577* L_3 = (StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577*)(&((StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A*)__this)->____stylus);
+		float* L_4 = (float*)(&L_3->___cluster_middle_value);
+		il2cpp_codegen_runtime_class_init_inline(OVRPlugin_t0BF53CAD10A7503BB132A303469F2E0A639E696B_il2cpp_TypeInfo_var);
+		bool L_5;
+		L_5 = OVRPlugin_GetActionStateFloat_m5FC2F0B3B7F1F2377DEA3C8F752ED4771893449E(_stringLiteralA9E17AB3E75A76F20DC59C30110BEC9F694FDC24, L_4, NULL);
+		if (L_5)
+		{
+			goto IL_004d;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/VrStylusHandler.cs:73>
+		il2cpp_codegen_runtime_class_init_inline(Debug_t8394C7EEAECA3689C2C9B9DE9C7166D73596276F_il2cpp_TypeInfo_var);
+		Debug_LogError_mB00B2B4468EF3CAF041B038D840820FB84C924B2(_stringLiteralDCCA0A2638DC60493EE63346010737BB65AC311D, NULL);
+	}
+
+IL_004d:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/VrStylusHandler.cs:76>
+		StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577* L_6 = (StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577*)(&((StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A*)__this)->____stylus);
+		bool* L_7 = (bool*)(&L_6->___cluster_front_value);
+		il2cpp_codegen_runtime_class_init_inline(OVRPlugin_t0BF53CAD10A7503BB132A303469F2E0A639E696B_il2cpp_TypeInfo_var);
+		bool L_8;
+		L_8 = OVRPlugin_GetActionStateBoolean_m173670791E80561162E8A97498CFCD5E1B94CF9C(_stringLiteral19209A8C4F49219A7E67DA4797FBF05AB308F21D, L_7, NULL);
+		if (L_8)
+		{
+			goto IL_006e;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/VrStylusHandler.cs:78>
+		il2cpp_codegen_runtime_class_init_inline(Debug_t8394C7EEAECA3689C2C9B9DE9C7166D73596276F_il2cpp_TypeInfo_var);
+		Debug_LogError_mB00B2B4468EF3CAF041B038D840820FB84C924B2(_stringLiteralFF357A3204662852B1452A127C14FE4AEEC36BC8, NULL);
+	}
+
+IL_006e:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/VrStylusHandler.cs:81>
+		StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577* L_9 = (StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577*)(&((StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A*)__this)->____stylus);
+		bool* L_10 = (bool*)(&L_9->___cluster_back_value);
+		il2cpp_codegen_runtime_class_init_inline(OVRPlugin_t0BF53CAD10A7503BB132A303469F2E0A639E696B_il2cpp_TypeInfo_var);
+		bool L_11;
+		L_11 = OVRPlugin_GetActionStateBoolean_m173670791E80561162E8A97498CFCD5E1B94CF9C(_stringLiteral381617D1A1C0C848CBE085A3C3BF523A03E9659F, L_10, NULL);
+		if (L_11)
+		{
+			goto IL_008f;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/VrStylusHandler.cs:83>
+		il2cpp_codegen_runtime_class_init_inline(Debug_t8394C7EEAECA3689C2C9B9DE9C7166D73596276F_il2cpp_TypeInfo_var);
+		Debug_LogError_mB00B2B4468EF3CAF041B038D840820FB84C924B2(_stringLiteralC661681DF7BF85DBB5FCC315531FDF23FAFDAF2D, NULL);
+	}
+
+IL_008f:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/VrStylusHandler.cs:86>
+		StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577* L_12 = (StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577*)(&((StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A*)__this)->____stylus);
+		bool* L_13 = (bool*)(&L_12->___cluster_back_double_tap_value);
+		il2cpp_codegen_runtime_class_init_inline(OVRPlugin_t0BF53CAD10A7503BB132A303469F2E0A639E696B_il2cpp_TypeInfo_var);
+		bool L_14;
+		L_14 = OVRPlugin_GetActionStateBoolean_m173670791E80561162E8A97498CFCD5E1B94CF9C(_stringLiteral228A2375A22B5F56D4A8A63F0FBEAD959DA2BEDD, L_13, NULL);
+		if (L_14)
+		{
+			goto IL_00b0;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/VrStylusHandler.cs:88>
+		il2cpp_codegen_runtime_class_init_inline(Debug_t8394C7EEAECA3689C2C9B9DE9C7166D73596276F_il2cpp_TypeInfo_var);
+		Debug_LogError_mB00B2B4468EF3CAF041B038D840820FB84C924B2(_stringLiteralD7F0A791F7F76A69E47443C66A443C6D81EA5B49, NULL);
+	}
+
+IL_00b0:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/VrStylusHandler.cs:91>
+		StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577* L_15 = (StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577*)(&((StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A*)__this)->____stylus);
+		bool* L_16 = (bool*)(&L_15->___cluster_back_double_tap_value);
+		il2cpp_codegen_runtime_class_init_inline(OVRPlugin_t0BF53CAD10A7503BB132A303469F2E0A639E696B_il2cpp_TypeInfo_var);
+		bool L_17;
+		L_17 = OVRPlugin_GetActionStateBoolean_m173670791E80561162E8A97498CFCD5E1B94CF9C(_stringLiteralD40A0643B9E952028112DAC686522393B8298D6E, L_16, NULL);
+		if (L_17)
+		{
+			goto IL_00d1;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/VrStylusHandler.cs:93>
+		il2cpp_codegen_runtime_class_init_inline(Debug_t8394C7EEAECA3689C2C9B9DE9C7166D73596276F_il2cpp_TypeInfo_var);
+		Debug_LogError_mB00B2B4468EF3CAF041B038D840820FB84C924B2(_stringLiteralA496F4F1F6657B079093C5288802EFD8F984AC62, NULL);
+	}
+
+IL_00d1:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/VrStylusHandler.cs:96>
+		StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577* L_18 = (StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577*)(&((StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A*)__this)->____stylus);
+		bool* L_19 = (bool*)(&L_18->___docked);
+		il2cpp_codegen_runtime_class_init_inline(OVRPlugin_t0BF53CAD10A7503BB132A303469F2E0A639E696B_il2cpp_TypeInfo_var);
+		bool L_20;
+		L_20 = OVRPlugin_GetActionStateBoolean_m173670791E80561162E8A97498CFCD5E1B94CF9C(_stringLiteral8DE767EE9FA0625954820697A6A8A22D9BDB4D6E, L_19, NULL);
+		if (L_20)
+		{
+			goto IL_00f2;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/VrStylusHandler.cs:98>
+		il2cpp_codegen_runtime_class_init_inline(Debug_t8394C7EEAECA3689C2C9B9DE9C7166D73596276F_il2cpp_TypeInfo_var);
+		Debug_LogError_mB00B2B4468EF3CAF041B038D840820FB84C924B2(_stringLiteral32883DDBDA81F80F2B0270CCE548459A398C3118, NULL);
+	}
+
+IL_00f2:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/VrStylusHandler.cs:101>
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/VrStylusHandler.cs:102>
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/VrStylusHandler.cs:103>
+		StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577* L_21 = (StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577*)(&((StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A*)__this)->____stylus);
+		StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577* L_22 = (StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577*)(&((StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A*)__this)->____stylus);
+		float L_23 = L_22->___tip_value;
+		if ((((float)L_23) > ((float)(0.0f))))
+		{
+			G_B19_0 = L_21;
+			goto IL_0143;
+		}
+		G_B15_0 = L_21;
+	}
+	{
+		StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577* L_24 = (StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577*)(&((StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A*)__this)->____stylus);
+		bool L_25 = L_24->___cluster_front_value;
+		if (L_25)
+		{
+			G_B19_0 = G_B15_0;
+			goto IL_0143;
+		}
+		G_B16_0 = G_B15_0;
+	}
+	{
+		StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577* L_26 = (StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577*)(&((StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A*)__this)->____stylus);
+		float L_27 = L_26->___cluster_middle_value;
+		if ((((float)L_27) > ((float)(0.0f))))
+		{
+			G_B19_0 = G_B16_0;
+			goto IL_0143;
+		}
+		G_B17_0 = G_B16_0;
+	}
+	{
+		StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577* L_28 = (StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577*)(&((StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A*)__this)->____stylus);
+		bool L_29 = L_28->___cluster_back_value;
+		if (L_29)
+		{
+			G_B19_0 = G_B17_0;
+			goto IL_0143;
+		}
+		G_B18_0 = G_B17_0;
+	}
+	{
+		StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577* L_30 = (StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577*)(&((StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A*)__this)->____stylus);
+		bool L_31 = L_30->___cluster_back_double_tap_value;
+		G_B20_0 = ((int32_t)(L_31));
+		G_B20_1 = G_B18_0;
+		goto IL_0144;
+	}
+
+IL_0143:
+	{
+		G_B20_0 = 1;
+		G_B20_1 = G_B19_0;
+	}
+
+IL_0144:
+	{
+		G_B20_1->___any = (bool)G_B20_0;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/VrStylusHandler.cs:105>
+		GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* L_32 = __this->____tip;
+		NullCheck(L_32);
+		MeshRenderer_t4B7747212F0B88244BB7790C61AE124BFC15BAAE* L_33;
+		L_33 = GameObject_GetComponent_TisMeshRenderer_t4B7747212F0B88244BB7790C61AE124BFC15BAAE_m7FF948365C38BC39333D82B235A7C4EAD219960D(L_32, GameObject_GetComponent_TisMeshRenderer_t4B7747212F0B88244BB7790C61AE124BFC15BAAE_m7FF948365C38BC39333D82B235A7C4EAD219960D_RuntimeMethod_var);
+		NullCheck(L_33);
+		Material_t18053F08F347D0DCA5E1140EC7EC4533DD8A14E3* L_34;
+		L_34 = Renderer_get_material_m5BA2A00816C4CC66580D4B2E409CF10718C15656(L_33, NULL);
+		StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577* L_35 = (StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577*)(&((StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A*)__this)->____stylus);
+		float L_36 = L_35->___tip_value;
+		if ((((float)L_36) > ((float)(0.0f))))
+		{
+			G_B22_0 = L_34;
+			goto IL_0173;
+		}
+		G_B21_0 = L_34;
+	}
+	{
+		Color_tD001788D726C3A7F1379BEED0260B9591F440C1F L_37 = __this->___default_color;
+		G_B23_0 = L_37;
+		G_B23_1 = G_B21_0;
+		goto IL_0179;
+	}
+
+IL_0173:
+	{
+		Color_tD001788D726C3A7F1379BEED0260B9591F440C1F L_38 = __this->___active_color;
+		G_B23_0 = L_38;
+		G_B23_1 = G_B22_0;
+	}
+
+IL_0179:
+	{
+		NullCheck(G_B23_1);
+		Material_set_color_m5C32DEBB215FF9EE35E7B575297D8C2F29CC2A2D(G_B23_1, G_B23_0, NULL);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/VrStylusHandler.cs:106>
+		GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* L_39 = __this->____cluster_front;
+		NullCheck(L_39);
+		MeshRenderer_t4B7747212F0B88244BB7790C61AE124BFC15BAAE* L_40;
+		L_40 = GameObject_GetComponent_TisMeshRenderer_t4B7747212F0B88244BB7790C61AE124BFC15BAAE_m7FF948365C38BC39333D82B235A7C4EAD219960D(L_39, GameObject_GetComponent_TisMeshRenderer_t4B7747212F0B88244BB7790C61AE124BFC15BAAE_m7FF948365C38BC39333D82B235A7C4EAD219960D_RuntimeMethod_var);
+		NullCheck(L_40);
+		Material_t18053F08F347D0DCA5E1140EC7EC4533DD8A14E3* L_41;
+		L_41 = Renderer_get_material_m5BA2A00816C4CC66580D4B2E409CF10718C15656(L_40, NULL);
+		StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577* L_42 = (StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577*)(&((StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A*)__this)->____stylus);
+		bool L_43 = L_42->___cluster_front_value;
+		if (L_43)
+		{
+			G_B25_0 = L_41;
+			goto IL_01a3;
+		}
+		G_B24_0 = L_41;
+	}
+	{
+		Color_tD001788D726C3A7F1379BEED0260B9591F440C1F L_44 = __this->___default_color;
+		G_B26_0 = L_44;
+		G_B26_1 = G_B24_0;
+		goto IL_01a9;
+	}
+
+IL_01a3:
+	{
+		Color_tD001788D726C3A7F1379BEED0260B9591F440C1F L_45 = __this->___active_color;
+		G_B26_0 = L_45;
+		G_B26_1 = G_B25_0;
+	}
+
+IL_01a9:
+	{
+		NullCheck(G_B26_1);
+		Material_set_color_m5C32DEBB215FF9EE35E7B575297D8C2F29CC2A2D(G_B26_1, G_B26_0, NULL);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/VrStylusHandler.cs:107>
+		GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* L_46 = __this->____cluster_middle;
+		NullCheck(L_46);
+		MeshRenderer_t4B7747212F0B88244BB7790C61AE124BFC15BAAE* L_47;
+		L_47 = GameObject_GetComponent_TisMeshRenderer_t4B7747212F0B88244BB7790C61AE124BFC15BAAE_m7FF948365C38BC39333D82B235A7C4EAD219960D(L_46, GameObject_GetComponent_TisMeshRenderer_t4B7747212F0B88244BB7790C61AE124BFC15BAAE_m7FF948365C38BC39333D82B235A7C4EAD219960D_RuntimeMethod_var);
+		NullCheck(L_47);
+		Material_t18053F08F347D0DCA5E1140EC7EC4533DD8A14E3* L_48;
+		L_48 = Renderer_get_material_m5BA2A00816C4CC66580D4B2E409CF10718C15656(L_47, NULL);
+		StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577* L_49 = (StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577*)(&((StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A*)__this)->____stylus);
+		float L_50 = L_49->___cluster_middle_value;
+		if ((((float)L_50) > ((float)(0.0f))))
+		{
+			G_B28_0 = L_48;
+			goto IL_01d8;
+		}
+		G_B27_0 = L_48;
+	}
+	{
+		Color_tD001788D726C3A7F1379BEED0260B9591F440C1F L_51 = __this->___default_color;
+		G_B29_0 = L_51;
+		G_B29_1 = G_B27_0;
+		goto IL_01de;
+	}
+
+IL_01d8:
+	{
+		Color_tD001788D726C3A7F1379BEED0260B9591F440C1F L_52 = __this->___active_color;
+		G_B29_0 = L_52;
+		G_B29_1 = G_B28_0;
+	}
+
+IL_01de:
+	{
+		NullCheck(G_B29_1);
+		Material_set_color_m5C32DEBB215FF9EE35E7B575297D8C2F29CC2A2D(G_B29_1, G_B29_0, NULL);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/VrStylusHandler.cs:108>
+		StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577* L_53 = (StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577*)(&((StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A*)__this)->____stylus);
+		bool L_54 = L_53->___cluster_back_value;
+		if (!L_54)
+		{
+			goto IL_0222;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/VrStylusHandler.cs:110>
+		GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* L_55 = __this->____cluster_back;
+		NullCheck(L_55);
+		MeshRenderer_t4B7747212F0B88244BB7790C61AE124BFC15BAAE* L_56;
+		L_56 = GameObject_GetComponent_TisMeshRenderer_t4B7747212F0B88244BB7790C61AE124BFC15BAAE_m7FF948365C38BC39333D82B235A7C4EAD219960D(L_55, GameObject_GetComponent_TisMeshRenderer_t4B7747212F0B88244BB7790C61AE124BFC15BAAE_m7FF948365C38BC39333D82B235A7C4EAD219960D_RuntimeMethod_var);
+		NullCheck(L_56);
+		Material_t18053F08F347D0DCA5E1140EC7EC4533DD8A14E3* L_57;
+		L_57 = Renderer_get_material_m5BA2A00816C4CC66580D4B2E409CF10718C15656(L_56, NULL);
+		StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577* L_58 = (StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577*)(&((StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A*)__this)->____stylus);
+		bool L_59 = L_58->___cluster_back_value;
+		if (L_59)
+		{
+			G_B32_0 = L_57;
+			goto IL_0215;
+		}
+		G_B31_0 = L_57;
+	}
+	{
+		Color_tD001788D726C3A7F1379BEED0260B9591F440C1F L_60 = __this->___default_color;
+		G_B33_0 = L_60;
+		G_B33_1 = G_B31_0;
+		goto IL_021b;
+	}
+
+IL_0215:
+	{
+		Color_tD001788D726C3A7F1379BEED0260B9591F440C1F L_61 = __this->___active_color;
+		G_B33_0 = L_61;
+		G_B33_1 = G_B32_0;
+	}
+
+IL_021b:
+	{
+		NullCheck(G_B33_1);
+		Material_set_color_m5C32DEBB215FF9EE35E7B575297D8C2F29CC2A2D(G_B33_1, G_B33_0, NULL);
+		goto IL_0252;
+	}
+
+IL_0222:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/VrStylusHandler.cs:114>
+		GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* L_62 = __this->____cluster_back;
+		NullCheck(L_62);
+		MeshRenderer_t4B7747212F0B88244BB7790C61AE124BFC15BAAE* L_63;
+		L_63 = GameObject_GetComponent_TisMeshRenderer_t4B7747212F0B88244BB7790C61AE124BFC15BAAE_m7FF948365C38BC39333D82B235A7C4EAD219960D(L_62, GameObject_GetComponent_TisMeshRenderer_t4B7747212F0B88244BB7790C61AE124BFC15BAAE_m7FF948365C38BC39333D82B235A7C4EAD219960D_RuntimeMethod_var);
+		NullCheck(L_63);
+		Material_t18053F08F347D0DCA5E1140EC7EC4533DD8A14E3* L_64;
+		L_64 = Renderer_get_material_m5BA2A00816C4CC66580D4B2E409CF10718C15656(L_63, NULL);
+		StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577* L_65 = (StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577*)(&((StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A*)__this)->____stylus);
+		bool L_66 = L_65->___cluster_back_double_tap_value;
+		if (L_66)
+		{
+			G_B36_0 = L_64;
+			goto IL_0247;
+		}
+		G_B35_0 = L_64;
+	}
+	{
+		Color_tD001788D726C3A7F1379BEED0260B9591F440C1F L_67 = __this->___default_color;
+		G_B37_0 = L_67;
+		G_B37_1 = G_B35_0;
+		goto IL_024d;
+	}
+
+IL_0247:
+	{
+		Color_tD001788D726C3A7F1379BEED0260B9591F440C1F L_68 = __this->___double_tap_active_color;
+		G_B37_0 = L_68;
+		G_B37_1 = G_B36_0;
+	}
+
+IL_024d:
+	{
+		NullCheck(G_B37_1);
+		Material_set_color_m5C32DEBB215FF9EE35E7B575297D8C2F29CC2A2D(G_B37_1, G_B37_0, NULL);
+	}
+
+IL_0252:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/VrStylusHandler.cs:116>
+		StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577* L_69 = (StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577*)(&((StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A*)__this)->____stylus);
+		bool L_70 = L_69->___cluster_back_double_tap_value;
+		if (!L_70)
+		{
+			goto IL_0265;
+		}
+	}
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/VrStylusHandler.cs:118>
+		VrStylusHandler_TriggerHapticClick_m86BB67DA5A5C0CA12FAE1A995C53930A444BBBA4(__this, NULL);
+	}
+
+IL_0265:
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/VrStylusHandler.cs:120>
+		return;
+	}
+}
+// Method Definition Index: 128559
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void VrStylusHandler_TriggerHapticPulse_mD016617556B9D67D7909496DB412ECC99D85A088 (VrStylusHandler_t5EFDF8B65CF2D5BB08AA538FD3174E4F18848423* __this, float ___0_amplitude, float ___1_duration, const RuntimeMethod* method) 
+{
+	static bool s_Il2CppMethodInitialized;
+	if (!s_Il2CppMethodInitialized)
+	{
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&OVRPlugin_t0BF53CAD10A7503BB132A303469F2E0A639E696B_il2cpp_TypeInfo_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&_stringLiteralAABA72134328E410DEFC498E16D44299EE24B905);
+		s_Il2CppMethodInitialized = true;
+	}
+	int32_t V_0 = 0;
+	int32_t G_B3_0 = 0;
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/VrStylusHandler.cs:124>
+		StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577* L_0 = (StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577*)(&((StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A*)__this)->____stylus);
+		bool L_1 = L_0->___isOnRightHand;
+		if (L_1)
+		{
+			goto IL_0010;
+		}
+	}
+	{
+		G_B3_0 = 0;
+		goto IL_0011;
+	}
+
+IL_0010:
+	{
+		G_B3_0 = 1;
+	}
+
+IL_0011:
+	{
+		V_0 = G_B3_0;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/VrStylusHandler.cs:125>
+		int32_t L_2 = V_0;
+		float L_3 = ___1_duration;
+		float L_4 = ___0_amplitude;
+		il2cpp_codegen_runtime_class_init_inline(OVRPlugin_t0BF53CAD10A7503BB132A303469F2E0A639E696B_il2cpp_TypeInfo_var);
+		bool L_5;
+		L_5 = OVRPlugin_TriggerVibrationAction_mBAA4083A19B7C822C29935896D1475A032F42345(_stringLiteralAABA72134328E410DEFC498E16D44299EE24B905, L_2, L_3, L_4, NULL);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/VrStylusHandler.cs:126>
+		return;
+	}
+}
+// Method Definition Index: 128560
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void VrStylusHandler_TriggerHapticClick_m86BB67DA5A5C0CA12FAE1A995C53930A444BBBA4 (VrStylusHandler_t5EFDF8B65CF2D5BB08AA538FD3174E4F18848423* __this, const RuntimeMethod* method) 
+{
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/VrStylusHandler.cs:130>
+		float L_0 = __this->____hapticClickAmplitude;
+		float L_1 = __this->____hapticClickDuration;
+		VrStylusHandler_TriggerHapticPulse_mD016617556B9D67D7909496DB412ECC99D85A088(__this, L_0, L_1, NULL);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/VrStylusHandler.cs:131>
+		return;
+	}
+}
+// Method Definition Index: 128561
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void VrStylusHandler__ctor_mA3B1B9776346CA2360621682C18C88B51665A56C (VrStylusHandler_t5EFDF8B65CF2D5BB08AA538FD3174E4F18848423* __this, const RuntimeMethod* method) 
+{
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/VrStylusHandler.cs:15>
+		Color_tD001788D726C3A7F1379BEED0260B9591F440C1F L_0;
+		L_0 = Color_get_green_mEB001F2CD8C68C6BBAEF9101990B779D3AA2A6EF_inline(NULL);
+		__this->___active_color = L_0;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/VrStylusHandler.cs:16>
+		Color_tD001788D726C3A7F1379BEED0260B9591F440C1F L_1;
+		L_1 = Color_get_cyan_m182A29E7475C0A98ACC03E1CF5252BAB83F0BA31_inline(NULL);
+		__this->___double_tap_active_color = L_1;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/VrStylusHandler.cs:17>
+		Color_tD001788D726C3A7F1379BEED0260B9591F440C1F L_2;
+		L_2 = Color_get_white_m068F5AF879B0FCA584E3693F762EA41BB65532C6_inline(NULL);
+		__this->___default_color = L_2;
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/VrStylusHandler.cs:30>
+		__this->____hapticClickDuration = (0.0109999999f);
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/VrStylusHandler.cs:31>
+		__this->____hapticClickAmplitude = (1.0f);
+		StylusHandler__ctor_mD36B13F50E27ED87A317197683C4A94C6757022C(__this, NULL);
+		return;
+	}
+}
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Winvalid-offsetof"
+#pragma clang diagnostic ignored "-Wunused-variable"
+#endif
+// Method Definition Index: 128562
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void Readme__ctor_m69C325C4C171DCB0312B646A9034AA91EA8C39C6 (Readme_tE17B99201D0F52BD5727638AD3F41072A65B3BBB* __this, const RuntimeMethod* method) 
+{
+	{
+		ScriptableObject__ctor_mD037FDB0B487295EA47F79A4DB1BF1846C9087FF(__this, NULL);
+		return;
+	}
+}
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Winvalid-offsetof"
+#pragma clang diagnostic ignored "-Wunused-variable"
+#endif
+// Method Definition Index: 128563
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void Section__ctor_m5F732533E4DFC0167D965E5F5DB332E46055399B (Section_t50C894D0A717C2368EBAAE5477D4E8626D0B5401* __this, const RuntimeMethod* method) 
+{
+	{
+		Object__ctor_mE837C6B9FA8C6D5D109F4B2EC885D79919AC0EA2(__this, NULL);
+		return;
+	}
+}
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Winvalid-offsetof"
+#pragma clang diagnostic ignored "-Wunused-variable"
+#endif
+// Method Definition Index: 128564
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR MonoScriptData_t8F50E352855B96FFFC1D9CB07EACC90C99D73A3E UnitySourceGeneratedAssemblyMonoScriptTypes_v1_Get_mBEB95BEB954BB63E9710BBC7AD5E78C4CB0A0033 (const RuntimeMethod* method) 
+{
+	static bool s_Il2CppMethodInitialized;
+	if (!s_Il2CppMethodInitialized)
+	{
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&ByteU5BU5D_tA6237BF417AE52AD70CFB4EF24A7A82613DF9031_il2cpp_TypeInfo_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&U3CPrivateImplementationDetailsU3E_t0F5473E849A5A5185A9F4C5246F0C32816C49FCA____894D4B1035152C17F7597AF81898FA76D0753BEF6DEA7F0BF21D6C8D5E958087_FieldInfo_var);
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&U3CPrivateImplementationDetailsU3E_t0F5473E849A5A5185A9F4C5246F0C32816C49FCA____A6C059AD484A2FB59D00FEC67257B0642A94D0C85A85E85DCF91D7A2D26E3D8E_FieldInfo_var);
+		s_Il2CppMethodInitialized = true;
+	}
+	MonoScriptData_t8F50E352855B96FFFC1D9CB07EACC90C99D73A3E V_0;
+	memset((&V_0), 0, sizeof(V_0));
+	{
+		il2cpp_codegen_initobj((&V_0), sizeof(MonoScriptData_t8F50E352855B96FFFC1D9CB07EACC90C99D73A3E));
+		ByteU5BU5D_tA6237BF417AE52AD70CFB4EF24A7A82613DF9031* L_0 = (ByteU5BU5D_tA6237BF417AE52AD70CFB4EF24A7A82613DF9031*)(ByteU5BU5D_tA6237BF417AE52AD70CFB4EF24A7A82613DF9031*)SZArrayNew(ByteU5BU5D_tA6237BF417AE52AD70CFB4EF24A7A82613DF9031_il2cpp_TypeInfo_var, (uint32_t)((int32_t)397));
+		ByteU5BU5D_tA6237BF417AE52AD70CFB4EF24A7A82613DF9031* L_1 = L_0;
+		RuntimeFieldHandle_t6E4C45B6D2EA12FC99185805A7E77527899B25C5 L_2 = { reinterpret_cast<intptr_t> (U3CPrivateImplementationDetailsU3E_t0F5473E849A5A5185A9F4C5246F0C32816C49FCA____894D4B1035152C17F7597AF81898FA76D0753BEF6DEA7F0BF21D6C8D5E958087_FieldInfo_var) };
+		RuntimeHelpers_InitializeArray_m751372AA3F24FBF6DA9B9D687CBFA2DE436CAB9B((RuntimeArray*)L_1, L_2, NULL);
+		(&V_0)->___FilePathsData = L_1;
+		Il2CppCodeGenWriteBarrier((void**)(&(&V_0)->___FilePathsData), (void*)L_1);
+		ByteU5BU5D_tA6237BF417AE52AD70CFB4EF24A7A82613DF9031* L_3 = (ByteU5BU5D_tA6237BF417AE52AD70CFB4EF24A7A82613DF9031*)(ByteU5BU5D_tA6237BF417AE52AD70CFB4EF24A7A82613DF9031*)SZArrayNew(ByteU5BU5D_tA6237BF417AE52AD70CFB4EF24A7A82613DF9031_il2cpp_TypeInfo_var, (uint32_t)((int32_t)241));
+		ByteU5BU5D_tA6237BF417AE52AD70CFB4EF24A7A82613DF9031* L_4 = L_3;
+		RuntimeFieldHandle_t6E4C45B6D2EA12FC99185805A7E77527899B25C5 L_5 = { reinterpret_cast<intptr_t> (U3CPrivateImplementationDetailsU3E_t0F5473E849A5A5185A9F4C5246F0C32816C49FCA____A6C059AD484A2FB59D00FEC67257B0642A94D0C85A85E85DCF91D7A2D26E3D8E_FieldInfo_var) };
+		RuntimeHelpers_InitializeArray_m751372AA3F24FBF6DA9B9D687CBFA2DE436CAB9B((RuntimeArray*)L_4, L_5, NULL);
+		(&V_0)->___TypesData = L_4;
+		Il2CppCodeGenWriteBarrier((void**)(&(&V_0)->___TypesData), (void*)L_4);
+		(&V_0)->___TotalFiles = 8;
+		(&V_0)->___TotalTypes = ((int32_t)12);
+		(&V_0)->___IsEditorOnly = (bool)0;
+		MonoScriptData_t8F50E352855B96FFFC1D9CB07EACC90C99D73A3E L_6 = V_0;
+		return L_6;
+	}
+}
+// Method Definition Index: 128565
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void UnitySourceGeneratedAssemblyMonoScriptTypes_v1__ctor_mE70FB23ACC1EA12ABC948AA22C2E78B2D0AA39B1 (UnitySourceGeneratedAssemblyMonoScriptTypes_v1_tC95F24D0C6E6B77389433852BB389F39C692926E* __this, const RuntimeMethod* method) 
+{
+	{
+		Object__ctor_mE837C6B9FA8C6D5D109F4B2EC885D79919AC0EA2(__this, NULL);
+		return;
+	}
+}
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Winvalid-offsetof"
+#pragma clang diagnostic ignored "-Wunused-variable"
+#endif
+IL2CPP_EXTERN_C void MonoScriptData_t8F50E352855B96FFFC1D9CB07EACC90C99D73A3E_marshal_pinvoke(const MonoScriptData_t8F50E352855B96FFFC1D9CB07EACC90C99D73A3E& unmarshaled, MonoScriptData_t8F50E352855B96FFFC1D9CB07EACC90C99D73A3E_marshaled_pinvoke& marshaled)
+{
+	marshaled.___FilePathsData = il2cpp_codegen_com_marshal_safe_array(IL2CPP_VT_I1, unmarshaled.___FilePathsData);
+	marshaled.___TypesData = il2cpp_codegen_com_marshal_safe_array(IL2CPP_VT_I1, unmarshaled.___TypesData);
+	marshaled.___TotalTypes = unmarshaled.___TotalTypes;
+	marshaled.___TotalFiles = unmarshaled.___TotalFiles;
+	marshaled.___IsEditorOnly = static_cast<int32_t>(unmarshaled.___IsEditorOnly);
+}
+IL2CPP_EXTERN_C void MonoScriptData_t8F50E352855B96FFFC1D9CB07EACC90C99D73A3E_marshal_pinvoke_back(const MonoScriptData_t8F50E352855B96FFFC1D9CB07EACC90C99D73A3E_marshaled_pinvoke& marshaled, MonoScriptData_t8F50E352855B96FFFC1D9CB07EACC90C99D73A3E& unmarshaled)
+{
+	unmarshaled.___FilePathsData = (ByteU5BU5D_tA6237BF417AE52AD70CFB4EF24A7A82613DF9031*)il2cpp_codegen_com_marshal_safe_array_result(IL2CPP_VT_I1, il2cpp_defaults.byte_class, marshaled.___FilePathsData);
+	Il2CppCodeGenWriteBarrier((void**)(&unmarshaled.___FilePathsData), (void*)(ByteU5BU5D_tA6237BF417AE52AD70CFB4EF24A7A82613DF9031*)il2cpp_codegen_com_marshal_safe_array_result(IL2CPP_VT_I1, il2cpp_defaults.byte_class, marshaled.___FilePathsData));
+	unmarshaled.___TypesData = (ByteU5BU5D_tA6237BF417AE52AD70CFB4EF24A7A82613DF9031*)il2cpp_codegen_com_marshal_safe_array_result(IL2CPP_VT_I1, il2cpp_defaults.byte_class, marshaled.___TypesData);
+	Il2CppCodeGenWriteBarrier((void**)(&unmarshaled.___TypesData), (void*)(ByteU5BU5D_tA6237BF417AE52AD70CFB4EF24A7A82613DF9031*)il2cpp_codegen_com_marshal_safe_array_result(IL2CPP_VT_I1, il2cpp_defaults.byte_class, marshaled.___TypesData));
+	int32_t unmarshaledTotalTypes_temp_2 = 0;
+	unmarshaledTotalTypes_temp_2 = marshaled.___TotalTypes;
+	unmarshaled.___TotalTypes = unmarshaledTotalTypes_temp_2;
+	int32_t unmarshaledTotalFiles_temp_3 = 0;
+	unmarshaledTotalFiles_temp_3 = marshaled.___TotalFiles;
+	unmarshaled.___TotalFiles = unmarshaledTotalFiles_temp_3;
+	bool unmarshaledIsEditorOnly_temp_4 = false;
+	unmarshaledIsEditorOnly_temp_4 = static_cast<bool>(marshaled.___IsEditorOnly);
+	unmarshaled.___IsEditorOnly = unmarshaledIsEditorOnly_temp_4;
+}
+IL2CPP_EXTERN_C void MonoScriptData_t8F50E352855B96FFFC1D9CB07EACC90C99D73A3E_marshal_pinvoke_cleanup(MonoScriptData_t8F50E352855B96FFFC1D9CB07EACC90C99D73A3E_marshaled_pinvoke& marshaled)
+{
+	il2cpp_codegen_com_destroy_safe_array(marshaled.___FilePathsData);
+	marshaled.___FilePathsData = NULL;
+	il2cpp_codegen_com_destroy_safe_array(marshaled.___TypesData);
+	marshaled.___TypesData = NULL;
+}
+IL2CPP_EXTERN_C void MonoScriptData_t8F50E352855B96FFFC1D9CB07EACC90C99D73A3E_marshal_com(const MonoScriptData_t8F50E352855B96FFFC1D9CB07EACC90C99D73A3E& unmarshaled, MonoScriptData_t8F50E352855B96FFFC1D9CB07EACC90C99D73A3E_marshaled_com& marshaled)
+{
+	marshaled.___FilePathsData = il2cpp_codegen_com_marshal_safe_array(IL2CPP_VT_I1, unmarshaled.___FilePathsData);
+	marshaled.___TypesData = il2cpp_codegen_com_marshal_safe_array(IL2CPP_VT_I1, unmarshaled.___TypesData);
+	marshaled.___TotalTypes = unmarshaled.___TotalTypes;
+	marshaled.___TotalFiles = unmarshaled.___TotalFiles;
+	marshaled.___IsEditorOnly = static_cast<int32_t>(unmarshaled.___IsEditorOnly);
+}
+IL2CPP_EXTERN_C void MonoScriptData_t8F50E352855B96FFFC1D9CB07EACC90C99D73A3E_marshal_com_back(const MonoScriptData_t8F50E352855B96FFFC1D9CB07EACC90C99D73A3E_marshaled_com& marshaled, MonoScriptData_t8F50E352855B96FFFC1D9CB07EACC90C99D73A3E& unmarshaled)
+{
+	unmarshaled.___FilePathsData = (ByteU5BU5D_tA6237BF417AE52AD70CFB4EF24A7A82613DF9031*)il2cpp_codegen_com_marshal_safe_array_result(IL2CPP_VT_I1, il2cpp_defaults.byte_class, marshaled.___FilePathsData);
+	Il2CppCodeGenWriteBarrier((void**)(&unmarshaled.___FilePathsData), (void*)(ByteU5BU5D_tA6237BF417AE52AD70CFB4EF24A7A82613DF9031*)il2cpp_codegen_com_marshal_safe_array_result(IL2CPP_VT_I1, il2cpp_defaults.byte_class, marshaled.___FilePathsData));
+	unmarshaled.___TypesData = (ByteU5BU5D_tA6237BF417AE52AD70CFB4EF24A7A82613DF9031*)il2cpp_codegen_com_marshal_safe_array_result(IL2CPP_VT_I1, il2cpp_defaults.byte_class, marshaled.___TypesData);
+	Il2CppCodeGenWriteBarrier((void**)(&unmarshaled.___TypesData), (void*)(ByteU5BU5D_tA6237BF417AE52AD70CFB4EF24A7A82613DF9031*)il2cpp_codegen_com_marshal_safe_array_result(IL2CPP_VT_I1, il2cpp_defaults.byte_class, marshaled.___TypesData));
+	int32_t unmarshaledTotalTypes_temp_2 = 0;
+	unmarshaledTotalTypes_temp_2 = marshaled.___TotalTypes;
+	unmarshaled.___TotalTypes = unmarshaledTotalTypes_temp_2;
+	int32_t unmarshaledTotalFiles_temp_3 = 0;
+	unmarshaledTotalFiles_temp_3 = marshaled.___TotalFiles;
+	unmarshaled.___TotalFiles = unmarshaledTotalFiles_temp_3;
+	bool unmarshaledIsEditorOnly_temp_4 = false;
+	unmarshaledIsEditorOnly_temp_4 = static_cast<bool>(marshaled.___IsEditorOnly);
+	unmarshaled.___IsEditorOnly = unmarshaledIsEditorOnly_temp_4;
+}
+IL2CPP_EXTERN_C void MonoScriptData_t8F50E352855B96FFFC1D9CB07EACC90C99D73A3E_marshal_com_cleanup(MonoScriptData_t8F50E352855B96FFFC1D9CB07EACC90C99D73A3E_marshaled_com& marshaled)
+{
+	il2cpp_codegen_com_destroy_safe_array(marshaled.___FilePathsData);
+	marshaled.___FilePathsData = NULL;
+	il2cpp_codegen_com_destroy_safe_array(marshaled.___TypesData);
+	marshaled.___TypesData = NULL;
+}
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Winvalid-offsetof"
+#pragma clang diagnostic ignored "-Wunused-variable"
+#endif
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Winvalid-offsetof"
+#pragma clang diagnostic ignored "-Wunused-variable"
+#endif
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Winvalid-offsetof"
+#pragma clang diagnostic ignored "-Wunused-variable"
+#endif
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif
+// Method Definition Index: 66707
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 Vector3_get_zero_m0C1249C3F25B1C70EAD3CC8B31259975A457AE39_inline (const RuntimeMethod* method) 
+{
+	static bool s_Il2CppMethodInitialized;
+	if (!s_Il2CppMethodInitialized)
+	{
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2_il2cpp_TypeInfo_var);
+		s_Il2CppMethodInitialized = true;
+	}
+	{
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_0 = ((Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2_StaticFields*)il2cpp_codegen_static_fields_for(Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2_il2cpp_TypeInfo_var))->___zeroVector;
+		return L_0;
+	}
+}
+// Method Definition Index: 66722
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR bool Vector3_op_Equality_mCDCBB8D2EDC3D3BF20F31A25ACB34705D352B479_inline (Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___0_lhs, Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___1_rhs, const RuntimeMethod* method) 
+{
+	float V_0 = 0.0f;
+	float V_1 = 0.0f;
+	float V_2 = 0.0f;
+	float V_3 = 0.0f;
+	bool V_4 = false;
+	{
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_0 = ___0_lhs;
+		float L_1 = L_0.___x;
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_2 = ___1_rhs;
+		float L_3 = L_2.___x;
+		V_0 = ((float)il2cpp_codegen_subtract(L_1, L_3));
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_4 = ___0_lhs;
+		float L_5 = L_4.___y;
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_6 = ___1_rhs;
+		float L_7 = L_6.___y;
+		V_1 = ((float)il2cpp_codegen_subtract(L_5, L_7));
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_8 = ___0_lhs;
+		float L_9 = L_8.___z;
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_10 = ___1_rhs;
+		float L_11 = L_10.___z;
+		V_2 = ((float)il2cpp_codegen_subtract(L_9, L_11));
+		float L_12 = V_0;
+		float L_13 = V_0;
+		float L_14 = V_1;
+		float L_15 = V_1;
+		float L_16 = V_2;
+		float L_17 = V_2;
+		V_3 = ((float)il2cpp_codegen_add(((float)il2cpp_codegen_add(((float)il2cpp_codegen_multiply(L_12, L_13)), ((float)il2cpp_codegen_multiply(L_14, L_15)))), ((float)il2cpp_codegen_multiply(L_16, L_17))));
+		float L_18 = V_3;
+		V_4 = (bool)((((float)L_18) < ((float)(9.99999944E-11f)))? 1 : 0);
+		goto IL_0043;
+	}
+
+IL_0043:
+	{
+		bool L_19 = V_4;
+		return L_19;
+	}
+}
+// Method Definition Index: 66709
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 Vector3_get_forward_mAA55A7034304DF8B2152EAD49AE779FC4CA2EB4A_inline (const RuntimeMethod* method) 
+{
+	static bool s_Il2CppMethodInitialized;
+	if (!s_Il2CppMethodInitialized)
+	{
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2_il2cpp_TypeInfo_var);
+		s_Il2CppMethodInitialized = true;
+	}
+	{
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_0 = ((Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2_StaticFields*)il2cpp_codegen_static_fields_for(Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2_il2cpp_TypeInfo_var))->___forwardVector;
+		return L_0;
+	}
+}
+// Method Definition Index: 66715
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 Vector3_get_positiveInfinity_mE0C7AA87B375383EA62F6084761DAE8197147D23_inline (const RuntimeMethod* method) 
+{
+	static bool s_Il2CppMethodInitialized;
+	if (!s_Il2CppMethodInitialized)
+	{
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2_il2cpp_TypeInfo_var);
+		s_Il2CppMethodInitialized = true;
+	}
+	{
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_0 = ((Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2_StaticFields*)il2cpp_codegen_static_fields_for(Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2_il2cpp_TypeInfo_var))->___positiveInfinityVector;
+		return L_0;
+	}
+}
+// Method Definition Index: 128554
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577 StylusHandler_get_CurrentState_m26068FA11B30F3E6A11632EF4A2C3963DE515734_inline (StylusHandler_t9D220B47078E94FB2862CFA59E13E40D12328F3A* __this, const RuntimeMethod* method) 
+{
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/StylusHandler.cs:26>
+		StylusInputs_t92901CD3FAD23B5CBFB6F0530406C9FBDCB99577 L_0 = __this->____stylus;
+		return L_0;
+	}
+}
+// Method Definition Index: 66702
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR float Vector3_get_sqrMagnitude_m43C27DEC47C4811FB30AB474FF2131A963B66FC8_inline (Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2* __this, const RuntimeMethod* method) 
+{
+	{
+		float L_0 = __this->___x;
+		float L_1 = __this->___x;
+		float L_2 = __this->___y;
+		float L_3 = __this->___y;
+		float L_4 = __this->___z;
+		float L_5 = __this->___z;
+		return ((float)il2cpp_codegen_add(((float)il2cpp_codegen_add(((float)il2cpp_codegen_multiply(L_0, L_1)), ((float)il2cpp_codegen_multiply(L_2, L_3)))), ((float)il2cpp_codegen_multiply(L_4, L_5))));
+	}
+}
+// Method Definition Index: 66711
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 Vector3_get_up_m128AF3FDC820BF59D5DE86D973E7DE3F20C3AEBA_inline (const RuntimeMethod* method) 
+{
+	static bool s_Il2CppMethodInitialized;
+	if (!s_Il2CppMethodInitialized)
+	{
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2_il2cpp_TypeInfo_var);
+		s_Il2CppMethodInitialized = true;
+	}
+	{
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_0 = ((Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2_StaticFields*)il2cpp_codegen_static_fields_for(Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2_il2cpp_TypeInfo_var))->___upVector;
+		return L_0;
+	}
+}
+// Method Definition Index: 66688
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void Vector3_Normalize_mC749B887A4C74BA0A2E13E6377F17CCAEB0AADA8_inline (Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2* __this, const RuntimeMethod* method) 
+{
+	float V_0 = 0.0f;
+	bool V_1 = false;
+	{
+		float L_0;
+		L_0 = Vector3_get_magnitude_mF0D6017E90B345F1F52D1CC564C640F1A847AF2D_inline(__this, NULL);
+		V_0 = L_0;
+		float L_1 = V_0;
+		V_1 = (bool)((((float)L_1) > ((float)(9.99999975E-06f)))? 1 : 0);
+		bool L_2 = V_1;
+		if (!L_2)
+		{
+			goto IL_0042;
+		}
+	}
+	{
+		float L_3 = __this->___x;
+		float L_4 = V_0;
+		__this->___x = ((float)(L_3/L_4));
+		float L_5 = __this->___y;
+		float L_6 = V_0;
+		__this->___y = ((float)(L_5/L_6));
+		float L_7 = __this->___z;
+		float L_8 = V_0;
+		__this->___z = ((float)(L_7/L_8));
+		goto IL_0065;
+	}
+
+IL_0042:
+	{
+		__this->___x = (0.0f);
+		__this->___y = (0.0f);
+		__this->___z = (0.0f);
+	}
+
+IL_0065:
+	{
+		return;
+	}
+}
+// Method Definition Index: 66690
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR float Vector3_Dot_mBB86BB940AA0A32FA7D3C02AC42E5BC7095A5D52_inline (Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___0_lhs, Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___1_rhs, const RuntimeMethod* method) 
+{
+	{
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_0 = ___0_lhs;
+		float L_1 = L_0.___x;
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_2 = ___1_rhs;
+		float L_3 = L_2.___x;
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_4 = ___0_lhs;
+		float L_5 = L_4.___y;
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_6 = ___1_rhs;
+		float L_7 = L_6.___y;
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_8 = ___0_lhs;
+		float L_9 = L_8.___z;
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_10 = ___1_rhs;
+		float L_11 = L_10.___z;
+		return ((float)il2cpp_codegen_add(((float)il2cpp_codegen_add(((float)il2cpp_codegen_multiply(L_1, L_3)), ((float)il2cpp_codegen_multiply(L_5, L_7)))), ((float)il2cpp_codegen_multiply(L_9, L_11))));
+	}
+}
+// Method Definition Index: 66824
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR float Mathf_Clamp01_mA7E048DBDA832D399A581BE4D6DED9FA44CE0F14_inline (float ___0_value, const RuntimeMethod* method) 
+{
+	bool V_0 = false;
+	float V_1 = 0.0f;
+	bool V_2 = false;
+	{
+		float L_0 = ___0_value;
+		V_0 = (bool)((((float)L_0) < ((float)(0.0f)))? 1 : 0);
+		bool L_1 = V_0;
+		if (!L_1)
+		{
+			goto IL_0015;
+		}
+	}
+	{
+		V_1 = (0.0f);
+		goto IL_002d;
+	}
+
+IL_0015:
+	{
+		float L_2 = ___0_value;
+		V_2 = (bool)((((float)L_2) > ((float)(1.0f)))? 1 : 0);
+		bool L_3 = V_2;
+		if (!L_3)
+		{
+			goto IL_0029;
+		}
+	}
+	{
+		V_1 = (1.0f);
+		goto IL_002d;
+	}
+
+IL_0029:
+	{
+		float L_4 = ___0_value;
+		V_1 = L_4;
+		goto IL_002d;
+	}
+
+IL_002d:
+	{
+		float L_5 = V_1;
+		return L_5;
+	}
+}
+// Method Definition Index: 66689
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 Vector3_get_normalized_m736BBF65D5CDA7A18414370D15B4DFCC1E466F07_inline (Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2* __this, const RuntimeMethod* method) 
+{
+	{
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_0;
+		L_0 = Vector3_Normalize_m1DE89849FE2019B6AA0031306896F3B800849399_inline(__this, NULL);
+		return L_0;
+	}
+}
+// Method Definition Index: 66679
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 Vector3_Cross_mF93A280558BCE756D13B6CC5DCD7DE8A43148987_inline (Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___0_lhs, Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___1_rhs, const RuntimeMethod* method) 
+{
+	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 V_0;
+	memset((&V_0), 0, sizeof(V_0));
+	{
+		il2cpp_codegen_initobj((&V_0), sizeof(Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2));
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_0 = ___0_lhs;
+		float L_1 = L_0.___y;
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_2 = ___1_rhs;
+		float L_3 = L_2.___z;
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_4 = ___0_lhs;
+		float L_5 = L_4.___z;
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_6 = ___1_rhs;
+		float L_7 = L_6.___y;
+		(&V_0)->___x = ((float)il2cpp_codegen_subtract(((float)il2cpp_codegen_multiply(L_1, L_3)), ((float)il2cpp_codegen_multiply(L_5, L_7))));
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_8 = ___0_lhs;
+		float L_9 = L_8.___z;
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_10 = ___1_rhs;
+		float L_11 = L_10.___x;
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_12 = ___0_lhs;
+		float L_13 = L_12.___x;
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_14 = ___1_rhs;
+		float L_15 = L_14.___z;
+		(&V_0)->___y = ((float)il2cpp_codegen_subtract(((float)il2cpp_codegen_multiply(L_9, L_11)), ((float)il2cpp_codegen_multiply(L_13, L_15))));
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_16 = ___0_lhs;
+		float L_17 = L_16.___x;
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_18 = ___1_rhs;
+		float L_19 = L_18.___y;
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_20 = ___0_lhs;
+		float L_21 = L_20.___y;
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_22 = ___1_rhs;
+		float L_23 = L_22.___x;
+		(&V_0)->___z = ((float)il2cpp_codegen_subtract(((float)il2cpp_codegen_multiply(L_17, L_19)), ((float)il2cpp_codegen_multiply(L_21, L_23))));
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_24 = V_0;
+		return L_24;
+	}
+}
+// Method Definition Index: 66719
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 Vector3_op_Multiply_m87BA7C578F96C8E49BB07088DAAC4649F83B0353_inline (Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___0_a, float ___1_d, const RuntimeMethod* method) 
+{
+	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 V_0;
+	memset((&V_0), 0, sizeof(V_0));
+	{
+		il2cpp_codegen_initobj((&V_0), sizeof(Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2));
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_0 = ___0_a;
+		float L_1 = L_0.___x;
+		float L_2 = ___1_d;
+		(&V_0)->___x = ((float)il2cpp_codegen_multiply(L_1, L_2));
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_3 = ___0_a;
+		float L_4 = L_3.___y;
+		float L_5 = ___1_d;
+		(&V_0)->___y = ((float)il2cpp_codegen_multiply(L_4, L_5));
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_6 = ___0_a;
+		float L_7 = L_6.___z;
+		float L_8 = ___1_d;
+		(&V_0)->___z = ((float)il2cpp_codegen_multiply(L_7, L_8));
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_9 = V_0;
+		return L_9;
+	}
+}
+// Method Definition Index: 66716
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 Vector3_op_Addition_m78C0EC70CB66E8DCAC225743D82B268DAEE92067_inline (Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___0_a, Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___1_b, const RuntimeMethod* method) 
+{
+	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 V_0;
+	memset((&V_0), 0, sizeof(V_0));
+	{
+		il2cpp_codegen_initobj((&V_0), sizeof(Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2));
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_0 = ___0_a;
+		float L_1 = L_0.___x;
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_2 = ___1_b;
+		float L_3 = L_2.___x;
+		(&V_0)->___x = ((float)il2cpp_codegen_add(L_1, L_3));
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_4 = ___0_a;
+		float L_5 = L_4.___y;
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_6 = ___1_b;
+		float L_7 = L_6.___y;
+		(&V_0)->___y = ((float)il2cpp_codegen_add(L_5, L_7));
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_8 = ___0_a;
+		float L_9 = L_8.___z;
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_10 = ___1_b;
+		float L_11 = L_10.___z;
+		(&V_0)->___z = ((float)il2cpp_codegen_add(L_9, L_11));
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_12 = V_0;
+		return L_12;
+	}
+}
+// Method Definition Index: 66697
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR float Vector3_Distance_m2314DB9B8BD01157E013DF87BEA557375C7F9FF9_inline (Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___0_a, Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___1_b, const RuntimeMethod* method) 
+{
+	static bool s_Il2CppMethodInitialized;
+	if (!s_Il2CppMethodInitialized)
+	{
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&Math_tEB65DE7CA8B083C412C969C92981C030865486CE_il2cpp_TypeInfo_var);
+		s_Il2CppMethodInitialized = true;
+	}
+	float V_0 = 0.0f;
+	float V_1 = 0.0f;
+	float V_2 = 0.0f;
+	float V_3 = 0.0f;
+	{
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_0 = ___0_a;
+		float L_1 = L_0.___x;
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_2 = ___1_b;
+		float L_3 = L_2.___x;
+		V_0 = ((float)il2cpp_codegen_subtract(L_1, L_3));
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_4 = ___0_a;
+		float L_5 = L_4.___y;
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_6 = ___1_b;
+		float L_7 = L_6.___y;
+		V_1 = ((float)il2cpp_codegen_subtract(L_5, L_7));
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_8 = ___0_a;
+		float L_9 = L_8.___z;
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_10 = ___1_b;
+		float L_11 = L_10.___z;
+		V_2 = ((float)il2cpp_codegen_subtract(L_9, L_11));
+		float L_12 = V_0;
+		float L_13 = V_0;
+		float L_14 = V_1;
+		float L_15 = V_1;
+		float L_16 = V_2;
+		float L_17 = V_2;
+		il2cpp_codegen_runtime_class_init_inline(Math_tEB65DE7CA8B083C412C969C92981C030865486CE_il2cpp_TypeInfo_var);
+		double L_18;
+		L_18 = sqrt(((double)((float)il2cpp_codegen_add(((float)il2cpp_codegen_add(((float)il2cpp_codegen_multiply(L_12, L_13)), ((float)il2cpp_codegen_multiply(L_14, L_15)))), ((float)il2cpp_codegen_multiply(L_16, L_17))))));
+		V_3 = ((float)L_18);
+		goto IL_0040;
+	}
+
+IL_0040:
+	{
+		float L_19 = V_3;
+		return L_19;
+	}
+}
+// Method Definition Index: 66717
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 Vector3_op_Subtraction_mE42023FF80067CB44A1D4A27EB7CF2B24CABB828_inline (Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___0_a, Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___1_b, const RuntimeMethod* method) 
+{
+	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 V_0;
+	memset((&V_0), 0, sizeof(V_0));
+	{
+		il2cpp_codegen_initobj((&V_0), sizeof(Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2));
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_0 = ___0_a;
+		float L_1 = L_0.___x;
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_2 = ___1_b;
+		float L_3 = L_2.___x;
+		(&V_0)->___x = ((float)il2cpp_codegen_subtract(L_1, L_3));
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_4 = ___0_a;
+		float L_5 = L_4.___y;
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_6 = ___1_b;
+		float L_7 = L_6.___y;
+		(&V_0)->___y = ((float)il2cpp_codegen_subtract(L_5, L_7));
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_8 = ___0_a;
+		float L_9 = L_8.___z;
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_10 = ___1_b;
+		float L_11 = L_10.___z;
+		(&V_0)->___z = ((float)il2cpp_codegen_subtract(L_9, L_11));
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_12 = V_0;
+		return L_12;
+	}
+}
+// Method Definition Index: 128530
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 LoopSound_get_Center_m6C8534417D76328D4F94C2AE9608C8891B06E953_inline (LoopSound_t0F81954F3F93403FEC588C98AAD22BF92DC6E075* __this, const RuntimeMethod* method) 
+{
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:139>
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_0 = __this->____center;
+		return L_0;
+	}
+}
+// Method Definition Index: 128531
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR float LoopSound_get_AverageRadius_mCA57CE0F7D8E84788E15F256B3C67AAD93E13033_inline (LoopSound_t0F81954F3F93403FEC588C98AAD22BF92DC6E075* __this, const RuntimeMethod* method) 
+{
+	{
+		//<source_info:D:/Work/RhythmForgeVR/Assets/Logitech/Scripts/LoopSound.cs:140>
+		float L_0 = __this->____averageRadius;
+		return L_0;
+	}
+}
+// Method Definition Index: 66807
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR float Mathf_Max_mF5379E63D2BBAC76D090748695D833934F8AD051_inline (float ___0_a, float ___1_b, const RuntimeMethod* method) 
+{
+	float V_0 = 0.0f;
+	float G_B3_0 = 0.0f;
+	{
+		float L_0 = ___0_a;
+		float L_1 = ___1_b;
+		if ((((float)L_0) > ((float)L_1)))
+		{
+			goto IL_0008;
+		}
+	}
+	{
+		float L_2 = ___1_b;
+		G_B3_0 = L_2;
+		goto IL_0009;
+	}
+
+IL_0008:
+	{
+		float L_3 = ___0_a;
+		G_B3_0 = L_3;
+	}
+
+IL_0009:
+	{
+		V_0 = G_B3_0;
+		goto IL_000c;
+	}
+
+IL_000c:
+	{
+		float L_4 = V_0;
+		return L_4;
+	}
+}
+// Method Definition Index: 66721
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 Vector3_op_Division_mCC6BB24E372AB96B8380D1678446EF6A8BAE13BB_inline (Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___0_a, float ___1_d, const RuntimeMethod* method) 
+{
+	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 V_0;
+	memset((&V_0), 0, sizeof(V_0));
+	{
+		il2cpp_codegen_initobj((&V_0), sizeof(Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2));
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_0 = ___0_a;
+		float L_1 = L_0.___x;
+		float L_2 = ___1_d;
+		(&V_0)->___x = ((float)(L_1/L_2));
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_3 = ___0_a;
+		float L_4 = L_3.___y;
+		float L_5 = ___1_d;
+		(&V_0)->___y = ((float)(L_4/L_5));
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_6 = ___0_a;
+		float L_7 = L_6.___z;
+		float L_8 = ___1_d;
+		(&V_0)->___z = ((float)(L_7/L_8));
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_9 = V_0;
+		return L_9;
+	}
+}
+// Method Definition Index: 66846
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void Vector2__ctor_m9525B79969AFFE3254B303A40997A56DEEB6F548_inline (Vector2_t1FD6F485C871E832B347AB2DC8CBA08B739D8DF7* __this, float ___0_x, float ___1_y, const RuntimeMethod* method) 
+{
+	{
+		float L_0 = ___0_x;
+		__this->___x = L_0;
+		float L_1 = ___1_y;
+		__this->___y = L_1;
+		return;
+	}
+}
+// Method Definition Index: 66830
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR float Mathf_Repeat_m6F1560A163481BB311D685294E1B463C3E4EB3BA_inline (float ___0_t, float ___1_length, const RuntimeMethod* method) 
+{
+	float V_0 = 0.0f;
+	{
+		float L_0 = ___0_t;
+		float L_1 = ___0_t;
+		float L_2 = ___1_length;
+		float L_3;
+		L_3 = floorf(((float)(L_1/L_2)));
+		float L_4 = ___1_length;
+		float L_5 = ___1_length;
+		float L_6;
+		L_6 = Mathf_Clamp_mEB9AEA827D27D20FCC787F7375156AF46BB12BBF_inline(((float)il2cpp_codegen_subtract(L_0, ((float)il2cpp_codegen_multiply(L_3, L_4)))), (0.0f), L_5, NULL);
+		V_0 = L_6;
+		goto IL_001b;
+	}
+
+IL_001b:
+	{
+		float L_7 = V_0;
+		return L_7;
+	}
+}
+// Method Definition Index: 66693
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 Vector3_ProjectOnPlane_m68FB895F6E9FCC45676BB8B95857D091C0D78794_inline (Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___0_vector, Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___1_planeNormal, const RuntimeMethod* method) 
+{
+	static bool s_Il2CppMethodInitialized;
+	if (!s_Il2CppMethodInitialized)
+	{
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&Mathf_tE284D016E3B297B72311AAD9EB8F0E643F6A4682_il2cpp_TypeInfo_var);
+		s_Il2CppMethodInitialized = true;
+	}
+	float V_0 = 0.0f;
+	bool V_1 = false;
+	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 V_2;
+	memset((&V_2), 0, sizeof(V_2));
+	float V_3 = 0.0f;
+	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 V_4;
+	memset((&V_4), 0, sizeof(V_4));
+	{
+		float L_0;
+		L_0 = Vector3_Dot_m9B5EBE36643126708DB3F444C59C11FA30803DBB_inline((&___1_planeNormal), (&___1_planeNormal), NULL);
+		V_0 = L_0;
+		float L_1 = V_0;
+		float L_2 = ((Mathf_tE284D016E3B297B72311AAD9EB8F0E643F6A4682_StaticFields*)il2cpp_codegen_static_fields_for(Mathf_tE284D016E3B297B72311AAD9EB8F0E643F6A4682_il2cpp_TypeInfo_var))->___Epsilon;
+		V_1 = (bool)((((float)L_1) < ((float)L_2))? 1 : 0);
+		bool L_3 = V_1;
+		if (!L_3)
+		{
+			goto IL_001b;
+		}
+	}
+	{
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_4 = ___0_vector;
+		V_2 = L_4;
+		goto IL_006f;
+	}
+
+IL_001b:
+	{
+		float L_5;
+		L_5 = Vector3_Dot_m9B5EBE36643126708DB3F444C59C11FA30803DBB_inline((&___0_vector), (&___1_planeNormal), NULL);
+		float L_6 = V_0;
+		V_3 = ((float)(L_5/L_6));
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_7 = ___0_vector;
+		float L_8 = L_7.___x;
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_9 = ___1_planeNormal;
+		float L_10 = L_9.___x;
+		float L_11 = V_3;
+		(&V_4)->___x = ((float)il2cpp_codegen_subtract(L_8, ((float)il2cpp_codegen_multiply(L_10, L_11))));
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_12 = ___0_vector;
+		float L_13 = L_12.___y;
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_14 = ___1_planeNormal;
+		float L_15 = L_14.___y;
+		float L_16 = V_3;
+		(&V_4)->___y = ((float)il2cpp_codegen_subtract(L_13, ((float)il2cpp_codegen_multiply(L_15, L_16))));
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_17 = ___0_vector;
+		float L_18 = L_17.___z;
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_19 = ___1_planeNormal;
+		float L_20 = L_19.___z;
+		float L_21 = V_3;
+		(&V_4)->___z = ((float)il2cpp_codegen_subtract(L_18, ((float)il2cpp_codegen_multiply(L_20, L_21))));
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_22 = V_4;
+		V_2 = L_22;
+		goto IL_006f;
+	}
+
+IL_006f:
+	{
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_23 = V_2;
+		return L_23;
+	}
+}
+// Method Definition Index: 66714
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 Vector3_get_right_mFF573AFBBB2186E7AFA1BA7CA271A78DF67E4EA0_inline (const RuntimeMethod* method) 
+{
+	static bool s_Il2CppMethodInitialized;
+	if (!s_Il2CppMethodInitialized)
+	{
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2_il2cpp_TypeInfo_var);
+		s_Il2CppMethodInitialized = true;
+	}
+	{
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_0 = ((Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2_StaticFields*)il2cpp_codegen_static_fields_for(Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2_il2cpp_TypeInfo_var))->___rightVector;
+		return L_0;
+	}
+}
+// Method Definition Index: 66822
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR float Mathf_Clamp_mEB9AEA827D27D20FCC787F7375156AF46BB12BBF_inline (float ___0_value, float ___1_min, float ___2_max, const RuntimeMethod* method) 
+{
+	bool V_0 = false;
+	bool V_1 = false;
+	float V_2 = 0.0f;
+	{
+		float L_0 = ___0_value;
+		float L_1 = ___1_min;
+		V_0 = (bool)((((float)L_0) < ((float)L_1))? 1 : 0);
+		bool L_2 = V_0;
+		if (!L_2)
+		{
+			goto IL_000e;
+		}
+	}
+	{
+		float L_3 = ___1_min;
+		___0_value = L_3;
+		goto IL_0019;
+	}
+
+IL_000e:
+	{
+		float L_4 = ___0_value;
+		float L_5 = ___2_max;
+		V_1 = (bool)((((float)L_4) > ((float)L_5))? 1 : 0);
+		bool L_6 = V_1;
+		if (!L_6)
+		{
+			goto IL_0019;
+		}
+	}
+	{
+		float L_7 = ___2_max;
+		___0_value = L_7;
+	}
+
+IL_0019:
+	{
+		float L_8 = ___0_value;
+		V_2 = L_8;
+		goto IL_001d;
+	}
+
+IL_001d:
+	{
+		float L_9 = V_2;
+		return L_9;
+	}
+}
+// Method Definition Index: 66818
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR int32_t Mathf_CeilToInt_mF2BF9F4261B3431DC20E10A46CFEEED103C48963_inline (float ___0_f, const RuntimeMethod* method) 
+{
+	static bool s_Il2CppMethodInitialized;
+	if (!s_Il2CppMethodInitialized)
+	{
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&Math_tEB65DE7CA8B083C412C969C92981C030865486CE_il2cpp_TypeInfo_var);
+		s_Il2CppMethodInitialized = true;
+	}
+	int32_t V_0 = 0;
+	{
+		float L_0 = ___0_f;
+		il2cpp_codegen_runtime_class_init_inline(Math_tEB65DE7CA8B083C412C969C92981C030865486CE_il2cpp_TypeInfo_var);
+		double L_1;
+		L_1 = ceil(((double)L_0));
+		V_0 = il2cpp_codegen_cast_double_to_int<int32_t>(L_1);
+		goto IL_000c;
+	}
+
+IL_000c:
+	{
+		int32_t L_2 = V_0;
+		return L_2;
+	}
+}
+// Method Definition Index: 66809
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR int32_t Mathf_Max_m7FA442918DE37E3A00106D1F2E789D65829792B8_inline (int32_t ___0_a, int32_t ___1_b, const RuntimeMethod* method) 
+{
+	int32_t V_0 = 0;
+	int32_t G_B3_0 = 0;
+	{
+		int32_t L_0 = ___0_a;
+		int32_t L_1 = ___1_b;
+		if ((((int32_t)L_0) > ((int32_t)L_1)))
+		{
+			goto IL_0008;
+		}
+	}
+	{
+		int32_t L_2 = ___1_b;
+		G_B3_0 = L_2;
+		goto IL_0009;
+	}
+
+IL_0008:
+	{
+		int32_t L_3 = ___0_a;
+		G_B3_0 = L_3;
+	}
+
+IL_0009:
+	{
+		V_0 = G_B3_0;
+		goto IL_000c;
+	}
+
+IL_000c:
+	{
+		int32_t L_4 = V_0;
+		return L_4;
+	}
+}
+// Method Definition Index: 66832
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR float Mathf_InverseLerp_mBD7EC6A7173CE082226077E1557D5BC2D2AE0D9D_inline (float ___0_a, float ___1_b, float ___2_value, const RuntimeMethod* method) 
+{
+	bool V_0 = false;
+	float V_1 = 0.0f;
+	{
+		float L_0 = ___0_a;
+		float L_1 = ___1_b;
+		V_0 = (bool)((((int32_t)((((float)L_0) == ((float)L_1))? 1 : 0)) == ((int32_t)0))? 1 : 0);
+		bool L_2 = V_0;
+		if (!L_2)
+		{
+			goto IL_001b;
+		}
+	}
+	{
+		float L_3 = ___2_value;
+		float L_4 = ___0_a;
+		float L_5 = ___1_b;
+		float L_6 = ___0_a;
+		float L_7;
+		L_7 = Mathf_Clamp01_mA7E048DBDA832D399A581BE4D6DED9FA44CE0F14_inline(((float)(((float)il2cpp_codegen_subtract(L_3, L_4))/((float)il2cpp_codegen_subtract(L_5, L_6)))), NULL);
+		V_1 = L_7;
+		goto IL_0023;
+	}
+
+IL_001b:
+	{
+		V_1 = (0.0f);
+		goto IL_0023;
+	}
+
+IL_0023:
+	{
+		float L_8 = V_1;
+		return L_8;
+	}
+}
+// Method Definition Index: 66825
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR float Mathf_Lerp_m47EF2FFB7647BD0A1FDC26DC03E28B19812139B5_inline (float ___0_a, float ___1_b, float ___2_t, const RuntimeMethod* method) 
+{
+	float V_0 = 0.0f;
+	{
+		float L_0 = ___0_a;
+		float L_1 = ___1_b;
+		float L_2 = ___0_a;
+		float L_3 = ___2_t;
+		float L_4;
+		L_4 = Mathf_Clamp01_mA7E048DBDA832D399A581BE4D6DED9FA44CE0F14_inline(L_3, NULL);
+		V_0 = ((float)il2cpp_codegen_add(L_0, ((float)il2cpp_codegen_multiply(((float)il2cpp_codegen_subtract(L_1, L_2)), L_4))));
+		goto IL_0010;
+	}
+
+IL_0010:
+	{
+		float L_5 = V_0;
+		return L_5;
+	}
+}
+// Method Definition Index: 66821
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR float Mathf_Sign_m42EE1F0BC041AF14F89DED7F762BE996E2C50D8A_inline (float ___0_f, const RuntimeMethod* method) 
+{
+	float V_0 = 0.0f;
+	float G_B3_0 = 0.0f;
+	{
+		float L_0 = ___0_f;
+		if ((((float)L_0) >= ((float)(0.0f))))
+		{
+			goto IL_0010;
+		}
+	}
+	{
+		G_B3_0 = (-1.0f);
+		goto IL_0015;
+	}
+
+IL_0010:
+	{
+		G_B3_0 = (1.0f);
+	}
+
+IL_0015:
+	{
+		V_0 = G_B3_0;
+		goto IL_0018;
+	}
+
+IL_0018:
+	{
+		float L_1 = V_0;
+		return L_1;
+	}
+}
+// Method Definition Index: 66700
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR float Vector3_get_magnitude_mF0D6017E90B345F1F52D1CC564C640F1A847AF2D_inline (Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2* __this, const RuntimeMethod* method) 
+{
+	static bool s_Il2CppMethodInitialized;
+	if (!s_Il2CppMethodInitialized)
+	{
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&Math_tEB65DE7CA8B083C412C969C92981C030865486CE_il2cpp_TypeInfo_var);
+		s_Il2CppMethodInitialized = true;
+	}
+	{
+		float L_0 = __this->___x;
+		float L_1 = __this->___x;
+		float L_2 = __this->___y;
+		float L_3 = __this->___y;
+		float L_4 = __this->___z;
+		float L_5 = __this->___z;
+		il2cpp_codegen_runtime_class_init_inline(Math_tEB65DE7CA8B083C412C969C92981C030865486CE_il2cpp_TypeInfo_var);
+		double L_6;
+		L_6 = sqrt(((double)((float)il2cpp_codegen_add(((float)il2cpp_codegen_add(((float)il2cpp_codegen_multiply(L_0, L_1)), ((float)il2cpp_codegen_multiply(L_2, L_3)))), ((float)il2cpp_codegen_multiply(L_4, L_5))))));
+		return ((float)L_6);
+	}
+}
+// Method Definition Index: 66694
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR float Vector3_Angle_mB16906B482814C140FE5BA9D041D2DC11E42A68D_inline (Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___0_from, Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___1_to, const RuntimeMethod* method) 
+{
+	static bool s_Il2CppMethodInitialized;
+	if (!s_Il2CppMethodInitialized)
+	{
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&Math_tEB65DE7CA8B083C412C969C92981C030865486CE_il2cpp_TypeInfo_var);
+		s_Il2CppMethodInitialized = true;
+	}
+	float V_0 = 0.0f;
+	float V_1 = 0.0f;
+	bool V_2 = false;
+	float V_3 = 0.0f;
+	{
+		float L_0;
+		L_0 = Vector3_get_sqrMagnitude_m43C27DEC47C4811FB30AB474FF2131A963B66FC8_inline((&___0_from), NULL);
+		float L_1;
+		L_1 = Vector3_get_sqrMagnitude_m43C27DEC47C4811FB30AB474FF2131A963B66FC8_inline((&___1_to), NULL);
+		il2cpp_codegen_runtime_class_init_inline(Math_tEB65DE7CA8B083C412C969C92981C030865486CE_il2cpp_TypeInfo_var);
+		double L_2;
+		L_2 = sqrt(((double)((float)il2cpp_codegen_multiply(L_0, L_1))));
+		V_0 = ((float)L_2);
+		float L_3 = V_0;
+		V_2 = (bool)((((float)L_3) < ((float)(1.0E-15f)))? 1 : 0);
+		bool L_4 = V_2;
+		if (!L_4)
+		{
+			goto IL_002c;
+		}
+	}
+	{
+		V_3 = (0.0f);
+		goto IL_0058;
+	}
+
+IL_002c:
+	{
+		float L_5;
+		L_5 = Vector3_Dot_m9B5EBE36643126708DB3F444C59C11FA30803DBB_inline((&___0_from), (&___1_to), NULL);
+		float L_6 = V_0;
+		float L_7;
+		L_7 = Mathf_Clamp_mEB9AEA827D27D20FCC787F7375156AF46BB12BBF_inline(((float)(L_5/L_6)), (-1.0f), (1.0f), NULL);
+		V_1 = L_7;
+		float L_8 = V_1;
+		il2cpp_codegen_runtime_class_init_inline(Math_tEB65DE7CA8B083C412C969C92981C030865486CE_il2cpp_TypeInfo_var);
+		double L_9;
+		L_9 = acos(((double)L_8));
+		V_3 = ((float)il2cpp_codegen_multiply(((float)L_9), (57.2957802f)));
+		goto IL_0058;
+	}
+
+IL_0058:
+	{
+		float L_10 = V_3;
+		return L_10;
+	}
+}
+// Method Definition Index: 66751
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR Quaternion_tDA59F214EF07D7700B26E40E562F267AF7306974 Quaternion_op_Multiply_mCB375FCCC12A2EC8F9EB824A1BFB4453B58C2012_inline (Quaternion_tDA59F214EF07D7700B26E40E562F267AF7306974 ___0_lhs, Quaternion_tDA59F214EF07D7700B26E40E562F267AF7306974 ___1_rhs, const RuntimeMethod* method) 
+{
+	Quaternion_tDA59F214EF07D7700B26E40E562F267AF7306974 V_0;
+	memset((&V_0), 0, sizeof(V_0));
+	{
+		il2cpp_codegen_initobj((&V_0), sizeof(Quaternion_tDA59F214EF07D7700B26E40E562F267AF7306974));
+		Quaternion_tDA59F214EF07D7700B26E40E562F267AF7306974 L_0 = ___0_lhs;
+		float L_1 = L_0.___w;
+		Quaternion_tDA59F214EF07D7700B26E40E562F267AF7306974 L_2 = ___1_rhs;
+		float L_3 = L_2.___x;
+		Quaternion_tDA59F214EF07D7700B26E40E562F267AF7306974 L_4 = ___0_lhs;
+		float L_5 = L_4.___x;
+		Quaternion_tDA59F214EF07D7700B26E40E562F267AF7306974 L_6 = ___1_rhs;
+		float L_7 = L_6.___w;
+		Quaternion_tDA59F214EF07D7700B26E40E562F267AF7306974 L_8 = ___0_lhs;
+		float L_9 = L_8.___y;
+		Quaternion_tDA59F214EF07D7700B26E40E562F267AF7306974 L_10 = ___1_rhs;
+		float L_11 = L_10.___z;
+		Quaternion_tDA59F214EF07D7700B26E40E562F267AF7306974 L_12 = ___0_lhs;
+		float L_13 = L_12.___z;
+		Quaternion_tDA59F214EF07D7700B26E40E562F267AF7306974 L_14 = ___1_rhs;
+		float L_15 = L_14.___y;
+		(&V_0)->___x = ((float)il2cpp_codegen_subtract(((float)il2cpp_codegen_add(((float)il2cpp_codegen_add(((float)il2cpp_codegen_multiply(L_1, L_3)), ((float)il2cpp_codegen_multiply(L_5, L_7)))), ((float)il2cpp_codegen_multiply(L_9, L_11)))), ((float)il2cpp_codegen_multiply(L_13, L_15))));
+		Quaternion_tDA59F214EF07D7700B26E40E562F267AF7306974 L_16 = ___0_lhs;
+		float L_17 = L_16.___w;
+		Quaternion_tDA59F214EF07D7700B26E40E562F267AF7306974 L_18 = ___1_rhs;
+		float L_19 = L_18.___y;
+		Quaternion_tDA59F214EF07D7700B26E40E562F267AF7306974 L_20 = ___0_lhs;
+		float L_21 = L_20.___y;
+		Quaternion_tDA59F214EF07D7700B26E40E562F267AF7306974 L_22 = ___1_rhs;
+		float L_23 = L_22.___w;
+		Quaternion_tDA59F214EF07D7700B26E40E562F267AF7306974 L_24 = ___0_lhs;
+		float L_25 = L_24.___z;
+		Quaternion_tDA59F214EF07D7700B26E40E562F267AF7306974 L_26 = ___1_rhs;
+		float L_27 = L_26.___x;
+		Quaternion_tDA59F214EF07D7700B26E40E562F267AF7306974 L_28 = ___0_lhs;
+		float L_29 = L_28.___x;
+		Quaternion_tDA59F214EF07D7700B26E40E562F267AF7306974 L_30 = ___1_rhs;
+		float L_31 = L_30.___z;
+		(&V_0)->___y = ((float)il2cpp_codegen_subtract(((float)il2cpp_codegen_add(((float)il2cpp_codegen_add(((float)il2cpp_codegen_multiply(L_17, L_19)), ((float)il2cpp_codegen_multiply(L_21, L_23)))), ((float)il2cpp_codegen_multiply(L_25, L_27)))), ((float)il2cpp_codegen_multiply(L_29, L_31))));
+		Quaternion_tDA59F214EF07D7700B26E40E562F267AF7306974 L_32 = ___0_lhs;
+		float L_33 = L_32.___w;
+		Quaternion_tDA59F214EF07D7700B26E40E562F267AF7306974 L_34 = ___1_rhs;
+		float L_35 = L_34.___z;
+		Quaternion_tDA59F214EF07D7700B26E40E562F267AF7306974 L_36 = ___0_lhs;
+		float L_37 = L_36.___z;
+		Quaternion_tDA59F214EF07D7700B26E40E562F267AF7306974 L_38 = ___1_rhs;
+		float L_39 = L_38.___w;
+		Quaternion_tDA59F214EF07D7700B26E40E562F267AF7306974 L_40 = ___0_lhs;
+		float L_41 = L_40.___x;
+		Quaternion_tDA59F214EF07D7700B26E40E562F267AF7306974 L_42 = ___1_rhs;
+		float L_43 = L_42.___y;
+		Quaternion_tDA59F214EF07D7700B26E40E562F267AF7306974 L_44 = ___0_lhs;
+		float L_45 = L_44.___y;
+		Quaternion_tDA59F214EF07D7700B26E40E562F267AF7306974 L_46 = ___1_rhs;
+		float L_47 = L_46.___x;
+		(&V_0)->___z = ((float)il2cpp_codegen_subtract(((float)il2cpp_codegen_add(((float)il2cpp_codegen_add(((float)il2cpp_codegen_multiply(L_33, L_35)), ((float)il2cpp_codegen_multiply(L_37, L_39)))), ((float)il2cpp_codegen_multiply(L_41, L_43)))), ((float)il2cpp_codegen_multiply(L_45, L_47))));
+		Quaternion_tDA59F214EF07D7700B26E40E562F267AF7306974 L_48 = ___0_lhs;
+		float L_49 = L_48.___w;
+		Quaternion_tDA59F214EF07D7700B26E40E562F267AF7306974 L_50 = ___1_rhs;
+		float L_51 = L_50.___w;
+		Quaternion_tDA59F214EF07D7700B26E40E562F267AF7306974 L_52 = ___0_lhs;
+		float L_53 = L_52.___x;
+		Quaternion_tDA59F214EF07D7700B26E40E562F267AF7306974 L_54 = ___1_rhs;
+		float L_55 = L_54.___x;
+		Quaternion_tDA59F214EF07D7700B26E40E562F267AF7306974 L_56 = ___0_lhs;
+		float L_57 = L_56.___y;
+		Quaternion_tDA59F214EF07D7700B26E40E562F267AF7306974 L_58 = ___1_rhs;
+		float L_59 = L_58.___y;
+		Quaternion_tDA59F214EF07D7700B26E40E562F267AF7306974 L_60 = ___0_lhs;
+		float L_61 = L_60.___z;
+		Quaternion_tDA59F214EF07D7700B26E40E562F267AF7306974 L_62 = ___1_rhs;
+		float L_63 = L_62.___z;
+		(&V_0)->___w = ((float)il2cpp_codegen_subtract(((float)il2cpp_codegen_subtract(((float)il2cpp_codegen_subtract(((float)il2cpp_codegen_multiply(L_49, L_51)), ((float)il2cpp_codegen_multiply(L_53, L_55)))), ((float)il2cpp_codegen_multiply(L_57, L_59)))), ((float)il2cpp_codegen_multiply(L_61, L_63))));
+		Quaternion_tDA59F214EF07D7700B26E40E562F267AF7306974 L_64 = V_0;
+		return L_64;
+	}
+}
+// Method Definition Index: 66723
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR bool Vector3_op_Inequality_m9F170CDFBF1E490E559DA5D06D6547501A402BBF_inline (Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___0_lhs, Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___1_rhs, const RuntimeMethod* method) 
+{
+	{
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_0 = ___0_lhs;
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_1 = ___1_rhs;
+		bool L_2;
+		L_2 = Vector3_op_Equality_mCDCBB8D2EDC3D3BF20F31A25ACB34705D352B479_inline(L_0, L_1, NULL);
+		return (bool)((((int32_t)L_2) == ((int32_t)0))? 1 : 0);
+	}
+}
+// Method Definition Index: 66766
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR Quaternion_tDA59F214EF07D7700B26E40E562F267AF7306974 Quaternion_Euler_m5BCCC19216CFAD2426F15BC51A30421880D27B73_inline (Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___0_euler, const RuntimeMethod* method) 
+{
+	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 V_0;
+	memset((&V_0), 0, sizeof(V_0));
+	{
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_0 = ___0_euler;
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_1;
+		L_1 = Vector3_op_Multiply_m87BA7C578F96C8E49BB07088DAAC4649F83B0353_inline(L_0, (0.0174532924f), NULL);
+		V_0 = L_1;
+		Quaternion_tDA59F214EF07D7700B26E40E562F267AF7306974 L_2;
+		L_2 = Quaternion_Internal_FromEulerRad_mD0C4C0EFE1D70EC0EA4A92B11F1A4D5B0A134E49((&V_0), NULL);
+		return L_2;
+	}
+}
+// Method Definition Index: 32160
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* OVRCameraRig_get_trackingSpace_m76339871C7804C1BD14283FBF3D91268D4D87550_inline (OVRCameraRig_t7FC2BB0D30DED2B7F0C8914AF2B66E9F4CF891A9* __this, const RuntimeMethod* method) 
+{
+	{
+		//<source_info:./Library/PackageCache/com.meta.xr.sdk.core@f8b4cfb2789f/Scripts/OVRCameraRig.cs:65>
+		Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* L_0 = __this->___U3CtrackingSpaceU3Ek__BackingField;
+		return L_0;
+	}
+}
+// Method Definition Index: 66545
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR Color_tD001788D726C3A7F1379BEED0260B9591F440C1F Color_get_green_mEB001F2CD8C68C6BBAEF9101990B779D3AA2A6EF_inline (const RuntimeMethod* method) 
+{
+	{
+		Color_tD001788D726C3A7F1379BEED0260B9591F440C1F L_0;
+		memset((&L_0), 0, sizeof(L_0));
+		Color__ctor_m3786F0D6E510D9CFA544523A955870BD2A514C8C_inline((&L_0), (0.0f), (1.0f), (0.0f), (1.0f), NULL);
+		return L_0;
+	}
+}
+// Method Definition Index: 66541
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR Color_tD001788D726C3A7F1379BEED0260B9591F440C1F Color_get_cyan_m182A29E7475C0A98ACC03E1CF5252BAB83F0BA31_inline (const RuntimeMethod* method) 
+{
+	{
+		Color_tD001788D726C3A7F1379BEED0260B9591F440C1F L_0;
+		memset((&L_0), 0, sizeof(L_0));
+		Color__ctor_m3786F0D6E510D9CFA544523A955870BD2A514C8C_inline((&L_0), (0.0f), (1.0f), (1.0f), (1.0f), NULL);
+		return L_0;
+	}
+}
+// Method Definition Index: 66548
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR Color_tD001788D726C3A7F1379BEED0260B9591F440C1F Color_get_white_m068F5AF879B0FCA584E3693F762EA41BB65532C6_inline (const RuntimeMethod* method) 
+{
+	{
+		Color_tD001788D726C3A7F1379BEED0260B9591F440C1F L_0;
+		memset((&L_0), 0, sizeof(L_0));
+		Color__ctor_m3786F0D6E510D9CFA544523A955870BD2A514C8C_inline((&L_0), (1.0f), (1.0f), (1.0f), (1.0f), NULL);
+		return L_0;
+	}
+}
+// Method Definition Index: 11510
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void List_1_Add_mEBCF994CC3814631017F46A387B1A192ED6C85C7_gshared_inline (List_1_tA239CB83DE5615F348BB0507E45F490F4F7C9A8D* __this, RuntimeObject* ___0_item, const RuntimeMethod* method) 
+{
+	ObjectU5BU5D_t8061030B0A12A55D5AD8652A20C922FE99450918* V_0 = NULL;
+	int32_t V_1 = 0;
+	{
+		int32_t L_0 = __this->____version;
+		__this->____version = ((int32_t)il2cpp_codegen_add(L_0, 1));
+		ObjectU5BU5D_t8061030B0A12A55D5AD8652A20C922FE99450918* L_1 = __this->____items;
+		V_0 = L_1;
+		int32_t L_2 = __this->____size;
+		V_1 = L_2;
+		int32_t L_3 = V_1;
+		ObjectU5BU5D_t8061030B0A12A55D5AD8652A20C922FE99450918* L_4 = V_0;
+		NullCheck(L_4);
+		if ((!(((uint32_t)L_3) < ((uint32_t)((int32_t)(((RuntimeArray*)L_4)->max_length))))))
+		{
+			goto IL_0034;
+		}
+	}
+	{
+		int32_t L_5 = V_1;
+		__this->____size = ((int32_t)il2cpp_codegen_add(L_5, 1));
+		ObjectU5BU5D_t8061030B0A12A55D5AD8652A20C922FE99450918* L_6 = V_0;
+		int32_t L_7 = V_1;
+		RuntimeObject* L_8 = ___0_item;
+		NullCheck(L_6);
+		(L_6)->SetAt(static_cast<il2cpp_array_size_t>(L_7), (RuntimeObject*)L_8);
+		return;
+	}
+
+IL_0034:
+	{
+		RuntimeObject* L_9 = ___0_item;
+		List_1_AddWithResize_m79A9BF770BEF9C06BE40D5401E55E375F2726CC4(__this, L_9, il2cpp_rgctx_method(method->klass->rgctx_data, 14));
+		return;
+	}
+}
+// Method Definition Index: 11510
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void List_1_Add_m2F86E252D086E288E02FA1C830B7E86C0A431E51_gshared_inline (List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* __this, float ___0_item, const RuntimeMethod* method) 
+{
+	SingleU5BU5D_t89DEFE97BCEDB5857010E79ECE0F52CF6E93B87C* V_0 = NULL;
+	int32_t V_1 = 0;
+	{
+		int32_t L_0 = __this->____version;
+		__this->____version = ((int32_t)il2cpp_codegen_add(L_0, 1));
+		SingleU5BU5D_t89DEFE97BCEDB5857010E79ECE0F52CF6E93B87C* L_1 = __this->____items;
+		V_0 = L_1;
+		int32_t L_2 = __this->____size;
+		V_1 = L_2;
+		int32_t L_3 = V_1;
+		SingleU5BU5D_t89DEFE97BCEDB5857010E79ECE0F52CF6E93B87C* L_4 = V_0;
+		NullCheck(L_4);
+		if ((!(((uint32_t)L_3) < ((uint32_t)((int32_t)(((RuntimeArray*)L_4)->max_length))))))
+		{
+			goto IL_0034;
+		}
+	}
+	{
+		int32_t L_5 = V_1;
+		__this->____size = ((int32_t)il2cpp_codegen_add(L_5, 1));
+		SingleU5BU5D_t89DEFE97BCEDB5857010E79ECE0F52CF6E93B87C* L_6 = V_0;
+		int32_t L_7 = V_1;
+		float L_8 = ___0_item;
+		NullCheck(L_6);
+		(L_6)->SetAt(static_cast<il2cpp_array_size_t>(L_7), (float)L_8);
+		return;
+	}
+
+IL_0034:
+	{
+		float L_9 = ___0_item;
+		List_1_AddWithResize_m446487BF7F55E757E7D552B2436AD74AC354EA99(__this, L_9, il2cpp_rgctx_method(method->klass->rgctx_data, 14));
+		return;
+	}
+}
+// Method Definition Index: 11510
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void List_1_Add_m79E50C4F592B1703F4B76A8BE7B4855515460CA1_gshared_inline (List_1_t77B94703E05C519A9010DD0614F757F974E1CD8B* __this, Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___0_item, const RuntimeMethod* method) 
+{
+	Vector3U5BU5D_tFF1859CCE176131B909E2044F76443064254679C* V_0 = NULL;
+	int32_t V_1 = 0;
+	{
+		int32_t L_0 = __this->____version;
+		__this->____version = ((int32_t)il2cpp_codegen_add(L_0, 1));
+		Vector3U5BU5D_tFF1859CCE176131B909E2044F76443064254679C* L_1 = __this->____items;
+		V_0 = L_1;
+		int32_t L_2 = __this->____size;
+		V_1 = L_2;
+		int32_t L_3 = V_1;
+		Vector3U5BU5D_tFF1859CCE176131B909E2044F76443064254679C* L_4 = V_0;
+		NullCheck(L_4);
+		if ((!(((uint32_t)L_3) < ((uint32_t)((int32_t)(((RuntimeArray*)L_4)->max_length))))))
+		{
+			goto IL_0034;
+		}
+	}
+	{
+		int32_t L_5 = V_1;
+		__this->____size = ((int32_t)il2cpp_codegen_add(L_5, 1));
+		Vector3U5BU5D_tFF1859CCE176131B909E2044F76443064254679C* L_6 = V_0;
+		int32_t L_7 = V_1;
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_8 = ___0_item;
+		NullCheck(L_6);
+		(L_6)->SetAt(static_cast<il2cpp_array_size_t>(L_7), (Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2)L_8);
+		return;
+	}
+
+IL_0034:
+	{
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_9 = ___0_item;
+		List_1_AddWithResize_mCDB189127FC2EE67B5EED9DE34F837DFC6EDC212(__this, L_9, il2cpp_rgctx_method(method->klass->rgctx_data, 14));
+		return;
+	}
+}
+// Method Definition Index: 11499
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR int32_t List_1_get_Count_m545762F67009314D9C63DD209B42FFF950569B05_gshared_inline (List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* __this, const RuntimeMethod* method) 
+{
+	{
+		int32_t L_0 = __this->____size;
+		return L_0;
+	}
+}
+// Method Definition Index: 11499
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR int32_t List_1_get_Count_m46EEFFA770BE665EA0CB3A5332E941DA4B3C1D37_gshared_inline (List_1_t77B94703E05C519A9010DD0614F757F974E1CD8B* __this, const RuntimeMethod* method) 
+{
+	{
+		int32_t L_0 = __this->____size;
+		return L_0;
+	}
+}
+// Method Definition Index: 11499
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR int32_t List_1_get_Count_m4407E4C389F22B8CEC282C15D56516658746C383_gshared_inline (List_1_tA239CB83DE5615F348BB0507E45F490F4F7C9A8D* __this, const RuntimeMethod* method) 
+{
+	{
+		int32_t L_0 = __this->____size;
+		return L_0;
+	}
+}
+// Method Definition Index: 11562
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR RuntimeObject* Enumerator_get_Current_m6330F15D18EE4F547C05DF9BF83C5EB710376027_gshared_inline (Enumerator_t9473BAB568A27E2339D48C1F91319E0F6D244D7A* __this, const RuntimeMethod* method) 
+{
+	{
+		RuntimeObject* L_0 = __this->____current;
+		return L_0;
+	}
+}
+// Method Definition Index: 11518
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void List_1_Clear_m16C1F2C61FED5955F10EB36BC1CB2DF34B128994_gshared_inline (List_1_tA239CB83DE5615F348BB0507E45F490F4F7C9A8D* __this, const RuntimeMethod* method) 
+{
+	int32_t V_0 = 0;
+	{
+		int32_t L_0 = __this->____version;
+		__this->____version = ((int32_t)il2cpp_codegen_add(L_0, 1));
+	}
+	{
+		int32_t L_1 = __this->____size;
+		V_0 = L_1;
+		__this->____size = 0;
+		int32_t L_2 = V_0;
+		if ((((int32_t)L_2) <= ((int32_t)0)))
+		{
+			goto IL_003c;
+		}
+	}
+	{
+		ObjectU5BU5D_t8061030B0A12A55D5AD8652A20C922FE99450918* L_3 = __this->____items;
+		int32_t L_4 = V_0;
+		Array_Clear_m50BAA3751899858B097D3FF2ED31F284703FE5CB((RuntimeArray*)L_3, 0, L_4, NULL);
+		return;
+	}
+
+IL_003c:
+	{
+		return;
+	}
+}
+// Method Definition Index: 11518
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void List_1_Clear_m6CD2E5AAE6552A27AECCC57936767B4DCFC902B1_gshared_inline (List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* __this, const RuntimeMethod* method) 
+{
+	int32_t V_0 = 0;
+	{
+		int32_t L_0 = __this->____version;
+		__this->____version = ((int32_t)il2cpp_codegen_add(L_0, 1));
+		goto IL_0035;
+	}
+
+IL_0035:
+	{
+		__this->____size = 0;
+	}
+
+IL_003c:
+	{
+		return;
+	}
+}
+// Method Definition Index: 11510
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void List_1_Add_m0248A96C5334E9A93E6994B7780478BCD994EA3D_gshared_inline (List_1_t05915E9237850A58106982B7FE4BC5DA4E872E73* __this, int32_t ___0_item, const RuntimeMethod* method) 
+{
+	Int32U5BU5D_t19C97395396A72ECAF310612F0760F165060314C* V_0 = NULL;
+	int32_t V_1 = 0;
+	{
+		int32_t L_0 = __this->____version;
+		__this->____version = ((int32_t)il2cpp_codegen_add(L_0, 1));
+		Int32U5BU5D_t19C97395396A72ECAF310612F0760F165060314C* L_1 = __this->____items;
+		V_0 = L_1;
+		int32_t L_2 = __this->____size;
+		V_1 = L_2;
+		int32_t L_3 = V_1;
+		Int32U5BU5D_t19C97395396A72ECAF310612F0760F165060314C* L_4 = V_0;
+		NullCheck(L_4);
+		if ((!(((uint32_t)L_3) < ((uint32_t)((int32_t)(((RuntimeArray*)L_4)->max_length))))))
+		{
+			goto IL_0034;
+		}
+	}
+	{
+		int32_t L_5 = V_1;
+		__this->____size = ((int32_t)il2cpp_codegen_add(L_5, 1));
+		Int32U5BU5D_t19C97395396A72ECAF310612F0760F165060314C* L_6 = V_0;
+		int32_t L_7 = V_1;
+		int32_t L_8 = ___0_item;
+		NullCheck(L_6);
+		(L_6)->SetAt(static_cast<il2cpp_array_size_t>(L_7), (int32_t)L_8);
+		return;
+	}
+
+IL_0034:
+	{
+		int32_t L_9 = ___0_item;
+		List_1_AddWithResize_m378B392086AAB6F400944FA9839516326B3F7BB8(__this, L_9, il2cpp_rgctx_method(method->klass->rgctx_data, 14));
+		return;
+	}
+}
+// Method Definition Index: 11499
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR int32_t List_1_get_Count_mF590592E32D421DE2C6E2F0D5C2F62FB14CCEFDF_gshared_inline (List_1_t05915E9237850A58106982B7FE4BC5DA4E872E73* __this, const RuntimeMethod* method) 
+{
+	{
+		int32_t L_0 = __this->____size;
+		return L_0;
+	}
+}
+// Method Definition Index: 66687
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 Vector3_Normalize_m1DE89849FE2019B6AA0031306896F3B800849399_inline (Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2* ___0_value, const RuntimeMethod* method) 
+{
+	static bool s_Il2CppMethodInitialized;
+	if (!s_Il2CppMethodInitialized)
+	{
+		il2cpp_codegen_initialize_runtime_metadata((uintptr_t*)&Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2_il2cpp_TypeInfo_var);
+		s_Il2CppMethodInitialized = true;
+	}
+	float V_0 = 0.0f;
+	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 V_1;
+	memset((&V_1), 0, sizeof(V_1));
+	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 V_2;
+	memset((&V_2), 0, sizeof(V_2));
+	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 G_B3_0;
+	memset((&G_B3_0), 0, sizeof(G_B3_0));
+	{
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2* L_0 = ___0_value;
+		float L_1;
+		L_1 = Vector3_get_magnitude_mF0D6017E90B345F1F52D1CC564C640F1A847AF2D_inline(L_0, NULL);
+		V_0 = L_1;
+		float L_2 = V_0;
+		if ((((float)L_2) > ((float)(9.99999975E-06f))))
+		{
+			goto IL_0017;
+		}
+	}
+	{
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_3 = ((Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2_StaticFields*)il2cpp_codegen_static_fields_for(Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2_il2cpp_TypeInfo_var))->___zeroVector;
+		G_B3_0 = L_3;
+		goto IL_004d;
+	}
+
+IL_0017:
+	{
+		il2cpp_codegen_initobj((&V_1), sizeof(Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2));
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2* L_4 = ___0_value;
+		float L_5 = L_4->___x;
+		float L_6 = V_0;
+		(&V_1)->___x = ((float)(L_5/L_6));
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2* L_7 = ___0_value;
+		float L_8 = L_7->___y;
+		float L_9 = V_0;
+		(&V_1)->___y = ((float)(L_8/L_9));
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2* L_10 = ___0_value;
+		float L_11 = L_10->___z;
+		float L_12 = V_0;
+		(&V_1)->___z = ((float)(L_11/L_12));
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_13 = V_1;
+		G_B3_0 = L_13;
+	}
+
+IL_004d:
+	{
+		V_2 = G_B3_0;
+		goto IL_0050;
+	}
+
+IL_0050:
+	{
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 L_14 = V_2;
+		return L_14;
+	}
+}
+// Method Definition Index: 66691
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR float Vector3_Dot_m9B5EBE36643126708DB3F444C59C11FA30803DBB_inline (Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2* ___0_lhs, Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2* ___1_rhs, const RuntimeMethod* method) 
+{
+	{
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2* L_0 = ___0_lhs;
+		float L_1 = L_0->___x;
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2* L_2 = ___1_rhs;
+		float L_3 = L_2->___x;
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2* L_4 = ___0_lhs;
+		float L_5 = L_4->___y;
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2* L_6 = ___1_rhs;
+		float L_7 = L_6->___y;
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2* L_8 = ___0_lhs;
+		float L_9 = L_8->___z;
+		Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2* L_10 = ___1_rhs;
+		float L_11 = L_10->___z;
+		return ((float)il2cpp_codegen_add(((float)il2cpp_codegen_add(((float)il2cpp_codegen_multiply(L_1, L_3)), ((float)il2cpp_codegen_multiply(L_5, L_7)))), ((float)il2cpp_codegen_multiply(L_9, L_11))));
+	}
+}
+// Method Definition Index: 66513
+IL2CPP_MANAGED_FORCE_INLINE IL2CPP_METHOD_ATTR void Color__ctor_m3786F0D6E510D9CFA544523A955870BD2A514C8C_inline (Color_tD001788D726C3A7F1379BEED0260B9591F440C1F* __this, float ___0_r, float ___1_g, float ___2_b, float ___3_a, const RuntimeMethod* method) 
+{
+	{
+		float L_0 = ___0_r;
+		__this->___r = L_0;
+		float L_1 = ___1_g;
+		__this->___g = L_1;
+		float L_2 = ___2_b;
+		__this->___b = L_2;
+		float L_3 = ___3_a;
+		__this->___a = L_3;
+		return;
+	}
+}

@@ -38,6 +38,11 @@ $RECYCLE.BIN/
 [Mm]emoryCaptures/
 [Rr]ecords/
 UserSettings/
+[Bb]urstDebugInformation*/
+*BurstDebugInformation_DoNotShip*/
+gam_BackUpThisFolder_ButDontShipItWithYourGame/
+gradleOut/
+Il2cppBuildCache/
 
 # Unity cache
 /[Aa]sset[Ss]tore/

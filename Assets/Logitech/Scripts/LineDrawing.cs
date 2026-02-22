@@ -15,21 +15,12 @@ public class LineDrawing : MonoBehaviour
     [SerializeField] Material _material;
 
     [SerializeField] private Color _currentColor;
-    [SerializeField] private Color highlightColor;
-    [SerializeField] private float highlightThreshold = 0.01f;
-    private Color _cachedColor;
-    private GameObject _highlightedLine;
-    private Vector3 _grabStartPosition;
-    private Quaternion _grabStartRotation;
-    private Vector3[] _originalLinePositions;
-    private bool _movingLine = false;
     public Color CurrentColor
     {
         get { return _currentColor; }
         set
         {
             _currentColor = value;
-            Debug.Log("LineDrawing color: " + _currentColor.ToString());
         }
     }
 
@@ -55,6 +46,7 @@ public class LineDrawing : MonoBehaviour
 
     [SerializeField]
     private StylusHandler _stylusHandler;
+
     private Vector3 _previousLinePoint;
     private const float _minDistanceBetweenLinePoints = 0.0005f;
 
@@ -79,6 +71,13 @@ public class LineDrawing : MonoBehaviour
         _previousLinePoint = new Vector3(0, 0, 0);
     }
 
+    private void TriggerHaptics()
+    {
+        const float dampingFactor = 0.6f;
+        const float duration = 0.01f;
+        float middleButtonPressure = _stylusHandler.CurrentState.cluster_middle_value * dampingFactor;
+        ((VrStylusHandler)_stylusHandler).TriggerHapticPulse(middleButtonPressure, duration);
+    }
     private void AddPoint(Vector3 position, float width)
     {
         if (Vector3.Distance(position, _previousLinePoint) > _minDistanceBetweenLinePoints)
@@ -93,11 +92,16 @@ public class LineDrawing : MonoBehaviour
             AnimationCurve curve = new AnimationCurve();
 
             //populate the curve with keyframes based on the widths list
-
-            for (var i = 0; i < _currentLineWidths.Count; i++)
+            if (_currentLineWidths.Count > 1)
             {
-                curve.AddKey(i / (float)(_currentLineWidths.Count - 1),
-                 _currentLineWidths[i]);
+                for (int i = 0; i < _currentLineWidths.Count; i++)
+                {
+                    curve.AddKey(i / (float)(_currentLineWidths.Count - 1), _currentLineWidths[i]);
+                }
+            }
+            else
+            {
+                curve.AddKey(0, _currentLineWidths[0]);
             }
 
             //assign the curve to the widthCurve
@@ -120,37 +124,21 @@ public class LineDrawing : MonoBehaviour
             Destroy(line);
         }
         _lines.Clear();
-        _highlightedLine = null;
-        _movingLine = false;
-    }
-
-    private void TriggerHaptics()
-    {
-        const float dampingFactor = 0.6f;
-        const float duration = 0.01f;
-        float middleButtonPressure = _stylusHandler.CurrentState.cluster_middle_value * dampingFactor;
-        ((VrStylusHandler)_stylusHandler).TriggerHapticPulse(middleButtonPressure, duration);
     }
 
     void Update()
     {
+
         float analogInput = Mathf.Max(_stylusHandler.CurrentState.tip_value, _stylusHandler.CurrentState.cluster_middle_value);
 
         if (analogInput > 0 && _stylusHandler.CanDraw())
         {
-            if (_highlightedLine)
-            {
-                UnhighlightLine(_highlightedLine);
-                _movingLine = false;
-            }
-
             if (!_isDrawing)
             {
                 StartNewLine();
                 _isDrawing = true;
             }
             AddPoint(_stylusHandler.CurrentState.inkingPose.position, _lineWidthIsFixed ? 1.0f : analogInput);
-            return;
         }
         else
         {
@@ -163,159 +151,18 @@ public class LineDrawing : MonoBehaviour
         {
             if (_lines.Count > 0 && !_doubleTapDetected)
             {
-                _doubleTapDetected = true;
                 buttonPressedTimestamp = Time.time;
-                if (_highlightedLine)
-                {
-                    _lines.Remove(_highlightedLine);
-                    Destroy(_highlightedLine);
-                    _highlightedLine = null;
-                    //haptic click when removing highlighted line
-                    ((VrStylusHandler)_stylusHandler).TriggerHapticClick();
-                    return;
-                }
-                else
-                {
-                    RemoveLastLine();
-                    //haptic click when deleting last line
-                    ((VrStylusHandler)_stylusHandler).TriggerHapticClick();
-                    return;
-                }
+                RemoveLastLine();
             }
-
+            _doubleTapDetected = true;
             if (_lines.Count > 0 && Time.time >= (buttonPressedTimestamp + longPressDuration))
             {
-                //haptic pulse when removing all lines
-                ((VrStylusHandler)_stylusHandler).TriggerHapticPulse(1.0f, 0.1f);
                 ClearAllLines();
-                return;
             }
         }
         else
         {
             _doubleTapDetected = false;
         }
-
-        // Look for closest Line
-        if (!_movingLine)
-        {
-            var closestLine = FindClosestLine(_stylusHandler.CurrentState.inkingPose.position);
-            if (closestLine)
-            {
-                if (_highlightedLine != closestLine)
-                {
-                    if (_highlightedLine)
-                    {
-                        UnhighlightLine(_highlightedLine);
-                    }
-                    HighlightLine(closestLine);
-                    return;
-                }
-            }
-            else if (_highlightedLine)
-            {
-                UnhighlightLine(_highlightedLine);
-                return;
-            }
-        }
-        if (_stylusHandler.CurrentState.cluster_front_value && !_movingLine)
-        {
-            _movingLine = true;
-            StartGrabbingLine();
-        }
-        else if (!_stylusHandler.CurrentState.cluster_front_value && _movingLine)
-        {
-            if (_highlightedLine)
-            {
-                UnhighlightLine(_highlightedLine);
-            }
-            _movingLine = false;
-        }
-        else if (_stylusHandler.CurrentState.cluster_front_value)
-        {
-            MoveHighlightedLine();
-        }
-    }
-
-    private GameObject FindClosestLine(Vector3 position)
-    {
-        GameObject closestLine = null;
-        var closestDistance = float.MaxValue;
-
-        foreach (var line in _lines)
-        {
-            var lineRenderer = line.GetComponent<LineRenderer>();
-            for (var i = 0; i < lineRenderer.positionCount - 1; i++)
-            {
-                var point = FindNearestPointOnLineSegment(lineRenderer.GetPosition(i),
-                    lineRenderer.GetPosition(i + 1), position);
-                var distance = Vector3.Distance(point, position);
-
-                if (!(distance < closestDistance) || !(distance < highlightThreshold)) continue;
-                closestDistance = distance;
-                closestLine = line;
-            }
-        }
-
-        return closestLine;
-    }
-    private Vector3 FindNearestPointOnLineSegment(Vector3 segStart, Vector3 segEnd, Vector3 point)
-    {
-        var segVec = segEnd - segStart;
-        var segLen = segVec.magnitude;
-        var segDir = segVec.normalized;
-
-        var pointVec = point - segStart;
-        var projLen = Vector3.Dot(pointVec, segDir);
-        var clampedLen = Mathf.Clamp(projLen, 0f, segLen);
-
-        return segStart + segDir * clampedLen;
-    }
-
-    private void HighlightLine(GameObject line)
-    {
-        _highlightedLine = line;
-        var lineRenderer = line.GetComponent<LineRenderer>();
-        _cachedColor = lineRenderer.material.color;
-        lineRenderer.material.color = highlightColor;
-        //haptic click when highlighting a line
-        ((VrStylusHandler)_stylusHandler).TriggerHapticClick();
-    }
-
-    private void UnhighlightLine(GameObject line)
-    {
-        var lineRenderer = line.GetComponent<LineRenderer>();
-        lineRenderer.material.color = _cachedColor;
-        _highlightedLine = null;
-        //haptic click when unhighlighting a line
-        ((VrStylusHandler)_stylusHandler).TriggerHapticClick();
-    }
-
-    private void StartGrabbingLine()
-    {
-        if (!_highlightedLine) return;
-        _grabStartPosition = _stylusHandler.CurrentState.inkingPose.position;
-        _grabStartRotation = _stylusHandler.CurrentState.inkingPose.rotation;
-
-        var lineRenderer = _highlightedLine.GetComponent<LineRenderer>();
-        _originalLinePositions = new Vector3[lineRenderer.positionCount];
-        lineRenderer.GetPositions(_originalLinePositions);
-        //haptic pulse when start grabbing a line
-        ((VrStylusHandler)_stylusHandler).TriggerHapticPulse(1.0f, 0.03f);
-    }
-
-    private void MoveHighlightedLine()
-    {
-        if (!_highlightedLine) return;
-        var rotation = _stylusHandler.CurrentState.inkingPose.rotation * Quaternion.Inverse(_grabStartRotation);
-        var lineRenderer = _highlightedLine.GetComponent<LineRenderer>();
-        var newPositions = new Vector3[_originalLinePositions.Length];
-
-        for (var i = 0; i < _originalLinePositions.Length; i++)
-        {
-            newPositions[i] = rotation * (_originalLinePositions[i] - _grabStartPosition) + _stylusHandler.CurrentState.inkingPose.position;
-        }
-
-        lineRenderer.SetPositions(newPositions);
     }
 }

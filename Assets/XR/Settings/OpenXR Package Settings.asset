@@ -424,6 +424,7 @@ MonoBehaviour:
   m_Name: LogitechMxInkControllerProfile Standalone
   m_EditorClassIdentifier: Assembly-CSharp::UnityEngine.XR.OpenXR.Features.Interactions.LogitechMxInkControllerProfile
   m_enabled: 1
+  <failedInitialization>k__BackingField: 0
   nameUi: Logitech MX Ink Stylus Interaction Profile
   version: 1.0.0
   featureIdInternal: com.unity.openxr.feature.input.logitechmxink
@@ -477,7 +478,6 @@ MonoBehaviour:
   - {fileID: 1448890777652126312}
   - {fileID: -3466263740663411397}
   - {fileID: 6417291053334459322}
-  - {fileID: 4937430851461804355}
   - {fileID: 7999746168141453481}
   - {fileID: 6424814391585986897}
   - {fileID: -5913923859524115210}
@@ -610,6 +610,7 @@ MonoBehaviour:
   m_Name: LogitechMxInkControllerProfile Metro
   m_EditorClassIdentifier: Assembly-CSharp::UnityEngine.XR.OpenXR.Features.Interactions.LogitechMxInkControllerProfile
   m_enabled: 0
+  <failedInitialization>k__BackingField: 0
   nameUi: Logitech MX Ink Stylus Interaction Profile
   version: 1.0.0
   featureIdInternal: com.unity.openxr.feature.input.logitechmxink
@@ -663,7 +664,6 @@ MonoBehaviour:
   - {fileID: -456935249203459951}
   - {fileID: -1723103586094643380}
   - {fileID: 6638498482979369226}
-  - {fileID: -4098161811518316489}
   - {fileID: -4782014265994833526}
   - {fileID: 7438149548862580509}
   - {fileID: -940922764404883757}
@@ -1334,6 +1334,7 @@ MonoBehaviour:
   m_Name: LogitechMxInkControllerProfile Android
   m_EditorClassIdentifier: Assembly-CSharp::UnityEngine.XR.OpenXR.Features.Interactions.LogitechMxInkControllerProfile
   m_enabled: 1
+  <failedInitialization>k__BackingField: 0
   nameUi: Logitech MX Ink Stylus Interaction Profile
   version: 1.0.0
   featureIdInternal: com.unity.openxr.feature.input.logitechmxink
@@ -1587,7 +1588,6 @@ MonoBehaviour:
   - {fileID: -4587291417027044391}
   - {fileID: -4259954943620130180}
   - {fileID: 1507721445030715450}
-  - {fileID: -3352197016818861654}
   - {fileID: 7619961110279377810}
   - {fileID: 8717676566517702114}
   - {fileID: -8958862181798060418}

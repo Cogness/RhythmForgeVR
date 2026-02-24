@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+* { margin: 0; padding: 0; }
+body { background: #050510; overflow: hidden; }
+canvas { display: block; }
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<script>
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+canvas.width = 1920;
+canvas.height = 1080;
+
+// Background with subtle center glow
+function drawBackground() {
+  const grad = ctx.createRadialGradient(960, 480, 30, 960, 540, 700);
+  grad.addColorStop(0, '#0f0a20');
+  grad.addColorStop(0.3, '#0a0815');
+  grad.addColorStop(1, '#040408');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, 1920, 1080);
+}
+
+// Subtle particle field
+function drawParticles() {
+  const rng = (seed) => {
+    let s = seed;
+    return () => { s = (s * 16807) % 2147483647; return (s - 1) / 2147483646; };
+  };
+  const r = rng(789);
+
+  for (let i = 0; i < 60; i++) {
+    const x = r() * 1920;
+    const y = r() * 1080;
+    const size = r() * 2 + 0.3;
+    const alpha = r() * 0.15 + 0.03;
+    const colorChoice = Math.floor(r() * 3);
+    const colors = ['rgba(255, 140, 50,', 'rgba(120, 80, 255,', 'rgba(50, 200, 180,'];
+
+    ctx.beginPath();
+    ctx.arc(x, y, size, 0, Math.PI * 2);
+    ctx.fillStyle = `${colors[colorChoice]} ${alpha})`;
+    ctx.fill();
+  }
+}
+
+// Decorative thin orbit rings
+function drawOrbits() {
+  const cx = 960;
+  const cy = 430;
+
+  const orbits = [
+    { rx: 300, ry: 25, color: 'rgba(255, 140, 50, 0.06)' },
+    { rx: 450, ry: 35, color: 'rgba(120, 80, 255, 0.04)' },
+    { rx: 600, ry: 45, color: 'rgba(50, 200, 180, 0.03)' },
+  ];
+
+  orbits.forEach(o => {
+    ctx.beginPath();
+    ctx.ellipse(cx, cy, o.rx, o.ry, 0, 0, Math.PI * 2);
+    ctx.strokeStyle = o.color;
+    ctx.lineWidth = 1;
+    ctx.stroke();
+  });
+
+  // A few dots on the orbits
+  const dots = [
+    { angle: 0.5, orbit: 0, color: [255, 140, 50], size: 4 },
+    { angle: 3.2, orbit: 0, color: [255, 100, 40], size: 3 },
+    { angle: 1.8, orbit: 1, color: [140, 80, 255], size: 5 },
+    { angle: 4.5, orbit: 1, color: [100, 60, 220], size: 3.5 },
+    { angle: 0.8, orbit: 2, color: [50, 200, 180], size: 4 },
+    { angle: 3.9, orbit: 2, color: [80, 220, 160], size: 3 },
+  ];
+
+  dots.forEach(d => {
+    const o = orbits[d.orbit];
+    const x = cx + o.rx * Math.cos(d.angle);
+    const y = cy + o.ry * Math.sin(d.angle);
+    const [cr, cg, cb] = d.color;
+
+    ctx.beginPath();
+    ctx.arc(x, y, d.size, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(${cr}, ${cg}, ${cb}, 0.6)`;
+    ctx.shadowColor = `rgba(${cr}, ${cg}, ${cb}, 0.5)`;
+    ctx.shadowBlur = 15;
+    ctx.fill();
+    ctx.shadowBlur = 0;
+  });
+}
+
+// Main text
+function drawText() {
+  const cx = 960;
+
+  // Product name
+  ctx.font = '700 72px "Helvetica Neue", Arial, sans-serif';
+  ctx.fillStyle = '#ffffff';
+  ctx.textAlign = 'center';
+  ctx.letterSpacing = '4px';
+  ctx.shadowColor = 'rgba(120, 80, 255, 0.3)';
+  ctx.shadowBlur = 30;
+  ctx.fillText('RhythmForge VR', cx, 460);
+  ctx.shadowBlur = 0;
+
+  // Subtle underline accent
+  const lineGrad = ctx.createLinearGradient(cx - 200, 0, cx + 200, 0);
+  lineGrad.addColorStop(0, 'rgba(255, 140, 50, 0)');
+  lineGrad.addColorStop(0.3, 'rgba(255, 140, 50, 0.4)');
+  lineGrad.addColorStop(0.5, 'rgba(120, 80, 255, 0.4)');
+  lineGrad.addColorStop(0.7, 'rgba(50, 200, 180, 0.4)');
+  lineGrad.addColorStop(1, 'rgba(50, 200, 180, 0)');
+  ctx.beginPath();
+  ctx.moveTo(cx - 280, 478);
+  ctx.lineTo(cx + 280, 478);
+  ctx.strokeStyle = lineGrad;
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  // Tagline
+  ctx.font = '300 26px "Helvetica Neue", Arial, sans-serif';
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.55)';
+  ctx.fillText('Conduct reality. Compose destiny.', cx, 530);
+
+  ctx.font = '300 28px "Helvetica Neue", Arial, sans-serif';
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+  ctx.fillText('Create music with motion.', cx, 575);
+
+  // Built for line
+  ctx.font = '300 18px "Helvetica Neue", Arial, sans-serif';
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+  ctx.fillText('Built for Logitech MX Ink  ×  Meta Quest', cx, 660);
+
+  // DevStudio badge
+  ctx.font = '600 16px "Helvetica Neue", Arial, sans-serif';
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.25)';
+  ctx.fillText('DevStudio 2026', cx, 700);
+
+  // Thin box around DevStudio
+  const tw = ctx.measureText('DevStudio 2026').width;
+  ctx.beginPath();
+  ctx.roundRect(cx - tw/2 - 15, 684, tw + 30, 24, 4);
+  ctx.strokeStyle = 'rgba(255, 255, 255, 0.12)';
+  ctx.lineWidth = 1;
+  ctx.stroke();
+}
+
+// Render
+drawBackground();
+drawParticles();
+drawOrbits();
+drawText();
+</script>
+</body>
+</html>

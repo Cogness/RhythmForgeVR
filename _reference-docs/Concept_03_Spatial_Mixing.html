@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+* { margin: 0; padding: 0; }
+body { background: #050510; overflow: hidden; }
+canvas { display: block; }
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<script>
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+canvas.width = 1920;
+canvas.height = 1080;
+
+function drawBackground() {
+  const grad = ctx.createRadialGradient(960, 540, 50, 960, 540, 900);
+  grad.addColorStop(0, '#0a0818');
+  grad.addColorStop(0.5, '#060612');
+  grad.addColorStop(1, '#020208');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, 1920, 1080);
+}
+
+function drawStars() {
+  const rng = (seed) => {
+    let s = seed;
+    return () => { s = (s * 16807) % 2147483647; return (s - 1) / 2147483646; };
+  };
+  const r = rng(123);
+  for (let i = 0; i < 180; i++) {
+    const x = r() * 1920;
+    const y = r() * 1080;
+    const size = r() * 1.3 + 0.2;
+    const alpha = r() * 0.25 + 0.05;
+    ctx.beginPath();
+    ctx.arc(x, y, size, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(180, 190, 255, ${alpha})`;
+    ctx.fill();
+  }
+}
+
+// Sound objects floating in space
+function drawSoundObjects() {
+  const objects = [
+    // Close/large objects (louder)
+    { x: 650, y: 420, r: 65, color: [255, 100, 50], label: 'DRUMS', type: 'circle', brightness: 1.0 },
+    { x: 1100, y: 350, r: 55, color: [255, 200, 50], label: 'BASS', type: 'circle', brightness: 0.9 },
+
+    // Medium distance
+    { x: 400, y: 600, r: 40, color: [120, 80, 255], label: 'MELODY', type: 'circle', brightness: 0.7 },
+    { x: 1350, y: 550, r: 38, color: [50, 200, 180], label: 'PIANO', type: 'circle', brightness: 0.65 },
+
+    // Far objects (quieter)
+    { x: 250, y: 300, r: 22, color: [180, 100, 255], label: 'PAD', type: 'circle', brightness: 0.35 },
+    { x: 1600, y: 280, r: 20, color: [100, 220, 100], label: 'FX', type: 'circle', brightness: 0.3 },
+    { x: 1500, y: 750, r: 18, color: [255, 150, 200], label: 'VINYL', type: 'circle', brightness: 0.25 },
+    { x: 300, y: 800, r: 16, color: [80, 180, 255], label: 'RAIN', type: 'circle', brightness: 0.2 },
+  ];
+
+  // Draw connecting lines between objects first (behind everything)
+  const connections = [[0,1], [0,2], [1,3], [2,4], [3,5], [1,6]];
+  connections.forEach(([a, b]) => {
+    const objA = objects[a];
+    const objB = objects[b];
+    const alpha = Math.min(objA.brightness, objB.brightness) * 0.15;
+
+    ctx.beginPath();
+    ctx.moveTo(objA.x, objA.y);
+
+    // Curved connection
+    const mx = (objA.x + objB.x) / 2 + (Math.sin(a + b) * 40);
+    const my = (objA.y + objB.y) / 2 + (Math.cos(a * b) * 30);
+    ctx.quadraticCurveTo(mx, my, objB.x, objB.y);
+
+    ctx.strokeStyle = `rgba(${objA.color.join(',')}, ${alpha})`;
+    ctx.lineWidth = 1;
+    ctx.stroke();
+  });
+
+  // Draw each object
+  objects.forEach(obj => {
+    const [cr, cg, cb] = obj.color;
+    const b = obj.brightness;
+
+    // Outer glow rings
+    for (let g = 4; g >= 0; g--) {
+      ctx.beginPath();
+      ctx.arc(obj.x, obj.y, obj.r + g * 15, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(${cr}, ${cg}, ${cb}, ${0.01 * b + g * 0.005 * b})`;
+      ctx.fill();
+    }
+
+    // Main sphere gradient
+    const sphereGrad = ctx.createRadialGradient(
+      obj.x - obj.r * 0.3, obj.y - obj.r * 0.3, obj.r * 0.1,
+      obj.x, obj.y, obj.r
+    );
+    sphereGrad.addColorStop(0, `rgba(${Math.min(cr+80,255)}, ${Math.min(cg+80,255)}, ${Math.min(cb+80,255)}, ${0.9 * b})`);
+    sphereGrad.addColorStop(0.6, `rgba(${cr}, ${cg}, ${cb}, ${0.7 * b})`);
+    sphereGrad.addColorStop(1, `rgba(${Math.floor(cr*0.5)}, ${Math.floor(cg*0.5)}, ${Math.floor(cb*0.5)}, ${0.4 * b})`);
+
+    ctx.beginPath();
+    ctx.arc(obj.x, obj.y, obj.r, 0, Math.PI * 2);
+    ctx.fillStyle = sphereGrad;
+    ctx.shadowColor = `rgba(${cr}, ${cg}, ${cb}, ${0.6 * b})`;
+    ctx.shadowBlur = 40 * b;
+    ctx.fill();
+    ctx.shadowBlur = 0;
+
+    // Specular highlight
+    ctx.beginPath();
+    ctx.arc(obj.x - obj.r * 0.25, obj.y - obj.r * 0.25, obj.r * 0.35, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(255, 255, 255, ${0.15 * b})`;
+    ctx.fill();
+
+    // Pulsing ring
+    ctx.beginPath();
+    ctx.arc(obj.x, obj.y, obj.r * 1.3, 0, Math.PI * 2);
+    ctx.strokeStyle = `rgba(${cr}, ${cg}, ${cb}, ${0.15 * b})`;
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+
+    // Label
+    ctx.font = `600 ${Math.max(10, Math.floor(11 * b + 3))}px "Helvetica Neue", Arial, sans-serif`;
+    ctx.fillStyle = `rgba(${cr}, ${cg}, ${cb}, ${0.6 * b + 0.2})`;
+    ctx.textAlign = 'center';
+    ctx.fillText(obj.label, obj.x, obj.y + obj.r + 22);
+  });
+
+  return objects;
+}
+
+// Draw a hand grabbing the DRUMS object and moving it
+function drawHandInteraction(objects) {
+  const drum = objects[0]; // DRUMS object
+
+  // Arrow showing movement direction (pulling closer)
+  ctx.save();
+  ctx.translate(drum.x + 80, drum.y + 20);
+
+  // Arrow body
+  ctx.beginPath();
+  ctx.moveTo(0, 0);
+  ctx.lineTo(80, 40);
+  ctx.strokeStyle = 'rgba(255, 255, 255, 0.25)';
+  ctx.lineWidth = 2;
+  ctx.setLineDash([6, 4]);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Arrowhead
+  ctx.beginPath();
+  ctx.moveTo(80, 40);
+  ctx.lineTo(65, 32);
+  ctx.lineTo(72, 48);
+  ctx.closePath();
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.25)';
+  ctx.fill();
+
+  ctx.restore();
+
+  // "CLOSER = LOUDER" annotation
+  ctx.font = '300 14px "Helvetica Neue", Arial, sans-serif';
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.35)';
+  ctx.textAlign = 'left';
+  ctx.fillText('closer = louder', drum.x + 170, drum.y + 68);
+}
+
+// Draw reverb trail effect
+function drawReverbTrail() {
+  const startX = 400;
+  const startY = 600;
+
+  // Golden shimmer trail
+  const trailPoints = [];
+  for (let i = 0; i < 60; i++) {
+    const t = i / 59;
+    const x = startX + t * 250 + Math.sin(t * Math.PI * 4) * 15;
+    const y = startY - 40 + Math.sin(t * Math.PI * 2) * 20 - t * 30;
+    trailPoints.push({ x, y, t });
+  }
+
+  // Draw trail
+  for (let w = 3; w >= 0; w--) {
+    ctx.beginPath();
+    trailPoints.forEach((p, i) => {
+      if (i === 0) ctx.moveTo(p.x, p.y);
+      else ctx.lineTo(p.x, p.y);
+    });
+    ctx.strokeStyle = `rgba(255, 200, 80, ${0.03 + w * 0.02})`;
+    ctx.lineWidth = 15 - w * 3;
+    ctx.lineCap = 'round';
+    ctx.stroke();
+  }
+
+  // Main trail line
+  ctx.beginPath();
+  trailPoints.forEach((p, i) => {
+    if (i === 0) ctx.moveTo(p.x, p.y);
+    else ctx.lineTo(p.x, p.y);
+  });
+  ctx.strokeStyle = 'rgba(255, 210, 100, 0.5)';
+  ctx.lineWidth = 3;
+  ctx.shadowColor = 'rgba(255, 200, 80, 0.5)';
+  ctx.shadowBlur = 15;
+  ctx.stroke();
+  ctx.shadowBlur = 0;
+
+  // Shimmer particles along trail
+  trailPoints.forEach((p, i) => {
+    if (i % 4 === 0) {
+      const size = 2 + Math.sin(i * 0.5) * 1;
+      const alpha = 0.4 * (1 - p.t * 0.7);
+      ctx.beginPath();
+      ctx.arc(p.x + Math.sin(i) * 8, p.y + Math.cos(i * 0.7) * 8, size, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(255, 220, 120, ${alpha})`;
+      ctx.fill();
+    }
+  });
+
+  // "reverb" label
+  ctx.font = 'italic 300 13px "Helvetica Neue", Arial, sans-serif';
+  ctx.fillStyle = 'rgba(255, 210, 100, 0.4)';
+  ctx.textAlign = 'left';
+  ctx.fillText('reverb effect', 660, startY - 60);
+}
+
+// Spatial axis indicators
+function drawSpatialAxes() {
+  ctx.save();
+  ctx.translate(1720, 900);
+
+  // Volume axis (distance)
+  ctx.beginPath();
+  ctx.moveTo(0, 0);
+  ctx.lineTo(0, -80);
+  ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+  ctx.lineWidth = 1;
+  ctx.stroke();
+
+  ctx.font = '300 10px "Helvetica Neue", Arial, sans-serif';
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+  ctx.textAlign = 'center';
+  ctx.fillText('VOLUME', 0, -88);
+  ctx.fillText('(distance)', 0, -76);
+
+  // Pan axis (left-right)
+  ctx.beginPath();
+  ctx.moveTo(-50, 0);
+  ctx.lineTo(50, 0);
+  ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+  ctx.lineWidth = 1;
+  ctx.stroke();
+
+  ctx.fillText('L', -58, 4);
+  ctx.fillText('R', 58, 4);
+  ctx.fillText('PAN', 0, 18);
+
+  // Tone axis (height)
+  ctx.beginPath();
+  ctx.moveTo(-35, 15);
+  ctx.lineTo(35, -70);
+  ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+  ctx.lineWidth = 1;
+  ctx.setLineDash([3, 3]);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  ctx.fillText('TONE', 40, -30);
+
+  ctx.restore();
+}
+
+// Feature label
+function drawLabel() {
+  ctx.font = '300 20px "Helvetica Neue", Arial, sans-serif';
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+  ctx.textAlign = 'left';
+  ctx.fillText('Spatial Mixing', 60, 1030);
+
+  ctx.beginPath();
+  ctx.moveTo(60, 1042);
+  ctx.lineTo(220, 1042);
+  ctx.strokeStyle = 'rgba(50, 200, 180, 0.3)';
+  ctx.lineWidth = 1;
+  ctx.stroke();
+}
+
+// Render
+drawBackground();
+drawStars();
+const objects = drawSoundObjects();
+drawHandInteraction(objects);
+drawReverbTrail();
+drawSpatialAxes();
+drawLabel();
+</script>
+</body>
+</html>

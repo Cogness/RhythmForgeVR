@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+* { margin: 0; padding: 0; }
+body { background: #050510; overflow: hidden; }
+canvas { display: block; }
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<script>
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+canvas.width = 1920;
+canvas.height = 1080;
+
+function drawBackground() {
+  const grad = ctx.createRadialGradient(960, 540, 50, 960, 540, 900);
+  grad.addColorStop(0, '#0c0825');
+  grad.addColorStop(0.4, '#080618');
+  grad.addColorStop(1, '#030308');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, 1920, 1080);
+}
+
+function drawStars() {
+  const rng = (seed) => {
+    let s = seed;
+    return () => { s = (s * 16807) % 2147483647; return (s - 1) / 2147483646; };
+  };
+  const r = rng(77);
+  for (let i = 0; i < 150; i++) {
+    const x = r() * 1920;
+    const y = r() * 1080;
+    const size = r() * 1.2 + 0.3;
+    const alpha = r() * 0.3 + 0.05;
+    ctx.beginPath();
+    ctx.arc(x, y, size, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(160, 180, 255, ${alpha})`;
+    ctx.fill();
+  }
+}
+
+// Horizontal scale reference lines (like a musical staff)
+function drawScaleLines() {
+  const notes = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
+  const startY = 200;
+  const gap = 90;
+
+  for (let i = 0; i < 7; i++) {
+    const y = startY + i * gap;
+    // Faint horizontal line
+    ctx.beginPath();
+    ctx.moveTo(150, y);
+    ctx.lineTo(1770, y);
+    ctx.strokeStyle = `rgba(100, 80, 180, ${0.08 + (6-i) * 0.01})`;
+    ctx.lineWidth = 1;
+    ctx.stroke();
+
+    // Note label on the left
+    ctx.font = '300 14px "Helvetica Neue", Arial, sans-serif';
+    ctx.fillStyle = `rgba(160, 130, 255, ${0.25 + (6-i) * 0.03})`;
+    ctx.textAlign = 'right';
+    ctx.fillText(notes[6-i], 130, y + 5);
+  }
+
+  // "HIGH PITCH" and "LOW PITCH" labels
+  ctx.font = '300 12px "Helvetica Neue", Arial, sans-serif';
+  ctx.fillStyle = 'rgba(160, 130, 255, 0.3)';
+  ctx.textAlign = 'left';
+  ctx.save();
+  ctx.translate(80, 540);
+  ctx.rotate(-Math.PI/2);
+  ctx.textAlign = 'center';
+  ctx.fillText('← LOW PITCH                          HIGH PITCH →', 0, 0);
+  ctx.restore();
+}
+
+// Draw the melody curve
+function drawMelodyCurve() {
+  // Define the melody path as a series of control points
+  const points = [];
+  const startX = 200;
+  const endX = 1700;
+  const steps = 300;
+
+  for (let i = 0; i <= steps; i++) {
+    const t = i / steps;
+    const x = startX + t * (endX - startX);
+
+    // Create a musical-feeling curve: ascending phrase, dip, climax, resolve
+    let y = 540; // center
+    y -= Math.sin(t * Math.PI * 0.8) * 180; // overall ascending arc
+    y -= Math.sin(t * Math.PI * 3.2) * 50; // melodic variation
+    y += Math.sin(t * Math.PI * 7) * 20; // small vibrato
+    y -= Math.cos(t * Math.PI * 1.5) * 60; // phrase shape
+
+    points.push({ x, y });
+  }
+
+  // Outer glow layers
+  for (let g = 4; g >= 0; g--) {
+    ctx.beginPath();
+    points.forEach((p, i) => {
+      if (i === 0) ctx.moveTo(p.x, p.y);
+      else ctx.lineTo(p.x, p.y);
+    });
+    ctx.strokeStyle = `rgba(120, 80, 255, ${0.03 + g * 0.01})`;
+    ctx.lineWidth = 30 - g * 5;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.stroke();
+  }
+
+  // Main curve
+  ctx.beginPath();
+  points.forEach((p, i) => {
+    if (i === 0) ctx.moveTo(p.x, p.y);
+    else ctx.lineTo(p.x, p.y);
+  });
+  ctx.strokeStyle = '#8855ff';
+  ctx.lineWidth = 4;
+  ctx.shadowColor = '#7744ff';
+  ctx.shadowBlur = 25;
+  ctx.lineCap = 'round';
+  ctx.stroke();
+  ctx.shadowBlur = 0;
+
+  // Bright inner highlight
+  ctx.beginPath();
+  points.forEach((p, i) => {
+    if (i === 0) ctx.moveTo(p.x, p.y);
+    else ctx.lineTo(p.x, p.y);
+  });
+  ctx.strokeStyle = 'rgba(200, 180, 255, 0.4)';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  // Note dots at key positions
+  const noteDots = [0.05, 0.15, 0.25, 0.38, 0.5, 0.62, 0.72, 0.82, 0.92];
+  noteDots.forEach((t, idx) => {
+    const i = Math.floor(t * steps);
+    const p = points[i];
+    const isActive = idx === 4; // Highlight one as "currently playing"
+
+    // Glow
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, isActive ? 14 : 8, 0, Math.PI * 2);
+    ctx.fillStyle = isActive ? 'rgba(180, 140, 255, 0.3)' : 'rgba(120, 80, 255, 0.15)';
+    ctx.fill();
+
+    // Dot
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, isActive ? 7 : 5, 0, Math.PI * 2);
+    ctx.fillStyle = isActive ? '#ddccff' : '#9977ff';
+    ctx.shadowColor = '#7744ff';
+    ctx.shadowBlur = isActive ? 20 : 10;
+    ctx.fill();
+    ctx.shadowBlur = 0;
+
+    // Floating note symbol for active
+    if (isActive) {
+      ctx.font = '28px serif';
+      ctx.fillStyle = 'rgba(200, 170, 255, 0.7)';
+      ctx.textAlign = 'center';
+      ctx.fillText('♪', p.x + 20, p.y - 25);
+
+      // Rising particles
+      for (let sp = 0; sp < 5; sp++) {
+        const px = p.x + (Math.sin(sp * 2.3) * 30);
+        const py = p.y - 40 - sp * 25;
+        const sa = 0.5 - sp * 0.09;
+        ctx.beginPath();
+        ctx.arc(px, py, 2 - sp * 0.3, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(180, 150, 255, ${sa})`;
+        ctx.fill();
+      }
+    }
+  });
+
+  return points;
+}
+
+// Draw the stylus drawing the curve
+function drawStylus(points) {
+  // Position stylus at ~50% along the curve
+  const idx = Math.floor(points.length * 0.5);
+  const p = points[idx];
+
+  ctx.save();
+  ctx.translate(p.x + 15, p.y + 25);
+  ctx.rotate(0.5);
+
+  // Stylus body
+  const styGrad = ctx.createLinearGradient(0, -6, 0, 6);
+  styGrad.addColorStop(0, '#e0e0e0');
+  styGrad.addColorStop(0.5, '#ffffff');
+  styGrad.addColorStop(1, '#c0c0c0');
+  ctx.beginPath();
+  ctx.roundRect(-5, -6, 110, 12, 6);
+  ctx.fillStyle = styGrad;
+  ctx.shadowColor = 'rgba(120, 80, 255, 0.4)';
+  ctx.shadowBlur = 15;
+  ctx.fill();
+  ctx.shadowBlur = 0;
+
+  // Tip
+  ctx.beginPath();
+  ctx.arc(-5, 0, 4, 0, Math.PI * 2);
+  ctx.fillStyle = '#8855ff';
+  ctx.shadowColor = '#7744ff';
+  ctx.shadowBlur = 20;
+  ctx.fill();
+  ctx.shadowBlur = 0;
+
+  ctx.restore();
+}
+
+// Tilt indicator
+function drawTiltIndicator() {
+  ctx.save();
+  ctx.translate(1750, 300);
+
+  ctx.font = '300 14px "Helvetica Neue", Arial, sans-serif';
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+  ctx.textAlign = 'center';
+  ctx.fillText('TILT', 0, -50);
+
+  // Arc showing tilt range
+  ctx.beginPath();
+  ctx.arc(0, 0, 35, -Math.PI * 0.7, -Math.PI * 0.3);
+  ctx.strokeStyle = 'rgba(120, 80, 255, 0.3)';
+  ctx.lineWidth = 3;
+  ctx.lineCap = 'round';
+  ctx.stroke();
+
+  // Current tilt indicator
+  const tiltAngle = -Math.PI * 0.5;
+  ctx.beginPath();
+  ctx.moveTo(0, 0);
+  ctx.lineTo(35 * Math.cos(tiltAngle), 35 * Math.sin(tiltAngle));
+  ctx.strokeStyle = '#8855ff';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.arc(35 * Math.cos(tiltAngle), 35 * Math.sin(tiltAngle), 4, 0, Math.PI * 2);
+  ctx.fillStyle = '#8855ff';
+  ctx.shadowColor = '#7744ff';
+  ctx.shadowBlur = 10;
+  ctx.fill();
+  ctx.shadowBlur = 0;
+
+  ctx.font = '300 11px "Helvetica Neue", Arial, sans-serif';
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+  ctx.fillText('pitch bend', 0, 55);
+
+  ctx.restore();
+}
+
+// Feature label
+function drawLabel() {
+  ctx.font = '300 20px "Helvetica Neue", Arial, sans-serif';
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+  ctx.textAlign = 'left';
+  ctx.fillText('Melody Sculptor', 60, 1030);
+
+  ctx.beginPath();
+  ctx.moveTo(60, 1042);
+  ctx.lineTo(240, 1042);
+  ctx.strokeStyle = 'rgba(120, 80, 255, 0.3)';
+  ctx.lineWidth = 1;
+  ctx.stroke();
+}
+
+// Render
+drawBackground();
+drawStars();
+drawScaleLines();
+const points = drawMelodyCurve();
+drawStylus(points);
+drawTiltIndicator();
+drawLabel();
+</script>
+</body>
+</html>

@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+* { margin: 0; padding: 0; }
+body { background: #020208; overflow: hidden; }
+canvas { display: block; }
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<script>
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+canvas.width = 1920;
+canvas.height = 1080;
+
+const rng = (seed) => {
+  let s = seed;
+  return () => { s = (s * 16807) % 2147483647; return (s - 1) / 2147483646; };
+};
+
+function drawBackground() {
+  // Deep space with warm center glow
+  const grad = ctx.createRadialGradient(960, 580, 30, 960, 580, 950);
+  grad.addColorStop(0, '#1a1030');
+  grad.addColorStop(0.15, '#100820');
+  grad.addColorStop(0.4, '#080614');
+  grad.addColorStop(1, '#020208');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, 1920, 1080);
+
+  // Subtle nebula clouds
+  const nebulae = [
+    { x: 700, y: 400, r: 400, color: [80, 40, 120] },
+    { x: 1200, y: 600, r: 350, color: [40, 60, 100] },
+    { x: 960, y: 500, r: 300, color: [100, 50, 60] },
+  ];
+  nebulae.forEach(n => {
+    const ng = ctx.createRadialGradient(n.x, n.y, 0, n.x, n.y, n.r);
+    ng.addColorStop(0, `rgba(${n.color.join(',')}, 0.06)`);
+    ng.addColorStop(0.5, `rgba(${n.color.join(',')}, 0.02)`);
+    ng.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = ng;
+    ctx.fillRect(0, 0, 1920, 1080);
+  });
+}
+
+function drawStars() {
+  const r = rng(99);
+  for (let i = 0; i < 300; i++) {
+    const x = r() * 1920;
+    const y = r() * 1080;
+    const size = r() * 1.5 + 0.2;
+    const alpha = r() * 0.4 + 0.05;
+    ctx.beginPath();
+    ctx.arc(x, y, size, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(200, 210, 255, ${alpha})`;
+    ctx.fill();
+  }
+}
+
+// Central silhouette figure
+function drawSilhouette() {
+  const cx = 960;
+  const baseY = 750;
+
+  // Body silhouette (simplified human form)
+  ctx.beginPath();
+
+  // Head
+  ctx.arc(cx, baseY - 230, 22, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Torso
+  ctx.beginPath();
+  ctx.moveTo(cx - 25, baseY - 205);
+  ctx.lineTo(cx + 25, baseY - 205);
+  ctx.lineTo(cx + 30, baseY - 120);
+  ctx.lineTo(cx - 30, baseY - 120);
+  ctx.closePath();
+
+  // Legs
+  ctx.moveTo(cx - 25, baseY - 120);
+  ctx.lineTo(cx - 30, baseY);
+  ctx.lineTo(cx - 15, baseY);
+  ctx.lineTo(cx - 5, baseY - 120);
+  ctx.closePath();
+
+  ctx.moveTo(cx + 5, baseY - 120);
+  ctx.lineTo(cx + 15, baseY);
+  ctx.lineTo(cx + 30, baseY);
+  ctx.lineTo(cx + 25, baseY - 120);
+  ctx.closePath();
+
+  // Right arm extended up (holding stylus)
+  ctx.moveTo(cx + 25, baseY - 195);
+  ctx.lineTo(cx + 80, baseY - 260);
+  ctx.lineTo(cx + 130, baseY - 300);
+  ctx.lineTo(cx + 125, baseY - 310);
+  ctx.lineTo(cx + 75, baseY - 270);
+  ctx.lineTo(cx + 22, baseY - 205);
+  ctx.closePath();
+
+  // Left arm out to the side
+  ctx.moveTo(cx - 25, baseY - 195);
+  ctx.lineTo(cx - 90, baseY - 170);
+  ctx.lineTo(cx - 120, baseY - 165);
+  ctx.lineTo(cx - 118, baseY - 155);
+  ctx.lineTo(cx - 85, baseY - 160);
+  ctx.lineTo(cx - 22, baseY - 185);
+  ctx.closePath();
+
+  ctx.fillStyle = '#0a0815';
+  ctx.fill();
+
+  // Subtle rim light
+  ctx.strokeStyle = 'rgba(120, 80, 200, 0.15)';
+  ctx.lineWidth = 1.5;
+  ctx.stroke();
+
+  // Stylus in right hand
+  ctx.save();
+  ctx.translate(cx + 130, baseY - 305);
+  ctx.rotate(-0.8);
+  ctx.beginPath();
+  ctx.roundRect(-3, -25, 6, 50, 3);
+  ctx.fillStyle = 'rgba(200, 200, 220, 0.6)';
+  ctx.fill();
+
+  // Stylus tip glow
+  ctx.beginPath();
+  ctx.arc(0, -25, 4, 0, Math.PI * 2);
+  ctx.fillStyle = '#ff8c32';
+  ctx.shadowColor = '#ff6a00';
+  ctx.shadowBlur = 20;
+  ctx.fill();
+  ctx.shadowBlur = 0;
+  ctx.restore();
+
+  // Ground glow under feet
+  const floorGrad = ctx.createRadialGradient(cx, baseY + 5, 5, cx, baseY + 5, 150);
+  floorGrad.addColorStop(0, 'rgba(100, 60, 180, 0.08)');
+  floorGrad.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = floorGrad;
+  ctx.fillRect(cx - 200, baseY - 20, 400, 80);
+}
+
+// Orbiting elements
+function drawOrbitingElements() {
+  const cx = 960;
+  const cy = 520;
+  const r = rng(456);
+
+  // Orbit rings (faint ellipses)
+  const orbits = [
+    { rx: 200, ry: 80, rotation: 0.2, color: 'rgba(255, 140, 50, 0.06)' },
+    { rx: 350, ry: 130, rotation: -0.15, color: 'rgba(120, 80, 255, 0.05)' },
+    { rx: 500, ry: 180, rotation: 0.3, color: 'rgba(50, 200, 180, 0.04)' },
+    { rx: 650, ry: 220, rotation: -0.1, color: 'rgba(255, 200, 50, 0.03)' },
+  ];
+
+  orbits.forEach(orbit => {
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.rotate(orbit.rotation);
+    ctx.beginPath();
+    ctx.ellipse(0, 0, orbit.rx, orbit.ry, 0, 0, Math.PI * 2);
+    ctx.strokeStyle = orbit.color;
+    ctx.lineWidth = 1;
+    ctx.stroke();
+    ctx.restore();
+  });
+
+  // Orbiting sound spheres
+  const spheres = [
+    // Inner orbit (orange - rhythm)
+    { angle: 0.8, orbit: 0, color: [255, 120, 50], size: 18, label: '' },
+    { angle: 2.5, orbit: 0, color: [255, 80, 40], size: 14, label: '' },
+    { angle: 4.2, orbit: 0, color: [255, 150, 70], size: 11, label: '' },
+
+    // Second orbit (purple - melody)
+    { angle: 1.2, orbit: 1, color: [140, 80, 255], size: 22, label: '' },
+    { angle: 3.8, orbit: 1, color: [100, 60, 220], size: 16, label: '' },
+    { angle: 5.5, orbit: 1, color: [170, 120, 255], size: 13, label: '' },
+
+    // Third orbit (teal - instruments)
+    { angle: 0.5, orbit: 2, color: [50, 200, 180], size: 20, label: '' },
+    { angle: 2.0, orbit: 2, color: [80, 220, 160], size: 15, label: '' },
+    { angle: 3.5, orbit: 2, color: [40, 180, 200], size: 12, label: '' },
+    { angle: 5.0, orbit: 2, color: [60, 210, 170], size: 10, label: '' },
+
+    // Outer orbit (gold - effects)
+    { angle: 1.0, orbit: 3, color: [255, 200, 50], size: 16, label: '' },
+    { angle: 2.8, orbit: 3, color: [255, 180, 30], size: 12, label: '' },
+    { angle: 4.5, orbit: 3, color: [255, 220, 80], size: 9, label: '' },
+    { angle: 6.0, orbit: 3, color: [255, 190, 60], size: 8, label: '' },
+  ];
+
+  spheres.forEach(s => {
+    const orbit = orbits[s.orbit];
+    const cos_r = Math.cos(orbit.rotation);
+    const sin_r = Math.sin(orbit.rotation);
+    const ox = orbit.rx * Math.cos(s.angle);
+    const oy = orbit.ry * Math.sin(s.angle);
+    const x = cx + ox * cos_r - oy * sin_r;
+    const y = cy + ox * sin_r + oy * cos_r;
+
+    const [cr, cg, cb] = s.color;
+
+    // Glow
+    const glow = ctx.createRadialGradient(x, y, 0, x, y, s.size * 3);
+    glow.addColorStop(0, `rgba(${cr}, ${cg}, ${cb}, 0.2)`);
+    glow.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = glow;
+    ctx.fillRect(x - s.size * 3, y - s.size * 3, s.size * 6, s.size * 6);
+
+    // Sphere
+    const sg = ctx.createRadialGradient(x - s.size * 0.3, y - s.size * 0.3, 0, x, y, s.size);
+    sg.addColorStop(0, `rgba(${Math.min(cr+60,255)}, ${Math.min(cg+60,255)}, ${Math.min(cb+60,255)}, 0.9)`);
+    sg.addColorStop(0.7, `rgba(${cr}, ${cg}, ${cb}, 0.7)`);
+    sg.addColorStop(1, `rgba(${Math.floor(cr*0.4)}, ${Math.floor(cg*0.4)}, ${Math.floor(cb*0.4)}, 0.5)`);
+
+    ctx.beginPath();
+    ctx.arc(x, y, s.size, 0, Math.PI * 2);
+    ctx.fillStyle = sg;
+    ctx.shadowColor = `rgba(${cr}, ${cg}, ${cb}, 0.5)`;
+    ctx.shadowBlur = 20;
+    ctx.fill();
+    ctx.shadowBlur = 0;
+  });
+
+  // Flowing ribbon curves (melody arcs)
+  const ribbons = [
+    { startAngle: 0.3, endAngle: 2.8, orbitIdx: 1, color: [140, 100, 255], width: 3 },
+    { startAngle: 3.5, endAngle: 5.5, orbitIdx: 2, color: [60, 200, 170], width: 2.5 },
+    { startAngle: 1.0, endAngle: 4.0, orbitIdx: 3, color: [255, 200, 60], width: 2 },
+  ];
+
+  ribbons.forEach(ribbon => {
+    const orbit = orbits[ribbon.orbitIdx];
+    const [cr, cg, cb] = ribbon.color;
+
+    ctx.beginPath();
+    for (let a = ribbon.startAngle; a <= ribbon.endAngle; a += 0.05) {
+      const t = (a - ribbon.startAngle) / (ribbon.endAngle - ribbon.startAngle);
+      const wobble = Math.sin(a * 5) * 15;
+      const ox = (orbit.rx + wobble) * Math.cos(a);
+      const oy = (orbit.ry + wobble * 0.5) * Math.sin(a);
+      const cos_r = Math.cos(orbit.rotation);
+      const sin_r = Math.sin(orbit.rotation);
+      const x = cx + ox * cos_r - oy * sin_r;
+      const y = cy + ox * sin_r + oy * cos_r;
+      if (a === ribbon.startAngle) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    }
+    ctx.strokeStyle = `rgba(${cr}, ${cg}, ${cb}, 0.25)`;
+    ctx.lineWidth = ribbon.width;
+    ctx.lineCap = 'round';
+    ctx.shadowColor = `rgba(${cr}, ${cg}, ${cb}, 0.3)`;
+    ctx.shadowBlur = 15;
+    ctx.stroke();
+    ctx.shadowBlur = 0;
+  });
+
+  // Particle dust
+  for (let i = 0; i < 80; i++) {
+    const angle = r() * Math.PI * 2;
+    const dist = r() * 600 + 100;
+    const orbitTilt = r() * 0.4 - 0.2;
+    const x = cx + dist * Math.cos(angle) * Math.cos(orbitTilt);
+    const y = cy + dist * Math.sin(angle) * 0.4 + dist * Math.cos(angle) * Math.sin(orbitTilt) * 0.3;
+    const size = r() * 2 + 0.5;
+    const colorChoice = Math.floor(r() * 4);
+    const colors = [
+      [255, 140, 50],
+      [120, 80, 255],
+      [50, 200, 180],
+      [255, 200, 50]
+    ];
+    const [pr, pg, pb] = colors[colorChoice];
+    const alpha = r() * 0.3 + 0.05;
+
+    ctx.beginPath();
+    ctx.arc(x, y, size, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(${pr}, ${pg}, ${pb}, ${alpha})`;
+    ctx.fill();
+  }
+}
+
+// Volumetric light rays from center
+function drawLightRays() {
+  const cx = 960;
+  const cy = 520;
+
+  for (let i = 0; i < 12; i++) {
+    const angle = (i / 12) * Math.PI * 2 + 0.15;
+    const length = 500 + Math.sin(i * 2.7) * 200;
+    const width = 30 + Math.sin(i * 1.3) * 15;
+
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.rotate(angle);
+
+    const rayGrad = ctx.createLinearGradient(0, 0, length, 0);
+    rayGrad.addColorStop(0, 'rgba(150, 120, 200, 0.04)');
+    rayGrad.addColorStop(0.3, 'rgba(150, 120, 200, 0.015)');
+    rayGrad.addColorStop(1, 'rgba(150, 120, 200, 0)');
+
+    ctx.beginPath();
+    ctx.moveTo(0, -2);
+    ctx.lineTo(length, -width/2);
+    ctx.lineTo(length, width/2);
+    ctx.lineTo(0, 2);
+    ctx.closePath();
+    ctx.fillStyle = rayGrad;
+    ctx.fill();
+
+    ctx.restore();
+  }
+}
+
+// Render order matters
+drawBackground();
+drawStars();
+drawLightRays();
+drawOrbitingElements();
+drawSilhouette();
+</script>
+</body>
+</html>

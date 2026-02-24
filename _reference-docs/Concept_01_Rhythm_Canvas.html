@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+* { margin: 0; padding: 0; }
+body { background: #050510; overflow: hidden; }
+canvas { display: block; }
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<script>
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+canvas.width = 1920;
+canvas.height = 1080;
+
+// Starfield background
+function drawStars() {
+  const rng = (seed) => {
+    let s = seed;
+    return () => { s = (s * 16807) % 2147483647; return (s - 1) / 2147483646; };
+  };
+  const r = rng(42);
+  for (let i = 0; i < 200; i++) {
+    const x = r() * 1920;
+    const y = r() * 1080;
+    const size = r() * 1.5 + 0.3;
+    const alpha = r() * 0.4 + 0.1;
+    ctx.beginPath();
+    ctx.arc(x, y, size, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(180, 200, 255, ${alpha})`;
+    ctx.fill();
+  }
+}
+
+// Subtle radial gradient background
+function drawBackground() {
+  const grad = ctx.createRadialGradient(960, 540, 100, 960, 540, 800);
+  grad.addColorStop(0, '#0a0a2a');
+  grad.addColorStop(0.5, '#060618');
+  grad.addColorStop(1, '#030308');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, 1920, 1080);
+}
+
+// Draw glowing circle path
+function drawRhythmCircle() {
+  const cx = 960;
+  const cy = 500;
+  const radius = 250;
+
+  // Outer glow
+  for (let g = 0; g < 5; g++) {
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius + g * 8, 0, Math.PI * 2);
+    ctx.strokeStyle = `rgba(255, 140, 50, ${0.04 - g * 0.007})`;
+    ctx.lineWidth = 20 - g * 3;
+    ctx.stroke();
+  }
+
+  // Main circle trail - slightly uneven to look hand-drawn
+  ctx.beginPath();
+  for (let a = 0; a <= Math.PI * 2; a += 0.02) {
+    const wobble = Math.sin(a * 7) * 3 + Math.cos(a * 13) * 2;
+    const x = cx + (radius + wobble) * Math.cos(a);
+    const y = cy + (radius + wobble) * Math.sin(a);
+    if (a === 0) ctx.moveTo(x, y);
+    else ctx.lineTo(x, y);
+  }
+  ctx.closePath();
+  ctx.strokeStyle = '#ff8c32';
+  ctx.lineWidth = 4;
+  ctx.shadowColor = '#ff6a00';
+  ctx.shadowBlur = 30;
+  ctx.stroke();
+  ctx.shadowBlur = 0;
+
+  // Inner glow fill
+  const innerGrad = ctx.createRadialGradient(cx, cy, radius - 50, cx, cy, radius + 30);
+  innerGrad.addColorStop(0, 'rgba(255, 140, 50, 0.02)');
+  innerGrad.addColorStop(0.7, 'rgba(255, 100, 30, 0.05)');
+  innerGrad.addColorStop(1, 'rgba(255, 80, 20, 0)');
+  ctx.fillStyle = innerGrad;
+  ctx.fill();
+}
+
+// Draw trigger points
+function drawTriggerPoints() {
+  const cx = 960;
+  const cy = 500;
+  const radius = 250;
+  const triggers = [
+    { angle: -Math.PI / 2, label: 'KICK', color: '#ff4444', active: true, size: 1.3 },
+    { angle: 0, label: 'HI-HAT', color: '#44ddff', active: false, size: 1.0 },
+    { angle: Math.PI / 2, label: 'SNARE', color: '#ffdd44', active: false, size: 1.0 },
+    { angle: Math.PI, label: 'CLAP', color: '#aa66ff', active: false, size: 1.0 },
+  ];
+
+  triggers.forEach((t, i) => {
+    const x = cx + radius * Math.cos(t.angle);
+    const y = cy + radius * Math.sin(t.angle);
+
+    // Pulse ring for active trigger
+    if (t.active) {
+      for (let p = 0; p < 4; p++) {
+        ctx.beginPath();
+        ctx.arc(x, y, 20 + p * 15, 0, Math.PI * 2);
+        ctx.strokeStyle = `rgba(255, 68, 68, ${0.3 - p * 0.07})`;
+        ctx.lineWidth = 2;
+        ctx.stroke();
+      }
+    }
+
+    // Outer glow
+    ctx.beginPath();
+    ctx.arc(x, y, 18 * t.size, 0, Math.PI * 2);
+    ctx.shadowColor = t.color;
+    ctx.shadowBlur = 40;
+    ctx.fillStyle = t.color;
+    ctx.fill();
+    ctx.shadowBlur = 0;
+
+    // Inner bright core
+    ctx.beginPath();
+    ctx.arc(x, y, 10 * t.size, 0, Math.PI * 2);
+    ctx.fillStyle = '#ffffff';
+    ctx.globalAlpha = 0.8;
+    ctx.fill();
+    ctx.globalAlpha = 1;
+
+    // Label
+    ctx.font = '600 13px "Helvetica Neue", Arial, sans-serif';
+    ctx.fillStyle = t.color;
+    ctx.textAlign = 'center';
+    ctx.fillText(t.label, x, y + 38);
+  });
+}
+
+// Draw rotation indicator (playhead line)
+function drawPlayhead() {
+  const cx = 960;
+  const cy = 500;
+  const angle = -Math.PI / 2; // Currently at the kick (top)
+
+  // Glowing line from center to edge
+  const grad = ctx.createLinearGradient(cx, cy, cx + 280 * Math.cos(angle), cy + 280 * Math.sin(angle));
+  grad.addColorStop(0, 'rgba(255, 255, 255, 0)');
+  grad.addColorStop(0.5, 'rgba(255, 255, 255, 0.1)');
+  grad.addColorStop(1, 'rgba(255, 255, 255, 0.4)');
+  ctx.beginPath();
+  ctx.moveTo(cx, cy);
+  ctx.lineTo(cx + 280 * Math.cos(angle), cy + 280 * Math.sin(angle));
+  ctx.strokeStyle = grad;
+  ctx.lineWidth = 2;
+  ctx.stroke();
+}
+
+// Draw a stylus hint (bottom right)
+function drawStylusHint() {
+  // Stylus shape (simplified)
+  ctx.save();
+  ctx.translate(1550, 750);
+  ctx.rotate(-0.6);
+
+  // Stylus body
+  const styGrad = ctx.createLinearGradient(0, -8, 0, 8);
+  styGrad.addColorStop(0, '#e0e0e0');
+  styGrad.addColorStop(0.5, '#ffffff');
+  styGrad.addColorStop(1, '#c0c0c0');
+
+  ctx.beginPath();
+  ctx.roundRect(-60, -6, 120, 12, 6);
+  ctx.fillStyle = styGrad;
+  ctx.shadowColor = 'rgba(255, 140, 50, 0.5)';
+  ctx.shadowBlur = 20;
+  ctx.fill();
+  ctx.shadowBlur = 0;
+
+  // Tip glow
+  ctx.beginPath();
+  ctx.arc(60, 0, 4, 0, Math.PI * 2);
+  ctx.fillStyle = '#ff8c32';
+  ctx.shadowColor = '#ff6a00';
+  ctx.shadowBlur = 25;
+  ctx.fill();
+  ctx.shadowBlur = 0;
+
+  // Drawing trail from tip
+  ctx.beginPath();
+  ctx.moveTo(64, 0);
+  ctx.quadraticCurveTo(90, -30, 130, -20);
+  ctx.quadraticCurveTo(160, -15, 180, -40);
+  ctx.strokeStyle = 'rgba(255, 140, 50, 0.6)';
+  ctx.lineWidth = 3;
+  ctx.shadowColor = '#ff6a00';
+  ctx.shadowBlur = 15;
+  ctx.stroke();
+  ctx.shadowBlur = 0;
+
+  ctx.restore();
+}
+
+// Feature label
+function drawLabel() {
+  ctx.font = '300 20px "Helvetica Neue", Arial, sans-serif';
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+  ctx.textAlign = 'left';
+  ctx.fillText('Rhythm Canvas', 60, 1030);
+
+  // Thin separator line
+  ctx.beginPath();
+  ctx.moveTo(60, 1042);
+  ctx.lineTo(220, 1042);
+  ctx.strokeStyle = 'rgba(255, 140, 50, 0.3)';
+  ctx.lineWidth = 1;
+  ctx.stroke();
+}
+
+// Pressure indicator
+function drawPressureIndicator() {
+  ctx.save();
+  ctx.translate(1700, 300);
+
+  ctx.font = '300 14px "Helvetica Neue", Arial, sans-serif';
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+  ctx.textAlign = 'center';
+  ctx.fillText('PRESSURE', 0, -70);
+
+  // Vertical bar
+  for (let i = 0; i < 6; i++) {
+    const alpha = 0.2 + (i / 5) * 0.8;
+    const w = 6 + i * 2;
+    ctx.beginPath();
+    ctx.roundRect(-w/2, -60 + i * 20, w, 14, 3);
+    ctx.fillStyle = `rgba(255, 140, 50, ${alpha})`;
+    ctx.fill();
+  }
+
+  ctx.font = '300 11px "Helvetica Neue", Arial, sans-serif';
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+  ctx.fillText('soft', 0, -62 + 6 * 20 + 20);
+  ctx.fillText('hard', 0, -52);
+
+  ctx.restore();
+}
+
+// Render
+drawBackground();
+drawStars();
+drawPlayhead();
+drawRhythmCircle();
+drawTriggerPoints();
+drawStylusHint();
+drawLabel();
+drawPressureIndicator();
+</script>
+</body>
+</html>

@@ -15,7 +15,7 @@ Read this column-by-column: what the viewer SEES on the left, what they HEAR on 
 - Quick montage (1.5s each): close-up of a mouse clicking a DAW timeline grid, fingers on a MIDI keyboard in a dark bedroom studio, a laptop screen full of tiny faders and menus.
 - These should feel *cramped, flat, uninspiring.*
 
-**VOICEOVER (you, recorded separately):**
+**VOICEOVER (ElevenLabs AI — see AI_Prompts file for exact prompts):**
 > "Music production has been stuck on a flat screen for decades. Click. Drag. Zoom in. Repeat."
 
 **TEXT ON SCREEN:** *(none — let the visuals do the work)*
@@ -28,7 +28,7 @@ Read this column-by-column: what the viewer SEES on the left, what they HEAR on 
 - Hard cut to BLACK for 0.5 seconds.
 - Then: a wide shot of someone putting on a Meta Quest 3 headset and picking up the Logitech MX Ink stylus from a desk. Clean, bright environment. Camera slowly pushes in.
 
-**VOICEOVER:**
+**VOICEOVER (ElevenLabs AI):**
 > "What if you could step inside the music... and build it with your hands?"
 
 **TEXT ON SCREEN:** *(at 0:13)* **RhythmForge VR** *(fade in, clean white text, center screen)*
@@ -42,7 +42,7 @@ Read this column-by-column: what the viewer SEES on the left, what they HEAR on 
 - 0:19–0:23 — Trigger points appear on the circle (tap-tap-tap-tap). Each tap creates a small pulse of light.
 - 0:23–0:28 — The circle starts rotating. Each time it crosses a trigger point, a drum sound fires and the point flashes. A beat is born.
 
-**VOICEOVER:**
+**VOICEOVER (ElevenLabs AI):**
 > "Draw a loop in the air. Place your beats. The circle rotates — and your rhythm comes alive. Pressure on the stylus controls how hard each hit lands."
 
 **TEXT ON SCREEN:** *(at 0:15, bottom-left, subtle)* `Rhythm Canvas`
@@ -55,7 +55,7 @@ Read this column-by-column: what the viewer SEES on the left, what they HEAR on 
 - 0:28–0:32 — User presses the MX Ink button (show close-up of finger on button if possible). Mode label switches.
 - 0:32–0:38 — User draws a flowing wave/curve in space. The curve glows a different color (e.g., blue/purple vs. the orange rhythm). Notes sound as the curve is drawn — ascending pitch as the hand moves up.
 
-**VOICEOVER:**
+**VOICEOVER (ElevenLabs AI):**
 > "Switch modes with one click. Now draw a melody — height is pitch, pressure is volume. Tilt the stylus to bend notes like a guitar string."
 
 **TEXT ON SCREEN:** *(at 0:28, bottom-left, subtle)* `Melody Sculptor`
@@ -69,7 +69,7 @@ Read this column-by-column: what the viewer SEES on the left, what they HEAR on 
 - 0:42–0:45 — The user grabs a sound object with their left hand and pushes it further away. The sound gets quieter.
 - 0:45–0:48 — The user paints a reverb trail over a melody with the stylus. The trail shimmers and the sound blooms with reverb.
 
-**VOICEOVER:**
+**VOICEOVER (ElevenLabs AI):**
 > "Every sound is an object you can touch. Move it closer — louder. Further — quieter. Paint effects in real time. This is mixing as spatial sculpture."
 
 **TEXT ON SCREEN:** *(at 0:38, bottom-left, subtle)* `Spatial Mixing`
@@ -83,7 +83,7 @@ Read this column-by-column: what the viewer SEES on the left, what they HEAR on 
 - 0:52–0:55 — Cut to the real person removing the Quest 3 headset, smiling, MX Ink on the desk. Clean, bright, human.
 - 0:55–0:58 — End card.
 
-**VOICEOVER:**
+**VOICEOVER (ElevenLabs AI):**
 > "RhythmForge VR. Create music with motion — powered by Logitech MX Ink."
 
 **TEXT ON SCREEN (End Card — 0:55–0:58):**
@@ -108,8 +108,10 @@ You have three types of footage to produce:
 | Type | Source | Shots Needed |
 |------|--------|-------------|
 | **Real VR footage** | Quest 3 screen capture of your working prototype | Beats 3 & 4 (the core demos) |
-| **Real camera footage** | Phone or webcam, you in a clean room | Beats 2 & 6 (putting on/removing headset) |
-| **AI-generated footage** | AI video tool from a prompt or reference image | Beats 1 & 5 (concept shots, the "galaxy" hero shot) |
+| **AI-generated video** | Google Veo 3.1 (VideoFX / AI Studio) | Beats 1, 2, 5 & 6 (all non-VR shots) |
+| **AI voiceover** | ElevenLabs (Text to Speech) | All beats — full narration |
+
+**See the companion file `RhythmForgeVR_AI_Prompts.md` for every copy-paste-ready prompt.**
 
 ---
 
@@ -139,56 +141,35 @@ This is the most important footage — it proves the concept is real.
 
 ---
 
-### C. RECORDING YOUR REAL-WORLD CAMERA FOOTAGE
+### C. AI-GENERATED VIDEO (Google Veo 3.1)
 
-You need two simple shots:
+All non-VR shots (Beats 1, 2, 5, 6) are generated with Google Veo 3.1. The real-world camera shots (headset on/off) and all concept visuals are AI-generated.
 
-**Shot 1 (Beat 2): Putting on the headset**
-- Frame: waist-up, you sitting or standing at a clean desk.
-- On the desk: MX Ink stylus, Quest 3 headset. Nothing else distracting.
-- Action: pick up the Quest 3, put it on, then pick up the MX Ink.
-- Lighting: bright, natural light from a window or a desk lamp. Avoid overhead fluorescent.
-- Camera: phone on a tripod or propped up. Horizontal (landscape) orientation. 1080p minimum.
+**All detailed prompts are in the companion file: `RhythmForgeVR_AI_Prompts.md`**
 
-**Shot 2 (Beat 6): Removing the headset**
-- Same setup. Take off the Quest 3, look at the camera, natural smile.
-- This humanizes the pitch. Judges connect with a face, not just a screen recording.
+**Quick reference — you need these AI video clips:**
 
-**Tip:** Wear a solid-color shirt (dark blue, black, or white). No logos, no busy patterns.
+| Clip | Beat | Description |
+|------|------|-------------|
+| `beat1_clipA` | 1 | Mouse clicking on a DAW timeline |
+| `beat1_clipB` | 1 | Fingers on MIDI keyboard |
+| `beat1_clipC` | 1 | Screen full of faders and menus |
+| `beat2_clipA` | 2 | Person putting on VR headset |
+| `beat2_clipB` | 2 | Hand picking up stylus |
+| `beat5_clipA` | 5 | Wide shot of floating sound objects |
+| `beat5_clipB` | 5 | Grabbing and moving a sound object closer |
+| `beat5_clipC` | 5 | Painting effect trail with stylus |
+| `beat6_clipA` | 6 | Hero "galaxy" shot — person surrounded by orbiting music elements |
+| `beat6_clipB` | 6 | Person removing headset, smiling |
 
----
+**Workflow:**
+1. Go to [Google AI Studio](https://aistudio.google.com/) or [VideoFX](https://labs.google/fx/tools/video-fx)
+2. Paste the prompt from the AI Prompts file
+3. Generate 3–4 variations per shot, pick the best
+4. Each clip only needs to be 2–4 seconds — you are cutting fast
+5. Download as MP4
 
-### D. AI-GENERATED FOOTAGE
-
-Use AI video generation for the shots you cannot capture from your prototype:
-
-**Shot list for AI generation:**
-
-| Shot | Description | Prompt Direction |
-|------|-------------|-----------------|
-| **DAW montage (Beat 1)** | Close-ups of mouse clicking on a music production grid, fingers on a MIDI keyboard | "Close-up of hands clicking a mouse on a music production DAW software interface, dark bedroom studio, moody lighting, shallow depth of field" |
-| **Galaxy hero shot (Beat 6)** | Wide view of a person surrounded by floating glowing orbs and light trails in VR | "Person standing in dark virtual space surrounded by floating glowing neon orbs, light trails forming circles and waves, futuristic music visualization, cinematic wide shot" |
-| **Spatial mixing concept (Beat 5)** | Sound objects floating and moving in 3D space | "Glowing 3D objects floating in dark virtual reality space, some objects bright and close to camera, others dim and far, light trails connecting them, futuristic UI aesthetic" |
-
-**Recommended AI video tools (in order of preference):**
-
-1. **Google Veo 3.1** (via Google AI Studio or VideoFX) — Currently the best quality all-rounder. Generates clean, believable shots. Best for the "galaxy hero shot." Free tier available through Google AI Studio.
-
-2. **Runway Gen-4.5** (runway.com) — Excellent for cinematic shots. Accepts an image as a starting point, so you can feed it a screenshot from your Quest prototype and it will enhance/animate it. Has a free trial with limited credits.
-
-3. **Kling AI** (klingai.com) — Good for realistic human motion if you need a synthetic shot of someone using a headset. Free tier available.
-
-4. **Pika** (pika.art) — Good for stylized, shorter clips (3–4 seconds). Free tier. Works well for abstract/concept visuals like the sound-object galaxy.
-
-**Workflow for AI shots:**
-
-1. Write your prompt (use the examples above as starting points).
-2. Generate 3–4 variations per shot.
-3. Pick the best one.
-4. Each AI clip only needs to be 2–4 seconds long — you are cutting fast.
-5. If the AI clip has artifacts or weird details, it is fine. At 2 seconds in a fast montage, the viewer will not notice.
-
-**Pro tip — image-to-video:** If you can take a screenshot of your Quest prototype (even a rough one), feed that image to Runway Gen-4.5 as a starting frame and ask it to "animate" the scene. This creates continuity between your real footage and the AI-enhanced shots.
+**Pro tip:** Take a screenshot of your Quest prototype and use it as a reference image if Veo supports image-to-video. This creates visual continuity between your real VR footage and the AI concept shots.
 
 ---
 
@@ -220,23 +201,19 @@ You need one background track — something electronic, forward-moving, builds e
 
 ---
 
-### F. VOICEOVER RECORDING
+### F. AI VOICEOVER (ElevenLabs)
 
-Record your own voice. Judges connect with a real person, not an AI voice.
+The full narration is generated with ElevenLabs Text to Speech. Generate each beat as a separate audio file for precise editing control.
 
-**Setup:**
-- Use your phone's Voice Memos app or the free [Audacity](https://www.audacityteam.org/) app on your Mac.
-- Record in a quiet room. Close windows, turn off fans/AC.
-- Hold the phone 6–8 inches from your mouth, slightly to the side (not directly in front — reduces plosives like "p" and "b" sounds).
-- Alternatively, use your AirPods as a microphone — surprisingly decent quality.
+**All detailed prompts, voice settings, and per-beat text are in: `RhythmForgeVR_AI_Prompts.md`**
 
-**Delivery tips:**
-- Speak slightly slower than feels natural. Nerves speed you up.
-- Pause between beats (the 6 sections). This gives you natural edit points.
-- Smile while you speak — it genuinely changes the tone of your voice.
-- Record the full script 3 times. Pick the best take for each section and cut them together.
+**Quick setup:**
+1. Go to [elevenlabs.io](https://elevenlabs.io) → Speech (Text to Speech)
+2. Recommended voice: **"Brian"** (calm, confident male) or **"Aria"** (clear, professional female)
+3. Settings: Stability 0.55, Similarity 0.80, Style 0.30, Speaker Boost ON
+4. Generate each beat separately → download as MP3 → name files `beat1_voice.mp3` through `beat6_voice.mp3`
 
-**Script for recording (clean version, no stage directions):**
+**Full script (for reference):**
 
 > "Music production has been stuck on a flat screen for decades. Click. Drag. Zoom in. Repeat.
 >
@@ -244,13 +221,13 @@ Record your own voice. Judges connect with a real person, not an AI voice.
 >
 > Draw a loop in the air. Place your beats. The circle rotates — and your rhythm comes alive. Pressure on the stylus controls how hard each hit lands.
 >
-> Switch modes with one click. Now draw a melody — height is pitch, pressure is volume. Tilt the stylus to bend notes like a guitar string.
+> Switch modes with one click. Draw a melody. Height is pitch. Pressure is volume. Tilt the stylus to bend notes like a guitar string.
 >
 > Every sound is an object you can touch. Move it closer — louder. Further — quieter. Paint effects in real time. This is mixing as spatial sculpture.
 >
-> RhythmForge VR. Create music with motion — powered by Logitech MX Ink."
+> RhythmForge VR. Create music with motion. Powered by Logitech MX Ink."
 
-**Word count: ~115 words. At a calm pace (~130 words/minute), this fills about 53 seconds — leaving 5–7 seconds for visual breathing room and the end card.**
+**Word count: ~110 words → approximately 50–55 seconds at natural AI pace, leaving 5–7 seconds for visual breathing room and the end card.**
 
 ---
 

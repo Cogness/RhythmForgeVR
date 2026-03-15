@@ -38,6 +38,8 @@ $RECYCLE.BIN/
 [Mm]emoryCaptures/
 [Rr]ecords/
 UserSettings/
+*_BackUpThisFolder_ButDontShipItWithYourGame/
+*_BurstDebugInformation_DoNotShip/
 
 # Unity cache
 /[Aa]sset[Ss]tore/
@@ -52,6 +54,8 @@ Assets/AssetStoreTools*
 .idea/
 *.sln
 *.csproj
+*.props
+*.targets
 *.csproj.user
 *.pidb
 *.suo

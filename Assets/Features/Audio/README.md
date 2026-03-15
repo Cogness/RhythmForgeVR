@@ -1,40 +1,71 @@
-# RhythmForge VR Sound Engine V1
+# RhythmForge VR Sound Engine V3
 
-This folder contains the first-pass procedural sound engine for RhythmForge VR. It is built to be usable from keyboard input now and callable from drawing or VR interactions later.
+The engine now supports real audio samples. Each preset is sample-first: if clips are found for a preset slot, the engine plays those clips. If not, it falls back to the procedural sound for that slot.
 
-## What It Does
+## Built-In Presets
 
-- Generates 9 procedural sounds in code with no imported audio clips required
-- Lets you trigger sounds directly or toggle beat-synced loops
-- Supports runtime control over BPM, global pitch, and reverb
-- Boots automatically in Play Mode through `RhythmAudioBootstrap`
+- `Electronic`
+- `Orchestra`
+- `Rock`
+- `Classical`
+- `DrumAndBass`
 
-## Files
+## How Sample Loading Works
 
-- `RhythmSoundEngine.cs`: the reusable audio core and public API
-- `KeyboardSoundEngineDriver.cs`: temporary desktop input adapter
-- `RhythmAudioBootstrap.cs`: creates the runtime audio rig automatically
-- `RhythmVoiceDefinition.cs`: serializable voice preset structure
-- `RhythmEngineState.cs`: snapshot of current engine state
-- `WaveformType.cs`: waveform enum used by the voice presets
+The engine looks for clips in Unity `Resources` folders using the preset name.
 
-## Default Controls
+Expected folder layout:
+
+```text
+Assets/Resources/AudioPresets/Orchestra/
+Assets/Resources/AudioPresets/Rock/
+Assets/Resources/AudioPresets/Classical/
+Assets/Resources/AudioPresets/DrumAndBass/
+Assets/Resources/AudioPresets/Electronic/
+```
+
+The engine assigns clips to the 9 sound slots by the number at the start of the clip file name.
+
+Examples:
+
+```text
+Assets/Resources/AudioPresets/Orchestra/1_Timpani.wav
+Assets/Resources/AudioPresets/Orchestra/1_Timpani_Alt.wav
+Assets/Resources/AudioPresets/Orchestra/2_Snare.wav
+Assets/Resources/AudioPresets/Orchestra/4_CelloShort.wav
+Assets/Resources/AudioPresets/Rock/5_PowerChord_A.wav
+Assets/Resources/AudioPresets/Rock/5_PowerChord_B.wav
+Assets/Resources/AudioPresets/DrumAndBass/4_ReeseBass.wav
+```
+
+Rules:
+
+- File names must start with `1` to `9`
+- Multiple clips with the same starting number become variations for that slot
+- When a slot has multiple samples, the engine picks one variation at random on each trigger
+- If no sample exists for a slot, that slot still works using its procedural fallback
+
+## Keyboard Controls
 
 - `1-9`: trigger sound slots 1 through 9
 - `Shift + 1-9`: toggle the loop pattern for that sound slot
+- `,`: previous preset
+- `.`: next preset
 - `-` / `=`: decrease / increase BPM
 - `[` / `]`: decrease / increase global pitch in semitones
 - `;` / `'`: decrease / increase reverb amount
 - `Backspace`: stop all loops
-- `R`: reset BPM, pitch, reverb, and loop toggles to defaults
+- `R`: reset BPM, pitch, reverb, and loop toggles to the current preset defaults
 
 ## Public API
-
-`RhythmSoundEngine` is the part that later drawing code should call.
 
 ```csharp
 engine.TriggerSound(soundIndex);
 engine.ToggleLoop(soundIndex);
+engine.SetPreset(2);
+engine.SetPreset("Orchestra");
+engine.NextPreset();
+engine.PreviousPreset();
 engine.SetBpm(128f);
 engine.AdjustBpm(5f);
 engine.SetPitchSemitones(3f);
@@ -43,33 +74,17 @@ engine.SetReverb(0.35f);
 engine.AdjustReverb(0.05f);
 engine.StopAllLoops();
 RhythmEngineState state = engine.GetEngineState();
+string[] presetNames = engine.GetPresetNames();
 ```
 
-`soundIndex` is zero-based in code:
+## What To Do Next
 
-- `0`: Kick
-- `1`: Snare
-- `2`: HiHat
-- `3`: Bass Pulse
-- `4`: Lead Stab
-- `5`: Pad Hit
-- `6`: Pluck
-- `7`: Arp Tone
-- `8`: FX Sweep
+1. Import real drum/instrument one-shots into the `Resources/AudioPresets/<PresetName>/` folders.
+2. Name each file with a leading slot number from `1` to `9`.
+3. Enter Play Mode, switch presets with `,` and `.`, and test slots `1-9`.
+4. Replace only the slots you care about first; missing slots will still use procedural fallback.
 
-## How To Hook It To Drawing Later
+## Notes
 
-When your loop-drawing system is ready, do not call keyboard code. Get a reference to `RhythmSoundEngine` and call the public methods directly.
-
-Examples:
-
-- A tap gesture can call `TriggerSound(4)`
-- Closing a loop shape can call `ToggleLoop(3)`
-- Resizing a ring can call `SetBpm(...)`
-- Stylus pressure or distance can call `SetReverb(...)` or `SetPitchSemitones(...)`
-
-## Tuning Notes
-
-- Default sound presets are created automatically if no custom voice definitions are assigned.
-- You can edit the serialized voice settings on the `RhythmSoundEngine` component later in the Inspector.
-- The reverb is a lightweight built-in DSP effect intended for prototyping, not final mixing.
+- This project currently does not contain a real sample library, so adding proper source clips is still required for non-synthetic sound.
+- The current runtime architecture is now ready for those clips and does not need another redesign just to support sample playback.

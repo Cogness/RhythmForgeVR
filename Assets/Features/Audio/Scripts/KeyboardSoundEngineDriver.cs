@@ -48,6 +48,16 @@ public class KeyboardSoundEngineDriver : MonoBehaviour
         HandleNumberKey(keyboard.numpad8Key, shiftHeld, 7);
         HandleNumberKey(keyboard.numpad9Key, shiftHeld, 8);
 
+        if (keyboard.commaKey.wasPressedThisFrame)
+        {
+            _engine.PreviousPreset();
+        }
+
+        if (keyboard.periodKey.wasPressedThisFrame)
+        {
+            _engine.NextPreset();
+        }
+
         if (keyboard.minusKey.wasPressedThisFrame)
         {
             _engine.AdjustBpm(-_engine.GetBpmStep());

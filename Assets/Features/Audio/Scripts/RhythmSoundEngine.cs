@@ -14,24 +14,24 @@ public class RhythmSoundEngine : MonoBehaviour
     private const float MaximumPitchSemitones = 24f;
 
     [Header("Transport")]
-    [SerializeField] private float _defaultBpm = 120f;
     [SerializeField] private float _bpmStep = 5f;
 
     [Header("Global Sound")]
-    [SerializeField] private float _masterVolume = 0.9f;
-    [SerializeField] private float _defaultPitchSemitones = 0f;
     [SerializeField] private float _pitchStep = 1f;
-    [SerializeField] private float _defaultReverbAmount = 0.18f;
     [SerializeField] private float _reverbStep = 0.05f;
 
-    [Header("Voices")]
-    [SerializeField] private bool _autoCreateDefaults = true;
-    [SerializeField] private RhythmVoiceDefinition[] _voices = Array.Empty<RhythmVoiceDefinition>();
+    [Header("Presets")]
+    [SerializeField] private bool _autoCreateBuiltInPresets = true;
+    [SerializeField] private RhythmSoundPreset[] _presets = Array.Empty<RhythmSoundPreset>();
+    [SerializeField] private int _defaultPresetIndex;
+
+    [Header("Playback")]
     [SerializeField] private int _sourcePoolSize = 18;
 
     private AudioSource[] _voiceSources = Array.Empty<AudioSource>();
     private AudioReverbFilter[] _reverbFilters = Array.Empty<AudioReverbFilter>();
-    private AudioClip[] _voiceClips = Array.Empty<AudioClip>();
+    private AudioClip[] _proceduralClips = Array.Empty<AudioClip>();
+    private RhythmSoundSlot[] _slots = Array.Empty<RhythmSoundSlot>();
     private bool[] _activeLoops = new bool[VoiceCount];
     private int _sourceCursor;
     private int _transportStep = -1;
@@ -39,34 +39,28 @@ public class RhythmSoundEngine : MonoBehaviour
     private float _currentBpm;
     private float _currentPitchSemitones;
     private float _currentReverbAmount;
-    private bool _readyLogged;
+    private float _masterVolume = 0.8f;
+    private int _currentPresetIndex = -1;
 
     public float Bpm => _currentBpm;
     public float PitchSemitones => _currentPitchSemitones;
     public float ReverbAmount => _currentReverbAmount;
-    public int RegisteredSoundCount => _voices != null ? _voices.Length : 0;
+    public int RegisteredSoundCount => _slots != null ? _slots.Length : 0;
+    public int PresetCount => _presets != null ? _presets.Length : 0;
+    public int CurrentPresetIndex => _currentPresetIndex;
+    public string CurrentPresetName => IsValidPresetIndex(_currentPresetIndex) ? _presets[_currentPresetIndex].presetName : string.Empty;
 
     private void Awake()
     {
-        EnsureVoiceDefinitions();
-        _currentBpm = Mathf.Clamp(_defaultBpm, MinimumBpm, MaximumBpm);
-        _currentPitchSemitones = Mathf.Clamp(_defaultPitchSemitones, MinimumPitchSemitones, MaximumPitchSemitones);
-        _currentReverbAmount = Mathf.Clamp01(_defaultReverbAmount);
-
-        InitialiseClipCache();
+        EnsurePresetDefinitions();
         InitialiseSourcePool();
-        ApplyReverbToPool();
-
-        if (!_readyLogged)
-        {
-            Debug.Log($"RhythmSoundEngine: ready with {RegisteredSoundCount} sounds on '{gameObject.name}'.");
-            _readyLogged = true;
-        }
+        SetPresetInternal(Mathf.Clamp(_defaultPresetIndex, 0, Mathf.Max(0, PresetCount - 1)), true);
+        Debug.Log($"RhythmSoundEngine: ready with preset '{CurrentPresetName}'.");
     }
 
     private void Update()
     {
-        if (_voices == null || _voices.Length == 0)
+        if (_slots == null || _slots.Length == 0)
         {
             return;
         }
@@ -88,7 +82,7 @@ public class RhythmSoundEngine : MonoBehaviour
             return;
         }
 
-        PlayVoice(soundIndex);
+        PlaySlot(soundIndex);
     }
 
     public void ToggleLoop(int soundIndex)
@@ -100,7 +94,7 @@ public class RhythmSoundEngine : MonoBehaviour
         }
 
         _activeLoops[soundIndex] = !_activeLoops[soundIndex];
-        Debug.Log($"RhythmSoundEngine: loop {( _activeLoops[soundIndex] ? "enabled" : "disabled" )} for {_voices[soundIndex].name}.");
+        Debug.Log($"RhythmSoundEngine: loop {(_activeLoops[soundIndex] ? "enabled" : "disabled")} for {_slots[soundIndex].name}.");
     }
 
     public void StopAllLoops()
@@ -144,10 +138,82 @@ public class RhythmSoundEngine : MonoBehaviour
 
     public void ResetEngineSettings()
     {
-        SetBpm(_defaultBpm);
-        SetPitchSemitones(_defaultPitchSemitones);
-        SetReverb(_defaultReverbAmount);
+        ApplyCurrentPresetDefaults();
         StopAllLoops();
+        ResetTransport();
+        ApplyReverbToPool();
+    }
+
+    public void SetPreset(int presetIndex)
+    {
+        if (!IsValidPresetIndex(presetIndex))
+        {
+            Debug.LogWarning($"RhythmSoundEngine: invalid preset index {presetIndex}.");
+            return;
+        }
+
+        SetPresetInternal(presetIndex, false);
+    }
+
+    public void SetPreset(string presetName)
+    {
+        if (string.IsNullOrWhiteSpace(presetName) || _presets == null)
+        {
+            return;
+        }
+
+        for (int i = 0; i < _presets.Length; i++)
+        {
+            if (string.Equals(_presets[i].presetName, presetName, StringComparison.OrdinalIgnoreCase))
+            {
+                SetPresetInternal(i, false);
+                return;
+            }
+        }
+
+        Debug.LogWarning($"RhythmSoundEngine: preset '{presetName}' was not found.");
+    }
+
+    public void NextPreset()
+    {
+        if (PresetCount == 0)
+        {
+            return;
+        }
+
+        SetPresetInternal((_currentPresetIndex + 1) % PresetCount, false);
+    }
+
+    public void PreviousPreset()
+    {
+        if (PresetCount == 0)
+        {
+            return;
+        }
+
+        int nextIndex = _currentPresetIndex - 1;
+        if (nextIndex < 0)
+        {
+            nextIndex = PresetCount - 1;
+        }
+
+        SetPresetInternal(nextIndex, false);
+    }
+
+    public string[] GetPresetNames()
+    {
+        if (_presets == null)
+        {
+            return Array.Empty<string>();
+        }
+
+        string[] names = new string[_presets.Length];
+        for (int i = 0; i < _presets.Length; i++)
+        {
+            names[i] = _presets[i].presetName;
+        }
+
+        return names;
     }
 
     public RhythmEngineState GetEngineState()
@@ -157,6 +223,8 @@ public class RhythmSoundEngine : MonoBehaviour
 
         return new RhythmEngineState
         {
+            presetIndex = _currentPresetIndex,
+            presetName = CurrentPresetName,
             bpm = _currentBpm,
             pitchSemitones = _currentPitchSemitones,
             reverbAmount = _currentReverbAmount,
@@ -168,39 +236,142 @@ public class RhythmSoundEngine : MonoBehaviour
     public float GetPitchStep() => _pitchStep;
     public float GetReverbStep() => _reverbStep;
 
-    private void EnsureVoiceDefinitions()
+    private void EnsurePresetDefinitions()
     {
-        if (!_autoCreateDefaults && _voices != null && _voices.Length == VoiceCount)
+        bool needsBuiltIns = _presets == null || _presets.Length == 0;
+        if (!needsBuiltIns)
         {
-            return;
-        }
-
-        bool needsDefaults = _voices == null || _voices.Length != VoiceCount;
-        if (!needsDefaults)
-        {
-            for (int i = 0; i < _voices.Length; i++)
+            for (int i = 0; i < _presets.Length; i++)
             {
-                if (_voices[i].defaultLoopSteps == null || _voices[i].defaultLoopSteps.Length != StepsPerBar)
+                if (_presets[i] == null || _presets[i].slots == null || _presets[i].slots.Length != VoiceCount)
                 {
-                    needsDefaults = true;
+                    needsBuiltIns = true;
+                    break;
+                }
+
+                for (int slotIndex = 0; slotIndex < _presets[i].slots.Length; slotIndex++)
+                {
+                    bool[] steps = _presets[i].slots[slotIndex].defaultLoopSteps;
+                    if (steps == null || steps.Length != StepsPerBar)
+                    {
+                        needsBuiltIns = true;
+                        break;
+                    }
+                }
+
+                if (needsBuiltIns)
+                {
                     break;
                 }
             }
         }
 
-        if (needsDefaults)
+        if (_autoCreateBuiltInPresets && needsBuiltIns)
         {
-            _voices = CreateDefaultVoices();
+            _presets = RhythmBuiltInPresets.CreateBuiltInPresets();
         }
     }
 
-    private void InitialiseClipCache()
+    private void SetPresetInternal(int presetIndex, bool isInitial)
+    {
+        if (!IsValidPresetIndex(presetIndex))
+        {
+            return;
+        }
+
+        _currentPresetIndex = presetIndex;
+        RhythmSoundPreset preset = _presets[presetIndex];
+        _slots = CloneSlots(preset.slots);
+        LoadSamplesFromResourcesForCurrentPreset();
+        _masterVolume = Mathf.Clamp(preset.masterVolume, 0.1f, 1f);
+
+        ApplyCurrentPresetDefaults();
+        StopAllLoops();
+        StopAllSources();
+        ResetTransport();
+        RebuildProceduralClips();
+        UpdateSourceVolumes();
+        ApplyReverbToPool();
+
+        if (!isInitial)
+        {
+            Debug.Log($"RhythmSoundEngine: switched to preset '{preset.presetName}'.");
+        }
+    }
+
+    private void ApplyCurrentPresetDefaults()
+    {
+        if (!IsValidPresetIndex(_currentPresetIndex))
+        {
+            return;
+        }
+
+        RhythmSoundPreset preset = _presets[_currentPresetIndex];
+        _currentBpm = Mathf.Clamp(preset.defaultBpm, MinimumBpm, MaximumBpm);
+        _currentPitchSemitones = Mathf.Clamp(preset.defaultPitchSemitones, MinimumPitchSemitones, MaximumPitchSemitones);
+        _currentReverbAmount = Mathf.Clamp01(preset.defaultReverbAmount);
+    }
+
+    private void LoadSamplesFromResourcesForCurrentPreset()
+    {
+        if (!IsValidPresetIndex(_currentPresetIndex) || _slots == null || _slots.Length == 0)
+        {
+            return;
+        }
+
+        string presetName = _presets[_currentPresetIndex].presetName;
+        string[] resourcePaths =
+        {
+            $"AudioPresets/{presetName}",
+            $"AudioPresets/{presetName.Replace(" ", string.Empty)}"
+        };
+
+        AudioClip[] loadedClips = Array.Empty<AudioClip>();
+        for (int i = 0; i < resourcePaths.Length; i++)
+        {
+            loadedClips = Resources.LoadAll<AudioClip>(resourcePaths[i]);
+            if (loadedClips != null && loadedClips.Length > 0)
+            {
+                break;
+            }
+        }
+
+        if (loadedClips == null || loadedClips.Length == 0)
+        {
+            return;
+        }
+
+        for (int slotIndex = 0; slotIndex < _slots.Length; slotIndex++)
+        {
+            var matching = new System.Collections.Generic.List<AudioClip>();
+            for (int clipIndex = 0; clipIndex < loadedClips.Length; clipIndex++)
+            {
+                AudioClip clip = loadedClips[clipIndex];
+                if (clip == null)
+                {
+                    continue;
+                }
+
+                if (TryGetSlotIndexFromClipName(clip.name, out int parsedIndex) && parsedIndex == slotIndex)
+                {
+                    matching.Add(clip);
+                }
+            }
+
+            if (matching.Count > 0)
+            {
+                _slots[slotIndex].sampleClips = matching.ToArray();
+            }
+        }
+    }
+
+    private void RebuildProceduralClips()
     {
         int sampleRate = AudioSettings.outputSampleRate > 0 ? AudioSettings.outputSampleRate : 48000;
-        _voiceClips = new AudioClip[_voices.Length];
-        for (int i = 0; i < _voices.Length; i++)
+        _proceduralClips = new AudioClip[_slots.Length];
+        for (int i = 0; i < _slots.Length; i++)
         {
-            _voiceClips[i] = CreateVoiceClip(_voices[i], sampleRate, i);
+            _proceduralClips[i] = CreateProceduralClip(_slots[i].proceduralVoice, i, sampleRate);
         }
     }
 
@@ -225,7 +396,6 @@ public class RhythmSoundEngine : MonoBehaviour
             source.playOnAwake = false;
             source.loop = false;
             source.spatialBlend = 0f;
-            source.volume = _masterVolume;
             source.priority = 64;
 
             var reverb = child.AddComponent<AudioReverbFilter>();
@@ -237,6 +407,22 @@ public class RhythmSoundEngine : MonoBehaviour
         }
     }
 
+    private void UpdateSourceVolumes()
+    {
+        if (_voiceSources == null)
+        {
+            return;
+        }
+
+        for (int i = 0; i < _voiceSources.Length; i++)
+        {
+            if (_voiceSources[i] != null)
+            {
+                _voiceSources[i].volume = _masterVolume;
+            }
+        }
+    }
+
     private void ApplyReverbToPool()
     {
         if (_reverbFilters == null)
@@ -245,9 +431,9 @@ public class RhythmSoundEngine : MonoBehaviour
         }
 
         float room = Mathf.Lerp(-9000f, -1500f, _currentReverbAmount);
-        float decay = Mathf.Lerp(0.12f, 2.8f, _currentReverbAmount);
+        float decay = Mathf.Lerp(0.12f, 3.2f, _currentReverbAmount);
         float reflections = Mathf.Lerp(-10000f, -1000f, _currentReverbAmount);
-        float reverb = Mathf.Lerp(-10000f, -800f, _currentReverbAmount);
+        float reverb = Mathf.Lerp(-10000f, -700f, _currentReverbAmount);
         float dryLevel = Mathf.Lerp(0f, -1200f, _currentReverbAmount * 0.35f);
 
         for (int i = 0; i < _reverbFilters.Length; i++)
@@ -260,7 +446,7 @@ public class RhythmSoundEngine : MonoBehaviour
 
             filter.dryLevel = dryLevel;
             filter.room = room;
-            filter.roomHF = Mathf.Lerp(-100f, -2500f, _currentReverbAmount);
+            filter.roomHF = Mathf.Lerp(-100f, -2600f, _currentReverbAmount);
             filter.decayTime = decay;
             filter.decayHFRatio = Mathf.Lerp(0.15f, 0.85f, _currentReverbAmount);
             filter.reflectionsLevel = reflections;
@@ -279,24 +465,36 @@ public class RhythmSoundEngine : MonoBehaviour
     {
         _transportStep = (_transportStep + 1) % StepsPerBar;
 
-        for (int i = 0; i < _activeLoops.Length && i < _voices.Length; i++)
+        for (int i = 0; i < _activeLoops.Length && i < _slots.Length; i++)
         {
             if (!_activeLoops[i])
             {
                 continue;
             }
 
-            bool[] pattern = _voices[i].defaultLoopSteps;
+            bool[] pattern = _slots[i].defaultLoopSteps;
             if (pattern != null && pattern.Length == StepsPerBar && pattern[_transportStep])
             {
-                PlayVoice(i);
+                PlaySlot(i);
             }
         }
     }
 
-    private void PlayVoice(int soundIndex)
+    private void PlaySlot(int soundIndex)
     {
-        if (_voiceSources == null || _voiceSources.Length == 0 || _voiceClips == null || soundIndex >= _voiceClips.Length)
+        if (_voiceSources == null || _voiceSources.Length == 0 || soundIndex >= _slots.Length)
+        {
+            return;
+        }
+
+        RhythmSoundSlot slot = _slots[soundIndex];
+        AudioClip clipToPlay = ChooseSampleClip(slot);
+        if (clipToPlay == null && _proceduralClips != null && soundIndex < _proceduralClips.Length)
+        {
+            clipToPlay = _proceduralClips[soundIndex];
+        }
+
+        if (clipToPlay == null)
         {
             return;
         }
@@ -305,53 +503,177 @@ public class RhythmSoundEngine : MonoBehaviour
         _sourceCursor = (_sourceCursor + 1) % _voiceSources.Length;
 
         source.Stop();
-        source.clip = _voiceClips[soundIndex];
-        source.pitch = Mathf.Pow(2f, _currentPitchSemitones / 12f);
-        source.volume = _masterVolume;
+        source.clip = clipToPlay;
+        source.pitch = Mathf.Pow(2f, (_currentPitchSemitones + slot.pitchOffsetSemitones) / 12f);
+        source.volume = _masterVolume * Mathf.Clamp(slot.volumeMultiplier, 0.1f, 2f);
         source.Play();
+    }
+
+    private AudioClip ChooseSampleClip(RhythmSoundSlot slot)
+    {
+        if (slot.sampleClips == null || slot.sampleClips.Length == 0)
+        {
+            return null;
+        }
+
+        int nonNullCount = 0;
+        for (int i = 0; i < slot.sampleClips.Length; i++)
+        {
+            if (slot.sampleClips[i] != null)
+            {
+                nonNullCount++;
+            }
+        }
+
+        if (nonNullCount == 0)
+        {
+            return null;
+        }
+
+        int selection = UnityEngine.Random.Range(0, nonNullCount);
+        for (int i = 0; i < slot.sampleClips.Length; i++)
+        {
+            if (slot.sampleClips[i] == null)
+            {
+                continue;
+            }
+
+            if (selection == 0)
+            {
+                return slot.sampleClips[i];
+            }
+
+            selection--;
+        }
+
+        return null;
+    }
+
+    private void StopAllSources()
+    {
+        if (_voiceSources == null)
+        {
+            return;
+        }
+
+        for (int i = 0; i < _voiceSources.Length; i++)
+        {
+            if (_voiceSources[i] != null)
+            {
+                _voiceSources[i].Stop();
+            }
+        }
+    }
+
+    private void ResetTransport()
+    {
+        _stepTimer = 0f;
+        _transportStep = -1;
     }
 
     private bool IsValidSoundIndex(int soundIndex)
     {
-        return _voices != null && soundIndex >= 0 && soundIndex < _voices.Length;
+        return _slots != null && soundIndex >= 0 && soundIndex < _slots.Length;
     }
 
-    private AudioClip CreateVoiceClip(RhythmVoiceDefinition definition, int sampleRate, int clipIndex)
+    private bool IsValidPresetIndex(int presetIndex)
     {
-        float clipLengthSeconds = Mathf.Max(0.1f, definition.attackSeconds + definition.decaySeconds + definition.holdSeconds + definition.releaseSeconds + 0.05f);
+        return _presets != null && presetIndex >= 0 && presetIndex < _presets.Length;
+    }
+
+    private static bool TryGetSlotIndexFromClipName(string clipName, out int slotIndex)
+    {
+        slotIndex = -1;
+        if (string.IsNullOrWhiteSpace(clipName))
+        {
+            return false;
+        }
+
+        int value = 0;
+        int digits = 0;
+        for (int i = 0; i < clipName.Length; i++)
+        {
+            char c = clipName[i];
+            if (!char.IsDigit(c))
+            {
+                break;
+            }
+
+            value = (value * 10) + (c - '0');
+            digits++;
+        }
+
+        if (digits == 0 || value < 1 || value > VoiceCount)
+        {
+            return false;
+        }
+
+        slotIndex = value - 1;
+        return true;
+    }
+
+    private AudioClip CreateProceduralClip(RhythmVoiceDefinition definition, int clipIndex, int sampleRate)
+    {
+        float clipLengthSeconds = Mathf.Max(0.12f, definition.attackSeconds + definition.decaySeconds + definition.holdSeconds + definition.releaseSeconds + 0.05f);
         int sampleCount = Mathf.Max(256, Mathf.CeilToInt(clipLengthSeconds * sampleRate));
         float[] samples = new float[sampleCount];
-        uint noiseState = (uint)(definition.baseFrequency.GetHashCode() ^ (clipIndex + 1) * 486187739);
+        uint noiseState = (uint)(definition.baseFrequency.GetHashCode() ^ ((clipIndex + 1) * 486187739));
         if (noiseState == 0)
         {
             noiseState = 1u;
         }
 
-        double phase = 0d;
+        double primaryPhase = 0d;
+        double subPhase = 0d;
+        double overtonePhase = 0d;
+        float filterState = 0f;
         float detuneMultiplier = Mathf.Pow(2f, definition.detuneCents / 1200f);
-        float totalHold = Mathf.Max(0.01f, definition.holdSeconds);
+        float transientDecay = Mathf.Max(0.001f, definition.transientDecaySeconds);
+        float peak = 0f;
 
         for (int i = 0; i < sampleCount; i++)
         {
             float time = i / (float)sampleRate;
+            float progress = i / (float)sampleCount;
             float amplitude = EvaluateEnvelope(definition, time);
-            float pitchDecayProgress = Mathf.Clamp01(time / totalHold);
+            float pitchHold = Mathf.Max(0.01f, definition.holdSeconds);
+            float pitchDecayProgress = Mathf.Clamp01(time / pitchHold);
             float pitchModifier = 1f + (definition.pitchDecayAmount * (1f - pitchDecayProgress));
             float vibrato = definition.vibratoDepth <= 0f
                 ? 0f
                 : Mathf.Sin(time * definition.vibratoRate * Mathf.PI * 2f) * definition.vibratoDepth;
 
             float frequency = Mathf.Max(10f, definition.baseFrequency * detuneMultiplier * (pitchModifier + vibrato));
-            phase += frequency / sampleRate;
-            phase -= Math.Floor(phase);
+            primaryPhase = AdvancePhase(primaryPhase, frequency, sampleRate);
+            subPhase = AdvancePhase(subPhase, frequency * 0.5f, sampleRate);
+            overtonePhase = AdvancePhase(overtonePhase, frequency * Mathf.Max(0.5f, definition.overtoneRatio), sampleRate);
 
-            float oscillator = SampleWaveform(definition.waveform, (float)phase, ref noiseState);
-            float noise = NextNoise(ref noiseState);
-            float blended = Mathf.Lerp(oscillator, noise, definition.noiseMix);
-            samples[i] = blended * amplitude * definition.gain;
+            float primary = SampleWaveform(definition.waveform, (float)primaryPhase);
+            float sub = Mathf.Sin((float)(subPhase * Mathf.PI * 2d));
+            float overtone = SampleWaveform(definition.waveform, (float)overtonePhase);
+            float tonal = MixOscillators(primary, sub, overtone, definition.subOscillatorMix, definition.overtoneMix);
+            float transient = NextNoise(ref noiseState) * definition.transientMix * Mathf.Exp(-time / transientDecay);
+            float noisy = Mathf.Lerp(tonal, NextNoise(ref noiseState), definition.noiseMix) + transient;
+
+            float cutoffNorm = Mathf.Clamp01(definition.brightness + definition.brightnessDecay * (1f - progress));
+            float cutoffHz = Mathf.Lerp(180f, 14000f, cutoffNorm);
+            float filtered = ApplyLowPass(noisy, cutoffHz, sampleRate, ref filterState);
+            float saturated = ApplySaturation(filtered, definition.saturation);
+            float finalSample = saturated * amplitude * definition.gain;
+            samples[i] = finalSample;
+            peak = Mathf.Max(peak, Mathf.Abs(finalSample));
         }
 
-        AudioClip clip = AudioClip.Create($"RhythmVoice_{clipIndex + 1}_{definition.name}", sampleCount, 1, sampleRate, false);
+        if (peak > 0.98f)
+        {
+            float normalise = 0.98f / peak;
+            for (int i = 0; i < samples.Length; i++)
+            {
+                samples[i] *= normalise;
+            }
+        }
+
+        AudioClip clip = AudioClip.Create($"RhythmVoice_{clipIndex + 1}_{_slots[clipIndex].name}", sampleCount, 1, sampleRate, false);
         clip.SetData(samples, 0);
         return clip;
     }
@@ -387,7 +709,44 @@ public class RhythmSoundEngine : MonoBehaviour
         return Mathf.Lerp(sustain, 0f, releaseLerp);
     }
 
-    private static float SampleWaveform(WaveformType waveform, float phase, ref uint noiseState)
+    private static double AdvancePhase(double currentPhase, float frequency, int sampleRate)
+    {
+        currentPhase += frequency / sampleRate;
+        currentPhase -= Math.Floor(currentPhase);
+        return currentPhase;
+    }
+
+    private static float MixOscillators(float primary, float sub, float overtone, float subMix, float overtoneMix)
+    {
+        float baseMix = Mathf.Clamp01(1f - (subMix * 0.65f) - (overtoneMix * 0.65f));
+        float subWeight = subMix * 0.8f;
+        float overtoneWeight = overtoneMix * 0.75f;
+        float totalWeight = Mathf.Max(0.0001f, baseMix + subWeight + overtoneWeight);
+        return ((primary * baseMix) + (sub * subWeight) + (overtone * overtoneWeight)) / totalWeight;
+    }
+
+    private static float ApplyLowPass(float input, float cutoffHz, int sampleRate, ref float filterState)
+    {
+        float omega = 2f * Mathf.PI * cutoffHz / sampleRate;
+        float alpha = 1f - Mathf.Exp(-omega);
+        filterState += alpha * (input - filterState);
+        return filterState;
+    }
+
+    private static float ApplySaturation(float sample, float amount)
+    {
+        if (amount <= 0.0001f)
+        {
+            return sample;
+        }
+
+        float drive = 1f + (amount * 8f);
+        float shaped = (float)Math.Tanh(sample * drive);
+        float normalised = (float)Math.Tanh(drive);
+        return normalised > 0.0001f ? shaped / normalised : shaped;
+    }
+
+    private static float SampleWaveform(WaveformType waveform, float phase)
     {
         switch (waveform)
         {
@@ -398,7 +757,7 @@ public class RhythmSoundEngine : MonoBehaviour
             case WaveformType.Triangle:
                 return 1f - (4f * Mathf.Abs(phase - 0.5f));
             case WaveformType.Noise:
-                return NextNoise(ref noiseState);
+                return 0f;
             default:
                 return Mathf.Sin(phase * Mathf.PI * 2f);
         }
@@ -412,19 +771,28 @@ public class RhythmSoundEngine : MonoBehaviour
         return ((noiseState & 0x7fffffff) / (float)int.MaxValue) * 2f - 1f;
     }
 
-    private RhythmVoiceDefinition[] CreateDefaultVoices()
+    private static RhythmSoundSlot[] CloneSlots(RhythmSoundSlot[] source)
     {
-        return new[]
+        if (source == null)
         {
-            RhythmVoiceDefinition.Create("Kick", WaveformType.Sine, 55f, 0.95f, 0.001f, 0.07f, 0.0f, 0.08f, 0.05f, 0.02f, 0f, 0f, 0f, -0.72f, 0, 4, 8, 12),
-            RhythmVoiceDefinition.Create("Snare", WaveformType.Noise, 180f, 0.7f, 0.001f, 0.05f, 0.0f, 0.05f, 0.08f, 0.95f, 0f, 0f, 0f, -0.25f, 4, 12),
-            RhythmVoiceDefinition.Create("HiHat", WaveformType.Noise, 420f, 0.48f, 0.001f, 0.03f, 0.0f, 0.025f, 0.025f, 1.0f, 0f, 0f, 0f, 0f, 2, 6, 10, 14),
-            RhythmVoiceDefinition.Create("Bass Pulse", WaveformType.Saw, 82.41f, 0.4f, 0.005f, 0.08f, 0.45f, 0.18f, 0.12f, 0.05f, -4f, 0f, 0f, -0.08f, 0, 3, 8, 11),
-            RhythmVoiceDefinition.Create("Lead Stab", WaveformType.Square, 329.63f, 0.28f, 0.002f, 0.06f, 0.18f, 0.12f, 0.09f, 0.02f, 5f, 5.2f, 0.005f, 0f, 0, 5, 7, 12),
-            RhythmVoiceDefinition.Create("Pad Hit", WaveformType.Triangle, 220f, 0.24f, 0.03f, 0.16f, 0.65f, 0.34f, 0.3f, 0.0f, -3f, 2.1f, 0.012f, 0f, 0, 8),
-            RhythmVoiceDefinition.Create("Pluck", WaveformType.Saw, 440f, 0.26f, 0.001f, 0.09f, 0.06f, 0.09f, 0.07f, 0.03f, 9f, 6.8f, 0.01f, -0.12f, 1, 5, 9, 13),
-            RhythmVoiceDefinition.Create("Arp Tone", WaveformType.Sine, 659.25f, 0.2f, 0.002f, 0.05f, 0.2f, 0.08f, 0.08f, 0.0f, 0f, 7.5f, 0.008f, 0f, 0, 2, 4, 6, 8, 10, 12, 14),
-            RhythmVoiceDefinition.Create("FX Sweep", WaveformType.Triangle, 523.25f, 0.24f, 0.01f, 0.12f, 0.32f, 0.22f, 0.25f, 0.28f, 13f, 3.2f, 0.03f, 0.45f, 7, 15)
-        };
+            return Array.Empty<RhythmSoundSlot>();
+        }
+
+        var clone = new RhythmSoundSlot[source.Length];
+        for (int i = 0; i < source.Length; i++)
+        {
+            RhythmSoundSlot sourceSlot = source[i] ?? new RhythmSoundSlot();
+            clone[i] = new RhythmSoundSlot
+            {
+                name = sourceSlot.name,
+                volumeMultiplier = sourceSlot.volumeMultiplier,
+                pitchOffsetSemitones = sourceSlot.pitchOffsetSemitones,
+                proceduralVoice = sourceSlot.proceduralVoice,
+                sampleClips = sourceSlot.sampleClips != null ? (AudioClip[])sourceSlot.sampleClips.Clone() : Array.Empty<AudioClip>(),
+                defaultLoopSteps = sourceSlot.defaultLoopSteps != null ? (bool[])sourceSlot.defaultLoopSteps.Clone() : new bool[StepsPerBar]
+            };
+        }
+
+        return clone;
     }
 }

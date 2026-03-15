@@ -18,55 +18,13 @@ public struct RhythmVoiceDefinition
     [Min(0f)] public float vibratoRate;
     [Range(0f, 0.25f)] public float vibratoDepth;
     [Range(-1f, 1f)] public float pitchDecayAmount;
+    [Range(0f, 1f)] public float subOscillatorMix;
+    [Range(0f, 1f)] public float overtoneMix;
+    [Min(0.5f)] public float overtoneRatio;
+    [Range(0f, 1f)] public float brightness;
+    [Range(-1f, 1f)] public float brightnessDecay;
+    [Range(0f, 1f)] public float transientMix;
+    [Min(0.001f)] public float transientDecaySeconds;
+    [Range(0f, 1f)] public float saturation;
     public bool[] defaultLoopSteps;
-
-    public static RhythmVoiceDefinition Create(
-        string voiceName,
-        WaveformType waveformType,
-        float frequency,
-        float voiceGain,
-        float attack,
-        float decay,
-        float sustain,
-        float hold,
-        float release,
-        float noise,
-        float detune,
-        float vibratoHz,
-        float vibratoAmount,
-        float pitchDecay,
-        params int[] activeSteps)
-    {
-        var steps = new bool[16];
-        if (activeSteps != null)
-        {
-            for (int i = 0; i < activeSteps.Length; i++)
-            {
-                int index = activeSteps[i];
-                if (index >= 0 && index < steps.Length)
-                {
-                    steps[index] = true;
-                }
-            }
-        }
-
-        return new RhythmVoiceDefinition
-        {
-            name = voiceName,
-            waveform = waveformType,
-            baseFrequency = frequency,
-            gain = voiceGain,
-            attackSeconds = attack,
-            decaySeconds = decay,
-            sustainLevel = sustain,
-            holdSeconds = hold,
-            releaseSeconds = release,
-            noiseMix = noise,
-            detuneCents = detune,
-            vibratoRate = vibratoHz,
-            vibratoDepth = vibratoAmount,
-            pitchDecayAmount = pitchDecay,
-            defaultLoopSteps = steps
-        };
-    }
 }

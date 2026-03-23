@@ -22,6 +22,7 @@ public class PlayerMusicStartDetector : MonoBehaviour
     private void OnEnable()
     {
         LineDrawing.AnyLineStarted += HandleLineStarted;
+        ShapeDrawingManager.AnyStrokeStarted += HandleShapeStrokeStarted;
         if (_signalSource != null)
         {
             _signalSource.PlayerMusicStarted += HandleMusicSignalStarted;
@@ -31,12 +32,17 @@ public class PlayerMusicStartDetector : MonoBehaviour
     private void OnDisable()
     {
         LineDrawing.AnyLineStarted -= HandleLineStarted;
+        ShapeDrawingManager.AnyStrokeStarted -= HandleShapeStrokeStarted;
         if (_signalSource != null)
         {
             _signalSource.PlayerMusicStarted -= HandleMusicSignalStarted;
         }
     }
 
+    private void HandleShapeStrokeStarted()
+    {
+        RaiseStarted();
+    }
     private void HandleLineStarted(Vector3 _)
     {
         RaiseStarted();
@@ -58,3 +64,4 @@ public class PlayerMusicStartDetector : MonoBehaviour
         PlayerMusicStarted?.Invoke();
     }
 }
+

@@ -1,0 +1,3 @@
+interface:
+  display_name: "RhythmForge Addressables"
+  short_description: "Guide Addressables and asset-loading strategy"

@@ -1,0 +1,3 @@
+interface:
+  display_name: "RhythmForge Audio Direction"
+  short_description: "Guide audio palette, events, and mix strategy"

@@ -1,0 +1,3 @@
+interface:
+  display_name: "RhythmForge Unity DOTS"
+  short_description: "Guide DOTS and ECS evaluation for this repo"

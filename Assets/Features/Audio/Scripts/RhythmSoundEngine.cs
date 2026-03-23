@@ -50,6 +50,8 @@ public class RhythmSoundEngine : MonoBehaviour
     public int CurrentPresetIndex => _currentPresetIndex;
     public string CurrentPresetName => IsValidPresetIndex(_currentPresetIndex) ? _presets[_currentPresetIndex].presetName : string.Empty;
 
+    public event Action<int, float> SoundTriggered;
+
     private void Awake()
     {
         EnsurePresetDefinitions();
@@ -507,6 +509,7 @@ public class RhythmSoundEngine : MonoBehaviour
         source.pitch = Mathf.Pow(2f, (_currentPitchSemitones + slot.pitchOffsetSemitones) / 12f);
         source.volume = _masterVolume * Mathf.Clamp(slot.volumeMultiplier, 0.1f, 2f);
         source.Play();
+        SoundTriggered?.Invoke(soundIndex, Mathf.Clamp01(source.volume));
     }
 
     private AudioClip ChooseSampleClip(RhythmSoundSlot slot)
@@ -796,3 +799,6 @@ public class RhythmSoundEngine : MonoBehaviour
         return clone;
     }
 }
+
+
+

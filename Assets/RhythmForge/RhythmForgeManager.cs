@@ -108,6 +108,8 @@ namespace RhythmForge
             if (_initialized) return;
             _initialized = true;
 
+            SyncDrawModeFromStore();
+
             // Initialize subsystems
             if (_sequencer) _sequencer.Initialize(_store);
             if (_strokeCapture) _strokeCapture.Initialize(_store);
@@ -117,7 +119,7 @@ namespace RhythmForge
             if (_commitCard) _commitCard.Initialize(_strokeCapture);
             if (_inspectorPanel) _inspectorPanel.Initialize(_store);
             if (_dockPanel) _dockPanel.Initialize(_store, _drawModeController);
-            if (_transportPanel) _transportPanel.Initialize(_store, _sequencer);
+            if (_transportPanel) _transportPanel.Initialize(_store, _sequencer, _drawModeController);
             if (_sceneStripPanel) _sceneStripPanel.Initialize(_store, _sequencer);
             if (_arrangementPanel) _arrangementPanel.Initialize(_store, _sequencer);
 
@@ -132,6 +134,8 @@ namespace RhythmForge
 
             if (_sequencer)
                 _sequencer.OnTransportChanged += OnTransportChanged;
+            if (_drawModeController != null)
+                _drawModeController.OnModeChanged += OnDrawModeChanged;
 
             // Initial visual build
             RebuildInstanceVisuals();
@@ -147,6 +151,8 @@ namespace RhythmForge
             }
             if (_sequencer != null)
                 _sequencer.OnTransportChanged -= OnTransportChanged;
+            if (_drawModeController != null)
+                _drawModeController.OnModeChanged -= OnDrawModeChanged;
         }
 
         private void Update()
@@ -209,6 +215,12 @@ namespace RhythmForge
         private void OnTransportChanged()
         {
             // Could trigger visual updates, haptics, etc.
+        }
+
+        private void OnDrawModeChanged(PatternType mode)
+        {
+            if (_store != null)
+                _store.SetDrawMode(mode);
         }
 
         // --- Instance visual management ---
@@ -308,12 +320,14 @@ namespace RhythmForge
         {
             var demo = DemoSession.CreateDemoState(_store);
             _store.LoadState(demo);
+            SyncDrawModeFromStore();
             if (_toast) _toast.Show("Demo session loaded.");
         }
 
         public void ResetSession()
         {
             _store.Reset();
+            SyncDrawModeFromStore();
             SessionPersistence.Delete();
             if (_toast) _toast.Show("Session reset.");
         }
@@ -322,6 +336,12 @@ namespace RhythmForge
         {
             SessionPersistence.Save(_store.State);
             if (_toast) _toast.Show("Session saved.");
+        }
+
+        private void SyncDrawModeFromStore()
+        {
+            if (_store != null && _drawModeController != null)
+                _drawModeController.SetMode(_store.GetDrawMode());
         }
     }
 }

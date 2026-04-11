@@ -111,9 +111,20 @@ namespace RhythmForge.Core.Session
 
         // --- Mutations ---
 
-        public void SetDrawMode(string mode)
+        public PatternType GetDrawMode()
         {
-            State.drawMode = mode;
+            if (Enum.TryParse(State.drawMode, true, out PatternType mode))
+                return mode;
+
+            return PatternType.RhythmLoop;
+        }
+
+        public void SetDrawMode(PatternType mode)
+        {
+            string serialized = mode.ToString();
+            if (State.drawMode == serialized) return;
+
+            State.drawMode = serialized;
             OnStateChanged?.Invoke();
         }
 
@@ -359,7 +370,8 @@ namespace RhythmForge.Core.Session
             if (State.counters == null) State.counters = new DraftCounters();
 
             if (string.IsNullOrEmpty(State.activeGroupId)) State.activeGroupId = "lofi";
-            if (string.IsNullOrEmpty(State.drawMode)) State.drawMode = "RhythmLoop";
+            if (string.IsNullOrEmpty(State.drawMode)) State.drawMode = PatternType.RhythmLoop.ToString();
+            State.drawMode = GetDrawMode().ToString();
             if (string.IsNullOrEmpty(State.activeSceneId)) State.activeSceneId = "scene-a";
 
             CleanupSceneMembership();

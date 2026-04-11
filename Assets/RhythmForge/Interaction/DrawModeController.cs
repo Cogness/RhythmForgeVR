@@ -20,19 +20,20 @@ namespace RhythmForge.Interaction
 
         public void CycleMode()
         {
+            PatternType nextMode;
             switch (_currentMode)
             {
                 case PatternType.RhythmLoop:
-                    _currentMode = PatternType.MelodyLine;
+                    nextMode = PatternType.MelodyLine;
                     break;
                 case PatternType.MelodyLine:
-                    _currentMode = PatternType.HarmonyPad;
+                    nextMode = PatternType.HarmonyPad;
                     break;
                 default:
-                    _currentMode = PatternType.RhythmLoop;
+                    nextMode = PatternType.RhythmLoop;
                     break;
             }
-            OnModeChanged?.Invoke(_currentMode);
+            SetMode(nextMode);
         }
 
         public Color GetCurrentColor()
@@ -42,7 +43,12 @@ namespace RhythmForge.Interaction
 
         public string GetCurrentModeLabel()
         {
-            switch (_currentMode)
+            return GetModeLabel(_currentMode);
+        }
+
+        public static string GetModeLabel(PatternType mode)
+        {
+            switch (mode)
             {
                 case PatternType.RhythmLoop: return "Rhythm";
                 case PatternType.MelodyLine: return "Melody";

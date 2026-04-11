@@ -482,31 +482,36 @@ namespace RhythmForge.Bootstrap
         private TransportPanel BuildTransportPanel(Transform head)
         {
             var canvas = UIFactory.CreateWorldCanvas("TransportPanel",
-                transform, new Vector2(520, 100),
+                transform, new Vector2(640, 100),
                 PositionInFront(0f, -0.22f, 1.1f), 0.001f);
             RegisterPanel(canvas, 0f, -0.22f, 1.1f, PanelDragCoordinator.DragMembership.MainGroup);
 
             UIFactory.CreateBackground(canvas.transform,
-                new Vector2(520, 100), MaterialFactory.PanelBg);
+                new Vector2(640, 100), MaterialFactory.PanelBg);
 
             // Play/Stop button
             var playBtn = UIFactory.CreateButton(canvas.transform, "PlayStopButton", "Play",
                 new Rect(8, 8, 100, 84), MaterialFactory.ButtonActive, Color.white, 20, null);
             var playLabel = playBtn.GetComponentInChildren<Text>();
 
+            // Mode button
+            var modeBtn = UIFactory.CreateButton(canvas.transform, "ModeButton", "Mode\nRhythm",
+                new Rect(532, 8, 100, 84), TypeColors.RhythmLoop, Color.white, 18, null);
+            var modeLabel = modeBtn.GetComponentInChildren<Text>();
+
             // Info labels
             var bpmText    = UIFactory.CreateRectText(canvas.transform, "BpmText",
                 "85 BPM", 18, Color.white, TextAnchor.MiddleLeft,
-                new Rect(120, 58, 200, 34));
+                new Rect(120, 58, 280, 34));
             var keyText    = UIFactory.CreateRectText(canvas.transform, "KeyText",
                 "A minor", 16, new Color(0.7f, 0.9f, 1f), TextAnchor.MiddleLeft,
-                new Rect(120, 28, 200, 28));
+                new Rect(120, 28, 280, 28));
             var statusText = UIFactory.CreateRectText(canvas.transform, "StatusText",
                 "Idle", 14, new Color(0.55f, 0.55f, 0.65f), TextAnchor.MiddleLeft,
-                new Rect(120, 6, 380, 22));
+                new Rect(120, 6, 400, 22));
 
             var panel = canvas.gameObject.AddComponent<TransportPanel>();
-            panel.SetUIRefs(playBtn, playLabel, bpmText, keyText, statusText);
+            panel.SetUIRefs(playBtn, playLabel, modeBtn, modeLabel, bpmText, keyText, statusText);
             return panel;
         }
 

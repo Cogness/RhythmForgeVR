@@ -99,7 +99,7 @@ namespace RhythmForge.UI.Panels
         private void OnModeChanged(PatternType mode)
         {
             if (_drawModeLabel)
-                _drawModeLabel.text = $"Mode: {mode}";
+                _drawModeLabel.text = $"Mode: {DrawModeController.GetModeLabel(mode)}";
         }
 
         private void Refresh()

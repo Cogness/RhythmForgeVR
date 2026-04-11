@@ -103,10 +103,6 @@ namespace RhythmForge.Interaction
                 FinishStroke();
             }
 
-            // Front button cycles draw mode — skip if consumed by UI click this frame
-            if (_input.FrontButtonDown && !_input.FrontButtonConsumed)
-                _drawMode?.CycleMode();
-
             // Back button undoes last stroke
             if (_input.BackButtonDown && !_isDrawing && !HasPendingDraft)
                 ClearCurrentStroke();

@@ -10,6 +10,12 @@ namespace RhythmForge.Interaction
     {
         [SerializeField] private StylusHandler _stylusHandler;
 
+        /// <summary>Called by RhythmForgeBootstrapper to inject the stylus handler.</summary>
+        public void Configure(StylusHandler stylusHandler)
+        {
+            _stylusHandler = stylusHandler;
+        }
+
         // MX Ink state accessors
         public bool IsStylusActive => _stylusHandler != null && _stylusHandler.CurrentState.isActive;
         public float TipPressure => _stylusHandler != null ? _stylusHandler.CurrentState.tip_value : 0f;

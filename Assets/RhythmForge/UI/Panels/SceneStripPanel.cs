@@ -24,6 +24,13 @@ namespace RhythmForge.UI.Panels
         private Sequencer.Sequencer _sequencer;
         private string[] _sceneIds = { "scene-a", "scene-b", "scene-c", "scene-d" };
 
+        /// <summary>Called by RhythmForgeBootstrapper to inject UI button and label references.</summary>
+        public void SetUIRefs(List<Button> buttons, List<Text> labels)
+        {
+            _sceneButtons = buttons;
+            _sceneLabels  = labels;
+        }
+
         public void Initialize(SessionStore store, Sequencer.Sequencer sequencer)
         {
             _store = store;

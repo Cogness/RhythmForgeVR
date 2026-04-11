@@ -44,6 +44,35 @@ namespace RhythmForge.UI.Panels
         private SessionStore _store;
         private bool _updating;
 
+        /// <summary>Called by RhythmForgeBootstrapper to inject all UI element references.</summary>
+        public void SetUIRefs(
+            Text patternName, Text patternType, Text patternBars, Image typeColorBar,
+            Text shapeSummary, Text traitChips,
+            List<Slider> metricBars, List<Text> metricLabels,
+            Slider depthSlider, Button muteButton, Text muteLabel,
+            Button removeButton, Button duplicateButton, Dropdown presetDropdown,
+            Text panText, Text gainText, Text brightnessText, Transform lookAt)
+        {
+            _patternName     = patternName;
+            _patternType     = patternType;
+            _patternBars     = patternBars;
+            _typeColorBar    = typeColorBar;
+            _shapeSummary    = shapeSummary;
+            _traitChipsText  = traitChips;
+            _metricBars      = metricBars;
+            _metricLabels    = metricLabels;
+            _depthSlider     = depthSlider;
+            _muteButton      = muteButton;
+            _muteLabel       = muteLabel;
+            _removeButton    = removeButton;
+            _duplicateButton = duplicateButton;
+            _presetDropdown  = presetDropdown;
+            _panText         = panText;
+            _gainText        = gainText;
+            _brightnessText  = brightnessText;
+            _lookAtTarget    = lookAt;
+        }
+
         public void Initialize(SessionStore store)
         {
             _store = store;

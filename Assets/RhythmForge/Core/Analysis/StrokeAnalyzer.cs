@@ -20,8 +20,10 @@ namespace RhythmForge.Core.Analysis
 
     public static class StrokeAnalyzer
     {
-        // World-space threshold for closed stroke detection (pilot: 64px)
-        private const float CloseDistanceThreshold = 0.08f;
+        // World-space threshold for closed stroke detection.
+        // Increased for on-device VR drawing where hand tremor and table surface
+        // make precise loop closure difficult.
+        private const float CloseDistanceThreshold = 0.18f;
 
         public static StrokeMetrics Analyze(List<Vector2> points)
         {
@@ -72,7 +74,7 @@ namespace RhythmForge.Core.Analysis
             float wobble = Mathf.Sqrt(variance) / Mathf.Max(1f, meanRadius);
 
             float closeDistance = Vector2.Distance(points[0], points[points.Count - 1]);
-            bool closed = closeDistance < Mathf.Min(CloseDistanceThreshold, averageSize * 0.32f);
+            bool closed = closeDistance < Mathf.Min(CloseDistanceThreshold, averageSize * 0.55f);
 
             float dx = points[points.Count - 1].x - points[0].x;
             float dy = points[points.Count - 1].y - points[0].y;

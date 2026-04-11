@@ -17,6 +17,15 @@ namespace RhythmForge.UI
         private float _timer;
         private bool _showing;
 
+        /// <summary>Called by RhythmForgeBootstrapper to inject UI element references.</summary>
+        public void SetUIRefs(Text text, CanvasGroup canvasGroup, Transform followTarget)
+        {
+            _text = text;
+            _canvasGroup = canvasGroup;
+            _followTarget = followTarget;
+            if (_canvasGroup != null) _canvasGroup.alpha = 0f;
+        }
+
         private void Awake()
         {
             if (_canvasGroup == null)

@@ -16,6 +16,12 @@ namespace RhythmForge.Audio
 
         public bool IsReady => _samplePlayer != null;
 
+        /// <summary>Called by RhythmForgeBootstrapper to inject the SamplePlayer.</summary>
+        public void Configure(SamplePlayer samplePlayer)
+        {
+            _samplePlayer = samplePlayer;
+        }
+
         public void PlayDrumEvent(string lane, float velocity, float pan, float brightness,
             float depth, float fxSend, SoundProfile soundProfile)
         {

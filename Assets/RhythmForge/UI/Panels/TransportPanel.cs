@@ -19,6 +19,17 @@ namespace RhythmForge.UI.Panels
         private SessionStore _store;
         private Sequencer.Sequencer _sequencer;
 
+        /// <summary>Called by RhythmForgeBootstrapper to inject UI element references.</summary>
+        public void SetUIRefs(Button playStopButton, Text playStopLabel,
+            Text bpmText, Text keyText, Text transportStatus)
+        {
+            _playStopButton  = playStopButton;
+            _playStopLabel   = playStopLabel;
+            _bpmText         = bpmText;
+            _keyText         = keyText;
+            _transportStatus = transportStatus;
+        }
+
         public void Initialize(SessionStore store, Sequencer.Sequencer sequencer)
         {
             _store = store;

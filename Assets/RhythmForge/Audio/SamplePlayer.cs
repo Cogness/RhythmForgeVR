@@ -26,6 +26,17 @@ namespace RhythmForge.Audio
         private List<AudioSource> _pool = new List<AudioSource>();
         private int _nextPoolIndex;
 
+        /// <summary>Called by RhythmForgeBootstrapper to inject synthesized clips at runtime.</summary>
+        public void Configure(AudioClip kick, AudioClip snare, AudioClip hat,
+            AudioClip perc, AudioClip tone)
+        {
+            _kickClip  = kick;
+            _snareClip = snare;
+            _hatClip   = hat;
+            _percClip  = perc;
+            _toneClip  = tone;
+        }
+
         private void Awake()
         {
             for (int i = 0; i < _poolSize; i++)

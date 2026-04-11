@@ -33,7 +33,7 @@ $RECYCLE.BIN/
 [Oo]bj/
 [Bb]uild/
 [Bb]uilds/
-[.]utmp/
+.utmp/
 [Ll]ogs/
 [Mm]emoryCaptures/
 [Rr]ecords/
@@ -112,6 +112,11 @@ Assets/AssetStoreTools*
 *.stacktrace
 *.crash
 *.dmp
+
+# Mono crash dumps
+mono_crash.mem.*.blob
+*.blob
+sysinfo.txt
 
 ############################
 # TextMesh Pro

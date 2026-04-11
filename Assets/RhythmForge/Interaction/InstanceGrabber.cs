@@ -28,6 +28,16 @@ namespace RhythmForge.Interaction
         // The currently hovered visualizer (for highlighting)
         private PatternVisualizer _hoveredVisualizer;
 
+        /// <summary>Called by RhythmForgeBootstrapper to inject component references.</summary>
+        public void Configure(InputMapper input, Transform leftController,
+            LineRenderer rayLine, LayerMask instanceLayer)
+        {
+            _input = input;
+            _leftControllerTransform = leftController;
+            _rayVisual = rayLine;
+            _instanceLayer = instanceLayer;
+        }
+
         public void Initialize(SessionStore store)
         {
             _store = store;

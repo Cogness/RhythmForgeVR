@@ -44,6 +44,28 @@ namespace RhythmForge.UI.Panels
         private DrawModeController _drawMode;
         private string _activeTab = "instruments";
 
+        /// <summary>Called by RhythmForgeBootstrapper to inject all UI references (no prefabs required).</summary>
+        public void SetUIRefs(
+            Button instrumentsTab, Button patternsTab, Button scenesTab,
+            GameObject instrumentsPanel, GameObject patternsPanel, GameObject scenesPanel,
+            Transform groupButtonContainer, Text drawModeLabel,
+            Transform patternListContainer, Transform sceneListContainer, Transform lookAt)
+        {
+            _instrumentsTab          = instrumentsTab;
+            _patternsTab             = patternsTab;
+            _scenesTab               = scenesTab;
+            _instrumentsPanel        = instrumentsPanel;
+            _patternsPanel           = patternsPanel;
+            _scenesPanel             = scenesPanel;
+            _groupButtonContainer    = groupButtonContainer;
+            _drawModeLabel           = drawModeLabel;
+            _patternListContainer    = patternListContainer;
+            _sceneListContainer      = sceneListContainer;
+            _lookAtTarget            = lookAt;
+            _groupButtonPrefab       = null;
+            _patternListItemPrefab   = null;
+        }
+
         public void Initialize(SessionStore store, DrawModeController drawMode)
         {
             _store = store;

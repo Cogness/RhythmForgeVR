@@ -38,11 +38,9 @@ namespace RhythmForge.Core.Session
 
             if (type == PatternType.RhythmLoop && !metrics.closed)
             {
-                return new DraftResult
-                {
-                    success = false,
-                    error = "RhythmLoop needs a closed circle or loop-like stroke."
-                };
+                // Soft warning only — on-device VR drawing rarely closes perfectly.
+                // Proceed with the stroke; the rhythm deriver will handle it gracefully.
+                Debug.Log("[RhythmForge] RhythmLoop stroke not fully closed — proceeding anyway.");
             }
 
             var normalizedPoints = StrokeAnalyzer.NormalizePoints(rawPoints, metrics);

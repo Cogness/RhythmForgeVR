@@ -41,8 +41,21 @@ namespace RhythmForge.Interaction
         public event Action OnDraftDiscarded;
         public event Action OnStrokeStarted;
 
-        // External reference
+        // External references
         private SessionStore _store;
+        private StylusUIPointer _uiPointer;
+
+        /// <summary>Called by RhythmForgeBootstrapper to inject component references.</summary>
+        public void Configure(InputMapper input, DrawModeController drawMode,
+            Transform userHead, Material strokeMaterial = null,
+            StylusUIPointer uiPointer = null)
+        {
+            _input = input;
+            _drawMode = drawMode;
+            _userHead = userHead;
+            _uiPointer = uiPointer;
+            if (strokeMaterial != null) _strokeMaterial = strokeMaterial;
+        }
 
         public void Initialize(SessionStore store)
         {
@@ -56,8 +69,14 @@ namespace RhythmForge.Interaction
             // Don't allow new drawing while there's a pending draft
             if (HasPendingDraft)
             {
-                // Back double-tap discards pending draft
-                if (_input.BackDoubleTap)
+                // Front button (single press) = confirm/save draft
+                if (_input.FrontButtonDown)
+                    ConfirmDraft(false);
+                // Back button (single press) = discard draft
+                else if (_input.BackButtonDown)
+                    DiscardPending();
+                // Back double-tap = also discard (legacy)
+                else if (_input.BackDoubleTap)
                     DiscardPending();
                 return;
             }
@@ -79,8 +98,8 @@ namespace RhythmForge.Interaction
                 FinishStroke();
             }
 
-            // Front button cycles draw mode
-            if (_input.FrontButtonDown)
+            // Front button cycles draw mode (suppressed when ray is on a UI button)
+            if (_input.FrontButtonDown && (_uiPointer == null || !_uiPointer.IsHoveringUI))
                 _drawMode?.CycleMode();
 
             // Back button undoes last stroke

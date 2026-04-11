@@ -41,6 +41,45 @@ namespace RhythmForge
         [Header("Scene")]
         [SerializeField] private Transform _instanceContainer;
 
+        /// <summary>Called by RhythmForgeBootstrapper to inject all subsystem and UI references.</summary>
+        public void Configure(
+            AudioEngine audioEngine,
+            Sequencer.Sequencer sequencer,
+            StrokeCapture strokeCapture,
+            DrawModeController drawModeController,
+            InputMapper inputMapper,
+            InstanceGrabber instanceGrabber,
+            CommitCardPanel commitCard,
+            InspectorPanel inspectorPanel,
+            DockPanel dockPanel,
+            TransportPanel transportPanel,
+            SceneStripPanel sceneStripPanel,
+            ArrangementPanel arrangementPanel,
+            ToastMessage toast,
+            Material rhythmMaterial,
+            Material melodyMaterial,
+            Material harmonyMaterial,
+            Transform instanceContainer)
+        {
+            _audioEngine        = audioEngine;
+            _sequencer          = sequencer;
+            _strokeCapture      = strokeCapture;
+            _drawModeController = drawModeController;
+            _inputMapper        = inputMapper;
+            _instanceGrabber    = instanceGrabber;
+            _commitCard         = commitCard;
+            _inspectorPanel     = inspectorPanel;
+            _dockPanel          = dockPanel;
+            _transportPanel     = transportPanel;
+            _sceneStripPanel    = sceneStripPanel;
+            _arrangementPanel   = arrangementPanel;
+            _toast              = toast;
+            _rhythmMaterial     = rhythmMaterial;
+            _melodyMaterial     = melodyMaterial;
+            _harmonyMaterial    = harmonyMaterial;
+            _instanceContainer  = instanceContainer;
+        }
+
         // Core state
         private SessionStore _store;
         private Dictionary<string, PatternVisualizer> _visualizers = new Dictionary<string, PatternVisualizer>();
@@ -55,8 +94,20 @@ namespace RhythmForge
                 _store.LoadState(saved);
         }
 
+        private bool _initialized;
+
         private void Start()
         {
+            // Skip if already called by bootstrapper
+            if (!_initialized) InitializeSubsystems();
+        }
+
+        /// <summary>Called by RhythmForgeBootstrapper to initialize before LoadDemoSession.</summary>
+        public void InitializeSubsystems()
+        {
+            if (_initialized) return;
+            _initialized = true;
+
             // Initialize subsystems
             if (_sequencer) _sequencer.Initialize(_store);
             if (_strokeCapture) _strokeCapture.Initialize(_store);

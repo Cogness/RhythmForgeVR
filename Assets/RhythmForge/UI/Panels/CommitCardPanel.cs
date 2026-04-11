@@ -28,6 +28,22 @@ namespace RhythmForge.UI.Panels
         private StrokeCapture _strokeCapture;
         private DraftResult _currentDraft;
 
+        /// <summary>Called by RhythmForgeBootstrapper to inject all UI element references.</summary>
+        public void SetUIRefs(Text nameText, Text summaryText, Text detailsText,
+            Text typeLabel, Image typeColorBar, Button saveBtn, Button saveDupBtn,
+            Button discardBtn, Transform lookAt)
+        {
+            _nameText    = nameText;
+            _summaryText = summaryText;
+            _detailsText = detailsText;
+            _typeLabel   = typeLabel;
+            _typeColorBar = typeColorBar;
+            _saveButton   = saveBtn;
+            _saveDupButton = saveDupBtn;
+            _discardButton = discardBtn;
+            _lookAtTarget  = lookAt;
+        }
+
         public void Initialize(StrokeCapture strokeCapture)
         {
             _strokeCapture = strokeCapture;

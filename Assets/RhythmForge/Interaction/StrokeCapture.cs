@@ -69,19 +69,22 @@ namespace RhythmForge.Interaction
             // Don't allow new drawing while there's a pending draft
             if (HasPendingDraft)
             {
-                // Front button (single press) = confirm/save draft
-                if (_input.FrontButtonDown)
-                    ConfirmDraft(false);
-                // Back button (single press) = discard draft
-                else if (_input.BackButtonDown)
-                    DiscardPending();
-                // Back double-tap = also discard (legacy)
-                else if (_input.BackDoubleTap)
-                    DiscardPending();
+                // If a UI button was clicked this frame (Save/Discard in CommitCardPanel)
+                // the button's onClick handles it — don't also confirm via pen logic.
+                if (!_input.FrontButtonConsumed)
+                {
+                    if (_input.FrontButtonDown)
+                        ConfirmDraft(false);
+                    else if (_input.BackButtonDown || _input.BackDoubleTap)
+                        DiscardPending();
+                }
                 return;
             }
 
             float pressure = _input.TipPressure;
+
+            // Suppress drawing while back button held (reserved for panel dragging)
+            if (_input.BackButton) pressure = 0f;
 
             if (pressure > 0.05f)
             {
@@ -98,8 +101,8 @@ namespace RhythmForge.Interaction
                 FinishStroke();
             }
 
-            // Front button cycles draw mode (suppressed when ray is on a UI button)
-            if (_input.FrontButtonDown && (_uiPointer == null || !_uiPointer.IsHoveringUI))
+            // Front button cycles draw mode — skip if consumed by UI click this frame
+            if (_input.FrontButtonDown && !_input.FrontButtonConsumed)
                 _drawMode?.CycleMode();
 
             // Back button undoes last stroke

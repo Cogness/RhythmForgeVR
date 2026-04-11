@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -7,9 +6,8 @@ namespace RhythmForge.Interaction
 {
     /// <summary>
     /// Fires a UI ray from the MX Ink stylus tip to interact with world-space Canvas panels.
-    /// Uses GraphicRaycaster on each active Canvas to find hovered Buttons.
-    /// Front button click = pointer click on hovered button.
-    /// Shows a yellow line renderer from the stylus tip toward the nearest UI hit.
+    /// Hit detection uses pure local-space math — no Camera.main dependency (safe in OVR/VR).
+    /// Front button: clicks hovered button. Does NOT cycle draw mode or confirm draft.
     /// </summary>
     [DefaultExecutionOrder(10)]
     public class StylusUIPointer : MonoBehaviour
@@ -19,24 +17,56 @@ namespace RhythmForge.Interaction
         [SerializeField] private float _maxRayDistance = 4f;
 
         private Button _hoveredButton;
+        private ColorBlock _hoveredOriginalColors;
+        private GameObject _cursorDot;
 
-        /// <summary>True while the stylus ray is pointing at an interactive UI button.</summary>
+        // Hover highlight: bright white tint
+        private static readonly Color HoverTint = new Color(1f, 1f, 1f, 1f);
+
+        /// <summary>True while the stylus ray is over an interactive UI button.</summary>
         public bool IsHoveringUI => _hoveredButton != null;
+
+        /// <summary>
+        /// True for exactly one frame when the front button was pressed AND a UI button
+        /// was clicked. StrokeCapture reads this to skip mode-cycle and draft-confirm.
+        /// </summary>
+        public bool DidClickUI { get; private set; }
 
         public void Configure(InputMapper input, LineRenderer rayVisual, LayerMask uiLayer)
         {
             _input = input;
             _rayVisual = rayVisual;
+
+            // Style ray: thin white like Quest system pointer
+            if (_rayVisual != null)
+            {
+                _rayVisual.startWidth = 0.002f;
+                _rayVisual.endWidth   = 0.001f;
+                var mat = new Material(Shader.Find("Sprites/Default"));
+                mat.color = Color.white;
+                _rayVisual.material = mat;
+            }
+
+            // Cursor dot: small white sphere at ray hit point
+            _cursorDot = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            _cursorDot.name = "StylusUICursor";
+            Object.Destroy(_cursorDot.GetComponent<SphereCollider>());
+            _cursorDot.transform.localScale = Vector3.one * 0.012f;
+            var dotMat = new Material(Shader.Find("Sprites/Default"));
+            dotMat.color = Color.white;
+            _cursorDot.GetComponent<Renderer>().material = dotMat;
+            _cursorDot.SetActive(false);
         }
 
         private void Update()
         {
+            DidClickUI = false;
+
             if (_input == null) return;
 
-            bool stylusActive = _input.IsStylusActive;
-            if (!stylusActive)
+            if (!_input.IsStylusActive)
             {
-                SetRay(false, Vector3.zero, Vector3.zero);
+                SetRay(false, Vector3.zero, Vector3.zero, Vector3.zero);
                 ClearHover();
                 return;
             }
@@ -47,41 +77,36 @@ namespace RhythmForge.Interaction
 
             Button foundButton = null;
             Vector3 hitPoint = origin + direction * _maxRayDistance;
-
-            // Test against every active GraphicRaycaster in the scene
-            var raycasters = Object.FindObjectsByType<GraphicRaycaster>(
-                FindObjectsSortMode.None);
-
             float closestDist = _maxRayDistance;
+
+            var raycasters = Object.FindObjectsByType<GraphicRaycaster>(FindObjectsSortMode.None);
 
             foreach (var gr in raycasters)
             {
                 if (!gr.gameObject.activeInHierarchy) continue;
-
                 var canvas = gr.GetComponent<Canvas>();
-                if (canvas == null || canvas.renderMode != UnityEngine.RenderMode.WorldSpace)
-                    continue;
+                if (canvas == null || canvas.renderMode != RenderMode.WorldSpace) continue;
 
-                // Build a fake PointerEventData with a screen-space position derived
-                // from projecting the ray onto the canvas plane.
-                var plane = new Plane(-canvas.transform.forward, canvas.transform.position);
+                // Intersect ray with canvas plane (canvas faces +Z in local space)
+                var canvasPlane = new Plane(canvas.transform.forward, canvas.transform.position);
                 float dist;
-                if (!plane.Raycast(new Ray(origin, direction), out dist)) continue;
-                if (dist > closestDist) continue;
+                if (!canvasPlane.Raycast(new Ray(origin, direction), out dist)) continue;
+                if (dist > closestDist || dist < 0.01f) continue;
 
                 Vector3 worldHit = origin + direction * dist;
 
-                // Convert world hit to canvas local space
+                // worldHit → canvas local space (unscaled)
+                // Canvas localScale is 0.001, so InverseTransformPoint gives pixel coords
                 Vector3 localHit = canvas.transform.InverseTransformPoint(worldHit);
-                var rt = canvas.GetComponent<RectTransform>();
-                Vector2 canvasSize = rt.sizeDelta;
+                var canvasRt = canvas.GetComponent<RectTransform>();
+                Vector2 canvasSize = canvasRt.sizeDelta;
 
-                // Check if hit is within canvas bounds
-                if (localHit.x < 0 || localHit.x > canvasSize.x ||
-                    localHit.y < 0 || localHit.y > canvasSize.y)
+                // Canvas pivot is bottom-left (0,0); check bounds
+                if (localHit.x < 0f || localHit.x > canvasSize.x ||
+                    localHit.y < 0f || localHit.y > canvasSize.y)
                     continue;
 
-                // Find which Button contains this local point
+                // Hit is on this canvas — now find which Button contains the pixel point
                 var buttons = gr.GetComponentsInChildren<Button>(false);
                 foreach (var btn in buttons)
                 {
@@ -89,48 +114,59 @@ namespace RhythmForge.Interaction
                     var btnRt = btn.GetComponent<RectTransform>();
                     if (btnRt == null) continue;
 
-                    // Convert world hit to button's local space
-                    Vector2 localPos;
-                    if (RectTransformUtility.ScreenPointToLocalPointInRectangle(
-                            btnRt,
-                            RectTransformUtility.WorldToScreenPoint(Camera.main, worldHit),
-                            Camera.main,
-                            out localPos))
+                    // Button local space: InverseTransformPoint handles any nesting
+                    Vector3 btnLocal = btnRt.InverseTransformPoint(worldHit);
+                    if (btnRt.rect.Contains(new Vector2(btnLocal.x, btnLocal.y)))
                     {
-                        if (btnRt.rect.Contains(localPos))
-                        {
-                            foundButton = btn;
-                            closestDist = dist;
-                            hitPoint = worldHit;
-                            break;
-                        }
+                        foundButton = btn;
+                        closestDist = dist;
+                        hitPoint = worldHit;
+                        break;
                     }
                 }
             }
 
-            // Update ray visual
-            SetRay(true, origin, hitPoint);
+            SetRay(true, origin, hitPoint, hitPoint);
 
-            // Hover state
+            // Hover: apply/remove tint and update cursor dot color
             if (foundButton != _hoveredButton)
             {
                 if (_hoveredButton != null)
+                {
+                    _hoveredButton.colors = _hoveredOriginalColors;
                     ExecuteEvents.Execute(_hoveredButton.gameObject,
-                        new PointerEventData(EventSystem.current),
-                        ExecuteEvents.pointerExitHandler);
+                        new PointerEventData(EventSystem.current), ExecuteEvents.pointerExitHandler);
+                }
 
                 _hoveredButton = foundButton;
 
                 if (_hoveredButton != null)
+                {
+                    _hoveredOriginalColors = _hoveredButton.colors;
+                    var tinted = _hoveredButton.colors;
+                    tinted.normalColor      = new Color(1f, 0.9f, 0.3f);  // gold
+                    tinted.highlightedColor = new Color(1f, 0.9f, 0.3f);
+                    _hoveredButton.colors = tinted;
                     ExecuteEvents.Execute(_hoveredButton.gameObject,
-                        new PointerEventData(EventSystem.current),
-                        ExecuteEvents.pointerEnterHandler);
+                        new PointerEventData(EventSystem.current), ExecuteEvents.pointerEnterHandler);
+                }
             }
 
-            // Click on front button press (edge)
-            bool clickNow = _input.FrontButtonDown;
-            if (clickNow && _hoveredButton != null)
+            // Cursor dot: gold on button hover, white otherwise
+            if (_cursorDot != null)
             {
+                var r = _cursorDot.GetComponent<Renderer>();
+                if (r != null)
+                    r.material.color = _hoveredButton != null
+                        ? new Color(1f, 0.9f, 0.3f)
+                        : Color.white;
+            }
+
+            // Click — only fires when hovering a button; marks input as consumed
+            if (_input.FrontButtonDown && _hoveredButton != null)
+            {
+                DidClickUI = true;
+                _input.FrontButtonConsumed = true;
                 var ed = new PointerEventData(EventSystem.current);
                 ExecuteEvents.Execute(_hoveredButton.gameObject, ed, ExecuteEvents.pointerDownHandler);
                 ExecuteEvents.Execute(_hoveredButton.gameObject, ed, ExecuteEvents.pointerClickHandler);
@@ -142,21 +178,29 @@ namespace RhythmForge.Interaction
         {
             if (_hoveredButton != null)
             {
+                _hoveredButton.colors = _hoveredOriginalColors;
                 ExecuteEvents.Execute(_hoveredButton.gameObject,
-                    new PointerEventData(EventSystem.current),
-                    ExecuteEvents.pointerExitHandler);
+                    new PointerEventData(EventSystem.current), ExecuteEvents.pointerExitHandler);
                 _hoveredButton = null;
             }
         }
 
-        private void SetRay(bool visible, Vector3 from, Vector3 to)
+        private void SetRay(bool visible, Vector3 from, Vector3 to, Vector3 dotPos)
         {
-            if (_rayVisual == null) return;
-            _rayVisual.enabled = visible;
-            if (visible)
+            if (_rayVisual != null)
             {
-                _rayVisual.SetPosition(0, from);
-                _rayVisual.SetPosition(1, to);
+                _rayVisual.enabled = visible;
+                if (visible)
+                {
+                    _rayVisual.SetPosition(0, from);
+                    _rayVisual.SetPosition(1, to);
+                }
+            }
+
+            if (_cursorDot != null)
+            {
+                _cursorDot.SetActive(visible);
+                if (visible) _cursorDot.transform.position = dotPos;
             }
         }
     }

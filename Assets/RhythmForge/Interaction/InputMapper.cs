@@ -41,14 +41,21 @@ namespace RhythmForge.Interaction
         private bool _prevBackButton;
 
         public bool FrontButtonDown { get; private set; }
-        public bool BackButtonDown { get; private set; }
+        public bool BackButtonDown  { get; private set; }
+
+        /// <summary>
+        /// Set this to true to prevent other systems from acting on FrontButtonDown
+        /// this frame. StylusUIPointer sets it when a UI button is clicked.
+        /// </summary>
+        public bool FrontButtonConsumed { get; set; }
 
         private void Update()
         {
-            FrontButtonDown = FrontButton && !_prevFrontButton;
-            BackButtonDown = BackButton && !_prevBackButton;
-            _prevFrontButton = FrontButton;
-            _prevBackButton = BackButton;
+            FrontButtonDown     = FrontButton && !_prevFrontButton;
+            BackButtonDown      = BackButton  && !_prevBackButton;
+            _prevFrontButton    = FrontButton;
+            _prevBackButton     = BackButton;
+            FrontButtonConsumed = false; // reset each frame
         }
     }
 }

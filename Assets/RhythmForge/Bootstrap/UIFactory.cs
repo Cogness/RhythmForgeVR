@@ -43,19 +43,15 @@ namespace RhythmForge.Bootstrap
             canvas.renderMode = RenderMode.WorldSpace;
 
             var rt = go.GetComponent<RectTransform>();
+            // Pivot at bottom-left so local coords are 0..width, 0..height
+            // This matches the hit-detection math in StylusUIPointer.
+            rt.pivot = Vector2.zero;
+            rt.anchorMin = Vector2.zero;
+            rt.anchorMax = Vector2.zero;
             rt.sizeDelta = size;
 
             go.AddComponent<CanvasScaler>();
             go.AddComponent<GraphicRaycaster>();
-
-            // BoxCollider so Physics.Raycast can hit this canvas.
-            // Size is in canvas pixels; world size = pixels * worldScale.
-            var col = go.AddComponent<BoxCollider>();
-            col.size = new Vector3(size.x, size.y, 1f);
-            col.center = new Vector3(size.x * 0.5f, size.y * 0.5f, 0f);
-
-            // Layer 5 = Unity built-in "UI" layer
-            go.layer = 5;
 
             return canvas;
         }
@@ -304,12 +300,13 @@ namespace RhythmForge.Bootstrap
             var img = go.AddComponent<Image>();
             var rt = go.GetComponent<RectTransform>();
             SetAnchoredRect(rt, rect);
-            img.color = new Color(0.1f, 0.1f, 0.14f, 0.6f);
+            img.color = new Color(0f, 0f, 0f, 0f); // fully transparent — panel bg provides framing
 
             // Viewport
             var vp = new GameObject("Viewport");
             vp.transform.SetParent(go.transform, false);
             var vpImg = vp.AddComponent<Image>();
+            vpImg.color = new Color(0f, 0f, 0f, 0f); // transparent — needed for Mask but not visible
             var mask = vp.AddComponent<Mask>();
             mask.showMaskGraphic = false;
             var vpRt = vp.GetComponent<RectTransform>();

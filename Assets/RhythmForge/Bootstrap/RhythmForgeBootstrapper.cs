@@ -95,32 +95,73 @@ namespace RhythmForge.Bootstrap
         private readonly List<(Canvas canvas, float x, float y, float z)> _panelPositions
             = new List<(Canvas, float, float, float)>();
 
+        private InputMapper _inputMapperRef; // set after BuildSubsystems, used by RegisterPanel
+
         private void RegisterPanel(Canvas canvas, float x, float y, float z)
         {
             _panelPositions.Add((canvas, x, y, z));
+
+            // Attach dragger immediately; Configure() called once inputMapper is ready
+            canvas.gameObject.AddComponent<PanelDragger>();
+        }
+
+        private void WirePanelDraggers(InputMapper input)
+        {
+            foreach (var (canvas, _, _, _) in _panelPositions)
+            {
+                if (canvas == null) continue;
+                var dragger = canvas.GetComponent<PanelDragger>();
+                if (dragger != null) dragger.Configure(input);
+            }
         }
 
         private void RepositionPanels()
         {
             Transform head = _rig?.CenterEye;
 
+            // Use head's actual position but clamp to a sensible standing height.
+            Vector3 headPos = head != null ? head.position : new Vector3(0f, 1.6f, 0f);
+            // Guarantee panels are never below knee height regardless of tracking origin.
+            if (headPos.y < 0.5f) headPos.y = 1.6f;
+
+            // Flatten head forward to horizontal plane — panels sit on the wall in front.
+            Vector3 fwd   = Vector3.forward;
+            Vector3 right = Vector3.right;
+            if (head != null)
+            {
+                fwd = head.forward; fwd.y = 0f;
+                if (fwd.sqrMagnitude < 0.01f) fwd = Vector3.forward;
+                fwd.Normalize();
+                right = Vector3.Cross(Vector3.up, fwd).normalized;
+            }
+
+            // Canvas local +Z should point toward the user so the front face is visible.
+            // LookRotation(dir) sets local +Z = dir, so we pass the direction FROM panel TO user = -fwd.
+            // But we also need local +Y = world up to avoid upside-down rendering.
+            Quaternion facingUser = Quaternion.LookRotation(-fwd, Vector3.up);
+
             foreach (var (canvas, x, y, z) in _panelPositions)
             {
                 if (canvas == null) continue;
 
-                if (head != null)
-                {
-                    // Parent to head first, then set LOCAL position so panel
-                    // is always in front of camera regardless of world position.
-                    canvas.transform.SetParent(head, false);
-                    canvas.transform.localPosition = new Vector3(x, y, z);
-                    canvas.transform.localRotation = Quaternion.identity;
-                }
-                else
-                {
-                    // No head tracking — absolute fallback
-                    canvas.transform.position = new Vector3(x, 1.3f + y, z);
-                }
+                canvas.transform.SetParent(null, false);
+
+                // x = lateral offset, y = vertical offset from eye height, z = forward distance
+                Vector3 worldPos = headPos
+                    + fwd   * z
+                    + right * x
+                    + Vector3.up * y;
+
+                canvas.transform.position = worldPos;
+                canvas.transform.rotation = facingUser;
+            }
+
+            // Disable canvas component on inactive panels so they are fully invisible.
+            foreach (var (canvas, _, _, _) in _panelPositions)
+            {
+                if (canvas == null) continue;
+                if (!canvas.gameObject.activeSelf)
+                    canvas.enabled = false;
             }
         }
 
@@ -142,6 +183,9 @@ namespace RhythmForge.Bootstrap
 
             // ── 4. UI panels ──
             var panels = BuildUIPanels(subsystems.strokeCapture, subsystems.drawMode);
+
+            // ── 4b. Wire panel draggers now that inputMapper exists ──
+            WirePanelDraggers(subsystems.inputMapper);
 
             // ── 5. Instance container ──
             var instanceContainer = new GameObject("InstanceContainer").transform;
@@ -368,8 +412,8 @@ namespace RhythmForge.Bootstrap
         {
             var canvas = UIFactory.CreateWorldCanvas("TransportPanel",
                 transform, new Vector2(520, 100),
-                PositionInFront(-0.32f, -0.12f, 1.1f), 0.001f);
-            RegisterPanel(canvas, -0.32f, -0.12f, 1.1f);
+                PositionInFront(0f, -0.22f, 1.1f), 0.001f);
+            RegisterPanel(canvas, 0f, -0.22f, 1.1f);
 
             UIFactory.CreateBackground(canvas.transform,
                 new Vector2(520, 100), MaterialFactory.PanelBg);
@@ -401,8 +445,8 @@ namespace RhythmForge.Bootstrap
         {
             var canvas = UIFactory.CreateWorldCanvas("SceneStripPanel",
                 transform, new Vector2(540, 70),
-                PositionInFront(0f, -0.28f, 1.1f), 0.001f);
-            RegisterPanel(canvas, 0f, -0.28f, 1.1f);
+                PositionInFront(0f, -0.36f, 1.1f), 0.001f);
+            RegisterPanel(canvas, 0f, -0.36f, 1.1f);
 
             UIFactory.CreateBackground(canvas.transform,
                 new Vector2(540, 70), MaterialFactory.PanelBg);
@@ -485,8 +529,8 @@ namespace RhythmForge.Bootstrap
         {
             var canvas = UIFactory.CreateWorldCanvas("InspectorPanel",
                 transform, new Vector2(340, 420),
-                PositionInFront(0.36f, 0f, 1.1f), 0.001f);
-            RegisterPanel(canvas, 0.36f, 0f, 1.1f);
+                PositionInFront(0.45f, 0.05f, 1.15f), 0.001f);
+            RegisterPanel(canvas, 0.45f, 0.05f, 1.15f);
 
             UIFactory.CreateBackground(canvas.transform,
                 new Vector2(340, 420), MaterialFactory.PanelBg);
@@ -566,8 +610,8 @@ namespace RhythmForge.Bootstrap
         {
             var canvas = UIFactory.CreateWorldCanvas("DockPanel",
                 transform, new Vector2(340, 380),
-                PositionInFront(-0.38f, 0f, 1.1f), 0.001f);
-            RegisterPanel(canvas, -0.38f, 0f, 1.1f);
+                PositionInFront(-0.45f, 0.05f, 1.15f), 0.001f);
+            RegisterPanel(canvas, -0.45f, 0.05f, 1.15f);
 
             UIFactory.CreateBackground(canvas.transform,
                 new Vector2(340, 380), MaterialFactory.PanelBg);
@@ -588,22 +632,34 @@ namespace RhythmForge.Bootstrap
             // ── Instruments sub-panel ──
             var instrPanelGo = new GameObject("InstrumentsPanel");
             instrPanelGo.transform.SetParent(canvas.transform, false);
-            instrPanelGo.AddComponent<RectTransform>();
+            var instrRt = instrPanelGo.AddComponent<RectTransform>();
+            instrRt.anchorMin = Vector2.zero; instrRt.anchorMax = Vector2.zero;
+            instrRt.pivot = Vector2.zero;
+            instrRt.sizeDelta = new Vector2(340, 316);
+            instrRt.anchoredPosition = new Vector2(0, 4);
             var instrScroll = UIFactory.CreateScrollView(instrPanelGo.transform, "GroupList",
-                new Rect(4, 4, 332, 316));
+                new Rect(0, 0, 340, 316));
 
             // ── Patterns sub-panel ──
             var patternPanelGo = new GameObject("PatternsPanel");
             patternPanelGo.transform.SetParent(canvas.transform, false);
-            patternPanelGo.AddComponent<RectTransform>();
+            var patternRt = patternPanelGo.AddComponent<RectTransform>();
+            patternRt.anchorMin = Vector2.zero; patternRt.anchorMax = Vector2.zero;
+            patternRt.pivot = Vector2.zero;
+            patternRt.sizeDelta = new Vector2(340, 316);
+            patternRt.anchoredPosition = new Vector2(0, 4);
             patternPanelGo.SetActive(false);
             var patternScroll = UIFactory.CreateScrollView(patternPanelGo.transform, "PatternList",
-                new Rect(4, 4, 332, 316));
+                new Rect(0, 0, 340, 316));
 
             // ── Scenes sub-panel ──
             var scenePanelGo = new GameObject("ScenesPanel");
             scenePanelGo.transform.SetParent(canvas.transform, false);
-            scenePanelGo.AddComponent<RectTransform>();
+            var sceneRt = scenePanelGo.AddComponent<RectTransform>();
+            sceneRt.anchorMin = Vector2.zero; sceneRt.anchorMax = Vector2.zero;
+            sceneRt.pivot = Vector2.zero;
+            sceneRt.sizeDelta = new Vector2(340, 316);
+            sceneRt.anchoredPosition = new Vector2(0, 4);
             scenePanelGo.SetActive(false);
 
             var panel = canvas.gameObject.AddComponent<DockPanel>();
@@ -621,8 +677,8 @@ namespace RhythmForge.Bootstrap
         {
             var canvas = UIFactory.CreateWorldCanvas("ArrangementPanel",
                 transform, new Vector2(560, 100),
-                PositionInFront(0f, -0.44f, 1.1f), 0.001f);
-            RegisterPanel(canvas, 0f, -0.44f, 1.1f);
+                PositionInFront(0f, -0.50f, 1.1f), 0.001f);
+            RegisterPanel(canvas, 0f, -0.50f, 1.1f);
 
             UIFactory.CreateBackground(canvas.transform,
                 new Vector2(560, 100), MaterialFactory.PanelBg);

@@ -1,0 +1,3909 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RhythmForge Concept Stage</title>
+  <style>
+    :root {
+      --bg: #07111f;
+      --bg-deep: #02070d;
+      --panel: rgba(8, 18, 34, 0.72);
+      --panel-strong: rgba(9, 18, 33, 0.94);
+      --line: rgba(163, 204, 255, 0.14);
+      --text: #f4f4ef;
+      --muted: #a4b6c8;
+      --cyan: #51d7ff;
+      --cyan-soft: rgba(81, 215, 255, 0.2);
+      --gold: #f7c975;
+      --teal: #62f3d3;
+      --rose: #ff8bb0;
+      --danger: #ff7a7a;
+      --success: #79ffb1;
+      --shadow: 0 24px 80px rgba(0, 0, 0, 0.42);
+      --radius-xl: 28px;
+      --radius-lg: 22px;
+      --radius-md: 16px;
+      --radius-sm: 12px;
+      --font-display: "Baskerville", "Iowan Old Style", "Palatino Linotype", serif;
+      --font-ui: "Trebuchet MS", "Segoe UI", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      min-height: 100%;
+      margin: 0;
+      background:
+        radial-gradient(circle at top left, rgba(46, 119, 190, 0.16), transparent 32%),
+        radial-gradient(circle at top right, rgba(40, 158, 144, 0.18), transparent 28%),
+        linear-gradient(180deg, #07111f 0%, #040913 54%, #02070d 100%);
+      color: var(--text);
+      font-family: var(--font-ui);
+    }
+
+    body {
+      overflow: hidden;
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    .app-shell {
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      min-height: 100vh;
+      gap: 14px;
+      padding: 16px;
+      position: relative;
+      isolation: isolate;
+    }
+
+    .app-shell::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 30% 20%, rgba(81, 215, 255, 0.08), transparent 0 28%),
+        radial-gradient(circle at 70% 12%, rgba(247, 201, 117, 0.08), transparent 0 25%),
+        linear-gradient(transparent 0 76%, rgba(12, 21, 39, 0.36) 100%);
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .topbar,
+    .panel,
+    .transport-bar {
+      border: 1px solid var(--line);
+      background: var(--panel);
+      backdrop-filter: blur(20px);
+      box-shadow: var(--shadow);
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      padding: 16px 18px;
+      border-radius: var(--radius-xl);
+    }
+
+    .brand-block {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .brand-title {
+      font-family: var(--font-display);
+      font-size: clamp(1.55rem, 2vw, 2.25rem);
+      letter-spacing: 0.04em;
+      margin: 0;
+      color: #fff6e8;
+    }
+
+    .brand-subtitle {
+      color: var(--muted);
+      font-size: 0.92rem;
+      max-width: 34rem;
+    }
+
+    .session-controls {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .control-pill,
+    .button,
+    .slot-card,
+    .scene-chip,
+    .library-card,
+    .group-card,
+    .instance-card,
+    .scene-card,
+    .inspector-card,
+    .helper-card,
+    .commit-card {
+      border: 1px solid rgba(167, 206, 255, 0.14);
+      background: rgba(7, 16, 30, 0.7);
+      border-radius: var(--radius-md);
+    }
+
+    .control-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 12px;
+      color: var(--muted);
+    }
+
+    .control-pill input,
+    .control-pill select {
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 10px;
+      padding: 7px 9px;
+      min-width: 78px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 11px 14px;
+      color: var(--text);
+      background: linear-gradient(180deg, rgba(18, 34, 62, 0.9), rgba(10, 19, 34, 0.84));
+      cursor: pointer;
+      transition: transform 140ms ease, border-color 140ms ease, box-shadow 140ms ease;
+    }
+
+    .button:hover,
+    .button:focus-visible {
+      transform: translateY(-1px);
+      border-color: rgba(81, 215, 255, 0.4);
+      box-shadow: 0 0 0 1px rgba(81, 215, 255, 0.08), 0 14px 30px rgba(14, 34, 68, 0.45);
+      outline: none;
+    }
+
+    .button.primary {
+      background: linear-gradient(180deg, rgba(41, 95, 152, 0.94), rgba(18, 42, 69, 0.95));
+    }
+
+    .button.accent {
+      background: linear-gradient(180deg, rgba(59, 111, 109, 0.94), rgba(20, 53, 51, 0.96));
+    }
+
+    .button.warning {
+      background: linear-gradient(180deg, rgba(115, 57, 57, 0.94), rgba(48, 22, 22, 0.96));
+    }
+
+    .button.small {
+      padding: 8px 10px;
+      font-size: 0.84rem;
+      border-radius: 12px;
+    }
+
+    .button.ghost {
+      background: rgba(10, 19, 34, 0.54);
+    }
+
+    .button.active {
+      border-color: rgba(247, 201, 117, 0.56);
+      box-shadow: 0 0 0 1px rgba(247, 201, 117, 0.12), inset 0 0 40px rgba(247, 201, 117, 0.12);
+    }
+
+    .main-grid {
+      min-height: 0;
+      display: grid;
+      grid-template-columns: 320px minmax(480px, 1fr) 320px;
+      gap: 14px;
+    }
+
+    .panel {
+      min-height: 0;
+      border-radius: var(--radius-xl);
+      padding: 14px;
+      overflow: hidden;
+    }
+
+    .dock-panel,
+    .inspector-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .tabs {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      padding: 4px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .tab-button {
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      padding: 10px 12px;
+      border-radius: 14px;
+      cursor: pointer;
+      transition: background 120ms ease, color 120ms ease;
+    }
+
+    .tab-button.active {
+      color: #fff2d7;
+      background: linear-gradient(180deg, rgba(48, 83, 125, 0.86), rgba(19, 36, 59, 0.76));
+      box-shadow: inset 0 0 24px rgba(81, 215, 255, 0.09);
+    }
+
+    .scroll-region {
+      min-height: 0;
+      overflow: auto;
+      padding-right: 4px;
+    }
+
+    .scroll-region::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .scroll-region::-webkit-scrollbar-thumb {
+      background: rgba(163, 204, 255, 0.16);
+      border-radius: 999px;
+    }
+
+    .helper-card,
+    .inspector-card,
+    .library-card,
+    .group-card,
+    .scene-card,
+    .commit-card {
+      padding: 14px;
+    }
+
+    .helper-card h3,
+    .inspector-card h3,
+    .section-title {
+      margin: 0 0 10px;
+      font-size: 0.92rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #dfe9f5;
+    }
+
+    .helper-card ul,
+    .inspector-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      gap: 9px;
+      color: var(--muted);
+      font-size: 0.93rem;
+    }
+
+    .workspace-panel {
+      min-height: 0;
+      display: grid;
+      grid-template-rows: auto 1fr;
+      gap: 12px;
+      padding: 0;
+      background: transparent;
+      border: 0;
+      box-shadow: none;
+      backdrop-filter: none;
+      overflow: visible;
+    }
+
+    .stage-toolbar,
+    .transport-bar {
+      padding: 12px 14px;
+      border-radius: var(--radius-xl);
+    }
+
+    .stage-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .mode-switch {
+      display: inline-flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .status-line {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .status-line strong {
+      color: #fff2d7;
+      font-weight: 600;
+    }
+
+    .workspace {
+      position: relative;
+      min-height: 0;
+      border-radius: 34px;
+      overflow: hidden;
+      border: 1px solid rgba(163, 204, 255, 0.16);
+      background:
+        radial-gradient(circle at 50% 18%, rgba(30, 118, 146, 0.13), transparent 26%),
+        radial-gradient(circle at 50% 82%, rgba(247, 201, 117, 0.12), transparent 22%),
+        linear-gradient(180deg, rgba(6, 15, 29, 0.97), rgba(4, 9, 18, 0.99));
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.03), var(--shadow);
+      cursor: crosshair;
+      user-select: none;
+      touch-action: none;
+    }
+
+    #stage-canvas,
+    #stage-instances {
+      position: absolute;
+      inset: 0;
+    }
+
+    #stage-canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    #stage-instances {
+      pointer-events: none;
+    }
+
+    .instance-card {
+      position: absolute;
+      min-width: 140px;
+      max-width: 176px;
+      padding: 10px 12px;
+      color: var(--text);
+      transform: translate(-50%, -50%);
+      pointer-events: auto;
+      cursor: grab;
+      box-shadow: 0 18px 42px rgba(0, 0, 0, 0.38);
+      background: linear-gradient(180deg, rgba(10, 18, 33, 0.86), rgba(7, 13, 24, 0.86));
+      transition: border-color 140ms ease, transform 140ms ease, box-shadow 140ms ease;
+    }
+
+    .instance-card:hover,
+    .instance-card.selected {
+      border-color: rgba(81, 215, 255, 0.52);
+      box-shadow: 0 0 0 1px rgba(81, 215, 255, 0.08), 0 24px 48px rgba(0, 0, 0, 0.4);
+    }
+
+    .instance-card.selected {
+      transform: translate(-50%, -50%) scale(1.03);
+    }
+
+    .instance-card.dragging {
+      cursor: grabbing;
+    }
+
+    .instance-card.pulsing::after {
+      content: "";
+      position: absolute;
+      inset: -8px;
+      border-radius: 24px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 0 22px rgba(81, 215, 255, 0.22);
+      opacity: 0.8;
+      animation: pulse-ring 620ms ease-out forwards;
+      pointer-events: none;
+    }
+
+    .instance-title {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 5px;
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    .instance-subtitle {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+
+    .tag {
+      display: inline-flex;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--muted);
+    }
+
+    .workspace-hint {
+      position: absolute;
+      left: 50%;
+      bottom: 24px;
+      transform: translateX(-50%);
+      padding: 10px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(163, 204, 255, 0.18);
+      background: rgba(5, 11, 21, 0.76);
+      color: var(--muted);
+      font-size: 0.92rem;
+      pointer-events: none;
+    }
+
+    .commit-card {
+      position: absolute;
+      left: 22px;
+      bottom: 22px;
+      width: min(340px, calc(100% - 44px));
+      background: linear-gradient(180deg, rgba(12, 23, 43, 0.96), rgba(8, 16, 30, 0.96));
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+      z-index: 5;
+    }
+
+    .commit-card.hidden,
+    .hidden {
+      display: none;
+    }
+
+    .commit-card input {
+      width: 100%;
+      padding: 10px 12px;
+      margin: 10px 0 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text);
+    }
+
+    .commit-actions,
+    .inline-actions,
+    .panel-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .meta-line,
+    .library-meta,
+    .scene-meta,
+    .inspector-meta {
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.45;
+    }
+
+    .stack {
+      display: grid;
+      gap: 12px;
+    }
+
+    .group-card.active,
+    .library-card.selected,
+    .scene-card.active {
+      border-color: rgba(247, 201, 117, 0.54);
+      box-shadow: inset 0 0 24px rgba(247, 201, 117, 0.07);
+    }
+
+    .group-card header,
+    .library-card header,
+    .scene-card header,
+    .inspector-card header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .title-line {
+      font-size: 1.02rem;
+      font-weight: 600;
+    }
+
+    .swatches {
+      display: inline-flex;
+      gap: 6px;
+    }
+
+    .swatch {
+      width: 12px;
+      height: 12px;
+      border-radius: 999px;
+      box-shadow: 0 0 14px currentColor;
+    }
+
+    .inspector-panel .scroll-region {
+      display: grid;
+      gap: 12px;
+    }
+
+    .field {
+      display: grid;
+      gap: 6px;
+    }
+
+    .field label {
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    .field input,
+    .field select,
+    .field textarea {
+      width: 100%;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text);
+      padding: 10px 12px;
+    }
+
+    .field input[type="range"] {
+      padding: 0;
+    }
+
+    .scene-strip,
+    .arrangement-strip {
+      display: grid;
+      gap: 10px;
+    }
+
+    .scene-strip {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      margin-bottom: 12px;
+    }
+
+    .scene-chip {
+      padding: 10px 12px;
+      display: grid;
+      gap: 6px;
+      min-height: 82px;
+    }
+
+    .scene-chip.active {
+      border-color: rgba(81, 215, 255, 0.52);
+      box-shadow: inset 0 0 26px rgba(81, 215, 255, 0.08);
+    }
+
+    .scene-chip.playing {
+      border-color: rgba(247, 201, 117, 0.54);
+      box-shadow: inset 0 0 26px rgba(247, 201, 117, 0.12);
+    }
+
+    .scene-chip .chip-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .chip-label {
+      font-size: 1.04rem;
+      font-weight: 600;
+    }
+
+    .chip-caption {
+      color: var(--muted);
+      font-size: 0.84rem;
+      min-height: 2.4em;
+    }
+
+    .arrangement-strip {
+      grid-template-columns: repeat(8, minmax(0, 1fr));
+    }
+
+    .slot-card {
+      padding: 12px 10px;
+      display: grid;
+      gap: 8px;
+      min-height: 110px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .slot-card.active::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(81, 215, 255, 0.12), transparent 50%, rgba(247, 201, 117, 0.06));
+      pointer-events: none;
+    }
+
+    .slot-card.active {
+      border-color: rgba(81, 215, 255, 0.54);
+      box-shadow: inset 0 0 24px rgba(81, 215, 255, 0.1);
+    }
+
+    .slot-card.empty {
+      opacity: 0.68;
+    }
+
+    .slot-card label {
+      display: grid;
+      gap: 4px;
+      color: var(--muted);
+      font-size: 0.8rem;
+    }
+
+    .slot-card select {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 10px;
+      padding: 8px 9px;
+    }
+
+    .slot-index {
+      font-size: 0.76rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #c9d7e8;
+    }
+
+    .toast {
+      position: fixed;
+      right: 20px;
+      bottom: 20px;
+      max-width: 340px;
+      padding: 14px 16px;
+      border-radius: 18px;
+      border: 1px solid rgba(163, 204, 255, 0.16);
+      background: rgba(8, 18, 34, 0.94);
+      color: var(--text);
+      box-shadow: var(--shadow);
+      opacity: 0;
+      transform: translateY(12px);
+      pointer-events: none;
+      transition: opacity 180ms ease, transform 180ms ease;
+      z-index: 20;
+    }
+
+    .toast.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .stat {
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--muted);
+      font-size: 0.84rem;
+    }
+
+    .stat strong {
+      display: block;
+      margin-top: 4px;
+      color: var(--text);
+      font-size: 1.02rem;
+    }
+
+    .dna-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .trait-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .trait-chip {
+      display: inline-flex;
+      align-items: center;
+      padding: 7px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.04);
+      color: #e7eef7;
+      font-size: 0.82rem;
+      letter-spacing: 0.02em;
+    }
+
+    .trait-chip.soft {
+      color: #d7f8ec;
+      border-color: rgba(98, 243, 211, 0.24);
+      background: rgba(98, 243, 211, 0.08);
+    }
+
+    .trait-chip.sharp {
+      color: #ffe0cf;
+      border-color: rgba(247, 201, 117, 0.24);
+      background: rgba(247, 201, 117, 0.08);
+    }
+
+    .trait-chip.hot {
+      color: #ffdbe5;
+      border-color: rgba(255, 139, 176, 0.26);
+      background: rgba(255, 139, 176, 0.08);
+    }
+
+    .subtle {
+      color: var(--muted);
+      font-size: 0.86rem;
+    }
+
+    @keyframes pulse-ring {
+      from {
+        opacity: 0.82;
+        transform: scale(0.92);
+      }
+      to {
+        opacity: 0;
+        transform: scale(1.14);
+      }
+    }
+
+    @media (max-width: 1380px) {
+      .main-grid {
+        grid-template-columns: 280px minmax(420px, 1fr) 300px;
+      }
+    }
+
+    @media (max-width: 1180px) {
+      body {
+        overflow: auto;
+      }
+
+      .app-shell {
+        min-height: auto;
+      }
+
+      .main-grid {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto minmax(520px, 70vh) auto;
+      }
+
+      .panel,
+      .workspace-panel,
+      .transport-bar {
+        min-height: auto;
+      }
+
+      .scene-strip {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .arrangement-strip {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 740px) {
+      .topbar {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .scene-strip,
+      .arrangement-strip {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand-block">
+        <h1 class="brand-title">RhythmForge Concept Stage</h1>
+        <div class="brand-subtitle">Pattern-first composition for loops, melody lines, harmony pads, scenes, and reusable ensembles.</div>
+      </div>
+      <div class="session-controls">
+        <label class="control-pill">BPM <input id="tempo-input" type="number" min="60" max="160" step="1"></label>
+        <label class="control-pill">Key <select id="key-select"></select></label>
+        <button id="play-toggle" class="button primary" type="button">Play</button>
+        <button id="audio-toggle" class="button accent" type="button">Start Audio</button>
+        <button id="load-demo" class="button" type="button">Load Demo Session</button>
+        <button id="reset-session" class="button ghost" type="button">New Session</button>
+      </div>
+    </header>
+
+    <main class="main-grid">
+      <aside class="panel dock-panel">
+        <div class="tabs">
+          <button class="tab-button" data-tab="instruments" type="button">Instruments</button>
+          <button class="tab-button" data-tab="patterns" type="button">Patterns</button>
+          <button class="tab-button" data-tab="scenes" type="button">Scenes</button>
+        </div>
+        <div id="dock-content" class="scroll-region"></div>
+        <section class="helper-card">
+          <h3>VR to Web</h3>
+          <ul>
+            <li><strong>Stylus draw</strong> becomes mouse or trackpad drawing on the stage.</li>
+            <li><strong>Grab in space</strong> becomes dragging floating pattern labels across the stage.</li>
+            <li><strong>Depth in VR</strong> becomes the selected instance <strong>Depth</strong> slider.</li>
+            <li><strong>Scene tiles</strong> stay visible below the stage for quick A to D switching.</li>
+          </ul>
+        </section>
+      </aside>
+
+      <section class="workspace-panel">
+        <div class="stage-toolbar topbar">
+          <div class="mode-switch">
+            <button class="button small" data-draw-mode="RhythmLoop" type="button">RhythmLoop</button>
+            <button class="button small" data-draw-mode="MelodyLine" type="button">MelodyLine</button>
+            <button class="button small" data-draw-mode="HarmonyPad" type="button">HarmonyPad</button>
+          </div>
+          <div class="status-line">
+            <span id="scene-status"></span>
+            <span id="transport-status"></span>
+          </div>
+        </div>
+
+        <div id="workspace" class="workspace">
+          <canvas id="stage-canvas" aria-hidden="true"></canvas>
+          <div id="stage-instances"></div>
+          <div id="empty-hint" class="workspace-hint">Draw on the stage to commit a pattern, or load the demo session to hear the concept immediately.</div>
+          <section id="pending-card" class="commit-card hidden">
+            <div class="section-title">Commit Pattern</div>
+            <div id="pending-summary" class="meta-line"></div>
+            <input id="pending-name" type="text" aria-label="Pending pattern name">
+            <div id="pending-details" class="meta-line"></div>
+            <div class="commit-actions">
+              <button id="pending-save" class="button primary small" type="button">Save</button>
+              <button id="pending-duplicate" class="button small" type="button">Save + Duplicate</button>
+              <button id="pending-discard" class="button ghost small" type="button">Discard</button>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <aside class="panel inspector-panel">
+        <div id="inspector-content" class="scroll-region"></div>
+      </aside>
+    </main>
+
+    <footer class="transport-bar">
+      <div class="section-title">Scene Slots</div>
+      <div id="scene-strip" class="scene-strip"></div>
+      <div class="section-title">Arrangement</div>
+      <div id="arrangement-strip" class="arrangement-strip"></div>
+    </footer>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    (() => {
+      const STORAGE_KEY = "rhythmforge-concept-v1";
+      const EMPTY_SLOT = "";
+      const MAX_ARRANGEMENT_SLOTS = 8;
+      const BAR_STEPS = 16;
+      const TYPE_COLORS = {
+        RhythmLoop: "#51d7ff",
+        MelodyLine: "#f7c975",
+        HarmonyPad: "#62f3d3",
+      };
+      const TYPE_LABELS = {
+        RhythmLoop: "Rhythm",
+        MelodyLine: "Melody",
+        HarmonyPad: "Harmony",
+      };
+      const KEYS = {
+        "A minor": { rootMidi: 57, scale: [0, 2, 3, 5, 7, 8, 10], mode: "minor" },
+        "C major": { rootMidi: 60, scale: [0, 2, 4, 5, 7, 9, 11], mode: "major" },
+        "D minor": { rootMidi: 62, scale: [0, 2, 3, 5, 7, 8, 10], mode: "minor" },
+        "G major": { rootMidi: 67, scale: [0, 2, 4, 5, 7, 9, 11], mode: "major" },
+      };
+      const PRESETS = [
+        {
+          id: "lofi-drums",
+          label: "Lo-Fi Drums",
+          category: "Drums",
+          voiceType: "lofi-drums",
+          supportedTypes: ["RhythmLoop"],
+          envelope: { attack: 0.001, release: 0.22 },
+          filter: { base: 5200, range: 3800 },
+          fxSend: 0.18,
+        },
+        {
+          id: "trap-drums",
+          label: "Trap Drums",
+          category: "Drums",
+          voiceType: "trap-drums",
+          supportedTypes: ["RhythmLoop"],
+          envelope: { attack: 0.001, release: 0.18 },
+          filter: { base: 8200, range: 4000 },
+          fxSend: 0.1,
+        },
+        {
+          id: "dream-perc",
+          label: "Dream Percussion",
+          category: "Drums",
+          voiceType: "dream-perc",
+          supportedTypes: ["RhythmLoop"],
+          envelope: { attack: 0.003, release: 0.3 },
+          filter: { base: 6400, range: 3400 },
+          fxSend: 0.22,
+        },
+        {
+          id: "lofi-piano",
+          label: "Lo-Fi Piano",
+          category: "Keys",
+          voiceType: "lofi-piano",
+          supportedTypes: ["MelodyLine"],
+          envelope: { attack: 0.006, release: 0.56 },
+          filter: { base: 2500, range: 1800 },
+          fxSend: 0.2,
+        },
+        {
+          id: "lofi-bass",
+          label: "Lo-Fi Bass",
+          category: "Bass",
+          voiceType: "lofi-bass",
+          supportedTypes: ["MelodyLine"],
+          envelope: { attack: 0.01, release: 0.38 },
+          filter: { base: 1200, range: 1000 },
+          fxSend: 0.06,
+        },
+        {
+          id: "trap-bell",
+          label: "Trap Bell",
+          category: "Lead",
+          voiceType: "trap-bell",
+          supportedTypes: ["MelodyLine"],
+          envelope: { attack: 0.002, release: 0.46 },
+          filter: { base: 4800, range: 3000 },
+          fxSend: 0.12,
+        },
+        {
+          id: "dream-lead",
+          label: "Dream Lead",
+          category: "Lead",
+          voiceType: "dream-lead",
+          supportedTypes: ["MelodyLine"],
+          envelope: { attack: 0.04, release: 0.72 },
+          filter: { base: 3600, range: 2600 },
+          fxSend: 0.3,
+        },
+        {
+          id: "lofi-pad",
+          label: "Lo-Fi Pad",
+          category: "Pad",
+          voiceType: "lofi-pad",
+          supportedTypes: ["HarmonyPad"],
+          envelope: { attack: 0.24, release: 1.6 },
+          filter: { base: 1800, range: 1400 },
+          fxSend: 0.28,
+        },
+        {
+          id: "trap-atmos",
+          label: "Trap Atmos Pad",
+          category: "Pad",
+          voiceType: "trap-atmos",
+          supportedTypes: ["HarmonyPad"],
+          envelope: { attack: 0.12, release: 1.1 },
+          filter: { base: 2200, range: 1500 },
+          fxSend: 0.18,
+        },
+        {
+          id: "dream-pad",
+          label: "Dream Pad",
+          category: "Pad",
+          voiceType: "dream-pad",
+          supportedTypes: ["HarmonyPad"],
+          envelope: { attack: 0.34, release: 2.2 },
+          filter: { base: 2100, range: 1700 },
+          fxSend: 0.36,
+        },
+      ];
+      const GROUPS = [
+        {
+          id: "lofi-kit",
+          name: "Lo-Fi Kit",
+          defaultPresetByType: {
+            RhythmLoop: "lofi-drums",
+            MelodyLine: "lofi-piano",
+            HarmonyPad: "lofi-pad",
+          },
+          busFx: { reverb: 0.18, delay: 0.08 },
+          swatches: ["#51d7ff", "#f7c975", "#62f3d3"],
+        },
+        {
+          id: "trap-kit",
+          name: "Trap Kit",
+          defaultPresetByType: {
+            RhythmLoop: "trap-drums",
+            MelodyLine: "trap-bell",
+            HarmonyPad: "trap-atmos",
+          },
+          busFx: { reverb: 0.1, delay: 0.18 },
+          swatches: ["#ff8bb0", "#f7c975", "#51d7ff"],
+        },
+        {
+          id: "dream-ensemble",
+          name: "Dream Ensemble",
+          defaultPresetByType: {
+            RhythmLoop: "dream-perc",
+            MelodyLine: "dream-lead",
+            HarmonyPad: "dream-pad",
+          },
+          busFx: { reverb: 0.26, delay: 0.14 },
+          swatches: ["#62f3d3", "#8cdcff", "#f7c975"],
+        },
+      ];
+
+      const clone = (value) => JSON.parse(JSON.stringify(value));
+      const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
+      const lerp = (start, end, amount) => start + (end - start) * amount;
+      const dist = (a, b) => Math.hypot(a.x - b.x, a.y - b.y);
+      const roundTo = (value, digits = 2) => Number(value.toFixed(digits));
+
+      function midiToFrequency(midi) {
+        return 440 * Math.pow(2, (midi - 69) / 12);
+      }
+
+      function createId(prefix) {
+        return `${prefix}-${Math.random().toString(36).slice(2, 10)}`;
+      }
+
+      function createScene(id, name) {
+        return { id, name, instanceIds: [], tempoOverride: null, keyOverride: null };
+      }
+
+      function createArrangement() {
+        return Array.from({ length: MAX_ARRANGEMENT_SLOTS }, (_, index) => ({
+          id: `slot-${index + 1}`,
+          sceneId: EMPTY_SLOT,
+          bars: 4,
+        }));
+      }
+
+      function createEmptyState() {
+        return {
+          version: 2,
+          tempo: 85,
+          key: "A minor",
+          activeGroupId: "lofi-kit",
+          activeTab: "patterns",
+          drawMode: "RhythmLoop",
+          patterns: [],
+          instances: [],
+          scenes: [
+            createScene("scene-a", "Scene A"),
+            createScene("scene-b", "Scene B"),
+            createScene("scene-c", "Scene C"),
+            createScene("scene-d", "Scene D"),
+          ],
+          arrangement: createArrangement(),
+          activeSceneId: "scene-a",
+          selectedInstanceId: null,
+          selectedPatternId: null,
+          queuedSceneId: null,
+          counters: {
+            rhythm: 1,
+            melody: 1,
+            harmony: 1,
+          },
+        };
+      }
+
+      function createCirclePoints() {
+        const points = [];
+        for (let index = 0; index <= 30; index += 1) {
+          const angle = (Math.PI * 2 * index) / 30;
+          const wobble = 0.06 * Math.sin(angle * 3);
+          points.push({
+            x: 0.5 + Math.cos(angle) * (0.36 + wobble),
+            y: 0.5 + Math.sin(angle) * (0.36 - wobble * 0.7),
+          });
+        }
+        return points;
+      }
+
+      function createWavePoints(amplitude, cycles, lift = 0.5, stepCount = 26) {
+        const points = [];
+        for (let index = 0; index < stepCount; index += 1) {
+          const t = index / (stepCount - 1);
+          points.push({
+            x: 0.1 + t * 0.8,
+            y: lift + Math.sin(t * Math.PI * cycles) * amplitude + Math.cos(t * Math.PI * cycles * 0.5) * amplitude * 0.18,
+          });
+        }
+        return points;
+      }
+
+      function createPadPoints() {
+        return [
+          { x: 0.08, y: 0.58 },
+          { x: 0.18, y: 0.52 },
+          { x: 0.34, y: 0.46 },
+          { x: 0.56, y: 0.48 },
+          { x: 0.74, y: 0.44 },
+          { x: 0.92, y: 0.5 },
+        ];
+      }
+
+      function createDrumEvents(patternName, bars) {
+        const events = [];
+        for (let bar = 0; bar < bars; bar += 1) {
+          const offset = bar * BAR_STEPS;
+          events.push({ step: offset + 0, lane: "kick", velocity: 0.94 });
+          events.push({ step: offset + 6, lane: "perc", velocity: 0.34 });
+          events.push({ step: offset + 8, lane: "snare", velocity: 0.82 });
+          events.push({ step: offset + 12, lane: "kick", velocity: 0.66 });
+          [2, 4, 10, 14].forEach((step) => events.push({ step: offset + step, lane: "hat", velocity: patternName === "Drum-Break-02" ? 0.82 : 0.58 }));
+          if (patternName === "Drum-Break-02") {
+            [1, 7, 9, 11, 13, 15].forEach((step) => events.push({ step: offset + step, lane: "hat", velocity: 0.88 }));
+            events.push({ step: offset + 5, lane: "snare", velocity: 0.52 });
+          }
+        }
+        return events;
+      }
+
+      function createMelodyNotes(rootMidi, offsets, bars) {
+        const stepStride = Math.floor((bars * BAR_STEPS) / offsets.length);
+        return offsets.map((offset, index) => ({
+          step: index * stepStride,
+          midi: rootMidi + offset,
+          durationSteps: index % 3 === 0 ? 5 : 3,
+          velocity: index % 2 === 0 ? 0.76 : 0.62,
+        }));
+      }
+
+      function createDemoState() {
+        const state = createEmptyState();
+        state.activeGroupId = "lofi-kit";
+        state.activeSceneId = "scene-a";
+        state.activeTab = "patterns";
+        state.drawMode = "RhythmLoop";
+        state.counters = { rhythm: 3, melody: 3, harmony: 2 };
+
+        const beatPattern = {
+          id: createId("pattern"),
+          type: "RhythmLoop",
+          name: "Beat-01",
+          bars: 4,
+          tempoBase: 85,
+          key: "A minor",
+          groupId: "lofi-kit",
+          presetId: "lofi-drums",
+          points: createCirclePoints(),
+          derivedSequence: {
+            kind: "rhythm",
+            totalSteps: 64,
+            swing: 0.08,
+            events: createDrumEvents("Beat-01", 4),
+          },
+          tags: ["lofi", "core groove"],
+          color: TYPE_COLORS.RhythmLoop,
+        };
+
+        const breakPattern = {
+          id: createId("pattern"),
+          type: "RhythmLoop",
+          name: "Drum-Break-02",
+          bars: 2,
+          tempoBase: 85,
+          key: "A minor",
+          groupId: "lofi-kit",
+          presetId: "lofi-drums",
+          points: createWavePoints(0.12, 2.5, 0.5, 22),
+          derivedSequence: {
+            kind: "rhythm",
+            totalSteps: 32,
+            swing: 0.12,
+            events: createDrumEvents("Drum-Break-02", 2),
+          },
+          tags: ["variation", "break"],
+          color: TYPE_COLORS.RhythmLoop,
+        };
+
+        const bassPattern = {
+          id: createId("pattern"),
+          type: "MelodyLine",
+          name: "Bass-01",
+          bars: 4,
+          tempoBase: 85,
+          key: "A minor",
+          groupId: "lofi-kit",
+          presetId: "lofi-bass",
+          points: createWavePoints(0.18, 2, 0.66, 20),
+          derivedSequence: {
+            kind: "melody",
+            totalSteps: 64,
+            notes: createMelodyNotes(45, [0, 3, 7, 0, -5, 0, 2, 3], 4),
+          },
+          tags: ["bass", "hook"],
+          color: TYPE_COLORS.MelodyLine,
+        };
+
+        const pianoPattern = {
+          id: createId("pattern"),
+          type: "MelodyLine",
+          name: "Piano-Hook-01",
+          bars: 4,
+          tempoBase: 85,
+          key: "A minor",
+          groupId: "lofi-kit",
+          presetId: "lofi-piano",
+          points: createWavePoints(0.14, 3, 0.34, 28),
+          derivedSequence: {
+            kind: "melody",
+            totalSteps: 64,
+            notes: createMelodyNotes(69, [0, 3, 7, 3, 7, 10, 12, 7], 4),
+          },
+          tags: ["lead", "hook"],
+          color: TYPE_COLORS.MelodyLine,
+        };
+
+        const padPattern = {
+          id: createId("pattern"),
+          type: "HarmonyPad",
+          name: "Pad-Ambient-01",
+          bars: 8,
+          tempoBase: 85,
+          key: "A minor",
+          groupId: "lofi-kit",
+          presetId: "lofi-pad",
+          points: createPadPoints(),
+          derivedSequence: {
+            kind: "harmony",
+            totalSteps: 128,
+            flavor: "maj7",
+            rootMidi: 57,
+            chord: [57, 60, 64, 67],
+          },
+          tags: ["pad", "scene bed"],
+          color: TYPE_COLORS.HarmonyPad,
+        };
+
+        state.patterns = [beatPattern, bassPattern, pianoPattern, padPattern, breakPattern].map((pattern) => finalizePattern(pattern));
+
+        const instanceA1 = createInstanceForPattern(beatPattern.id, "scene-a", { x: 0.46, y: 0.36, depth: 0.34 });
+        const instanceA2 = createInstanceForPattern(bassPattern.id, "scene-a", { x: 0.29, y: 0.7, depth: 0.46, presetOverrideId: "lofi-bass" });
+        const instanceA3 = createInstanceForPattern(pianoPattern.id, "scene-a", { x: 0.7, y: 0.41, depth: 0.28 });
+        const instanceA4 = createInstanceForPattern(padPattern.id, "scene-a", { x: 0.56, y: 0.56, depth: 0.72 });
+        const instanceB1 = createInstanceForPattern(beatPattern.id, "scene-b", { x: 0.46, y: 0.36, depth: 0.36 });
+        const instanceB2 = createInstanceForPattern(bassPattern.id, "scene-b", { x: 0.29, y: 0.7, depth: 0.46, presetOverrideId: "lofi-bass" });
+        const instanceB3 = createInstanceForPattern(padPattern.id, "scene-b", { x: 0.56, y: 0.56, depth: 0.74 });
+        const instanceB4 = createInstanceForPattern(breakPattern.id, "scene-b", { x: 0.73, y: 0.68, depth: 0.34 });
+
+        state.instances = [instanceA1, instanceA2, instanceA3, instanceA4, instanceB1, instanceB2, instanceB3, instanceB4];
+        state.scenes[0].instanceIds = [instanceA1.id, instanceA2.id, instanceA3.id, instanceA4.id];
+        state.scenes[1].instanceIds = [instanceB1.id, instanceB2.id, instanceB3.id, instanceB4.id];
+        state.scenes[2].instanceIds = [];
+        state.scenes[3].instanceIds = [];
+
+        state.arrangement = createArrangement();
+        state.arrangement[0].sceneId = "scene-a";
+        state.arrangement[0].bars = 8;
+        state.arrangement[1].sceneId = "scene-a";
+        state.arrangement[1].bars = 8;
+        state.arrangement[2].sceneId = "scene-b";
+        state.arrangement[2].bars = 8;
+        state.arrangement[3].sceneId = "scene-b";
+        state.arrangement[3].bars = 8;
+        state.arrangement[4].sceneId = "scene-a";
+        state.arrangement[4].bars = 8;
+
+        return state;
+      }
+
+      function createInstanceForPattern(patternId, sceneId, overrides = {}) {
+        const depth = overrides.depth ?? 0.4;
+        return {
+          id: createId("instance"),
+          patternId,
+          sceneId,
+          x: overrides.x ?? 0.5,
+          y: overrides.y ?? 0.5,
+          depth,
+          presetOverrideId: overrides.presetOverrideId ?? null,
+          muted: overrides.muted ?? false,
+          gain: overrides.gain ?? roundTo(1.08 - depth * 0.58, 2),
+          pan: overrides.pan ?? roundTo((overrides.x ?? 0.5) * 2 - 1, 2),
+          brightness: overrides.brightness ?? roundTo(1 - (overrides.y ?? 0.5), 2),
+        };
+      }
+
+      function analyzeStroke(points) {
+        const bbox = {
+          minX: Math.min(...points.map((point) => point.x)),
+          maxX: Math.max(...points.map((point) => point.x)),
+          minY: Math.min(...points.map((point) => point.y)),
+          maxY: Math.max(...points.map((point) => point.y)),
+        };
+        bbox.width = Math.max(0.0001, bbox.maxX - bbox.minX);
+        bbox.height = Math.max(0.0001, bbox.maxY - bbox.minY);
+        bbox.centerX = bbox.minX + bbox.width / 2;
+        bbox.centerY = bbox.minY + bbox.height / 2;
+
+        let length = 0;
+        for (let index = 1; index < points.length; index += 1) {
+          length += dist(points[index - 1], points[index]);
+        }
+
+        const averageSize = (bbox.width + bbox.height) / 2;
+        const center = { x: bbox.centerX, y: bbox.centerY };
+        const radii = points.map((point) => dist(point, center));
+        const meanRadius = average(radii);
+        const variance = radii.reduce((sum, value) => sum + Math.pow(value - meanRadius, 2), 0) / Math.max(1, radii.length);
+        const wobble = Math.sqrt(variance) / Math.max(1, meanRadius);
+        const closed = dist(points[0], points[points.length - 1]) < Math.min(64, averageSize * 0.32);
+        const dx = points[points.length - 1].x - points[0].x;
+        const dy = points[points.length - 1].y - points[0].y;
+        const tilt = Math.atan2(dy, dx);
+
+        return {
+          bbox,
+          length,
+          averageSize,
+          wobble,
+          closed,
+          tilt,
+        };
+      }
+
+      const average = (values) => values.length ? values.reduce((sum, value) => sum + value, 0) / values.length : 0;
+
+      function standardDeviation(values, mean = average(values)) {
+        if (!values.length) {
+          return 0;
+        }
+        const variance = values.reduce((sum, value) => sum + Math.pow(value - mean, 2), 0) / values.length;
+        return Math.sqrt(variance);
+      }
+
+      function polygonArea(points) {
+        if (points.length < 3) {
+          return 0;
+        }
+        let area = 0;
+        for (let index = 0; index < points.length; index += 1) {
+          const current = points[index];
+          const next = points[(index + 1) % points.length];
+          area += current.x * next.y - next.x * current.y;
+        }
+        return Math.abs(area) / 2;
+      }
+
+      function wrapAngle(angle) {
+        let nextAngle = angle;
+        while (nextAngle > Math.PI) {
+          nextAngle -= Math.PI * 2;
+        }
+        while (nextAngle < -Math.PI) {
+          nextAngle += Math.PI * 2;
+        }
+        return nextAngle;
+      }
+
+      function normalizePoints(points, bbox) {
+        const size = Math.max(bbox.width, bbox.height);
+        const originX = bbox.centerX - size / 2;
+        const originY = bbox.centerY - size / 2;
+        return points.map((point) => ({
+          x: roundTo((point.x - originX) / size, 4),
+          y: roundTo((point.y - originY) / size, 4),
+        }));
+      }
+
+      function resampleStroke(points, sampleCount) {
+        if (points.length <= 1) {
+          return points;
+        }
+
+        const segments = [0];
+        let totalLength = 0;
+        for (let index = 1; index < points.length; index += 1) {
+          totalLength += dist(points[index - 1], points[index]);
+          segments.push(totalLength);
+        }
+
+        return Array.from({ length: sampleCount }, (_, sampleIndex) => {
+          const target = (sampleIndex / Math.max(1, sampleCount - 1)) * totalLength;
+          let segmentIndex = 1;
+          while (segmentIndex < segments.length && segments[segmentIndex] < target) {
+            segmentIndex += 1;
+          }
+          const currentIndex = clamp(segmentIndex, 1, points.length - 1);
+          const prevLength = segments[currentIndex - 1];
+          const nextLength = segments[currentIndex];
+          const local = nextLength === prevLength ? 0 : (target - prevLength) / (nextLength - prevLength);
+          return {
+            x: lerp(points[currentIndex - 1].x, points[currentIndex].x, local),
+            y: lerp(points[currentIndex - 1].y, points[currentIndex].y, local),
+          };
+        });
+      }
+
+      function deriveSymmetryScore(points, centroid) {
+        const samples = resampleStroke(points, 20);
+        if (!samples.length) {
+          return 0.5;
+        }
+        let error = 0;
+        samples.forEach((sample, index) => {
+          const mirrored = samples[samples.length - 1 - index];
+          const sampleDx = sample.x - centroid.x;
+          const mirroredDx = mirrored.x - centroid.x;
+          const sampleDy = sample.y - centroid.y;
+          const mirroredDy = mirrored.y - centroid.y;
+          error += Math.abs(Math.abs(sampleDx) - Math.abs(mirroredDx)) + Math.abs(sampleDy + mirroredDy) * 0.65;
+        });
+        return clamp(1 - error / (samples.length * 0.55), 0, 1);
+      }
+
+      function deriveShapeProfile(points, metrics, type) {
+        if (!points.length) {
+          return {
+            closedness: 0,
+            circularity: 0,
+            aspectRatio: 0,
+            angularity: 0,
+            symmetry: 0.5,
+            verticalSpan: 0,
+            horizontalSpan: 0,
+            pathLength: 0,
+            speedVariance: 0,
+            curvatureMean: 0,
+            curvatureVariance: 0,
+            centroidHeight: 0.5,
+            directionBias: 0.5,
+            tilt: 0.5,
+            tiltSigned: 0,
+            wobble: 0,
+          };
+        }
+
+        const bbox = metrics.bbox;
+        const width = Math.max(0.001, bbox.width);
+        const height = Math.max(0.001, bbox.height);
+        const centroid = {
+          x: average(points.map((point) => point.x)),
+          y: average(points.map((point) => point.y)),
+        };
+        const radii = points.map((point) => dist(point, centroid));
+        const meanRadius = average(radii);
+        const closeDistance = dist(points[0], points[points.length - 1]);
+        const segmentLengths = [];
+        const turns = [];
+
+        for (let index = 1; index < points.length; index += 1) {
+          segmentLengths.push(dist(points[index - 1], points[index]));
+        }
+        for (let index = 1; index < points.length - 1; index += 1) {
+          const prev = points[index - 1];
+          const current = points[index];
+          const next = points[index + 1];
+          const angleA = Math.atan2(current.y - prev.y, current.x - prev.x);
+          const angleB = Math.atan2(next.y - current.y, next.x - current.x);
+          turns.push(wrapAngle(angleB - angleA));
+        }
+
+        const meanSegmentLength = average(segmentLengths);
+        const absTurns = turns.map((turn) => Math.abs(turn));
+        const pathLength = clamp(metrics.length / 2.75, 0, 1);
+        const closedness = clamp(1 - closeDistance / 0.28, 0, 1);
+        const perimeter = metrics.length + (type === "RhythmLoop" ? closeDistance : 0);
+        const circularity = perimeter > 0 ? clamp((4 * Math.PI * polygonArea(points)) / Math.pow(perimeter, 2) / 0.9, 0, 1) : 0;
+        const aspectRatio = clamp(Math.min(width, height) / Math.max(width, height), 0, 1);
+        const curvatureMean = clamp(average(absTurns) / (Math.PI * 0.55), 0, 1);
+        const curvatureVariance = clamp(standardDeviation(absTurns, average(absTurns)) / (Math.PI * 0.4), 0, 1);
+        const angularity = clamp(curvatureMean * 0.72 + curvatureVariance * 0.52, 0, 1);
+        const symmetry = deriveSymmetryScore(points, centroid);
+        const directionBias = clamp((points[points.length - 1].x - points[0].x) / (width + 0.001) * 0.5 + 0.5, 0, 1);
+        const tiltSigned = clamp((points[points.length - 1].y - points[0].y) / (height + 0.001), -1, 1);
+
+        return {
+          closedness,
+          circularity: type === "RhythmLoop" ? circularity : clamp(circularity * 0.35 + closedness * 0.3, 0, 1),
+          aspectRatio,
+          angularity,
+          symmetry,
+          verticalSpan: clamp(height / 0.95, 0, 1),
+          horizontalSpan: clamp(width / 0.95, 0, 1),
+          pathLength,
+          speedVariance: clamp(standardDeviation(segmentLengths, meanSegmentLength) / Math.max(meanSegmentLength, 0.001) / 0.95, 0, 1),
+          curvatureMean,
+          curvatureVariance,
+          centroidHeight: clamp(1 - centroid.y, 0, 1),
+          directionBias,
+          tilt: clamp((tiltSigned + 1) / 2, 0, 1),
+          tiltSigned,
+          wobble: clamp(standardDeviation(radii, meanRadius) / Math.max(meanRadius, 0.001) / 0.4, 0, 1),
+        };
+      }
+
+      function deriveSoundProfile(type, shapeProfile) {
+        const smoothness = 1 - shapeProfile.angularity;
+        const asymmetry = 1 - shapeProfile.symmetry;
+        const tiltAmount = Math.abs(shapeProfile.tiltSigned);
+
+        if (type === "RhythmLoop") {
+          const instability = clamp(shapeProfile.wobble * 0.7 + asymmetry * 0.55 + shapeProfile.curvatureVariance * 0.35, 0, 1);
+          return {
+            brightness: clamp(0.22 + shapeProfile.angularity * 0.45 + instability * 0.16, 0, 1),
+            resonance: clamp(0.16 + shapeProfile.angularity * 0.34 + shapeProfile.curvatureVariance * 0.24, 0, 1),
+            drive: clamp(0.12 + shapeProfile.angularity * 0.68 + asymmetry * 0.22, 0, 1),
+            attackBias: clamp(0.24 + shapeProfile.angularity * 0.6 + (1 - shapeProfile.circularity) * 0.12, 0, 1),
+            releaseBias: clamp(0.22 + shapeProfile.circularity * 0.6 + shapeProfile.symmetry * 0.16, 0, 1),
+            detune: clamp(0.05 + instability * 0.26, 0, 1),
+            modDepth: clamp(0.08 + instability * 0.54, 0, 1),
+            stereoSpread: clamp(0.12 + (1 - shapeProfile.aspectRatio) * 0.34 + asymmetry * 0.14, 0, 1),
+            grooveInstability: instability,
+            delayBias: clamp(0.04 + (1 - shapeProfile.aspectRatio) * 0.18 + instability * 0.18, 0, 1),
+            reverbBias: clamp(0.08 + shapeProfile.circularity * 0.18 + asymmetry * 0.14, 0, 1),
+            waveMorph: clamp(0.2 + shapeProfile.angularity * 0.62, 0, 1),
+            filterMotion: clamp(0.1 + instability * 0.44, 0, 1),
+            transientSharpness: clamp(0.25 + shapeProfile.angularity * 0.7, 0, 1),
+            body: clamp(0.24 + shapeProfile.circularity * 0.58 + shapeProfile.symmetry * 0.14, 0, 1),
+          };
+        }
+
+        if (type === "MelodyLine") {
+          const contourPull = Math.abs(shapeProfile.directionBias - 0.5) * 2;
+          return {
+            brightness: clamp(0.24 + shapeProfile.angularity * 0.4 + shapeProfile.centroidHeight * 0.14 + shapeProfile.verticalSpan * 0.16, 0, 1),
+            resonance: clamp(0.16 + shapeProfile.curvatureMean * 0.44 + shapeProfile.curvatureVariance * 0.18, 0, 1),
+            drive: clamp(0.08 + shapeProfile.angularity * 0.44 + shapeProfile.speedVariance * 0.2, 0, 1),
+            attackBias: clamp(0.18 + shapeProfile.speedVariance * 0.52 + shapeProfile.angularity * 0.18, 0, 1),
+            releaseBias: clamp(0.2 + smoothness * 0.56 + shapeProfile.horizontalSpan * 0.12, 0, 1),
+            detune: clamp(0.08 + shapeProfile.curvatureVariance * 0.48 + asymmetry * 0.18, 0, 1),
+            modDepth: clamp(0.12 + shapeProfile.curvatureMean * 0.36 + contourPull * 0.26, 0, 1),
+            stereoSpread: clamp(0.14 + shapeProfile.horizontalSpan * 0.44 + contourPull * 0.12, 0, 1),
+            grooveInstability: clamp(0.08 + shapeProfile.speedVariance * 0.28, 0, 1),
+            delayBias: clamp(0.12 + contourPull * 0.34 + shapeProfile.horizontalSpan * 0.1, 0, 1),
+            reverbBias: clamp(0.12 + smoothness * 0.28 + shapeProfile.verticalSpan * 0.16, 0, 1),
+            waveMorph: clamp(0.16 + shapeProfile.angularity * 0.62, 0, 1),
+            filterMotion: clamp(0.16 + contourPull * 0.42 + shapeProfile.curvatureVariance * 0.16, 0, 1),
+            transientSharpness: clamp(0.2 + shapeProfile.angularity * 0.56 + shapeProfile.speedVariance * 0.18, 0, 1),
+            body: clamp(0.18 + smoothness * 0.46 + shapeProfile.verticalSpan * 0.12, 0, 1),
+          };
+        }
+
+        return {
+          brightness: clamp(0.16 + shapeProfile.centroidHeight * 0.24 + shapeProfile.angularity * 0.18 + tiltAmount * 0.18, 0, 1),
+          resonance: clamp(0.1 + tiltAmount * 0.44 + asymmetry * 0.2, 0, 1),
+          drive: clamp(0.05 + shapeProfile.angularity * 0.26 + asymmetry * 0.12, 0, 1),
+          attackBias: clamp(0.12 + shapeProfile.angularity * 0.42 + asymmetry * 0.12, 0, 1),
+          releaseBias: clamp(0.32 + shapeProfile.pathLength * 0.28 + smoothness * 0.28, 0, 1),
+          detune: clamp(0.12 + asymmetry * 0.42 + shapeProfile.horizontalSpan * 0.16, 0, 1),
+          modDepth: clamp(0.16 + tiltAmount * 0.32 + asymmetry * 0.24, 0, 1),
+          stereoSpread: clamp(0.24 + shapeProfile.horizontalSpan * 0.48, 0, 1),
+          grooveInstability: clamp(0.02 + shapeProfile.curvatureVariance * 0.18, 0, 1),
+          delayBias: clamp(0.08 + tiltAmount * 0.18, 0, 1),
+          reverbBias: clamp(0.24 + shapeProfile.pathLength * 0.36 + smoothness * 0.18, 0, 1),
+          waveMorph: clamp(0.22 + shapeProfile.angularity * 0.36 + tiltAmount * 0.18, 0, 1),
+          filterMotion: clamp(0.22 + tiltAmount * 0.5 + asymmetry * 0.14, 0, 1),
+          transientSharpness: clamp(0.08 + shapeProfile.angularity * 0.32, 0, 1),
+          body: clamp(0.28 + smoothness * 0.42 + shapeProfile.verticalSpan * 0.12, 0, 1),
+        };
+      }
+
+      function summarizeShapeDNA(type, shapeProfile, soundProfile) {
+        const shapeWord = shapeProfile.angularity > 0.7 ? "spiky" : shapeProfile.angularity > 0.45 ? "creased" : "smooth";
+        const balanceWord = shapeProfile.symmetry > 0.65 ? "balanced" : shapeProfile.symmetry < 0.35 ? "off-balance" : "tilted";
+        if (type === "RhythmLoop") {
+          const bodyWord = soundProfile.body > 0.65 ? "heavy body" : soundProfile.transientSharpness > 0.68 ? "hard transient edge" : "tight body";
+          return `${shapeWord} ${balanceWord} loop with ${bodyWord}`;
+        }
+        if (type === "MelodyLine") {
+          const motionWord = soundProfile.modDepth > 0.6 ? "singing modulation" : soundProfile.transientSharpness > 0.6 ? "biting attack" : "soft contour";
+          return `${shapeWord} line with ${motionWord} and ${shapeProfile.verticalSpan > 0.55 ? "wide register reach" : "contained register"}`;
+        }
+        const bloomWord = soundProfile.reverbBias > 0.6 ? "wide bloom" : soundProfile.filterMotion > 0.6 ? "moving filter color" : "steady bed";
+        return `${shapeWord} pad with ${bloomWord} and ${balanceWord} voicing`;
+      }
+
+      function buildShapeDNA(type, points) {
+        const metrics = analyzeStroke(points);
+        const shapeProfile = deriveShapeProfile(points, metrics, type);
+        const soundProfile = deriveSoundProfile(type, shapeProfile);
+        return {
+          shapeProfile,
+          soundProfile,
+          shapeSummary: summarizeShapeDNA(type, shapeProfile, soundProfile),
+        };
+      }
+
+      function finalizePattern(pattern) {
+        if (!pattern || !pattern.points || !pattern.points.length) {
+          return pattern;
+        }
+        if (pattern.shapeProfile && pattern.soundProfile && pattern.shapeSummary) {
+          return pattern;
+        }
+        return {
+          ...pattern,
+          ...buildShapeDNA(pattern.type, pattern.points),
+        };
+      }
+
+      function getScaleNotes(keyName) {
+        return KEYS[keyName] ?? KEYS["A minor"];
+      }
+
+      function pitchFromRelative(relative, keyName) {
+        const key = getScaleNotes(keyName);
+        const bounded = clamp(relative, 0, 0.999);
+        const stepsAcross = key.scale.length * 2;
+        const degreeIndex = Math.floor((1 - bounded) * stepsAcross);
+        const octave = Math.floor(degreeIndex / key.scale.length);
+        const degree = degreeIndex % key.scale.length;
+        return key.rootMidi + key.scale[degree] + octave * 12;
+      }
+
+      function deriveRhythm(points, metrics, groupId, shapeProfile, soundProfile) {
+        const bars = metrics.averageSize > 240 ? 4 : 2;
+        const totalSteps = bars * BAR_STEPS;
+        const group = GROUPS.find((item) => item.id === groupId) ?? GROUPS[0];
+        const presetId = group.defaultPresetByType.RhythmLoop;
+        const density = clamp(Math.round(6 + shapeProfile.angularity * 4 + (1 - shapeProfile.symmetry) * 3 + shapeProfile.wobble * 3), 6, 14);
+        const swing = roundTo(clamp(soundProfile.grooveInstability * 0.34 + shapeProfile.wobble * 0.08, 0, 0.42), 2);
+        const events = [];
+        const kickPattern = shapeProfile.aspectRatio < 0.52
+          ? [0, 6, 10, 13]
+          : shapeProfile.circularity > 0.75
+            ? [0, 8, 12]
+            : [0, 7, 10, 13];
+        const snarePattern = shapeProfile.symmetry > 0.6 ? [8] : [5, 8, 13];
+        const hatStride = shapeProfile.angularity > 0.68 ? 1 : 2;
+
+        for (let bar = 0; bar < bars; bar += 1) {
+          const offset = bar * BAR_STEPS;
+          kickPattern.forEach((step, index) => {
+            events.push({
+              step: offset + step,
+              lane: "kick",
+              velocity: roundTo(0.6 + soundProfile.body * 0.3 - index * 0.05, 2),
+              microShift: roundTo(Math.sin((step + 1) * 1.13 + shapeProfile.wobble * 5) * soundProfile.grooveInstability * 0.05, 3),
+            });
+          });
+          snarePattern.forEach((step, index) => {
+            events.push({
+              step: offset + step,
+              lane: "snare",
+              velocity: roundTo(0.56 + soundProfile.transientSharpness * 0.26 - index * 0.05, 2),
+              microShift: roundTo(Math.sin((step + 3) * 0.92 + shapeProfile.angularity * 4) * soundProfile.grooveInstability * 0.08, 3),
+            });
+          });
+
+          for (let step = 0; step < BAR_STEPS; step += hatStride) {
+            if (!kickPattern.includes(step) && !snarePattern.includes(step)) {
+              const emphasis = step % 4 === 0 ? 0.08 : 0;
+              events.push({
+                step: offset + step,
+                lane: step % 2 === 0 ? "hat" : "perc",
+                velocity: roundTo(0.24 + soundProfile.brightness * 0.22 + emphasis, 2),
+                microShift: roundTo(Math.sin((step + 2) * 1.47 + shapeProfile.curvatureVariance * 5) * soundProfile.grooveInstability * 0.18, 3),
+              });
+            }
+          }
+
+          if (density > 11 || shapeProfile.symmetry < 0.45) {
+            [3, 11, 15].forEach((step) => {
+              events.push({
+                step: offset + step,
+                lane: step === 11 ? "snare" : "perc",
+                velocity: roundTo(0.26 + soundProfile.drive * 0.18, 2),
+                microShift: roundTo(Math.sin((step + 4) * 1.81) * soundProfile.grooveInstability * 0.12, 3),
+              });
+            });
+          }
+        }
+
+        return {
+          bars,
+          presetId,
+          tags: ["loop", `${density} accents`, soundProfile.drive > 0.58 ? "heated" : "steady"],
+          derivedSequence: {
+            kind: "rhythm",
+            totalSteps,
+            swing,
+            events,
+          },
+          summary: `Closed loop, ${bars} bars, ${density} accents, swing ${Math.round(swing * 100)}%, ${shapeProfile.angularity > 0.6 ? "sharp" : "round"} transient DNA.`,
+          details: `Circularity drives kick weight, angularity pushes transient bite and drive, and symmetry loss adds broken micro-timing.`,
+        };
+      }
+
+      function deriveMelody(points, metrics, keyName, groupId, shapeProfile, soundProfile) {
+        const bars = metrics.length > 880 ? 4 : 2;
+        const totalSteps = bars * BAR_STEPS;
+        const sliceCount = metrics.length > 820 || shapeProfile.pathLength > 0.68 ? 16 : 8;
+        const samples = resampleStroke(points, sliceCount);
+        const group = GROUPS.find((item) => item.id === groupId) ?? GROUPS[0];
+        const presetId = group.defaultPresetByType.MelodyLine;
+        const notes = [];
+        const pitchCenter = metrics.bbox.minY + metrics.bbox.height / 2;
+        const verticalScale = 0.72 + shapeProfile.verticalSpan * 1.2;
+
+        samples.forEach((sample, index) => {
+          const previous = samples[Math.max(0, index - 1)];
+          const next = samples[Math.min(samples.length - 1, index + 1)];
+          const speed = dist(previous, next);
+          const curvature = Math.abs(next.y - sample.y) + Math.abs(sample.y - previous.y);
+          const centeredY = clamp((sample.y - pitchCenter) / Math.max(metrics.bbox.height, 1) * verticalScale + 0.5, 0, 0.999);
+          const midi = pitchFromRelative(centeredY, keyName);
+          const durationBase = speed < 24 ? 6 : speed < 40 ? 4 : 2;
+          const durationSteps = clamp(Math.round(durationBase + (1 - shapeProfile.speedVariance) * 1.5 - soundProfile.transientSharpness * 1.2), 2, 7);
+          const slope = clamp((next.y - previous.y) / Math.max(metrics.bbox.height, 1) * 4, -1, 1);
+          const step = Math.floor((index / sliceCount) * totalSteps);
+          notes.push({
+            step,
+            midi,
+            durationSteps,
+            velocity: roundTo(clamp(0.34 + curvature * 0.86 + shapeProfile.curvatureMean * 0.16, 0.3, 0.96), 2),
+            glide: roundTo(slope * (0.3 + soundProfile.filterMotion * 0.85), 2),
+          });
+        });
+
+        return {
+          bars,
+          presetId,
+          tags: ["line", `${sliceCount} slices`, soundProfile.modDepth > 0.56 ? "animated" : "steady"],
+          derivedSequence: {
+            kind: "melody",
+            totalSteps,
+            notes,
+          },
+          summary: `${sliceCount} slices, ${bars} bars, wide contour ${Math.round(shapeProfile.verticalSpan * 100)}%, ${soundProfile.modDepth > 0.58 ? "modulated" : "contained"} voice.`,
+          details: `Vertical span drives octave reach, angularity sharpens tone, and direction bias adds glide pull into notes.`,
+        };
+      }
+
+      function deriveHarmony(points, metrics, keyName, groupId, shapeProfile, soundProfile) {
+        const bars = metrics.length > 1200 ? 8 : metrics.length > 700 ? 4 : 2;
+        const totalSteps = bars * BAR_STEPS;
+        const group = GROUPS.find((item) => item.id === groupId) ?? GROUPS[0];
+        const presetId = group.defaultPresetByType.HarmonyPad;
+        const rootMidi = pitchFromRelative(1 - shapeProfile.centroidHeight, keyName) - 12;
+        const flavor = shapeProfile.tiltSigned > 0.28 ? "maj7" : shapeProfile.tiltSigned < -0.22 ? "sus" : "minor";
+        const chordIntervals = flavor === "sus" ? [0, 5, 7, 10] : flavor === "maj7" ? [0, 4, 7, 11] : [0, 3, 7, 10];
+        const spread = Math.round(shapeProfile.horizontalSpan * 10);
+        const chord = chordIntervals.map((interval, index) => {
+          if (index === 0 && shapeProfile.horizontalSpan > 0.72) {
+            return rootMidi + interval - 12;
+          }
+          if (index === 2) {
+            return rootMidi + interval + Math.round(spread * 0.45);
+          }
+          if (index === 3) {
+            return rootMidi + interval + spread;
+          }
+          return rootMidi + interval;
+        });
+
+        return {
+          bars,
+          presetId,
+          tags: [flavor, soundProfile.reverbBias > 0.56 ? "bloom" : "dry bed"],
+          derivedSequence: {
+            kind: "harmony",
+            totalSteps,
+            flavor,
+            rootMidi,
+            chord,
+          },
+          summary: `${bars} bars, ${flavor} chord, wide voicing ${Math.round(shapeProfile.horizontalSpan * 100)}%, filter motion ${Math.round(soundProfile.filterMotion * 100)}%.`,
+          details: `Tilt controls chord family and filter movement, width opens the voicing, and path length pushes bloom and tail size.`,
+        };
+      }
+
+      function buildDraftFromStroke(type, points, state) {
+        const metrics = analyzeStroke(points);
+        if (type === "RhythmLoop" && !metrics.closed) {
+          return { error: "RhythmLoop needs a closed circle or loop-like stroke." };
+        }
+
+        const normalizedPoints = normalizePoints(points, metrics.bbox);
+        const spawn = {
+          x: clamp(metrics.bbox.centerX / interactionController.workspaceRect.width, 0.12, 0.88),
+          y: clamp(metrics.bbox.centerY / interactionController.workspaceRect.height, 0.14, 0.86),
+        };
+        const name = store.nextDraftName(type);
+        const keyName = state.key;
+        const groupId = state.activeGroupId;
+        const dna = buildShapeDNA(type, normalizedPoints);
+        const base = type === "RhythmLoop"
+          ? deriveRhythm(points, metrics, groupId, dna.shapeProfile, dna.soundProfile)
+          : type === "MelodyLine"
+            ? deriveMelody(points, metrics, keyName, groupId, dna.shapeProfile, dna.soundProfile)
+            : deriveHarmony(points, metrics, keyName, groupId, dna.shapeProfile, dna.soundProfile);
+
+        return {
+          type,
+          name,
+          bars: base.bars,
+          tempoBase: state.tempo,
+          key: keyName,
+          groupId,
+          presetId: base.presetId,
+          points: normalizedPoints,
+          rawPoints: points,
+          spawn,
+          derivedSequence: base.derivedSequence,
+          tags: base.tags,
+          color: TYPE_COLORS[type],
+          summary: base.summary,
+          details: `${base.details} Shape DNA: ${dna.shapeSummary}.`,
+          shapeProfile: dna.shapeProfile,
+          soundProfile: dna.soundProfile,
+          shapeSummary: dna.shapeSummary,
+        };
+      }
+
+      const SOUND_PROFILE_KEYS = [
+        "brightness",
+        "resonance",
+        "drive",
+        "attackBias",
+        "releaseBias",
+        "detune",
+        "modDepth",
+        "stereoSpread",
+        "grooveInstability",
+        "delayBias",
+        "reverbBias",
+        "waveMorph",
+        "filterMotion",
+        "transientSharpness",
+        "body",
+      ];
+
+      function getPresetBias(preset, type) {
+        const base = {
+          brightness: 0.28,
+          resonance: 0.24,
+          drive: 0.18,
+          attackBias: 0.28,
+          releaseBias: 0.32,
+          detune: 0.16,
+          modDepth: 0.2,
+          stereoSpread: 0.2,
+          grooveInstability: 0.14,
+          delayBias: 0.14,
+          reverbBias: 0.18,
+          waveMorph: 0.24,
+          filterMotion: 0.18,
+          transientSharpness: 0.28,
+          body: 0.28,
+        };
+        const voice = preset.voiceType;
+
+        if (voice.includes("trap")) {
+          base.brightness += 0.18;
+          base.drive += 0.2;
+          base.transientSharpness += 0.16;
+          base.delayBias += 0.08;
+          base.releaseBias -= 0.08;
+        }
+        if (voice.includes("dream")) {
+          base.reverbBias += 0.24;
+          base.modDepth += 0.18;
+          base.stereoSpread += 0.18;
+          base.releaseBias += 0.2;
+        }
+        if (voice.includes("bass")) {
+          base.body += 0.32;
+          base.brightness -= 0.14;
+          base.detune -= 0.08;
+          base.attackBias += 0.08;
+        }
+        if (voice.includes("pad")) {
+          base.releaseBias += 0.24;
+          base.reverbBias += 0.2;
+          base.stereoSpread += 0.12;
+          base.body += 0.1;
+        }
+        if (voice.includes("bell")) {
+          base.brightness += 0.24;
+          base.transientSharpness += 0.18;
+          base.resonance += 0.12;
+          base.delayBias += 0.1;
+        }
+        if (voice.includes("piano")) {
+          base.body += 0.12;
+          base.attackBias += 0.08;
+          base.waveMorph -= 0.04;
+        }
+        if (voice.includes("drums") || type === "RhythmLoop") {
+          base.transientSharpness += 0.16;
+          base.grooveInstability += 0.08;
+          base.body += 0.1;
+        }
+        if (voice.includes("perc")) {
+          base.brightness += 0.08;
+          base.transientSharpness += 0.08;
+        }
+
+        Object.keys(base).forEach((key) => {
+          base[key] = clamp(base[key], 0, 1);
+        });
+        return base;
+      }
+
+      function resolveWaveformSet(type, preset, profile) {
+        if (type === "HarmonyPad") {
+          return {
+            waveA: profile.waveMorph > 0.55 ? "sawtooth" : "triangle",
+            waveB: profile.body > 0.58 ? "triangle" : "sine",
+          };
+        }
+        if (type === "MelodyLine") {
+          if (preset.voiceType.includes("bass")) {
+            return {
+              waveA: profile.body > 0.6 ? "triangle" : "square",
+              waveB: "sine",
+            };
+          }
+          if (preset.voiceType.includes("bell")) {
+            return {
+              waveA: "triangle",
+              waveB: profile.waveMorph > 0.58 ? "sine" : "square",
+            };
+          }
+          return {
+            waveA: profile.waveMorph > 0.58 ? "square" : profile.body > 0.6 ? "triangle" : "sine",
+            waveB: profile.brightness > 0.6 ? "triangle" : "sine",
+          };
+        }
+        return {
+          waveA: profile.transientSharpness > 0.58 ? "triangle" : "sine",
+          waveB: "sine",
+        };
+      }
+
+      function resolveEffectiveSoundProfile(pattern, preset) {
+        const geometry = pattern.soundProfile || deriveSoundProfile(pattern.type, pattern.shapeProfile || buildShapeDNA(pattern.type, pattern.points).shapeProfile);
+        const presetBias = getPresetBias(preset, pattern.type);
+        const effective = {};
+        SOUND_PROFILE_KEYS.forEach((key) => {
+          effective[key] = roundTo(clamp(geometry[key] * 0.78 + presetBias[key] * 0.42, 0, 1), 3);
+        });
+        const waveforms = resolveWaveformSet(pattern.type, preset, effective);
+        return {
+          ...effective,
+          ...waveforms,
+          filterType: pattern.type === "HarmonyPad"
+            ? effective.filterMotion > 0.62 ? "bandpass" : "lowpass"
+            : effective.brightness > 0.74 && effective.body < 0.45
+              ? "highpass"
+              : effective.resonance > 0.6 && pattern.type === "MelodyLine"
+                ? "bandpass"
+                : "lowpass",
+        };
+      }
+
+      function describePresetBase(preset) {
+        if (preset.voiceType.includes("trap")) {
+          return `${preset.label} keeps the family hard-edged, brighter, and more driven.`;
+        }
+        if (preset.voiceType.includes("dream")) {
+          return `${preset.label} keeps the family wide, soft, and washed with space.`;
+        }
+        if (preset.voiceType.includes("bass")) {
+          return `${preset.label} keeps the family low, weighty, and centered on body.`;
+        }
+        if (preset.voiceType.includes("bell")) {
+          return `${preset.label} keeps the family metallic, fast, and pointed.`;
+        }
+        if (preset.voiceType.includes("pad")) {
+          return `${preset.label} keeps the family sustained, blooming, and spatial.`;
+        }
+        return `${preset.label} sets the base voice family while shape DNA pushes it into a distinct variant.`;
+      }
+
+      function describeGeometryContribution(pattern) {
+        const sound = pattern.soundProfile || {};
+        const emphasis = sound.drive > 0.62 ? "drive and bite" : sound.body > 0.62 ? "body and weight" : "motion and tone color";
+        const motion = sound.modDepth > 0.58 ? "animated modulation" : sound.filterMotion > 0.58 ? "moving filter color" : "steady articulation";
+        return `Geometry pushes ${emphasis} with ${motion}. ${pattern.shapeSummary}.`;
+      }
+
+      function formatPercent(value) {
+        return `${Math.round(clamp(value, 0, 1) * 100)}%`;
+      }
+
+      function getShapeDNAStats(pattern) {
+        const shape = pattern.shapeProfile || {};
+        if (pattern.type === "RhythmLoop") {
+          return [
+            { label: "Circularity", value: shape.circularity },
+            { label: "Angularity", value: shape.angularity },
+            { label: "Symmetry", value: shape.symmetry },
+            { label: "Aspect Ratio", value: shape.aspectRatio },
+            { label: "Wobble", value: shape.wobble },
+            { label: "Path Length", value: shape.pathLength },
+          ];
+        }
+        if (pattern.type === "MelodyLine") {
+          return [
+            { label: "Vertical Span", value: shape.verticalSpan },
+            { label: "Angularity", value: shape.angularity },
+            { label: "Curvature", value: shape.curvatureMean },
+            { label: "Speed Var", value: shape.speedVariance },
+            { label: "Direction Bias", value: Math.abs((shape.directionBias || 0.5) - 0.5) * 2 },
+            { label: "Symmetry", value: shape.symmetry },
+          ];
+        }
+        return [
+          { label: "Width", value: shape.horizontalSpan },
+          { label: "Height", value: shape.centroidHeight },
+          { label: "Tilt", value: Math.abs(shape.tiltSigned || 0) },
+          { label: "Smoothness", value: 1 - (shape.angularity || 0) },
+          { label: "Symmetry", value: shape.symmetry },
+          { label: "Path Length", value: shape.pathLength },
+        ];
+      }
+
+      function getGeometryTraitChips(pattern) {
+        const sound = pattern.soundProfile || {};
+        const chips = [];
+        if (sound.body > 0.6) {
+          chips.push({ label: "Heavy body", tone: "soft" });
+        }
+        if (sound.transientSharpness > 0.58) {
+          chips.push({ label: "Sharp edge", tone: "sharp" });
+        }
+        if (sound.drive > 0.56) {
+          chips.push({ label: "Driven", tone: "hot" });
+        }
+        if (sound.modDepth > 0.58) {
+          chips.push({ label: "Animated", tone: "soft" });
+        }
+        if (sound.reverbBias > 0.58) {
+          chips.push({ label: "Bloom", tone: "soft" });
+        }
+        if (sound.filterMotion > 0.58) {
+          chips.push({ label: "Moving filter", tone: "sharp" });
+        }
+        if (sound.delayBias > 0.46) {
+          chips.push({ label: "Echo pull", tone: "hot" });
+        }
+        return chips.slice(0, 5);
+      }
+
+      const store = {
+        state: createEmptyState(),
+
+        init() {
+          const stored = this.load();
+          this.state = stored ?? createEmptyState();
+          this.normalizeState();
+        },
+
+        load() {
+          try {
+            const raw = localStorage.getItem(STORAGE_KEY);
+            if (!raw) {
+              return null;
+            }
+            return JSON.parse(raw);
+          } catch (error) {
+            console.warn("Failed to load saved session", error);
+            return null;
+          }
+        },
+
+        persist() {
+          try {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(this.state));
+          } catch (error) {
+            console.warn("Failed to persist session", error);
+          }
+        },
+
+        normalizeState() {
+          const fallback = createEmptyState();
+          this.state.version = 2;
+          this.state.scenes = fallback.scenes.map((fallbackScene) => {
+            const existing = (this.state.scenes || []).find((scene) => scene.id === fallbackScene.id);
+            return existing ? { ...fallbackScene, ...existing, instanceIds: existing.instanceIds || [] } : fallbackScene;
+          });
+          this.state.arrangement = Array.from({ length: MAX_ARRANGEMENT_SLOTS }, (_, index) => {
+            const existing = (this.state.arrangement || [])[index];
+            return {
+              id: `slot-${index + 1}`,
+              sceneId: existing?.sceneId ?? EMPTY_SLOT,
+              bars: existing?.bars ?? 4,
+            };
+          });
+          this.state.patterns = (this.state.patterns || []).map((pattern) => finalizePattern(pattern));
+          this.state.instances = this.state.instances || [];
+          this.state.activeGroupId = this.state.activeGroupId || fallback.activeGroupId;
+          this.state.activeTab = this.state.activeTab || fallback.activeTab;
+          this.state.drawMode = this.state.drawMode || fallback.drawMode;
+          this.state.activeSceneId = this.state.activeSceneId || fallback.activeSceneId;
+          this.state.selectedInstanceId = this.state.selectedInstanceId || null;
+          this.state.selectedPatternId = this.state.selectedPatternId || null;
+          this.state.queuedSceneId = this.state.queuedSceneId || null;
+          this.state.counters = {
+            rhythm: this.state.counters?.rhythm || 1,
+            melody: this.state.counters?.melody || 1,
+            harmony: this.state.counters?.harmony || 1,
+          };
+          this.cleanupSceneMembership();
+        },
+
+        cleanupSceneMembership() {
+          this.state.scenes.forEach((scene) => {
+            scene.instanceIds = scene.instanceIds.filter((instanceId) => this.state.instances.some((instance) => instance.id === instanceId && instance.sceneId === scene.id));
+          });
+          this.state.instances.forEach((instance) => {
+            const scene = this.getScene(instance.sceneId);
+            if (scene && !scene.instanceIds.includes(instance.id)) {
+              scene.instanceIds.push(instance.id);
+            }
+          });
+        },
+
+        nextDraftName(type) {
+          const mapping = {
+            RhythmLoop: { key: "rhythm", prefix: "Beat" },
+            MelodyLine: { key: "melody", prefix: "Melody" },
+            HarmonyPad: { key: "harmony", prefix: "Pad" },
+          };
+          const { key, prefix } = mapping[type];
+          const index = this.state.counters[key];
+          return `${prefix}-${String(index).padStart(2, "0")}`;
+        },
+
+        reserveName(type) {
+          const mapping = {
+            RhythmLoop: { key: "rhythm", prefix: "Beat" },
+            MelodyLine: { key: "melody", prefix: "Melody" },
+            HarmonyPad: { key: "harmony", prefix: "Pad" },
+          };
+          const { key, prefix } = mapping[type];
+          const index = this.state.counters[key];
+          this.state.counters[key] += 1;
+          return `${prefix}-${String(index).padStart(2, "0")}`;
+        },
+
+        getGroup(groupId) {
+          return GROUPS.find((group) => group.id === groupId) ?? GROUPS[0];
+        },
+
+        getPreset(presetId) {
+          return PRESETS.find((preset) => preset.id === presetId) ?? PRESETS[0];
+        },
+
+        getPattern(patternId) {
+          return this.state.patterns.find((pattern) => pattern.id === patternId) || null;
+        },
+
+        getScene(sceneId) {
+          return this.state.scenes.find((scene) => scene.id === sceneId) || null;
+        },
+
+        getInstance(instanceId) {
+          return this.state.instances.find((instance) => instance.id === instanceId) || null;
+        },
+
+        getSceneInstances(sceneId) {
+          return this.state.instances.filter((instance) => instance.sceneId === sceneId);
+        },
+
+        getEffectivePresetId(instance, pattern) {
+          return instance.presetOverrideId || pattern.presetId;
+        },
+
+        getEffectiveSoundProfile(instance, pattern) {
+          const preset = this.getPreset(this.getEffectivePresetId(instance, pattern));
+          return resolveEffectiveSoundProfile(pattern, preset);
+        },
+
+        getActiveScene() {
+          return this.getScene(this.state.activeSceneId) || this.state.scenes[0];
+        },
+
+        setActiveTab(tab) {
+          this.state.activeTab = tab;
+          renderer.render();
+          this.persist();
+        },
+
+        setDrawMode(mode) {
+          this.state.drawMode = mode;
+          renderer.render();
+          this.persist();
+        },
+
+        setActiveGroup(groupId) {
+          this.state.activeGroupId = groupId;
+          renderer.render();
+          this.persist();
+          toast.show(`Active ensemble: ${this.getGroup(groupId).name}`);
+        },
+
+        setTempo(tempo) {
+          this.state.tempo = clamp(Number(tempo) || 85, 60, 160);
+          renderer.renderTopbar();
+          renderer.renderInspector();
+          this.persist();
+        },
+
+        setKey(keyName) {
+          this.state.key = keyName in KEYS ? keyName : "A minor";
+          renderer.renderTopbar();
+          renderer.renderInspector();
+          this.persist();
+        },
+
+        setSelectedInstance(instanceId) {
+          this.state.selectedInstanceId = instanceId;
+          this.state.selectedPatternId = instanceId ? this.getInstance(instanceId)?.patternId || null : null;
+          renderer.renderInspector();
+          renderer.renderStageInstances();
+          this.persist();
+        },
+
+        commitDraft(draft, duplicate) {
+          const pattern = {
+            id: createId("pattern"),
+            type: draft.type,
+            name: draft.name || this.reserveName(draft.type),
+            bars: draft.bars,
+            tempoBase: draft.tempoBase,
+            key: draft.key,
+            groupId: draft.groupId,
+            presetId: draft.presetId,
+            points: draft.points,
+            derivedSequence: draft.derivedSequence,
+            tags: draft.tags,
+            color: draft.color,
+            shapeProfile: draft.shapeProfile,
+            soundProfile: draft.soundProfile,
+            shapeSummary: draft.shapeSummary,
+          };
+
+          this.state.patterns.unshift(pattern);
+          const instance = this.spawnPattern(pattern.id, this.state.activeSceneId, draft.spawn, false);
+          if (duplicate) {
+            this.spawnPattern(pattern.id, this.state.activeSceneId, {
+              x: clamp(draft.spawn.x + 0.12, 0.12, 0.88),
+              y: clamp(draft.spawn.y + 0.08, 0.14, 0.86),
+            }, false);
+          }
+
+          this.state.selectedPatternId = pattern.id;
+          this.state.selectedInstanceId = instance.id;
+          this.persist();
+          renderer.render();
+          toast.show(`${pattern.name} saved to the Pattern Library.`);
+        },
+
+        spawnPattern(patternId, sceneId = this.state.activeSceneId, coords = null, shouldRender = true) {
+          const pattern = this.getPattern(patternId);
+          if (!pattern) {
+            return null;
+          }
+          const scene = this.getScene(sceneId);
+          if (!scene) {
+            return null;
+          }
+          const placement = coords || this.getNextSpawnPosition(sceneId);
+          const instance = createInstanceForPattern(patternId, sceneId, {
+            x: placement.x,
+            y: placement.y,
+            depth: placement.depth ?? 0.4,
+            presetOverrideId: null,
+          });
+          this.state.instances.push(instance);
+          scene.instanceIds.push(instance.id);
+          this.state.selectedInstanceId = instance.id;
+          this.state.selectedPatternId = patternId;
+          if (shouldRender) {
+            this.persist();
+            renderer.render();
+            toast.show(`${pattern.name} added to ${scene.name}.`);
+          }
+          return instance;
+        },
+
+        getNextSpawnPosition(sceneId) {
+          const existing = this.getSceneInstances(sceneId);
+          const positions = [
+            { x: 0.35, y: 0.34, depth: 0.3 },
+            { x: 0.66, y: 0.36, depth: 0.28 },
+            { x: 0.28, y: 0.7, depth: 0.44 },
+            { x: 0.55, y: 0.58, depth: 0.68 },
+            { x: 0.74, y: 0.68, depth: 0.34 },
+          ];
+          return positions[existing.length % positions.length];
+        },
+
+        clonePattern(patternId) {
+          const source = this.getPattern(patternId);
+          if (!source) {
+            return;
+          }
+          const duplicate = clone(source);
+          duplicate.id = createId("pattern");
+          duplicate.name = `${source.name} Copy`;
+          this.state.patterns.unshift(duplicate);
+          this.state.selectedPatternId = duplicate.id;
+          this.state.selectedInstanceId = null;
+          this.persist();
+          renderer.render();
+          toast.show(`${source.name} duplicated as a new reusable pattern.`);
+        },
+
+        removeInstance(instanceId) {
+          const instance = this.getInstance(instanceId);
+          if (!instance) {
+            return;
+          }
+          const scene = this.getScene(instance.sceneId);
+          if (scene) {
+            scene.instanceIds = scene.instanceIds.filter((id) => id !== instanceId);
+          }
+          this.state.instances = this.state.instances.filter((item) => item.id !== instanceId);
+          if (this.state.selectedInstanceId === instanceId) {
+            this.state.selectedInstanceId = null;
+          }
+          this.persist();
+          renderer.render();
+          toast.show("Pattern instance removed from the scene.");
+        },
+
+        duplicateInstance(instanceId) {
+          const instance = this.getInstance(instanceId);
+          if (!instance) {
+            return;
+          }
+          const duplicate = clone(instance);
+          duplicate.id = createId("instance");
+          duplicate.x = clamp(instance.x + 0.08, 0.1, 0.9);
+          duplicate.y = clamp(instance.y + 0.08, 0.12, 0.88);
+          duplicate.pan = roundTo(duplicate.x * 2 - 1, 2);
+          duplicate.brightness = roundTo(1 - duplicate.y, 2);
+          this.state.instances.push(duplicate);
+          const scene = this.getScene(instance.sceneId);
+          if (scene) {
+            scene.instanceIds.push(duplicate.id);
+          }
+          this.state.selectedInstanceId = duplicate.id;
+          this.persist();
+          renderer.render();
+          toast.show("Instance duplicated inside the scene.");
+        },
+
+        updateInstance(instanceId, patch) {
+          const instance = this.getInstance(instanceId);
+          if (!instance) {
+            return;
+          }
+          Object.assign(instance, patch);
+          if (patch.x !== undefined) {
+            instance.pan = roundTo(instance.x * 2 - 1, 2);
+          }
+          if (patch.y !== undefined) {
+            instance.brightness = roundTo(1 - instance.y, 2);
+          }
+          if (patch.depth !== undefined) {
+            instance.gain = roundTo(1.08 - instance.depth * 0.58, 2);
+          }
+          this.persist();
+          renderer.renderStageInstances();
+          renderer.renderInspector();
+        },
+
+        setPresetOverride(instanceId, presetId) {
+          const instance = this.getInstance(instanceId);
+          if (!instance) {
+            return;
+          }
+          instance.presetOverrideId = presetId || null;
+          this.persist();
+          renderer.render();
+        },
+
+        setActiveScene(sceneId, queueIfPlaying = true) {
+          if (!this.getScene(sceneId)) {
+            return;
+          }
+          if (queueIfPlaying && sequencer.isPlaying() && !sequencer.hasArrangement()) {
+            this.state.queuedSceneId = sceneId;
+            renderer.renderSceneStrip();
+            renderer.renderTopbar();
+            this.persist();
+            toast.show(`Scene ${sceneId.slice(-1).toUpperCase()} queued for the next bar.`);
+            return;
+          }
+          this.state.activeSceneId = sceneId;
+          this.state.queuedSceneId = null;
+          if (this.state.selectedInstanceId) {
+            const selected = this.getInstance(this.state.selectedInstanceId);
+            if (!selected || selected.sceneId !== sceneId) {
+              this.state.selectedInstanceId = null;
+            }
+          }
+          this.persist();
+          renderer.render();
+        },
+
+        copyScene(sourceSceneId, targetSceneId) {
+          const source = this.getScene(sourceSceneId);
+          const target = this.getScene(targetSceneId);
+          if (!source || !target || sourceSceneId === targetSceneId) {
+            return;
+          }
+
+          const targetInstanceIds = new Set(target.instanceIds);
+          this.state.instances = this.state.instances.filter((instance) => !targetInstanceIds.has(instance.id));
+          target.instanceIds = [];
+
+          source.instanceIds.forEach((instanceId) => {
+            const sourceInstance = this.getInstance(instanceId);
+            if (!sourceInstance) {
+              return;
+            }
+            const copied = clone(sourceInstance);
+            copied.id = createId("instance");
+            copied.sceneId = targetSceneId;
+            target.instanceIds.push(copied.id);
+            this.state.instances.push(copied);
+          });
+
+          target.tempoOverride = source.tempoOverride;
+          target.keyOverride = source.keyOverride;
+          this.state.activeSceneId = targetSceneId;
+          this.state.selectedInstanceId = null;
+          this.persist();
+          renderer.render();
+          toast.show(`${source.name} copied into ${target.name}.`);
+        },
+
+        updateArrangement(slotId, patch) {
+          const slot = this.state.arrangement.find((item) => item.id === slotId);
+          if (!slot) {
+            return;
+          }
+          Object.assign(slot, patch);
+          this.persist();
+          renderer.renderArrangement();
+          renderer.renderTopbar();
+        },
+
+        loadDemo() {
+          sequencer.stop();
+          this.state = createDemoState();
+          this.persist();
+          renderer.render();
+          toast.show("Demo session loaded.");
+        },
+
+        reset() {
+          sequencer.stop();
+          this.state = createEmptyState();
+          this.persist();
+          renderer.render();
+          toast.show("New empty session created.");
+        },
+      };
+
+      const toast = {
+        timer: null,
+
+        show(message) {
+          const element = refs.toast;
+          element.textContent = message;
+          element.classList.add("visible");
+          clearTimeout(this.timer);
+          this.timer = setTimeout(() => element.classList.remove("visible"), 2400);
+        },
+      };
+
+      const refs = {};
+
+      const renderer = {
+        animationFrame: null,
+        dpr: window.devicePixelRatio || 1,
+
+        init() {
+          refs.tempoInput = document.getElementById("tempo-input");
+          refs.keySelect = document.getElementById("key-select");
+          refs.playToggle = document.getElementById("play-toggle");
+          refs.audioToggle = document.getElementById("audio-toggle");
+          refs.loadDemo = document.getElementById("load-demo");
+          refs.resetSession = document.getElementById("reset-session");
+          refs.dockContent = document.getElementById("dock-content");
+          refs.workspace = document.getElementById("workspace");
+          refs.stageCanvas = document.getElementById("stage-canvas");
+          refs.stageContext = refs.stageCanvas.getContext("2d");
+          refs.stageInstances = document.getElementById("stage-instances");
+          refs.pendingCard = document.getElementById("pending-card");
+          refs.pendingSummary = document.getElementById("pending-summary");
+          refs.pendingName = document.getElementById("pending-name");
+          refs.pendingDetails = document.getElementById("pending-details");
+          refs.pendingSave = document.getElementById("pending-save");
+          refs.pendingDuplicate = document.getElementById("pending-duplicate");
+          refs.pendingDiscard = document.getElementById("pending-discard");
+          refs.inspectorContent = document.getElementById("inspector-content");
+          refs.sceneStatus = document.getElementById("scene-status");
+          refs.transportStatus = document.getElementById("transport-status");
+          refs.sceneStrip = document.getElementById("scene-strip");
+          refs.arrangementStrip = document.getElementById("arrangement-strip");
+          refs.toast = document.getElementById("toast");
+
+          Object.keys(KEYS).forEach((keyName) => {
+            const option = document.createElement("option");
+            option.value = keyName;
+            option.textContent = keyName;
+            refs.keySelect.appendChild(option);
+          });
+
+          this.resizeCanvas();
+          this.startAnimationLoop();
+        },
+
+        render() {
+          this.renderTopbar();
+          this.renderTabs();
+          this.renderDock();
+          this.renderSceneStrip();
+          this.renderArrangement();
+          this.renderStageInstances();
+          this.renderPendingCard();
+          this.renderInspector();
+        },
+
+        renderTopbar() {
+          refs.tempoInput.value = store.state.tempo;
+          refs.keySelect.value = store.state.key;
+          refs.audioToggle.textContent = audioEngine.isReady() ? "Audio Ready" : "Start Audio";
+          refs.playToggle.textContent = sequencer.isPlaying() ? "Stop" : "Play";
+          const activeScene = store.getActiveScene();
+          const playbackSceneId = sequencer.getPlaybackSceneId();
+          const queuedScene = store.state.queuedSceneId;
+          refs.sceneStatus.innerHTML = `<strong>Edit:</strong> ${activeScene.name}${queuedScene ? ` <span class="subtle">| Queued: ${store.getScene(queuedScene)?.name || ""}</span>` : ""}`;
+          refs.transportStatus.innerHTML = sequencer.describeTransport(playbackSceneId);
+          document.querySelectorAll("[data-draw-mode]").forEach((button) => {
+            button.classList.toggle("active", button.getAttribute("data-draw-mode") === store.state.drawMode);
+          });
+        },
+
+        renderTabs() {
+          document.querySelectorAll(".tab-button").forEach((button) => {
+            button.classList.toggle("active", button.getAttribute("data-tab") === store.state.activeTab);
+          });
+        },
+
+        renderDock() {
+          const tab = store.state.activeTab;
+          if (tab === "instruments") {
+            refs.dockContent.innerHTML = `
+              <div class="stack">
+                ${GROUPS.map((group) => {
+                  const active = group.id === store.state.activeGroupId;
+                  return `
+                    <article class="group-card ${active ? "active" : ""}">
+                      <header>
+                        <div>
+                          <div class="title-line">${group.name}</div>
+                          <div class="library-meta">Defaults: ${Object.values(group.defaultPresetByType).map((presetId) => store.getPreset(presetId).label).join(" / ")}</div>
+                        </div>
+                        <div class="swatches">${group.swatches.map((color) => `<span class="swatch" style="color:${color};background:${color}"></span>`).join("")}</div>
+                      </header>
+                      <div class="library-meta">Bus FX: reverb ${Math.round(group.busFx.reverb * 100)}%, delay ${Math.round(group.busFx.delay * 100)}%</div>
+                      <div class="inline-actions" style="margin-top:10px;">
+                        <button class="button small ${active ? "active" : ""}" data-action="set-group" data-group-id="${group.id}" type="button">${active ? "Active" : "Use Ensemble"}</button>
+                      </div>
+                    </article>
+                  `;
+                }).join("")}
+              </div>
+            `;
+            return;
+          }
+
+          if (tab === "patterns") {
+            if (store.state.patterns.length === 0) {
+              refs.dockContent.innerHTML = `
+                <section class="inspector-card">
+                  <h3>Pattern Library</h3>
+                  <div class="meta-line">Draw your first RhythmLoop, MelodyLine, or HarmonyPad on the stage. Saved patterns become reusable building blocks you can drop into any scene.</div>
+                </section>
+              `;
+              return;
+            }
+            refs.dockContent.innerHTML = `
+              <div class="stack">
+                ${store.state.patterns.map((pattern) => `
+                  <article class="library-card ${store.state.selectedPatternId === pattern.id && !store.state.selectedInstanceId ? "selected" : ""}">
+                    <header>
+                      <div>
+                        <div class="title-line">${pattern.name}</div>
+                        <div class="library-meta">${TYPE_LABELS[pattern.type]} · ${pattern.bars} bars · ${store.getPreset(pattern.presetId).label}</div>
+                      </div>
+                      <span class="tag" style="color:${pattern.color};border:1px solid ${pattern.color}33;">${pattern.key}</span>
+                    </header>
+                    <div class="library-meta">${pattern.tags.join(" · ")}</div>
+                    <div class="inline-actions" style="margin-top:10px;">
+                      <button class="button small" data-action="spawn-pattern" data-pattern-id="${pattern.id}" type="button">Spawn</button>
+                      <button class="button ghost small" data-action="clone-pattern" data-pattern-id="${pattern.id}" type="button">Duplicate</button>
+                    </div>
+                  </article>
+                `).join("")}
+              </div>
+            `;
+            return;
+          }
+
+          refs.dockContent.innerHTML = `
+            <div class="stack">
+              ${store.state.scenes.map((scene) => {
+                const active = scene.id === store.state.activeSceneId;
+                const count = store.getSceneInstances(scene.id).length;
+                const preview = store.getSceneInstances(scene.id).slice(0, 3).map((instance) => store.getPattern(instance.patternId)?.name).filter(Boolean).join(", ") || "Empty";
+                return `
+                  <article class="scene-card ${active ? "active" : ""}">
+                    <header>
+                      <div>
+                        <div class="title-line">${scene.name}</div>
+                        <div class="scene-meta">${count} instance${count === 1 ? "" : "s"}</div>
+                      </div>
+                      <span class="tag">${scene.id.slice(-1).toUpperCase()}</span>
+                    </header>
+                    <div class="scene-meta">${preview}</div>
+                    <div class="inline-actions" style="margin-top:10px;">
+                      <button class="button small" data-action="select-scene" data-scene-id="${scene.id}" type="button">${active ? "Editing" : "Edit Scene"}</button>
+                      <button class="button ghost small" data-action="copy-scene" data-scene-id="${scene.id}" type="button">Copy Active Here</button>
+                    </div>
+                  </article>
+                `;
+              }).join("")}
+            </div>
+          `;
+        },
+
+        renderSceneStrip() {
+          const playbackSceneId = sequencer.getPlaybackSceneId();
+          refs.sceneStrip.innerHTML = store.state.scenes.map((scene) => {
+            const active = scene.id === store.state.activeSceneId;
+            const playing = scene.id === playbackSceneId;
+            const queued = scene.id === store.state.queuedSceneId;
+            const count = store.getSceneInstances(scene.id).length;
+            const label = queued ? "Queued" : active ? "Editing" : "Select";
+            return `
+              <article class="scene-chip ${active ? "active" : ""} ${playing ? "playing" : ""}">
+                <div class="chip-head">
+                  <div class="chip-label">${scene.name}</div>
+                  <span class="tag">${count}</span>
+                </div>
+                <div class="chip-caption">${count ? store.getSceneInstances(scene.id).slice(0, 2).map((instance) => store.getPattern(instance.patternId)?.name).join(" · ") : "No patterns yet"}</div>
+                <div class="inline-actions">
+                  <button class="button small ${active ? "active" : ""}" data-action="select-scene" data-scene-id="${scene.id}" type="button">${label}</button>
+                  <button class="button ghost small" data-action="copy-scene" data-scene-id="${scene.id}" type="button">Copy</button>
+                </div>
+              </article>
+            `;
+          }).join("");
+        },
+
+        renderArrangement() {
+          const activeSlotId = sequencer.getActiveSlotId();
+          refs.arrangementStrip.innerHTML = store.state.arrangement.map((slot, index) => `
+            <article class="slot-card ${slot.sceneId ? "" : "empty"} ${slot.id === activeSlotId ? "active" : ""}">
+              <div class="slot-index">Slot ${index + 1}</div>
+              <label>Scene
+                <select data-arrangement-scene="${slot.id}">
+                  <option value="">None</option>
+                  ${store.state.scenes.map((scene) => `<option value="${scene.id}" ${scene.id === slot.sceneId ? "selected" : ""}>${scene.name}</option>`).join("")}
+                </select>
+              </label>
+              <label>Bars
+                <select data-arrangement-bars="${slot.id}">
+                  ${[4, 8, 16].map((bars) => `<option value="${bars}" ${bars === slot.bars ? "selected" : ""}>${bars} bars</option>`).join("")}
+                </select>
+              </label>
+            </article>
+          `).join("");
+        },
+
+        renderStageInstances() {
+          const activeSceneId = store.state.activeSceneId;
+          const activeInstances = store.getSceneInstances(activeSceneId);
+          refs.stageInstances.innerHTML = activeInstances.map((instance) => {
+            const pattern = store.getPattern(instance.patternId);
+            if (!pattern) {
+              return "";
+            }
+            const effectivePreset = store.getPreset(store.getEffectivePresetId(instance, pattern));
+            const lastTrigger = sequencer.getLastTrigger(instance.id);
+            const isPulsing = lastTrigger && performance.now() - lastTrigger < 400;
+            const selected = store.state.selectedInstanceId === instance.id;
+            return `
+              <article
+                class="instance-card ${selected ? "selected" : ""} ${interactionController.dragState.instanceId === instance.id ? "dragging" : ""} ${isPulsing ? "pulsing" : ""}"
+                data-instance-id="${instance.id}"
+                style="left:${instance.x * 100}%;top:${instance.y * 100}%;"
+              >
+                <div class="instance-title">
+                  <span>${pattern.name}</span>
+                  <span class="tag" style="color:${pattern.color};border:1px solid ${pattern.color}33;">${TYPE_LABELS[pattern.type]}</span>
+                </div>
+                <div class="instance-subtitle">
+                  <span class="tag">${effectivePreset.label}</span>
+                  <span class="tag">Depth ${Math.round(instance.depth * 100)}%</span>
+                </div>
+              </article>
+            `;
+          }).join("");
+          document.getElementById("empty-hint").classList.toggle("hidden", activeInstances.length > 0 || Boolean(interactionController.pendingDraft) || Boolean(interactionController.drawPoints.length));
+        },
+
+        renderPendingCard() {
+          const draft = interactionController.pendingDraft;
+          if (!draft) {
+            refs.pendingCard.classList.add("hidden");
+            refs.pendingName.value = "";
+            return;
+          }
+          refs.pendingCard.classList.remove("hidden");
+          refs.pendingSummary.textContent = `${draft.name} · ${TYPE_LABELS[draft.type]} · ${draft.summary}`;
+          refs.pendingName.value = draft.name;
+          refs.pendingDetails.textContent = draft.details;
+        },
+
+        renderInspector() {
+          const instance = store.getInstance(store.state.selectedInstanceId);
+          if (!instance) {
+            const activeScene = store.getActiveScene();
+            refs.inspectorContent.innerHTML = `
+              <section class="inspector-card">
+                <h3>Session</h3>
+                <div class="stat-grid">
+                  <div class="stat">Patterns<strong>${store.state.patterns.length}</strong></div>
+                  <div class="stat">Scene Instances<strong>${store.getSceneInstances(activeScene.id).length}</strong></div>
+                  <div class="stat">Tempo<strong>${store.state.tempo} BPM</strong></div>
+                  <div class="stat">Active Key<strong>${store.state.key}</strong></div>
+                </div>
+              </section>
+              <section class="inspector-card">
+                <h3>How to Validate</h3>
+                <ul class="inspector-list">
+                  <li>Draw one shape in each mode and use the commit card to save it.</li>
+                  <li>Spawn the same saved pattern multiple times from the library.</li>
+                  <li>Copy Scene A into Scene B, then mute or move one instance to make a variation.</li>
+                  <li>Fill arrangement slots to hear song blocks switch on bar boundaries.</li>
+                </ul>
+              </section>
+              <section class="inspector-card">
+                <h3>Current Ensemble</h3>
+                <div class="inspector-meta">${store.getGroup(store.state.activeGroupId).name} defaults new drawings to ${Object.values(store.getGroup(store.state.activeGroupId).defaultPresetByType).map((presetId) => store.getPreset(presetId).label).join(", ")}.</div>
+              </section>
+            `;
+            return;
+          }
+
+          const pattern = store.getPattern(instance.patternId);
+          if (!pattern) {
+            refs.inspectorContent.innerHTML = "";
+            return;
+          }
+          const compatiblePresets = PRESETS.filter((preset) => preset.supportedTypes.includes(pattern.type));
+          const activePresetId = store.getEffectivePresetId(instance, pattern);
+          const activePreset = store.getPreset(activePresetId);
+          const effectiveSound = store.getEffectiveSoundProfile(instance, pattern);
+          refs.inspectorContent.innerHTML = `
+            <section class="inspector-card">
+              <header>
+                <div>
+                  <h3>${pattern.name}</h3>
+                  <div class="inspector-meta">${TYPE_LABELS[pattern.type]} · ${pattern.bars} bars · ${pattern.key}</div>
+                </div>
+                <span class="tag">${store.getScene(instance.sceneId)?.name || ""}</span>
+              </header>
+              <div class="field">
+                <label for="preset-select">Preset</label>
+                <select id="preset-select" data-inspector="preset">
+                  ${compatiblePresets.map((preset) => `<option value="${preset.id}" ${preset.id === activePresetId ? "selected" : ""}>${preset.label}</option>`).join("")}
+                </select>
+              </div>
+              <div class="field">
+                <label for="depth-range">Depth</label>
+                <input id="depth-range" data-inspector="depth" type="range" min="0.1" max="0.95" step="0.01" value="${instance.depth}">
+              </div>
+              <div class="panel-row">
+                <div class="stat">Pan<strong>${instance.pan}</strong></div>
+                <div class="stat">Brightness<strong>${instance.brightness}</strong></div>
+              </div>
+              <div class="panel-row">
+                <button class="button small" data-action="duplicate-instance" data-instance-id="${instance.id}" type="button">Duplicate Instance</button>
+                <button class="button ghost small" data-action="toggle-mute-instance" data-instance-id="${instance.id}" type="button">${instance.muted ? "Unmute" : "Mute"}</button>
+                <button class="button warning small" data-action="remove-instance" data-instance-id="${instance.id}" type="button">Remove</button>
+              </div>
+            </section>
+            <section class="inspector-card">
+              <h3>Reusable Pattern</h3>
+              <div class="inspector-meta">This stage object is only an instance. Geometry and timing come from the library master. Swapping presets changes the voice family, but the same shape DNA still drives the character.</div>
+              <div class="inline-actions" style="margin-top:10px;">
+                <button class="button small" data-action="spawn-pattern" data-pattern-id="${pattern.id}" type="button">Spawn Another</button>
+                <button class="button ghost small" data-action="clone-pattern" data-pattern-id="${pattern.id}" type="button">Duplicate Master</button>
+              </div>
+            </section>
+            <section class="inspector-card">
+              <h3>Shape DNA</h3>
+              <div class="inspector-meta">${pattern.shapeSummary}</div>
+              <div class="dna-grid">
+                ${getShapeDNAStats(pattern).map((item) => `<div class="stat">${item.label}<strong>${formatPercent(item.value)}</strong></div>`).join("")}
+              </div>
+              <div class="trait-list">
+                ${getGeometryTraitChips(pattern).map((chip) => `<span class="trait-chip ${chip.tone}">${chip.label}</span>`).join("")}
+              </div>
+              <div class="inspector-meta" style="margin-top:12px;">Preset family: ${describePresetBase(activePreset)}</div>
+              <div class="inspector-meta" style="margin-top:8px;">Geometry voice: ${describeGeometryContribution(pattern)}</div>
+              <div class="inspector-meta" style="margin-top:8px;">Effective blend: brightness ${formatPercent(effectiveSound.brightness)}, drive ${formatPercent(effectiveSound.drive)}, motion ${formatPercent(effectiveSound.filterMotion)}.</div>
+            </section>
+            <section class="inspector-card">
+              <h3>Derived Rule</h3>
+              <div class="inspector-meta">${describePatternDerivation(pattern)}</div>
+            </section>
+          `;
+        },
+
+        resizeCanvas() {
+          const rect = refs.workspace.getBoundingClientRect();
+          this.dpr = window.devicePixelRatio || 1;
+          refs.stageCanvas.width = Math.floor(rect.width * this.dpr);
+          refs.stageCanvas.height = Math.floor(rect.height * this.dpr);
+          refs.stageContext.setTransform(this.dpr, 0, 0, this.dpr, 0, 0);
+          interactionController.workspaceRect = rect;
+        },
+
+        drawStage() {
+          const ctx = refs.stageContext;
+          const rect = refs.workspace.getBoundingClientRect();
+          if (!rect.width || !rect.height) {
+            return;
+          }
+
+          if (refs.stageCanvas.width !== Math.floor(rect.width * this.dpr) || refs.stageCanvas.height !== Math.floor(rect.height * this.dpr)) {
+            this.resizeCanvas();
+          }
+
+          ctx.clearRect(0, 0, rect.width, rect.height);
+          this.drawBackdrops(ctx, rect.width, rect.height);
+
+          const sceneInstances = store.getSceneInstances(store.state.activeSceneId);
+          sceneInstances.forEach((instance) => {
+            const pattern = store.getPattern(instance.patternId);
+            if (!pattern) {
+              return;
+            }
+            const pulse = sequencer.getPulse(instance.id);
+            this.drawPattern(ctx, pattern, instance, pulse, rect);
+          });
+
+          if (interactionController.drawPoints.length > 0) {
+            this.drawFreehand(ctx, interactionController.drawPoints, store.state.drawMode, 0.95);
+          } else if (interactionController.pendingDraft) {
+            this.drawFreehand(ctx, interactionController.pendingDraft.rawPoints, interactionController.pendingDraft.type, 0.85);
+          }
+        },
+
+        drawBackdrops(ctx, width, height) {
+          const glow = ctx.createRadialGradient(width * 0.5, height * 0.42, 10, width * 0.5, height * 0.42, height * 0.64);
+          glow.addColorStop(0, "rgba(42, 112, 132, 0.2)");
+          glow.addColorStop(0.42, "rgba(18, 37, 66, 0.16)");
+          glow.addColorStop(1, "rgba(2, 7, 13, 0)");
+          ctx.fillStyle = glow;
+          ctx.fillRect(0, 0, width, height);
+
+          ctx.save();
+          ctx.translate(width * 0.5, height * 0.52);
+          for (let ring = 1; ring <= 5; ring += 1) {
+            ctx.beginPath();
+            ctx.strokeStyle = `rgba(163, 204, 255, ${0.04 + ring * 0.012})`;
+            ctx.lineWidth = ring === 5 ? 1.4 : 1;
+            ctx.ellipse(0, 0, width * (0.12 * ring), height * (0.055 * ring), 0, 0, Math.PI * 2);
+            ctx.stroke();
+          }
+          ctx.restore();
+
+          for (let line = 1; line <= 7; line += 1) {
+            const y = (line / 8) * height;
+            ctx.beginPath();
+            ctx.moveTo(0, y);
+            ctx.lineTo(width, y);
+            ctx.strokeStyle = line === 4 ? "rgba(247, 201, 117, 0.06)" : "rgba(163, 204, 255, 0.028)";
+            ctx.lineWidth = 1;
+            ctx.stroke();
+          }
+        },
+
+        drawPattern(ctx, pattern, instance, pulse, rect) {
+          const anchorX = instance.x * rect.width;
+          const anchorY = instance.y * rect.height;
+          const scale = pattern.type === "HarmonyPad" ? { x: 220, y: 92 } : pattern.type === "MelodyLine" ? { x: 190, y: 132 } : { x: 160, y: 160 };
+          const depthScale = 1 - instance.depth * 0.16;
+          const shape = pattern.shapeProfile || {};
+          const effective = store.getEffectiveSoundProfile(instance, pattern);
+          const now = performance.now() * 0.001;
+          const angularity = shape.angularity || 0;
+          const smoothness = 1 - angularity;
+          const flicker = angularity * (0.45 + 0.55 * Math.sin(now * (6 + effective.modDepth * 9) + anchorX * 0.01));
+          const alpha = instance.muted ? 0.18 : 0.7 + pulse * 0.18 + flicker * 0.08;
+
+          ctx.save();
+          ctx.translate(anchorX, anchorY);
+          ctx.scale(depthScale, depthScale);
+
+          if (pattern.type === "HarmonyPad") {
+            ctx.save();
+            ctx.rotate((shape.tiltSigned || 0) * 0.45);
+            ctx.beginPath();
+            ctx.ellipse(
+              0,
+              0,
+              scale.x * (0.58 + (shape.horizontalSpan || 0) * 0.22),
+              scale.y * (0.72 + effective.reverbBias * 0.22),
+              0,
+              0,
+              Math.PI * 2
+            );
+            ctx.fillStyle = toAlpha(pattern.color, 0.04 + effective.reverbBias * 0.08 + pulse * 0.04);
+            ctx.fill();
+            ctx.restore();
+          }
+
+          ctx.beginPath();
+          pattern.points.forEach((point, index) => {
+            const x = (point.x - 0.5) * scale.x;
+            const y = (point.y - 0.5) * scale.y;
+            if (index === 0) {
+              ctx.moveTo(x, y);
+            } else {
+              ctx.lineTo(x, y);
+            }
+          });
+          if (pattern.type === "RhythmLoop") {
+            ctx.closePath();
+          }
+
+          const glowWidth = pattern.type === "HarmonyPad"
+            ? 11 + smoothness * 5
+            : pattern.type === "MelodyLine"
+              ? 5 + shape.curvatureMean * 3
+              : 8 + angularity * 4;
+          ctx.shadowColor = `${pattern.color}88`;
+          ctx.shadowBlur = 12 + pulse * 16 + smoothness * 8 + flicker * 18;
+          ctx.strokeStyle = toAlpha(pattern.color, alpha);
+          ctx.lineWidth = glowWidth;
+          ctx.lineJoin = "round";
+          ctx.lineCap = "round";
+          ctx.stroke();
+
+          if (pattern.type === "RhythmLoop" && angularity > 0.42) {
+            ctx.save();
+            ctx.setLineDash([8, 6]);
+            ctx.strokeStyle = toAlpha("#ffffff", 0.12 + flicker * 0.1);
+            ctx.lineWidth = 1.4 + effective.transientSharpness * 1.6;
+            ctx.stroke();
+            ctx.restore();
+          }
+
+          if (pattern.type === "MelodyLine") {
+            ctx.save();
+            ctx.translate(Math.sin(now * 3.2 + anchorX * 0.01) * effective.modDepth * 8, Math.cos(now * 2.8 + anchorY * 0.01) * effective.filterMotion * 6);
+            ctx.beginPath();
+            pattern.points.forEach((point, index) => {
+              const x = (point.x - 0.5) * scale.x;
+              const y = (point.y - 0.5) * scale.y;
+              if (index === 0) {
+                ctx.moveTo(x, y);
+              } else {
+                ctx.lineTo(x, y);
+              }
+            });
+            ctx.strokeStyle = toAlpha(pattern.color, 0.12 + effective.modDepth * 0.16);
+            ctx.lineWidth = 2;
+            ctx.stroke();
+            ctx.restore();
+          }
+
+          ctx.shadowBlur = 0;
+          ctx.strokeStyle = toAlpha("#ffffff", pattern.type === "HarmonyPad" ? 0.1 : 0.16);
+          ctx.lineWidth = pattern.type === "HarmonyPad" ? 3 : 2;
+          ctx.stroke();
+
+          if (pattern.type === "HarmonyPad") {
+            ctx.fillStyle = toAlpha(pattern.color, 0.06 + effective.reverbBias * 0.08 + pulse * 0.04);
+            ctx.fill();
+          }
+
+          if (sequencer.isPlaying()) {
+            const phase = sequencer.getPhaseForPattern(pattern, instance.id);
+            if (phase !== null) {
+              const point = pattern.points[Math.floor(phase * (pattern.points.length - 1))];
+              ctx.beginPath();
+              ctx.fillStyle = toAlpha(pattern.color, 0.8);
+              ctx.shadowColor = pattern.color;
+              ctx.shadowBlur = 16;
+              ctx.arc((point.x - 0.5) * scale.x, (point.y - 0.5) * scale.y, pattern.type === "RhythmLoop" ? 6 : 5, 0, Math.PI * 2);
+              ctx.fill();
+            }
+          }
+          ctx.restore();
+        },
+
+        drawFreehand(ctx, points, type, alpha) {
+          if (points.length < 2) {
+            return;
+          }
+          ctx.save();
+          ctx.beginPath();
+          points.forEach((point, index) => {
+            if (index === 0) {
+              ctx.moveTo(point.x, point.y);
+            } else {
+              ctx.lineTo(point.x, point.y);
+            }
+          });
+          ctx.strokeStyle = toAlpha(TYPE_COLORS[type], alpha);
+          ctx.lineWidth = type === "HarmonyPad" ? 10 : type === "MelodyLine" ? 5 : 8;
+          ctx.lineJoin = "round";
+          ctx.lineCap = "round";
+          ctx.shadowColor = TYPE_COLORS[type];
+          ctx.shadowBlur = 18;
+          ctx.stroke();
+          ctx.restore();
+        },
+
+        startAnimationLoop() {
+          const frame = () => {
+            this.drawStage();
+            this.animationFrame = requestAnimationFrame(frame);
+          };
+          frame();
+        },
+      };
+
+      function toAlpha(hex, alpha) {
+        const normalized = hex.replace("#", "");
+        const bigint = Number.parseInt(normalized, 16);
+        const r = (bigint >> 16) & 255;
+        const g = (bigint >> 8) & 255;
+        const b = bigint & 255;
+        return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+      }
+
+      function describePatternDerivation(pattern) {
+        if (pattern.type === "RhythmLoop") {
+          return `${pattern.shapeSummary}. Closed-loop geometry produced a ${pattern.bars}-bar groove with ${pattern.derivedSequence.events.length} trigger events and extreme transient weighting.`;
+        }
+        if (pattern.type === "MelodyLine") {
+          return `${pattern.shapeSummary}. Stroke slices became ${pattern.derivedSequence.notes.length} scaled note events in ${pattern.key}, with line contour now affecting pitch, glide, articulation, and timbre.`;
+        }
+        return `${pattern.shapeSummary}. Stroke height and tilt generated a ${pattern.derivedSequence.flavor} harmony pad over ${pattern.bars} bars, with width and path length now driving bloom, spread, and filter motion.`;
+      }
+
+      const audioEngine = {
+        context: null,
+        master: null,
+        reverb: null,
+        reverbSend: null,
+        delay: null,
+        delayFeedback: null,
+
+        isReady() {
+          return Boolean(this.context);
+        },
+
+        async ensureStarted() {
+          if (!this.context) {
+            const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+            if (!AudioContextClass) {
+              toast.show("This browser does not support Web Audio.");
+              return false;
+            }
+            this.context = new AudioContextClass();
+            this.master = this.context.createGain();
+            this.master.gain.value = 0.82;
+
+            this.reverb = this.context.createConvolver();
+            this.reverb.buffer = this.createImpulseResponse();
+            this.reverbSend = this.context.createGain();
+            this.reverbSend.gain.value = 0.2;
+
+            this.delay = this.context.createDelay(1.2);
+            this.delay.delayTime.value = 0.22;
+            this.delayFeedback = this.context.createGain();
+            this.delayFeedback.gain.value = 0.18;
+            const delayTone = this.context.createBiquadFilter();
+            delayTone.type = "lowpass";
+            delayTone.frequency.value = 2200;
+
+            this.reverbSend.connect(this.reverb).connect(this.master);
+            this.delay.connect(delayTone).connect(this.delayFeedback).connect(this.delay);
+            this.delay.connect(this.master);
+            this.master.connect(this.context.destination);
+          }
+
+          if (this.context.state === "suspended") {
+            await this.context.resume();
+          }
+          renderer.renderTopbar();
+          return true;
+        },
+
+        createImpulseResponse() {
+          const length = this.context.sampleRate * 1.8;
+          const impulse = this.context.createBuffer(2, length, this.context.sampleRate);
+          for (let channel = 0; channel < impulse.numberOfChannels; channel += 1) {
+            const buffer = impulse.getChannelData(channel);
+            for (let index = 0; index < length; index += 1) {
+              buffer[index] = (Math.random() * 2 - 1) * Math.pow(1 - index / length, 2.6);
+            }
+          }
+          return impulse;
+        },
+
+        createDriveCurve(amount) {
+          const samples = 256;
+          const curve = new Float32Array(samples);
+          for (let index = 0; index < samples; index += 1) {
+            const x = index * 2 / samples - 1;
+            curve[index] = Math.tanh(x * amount);
+          }
+          return curve;
+        },
+
+        createVoiceChain({ pan = 0, brightness = 0.5, gain = 0.7, reverbSend = 0.12, delaySend = 0.08, soundProfile, type, startTime, voiceDuration }) {
+          const output = this.context.createGain();
+          output.gain.value = gain;
+          const filter = this.context.createBiquadFilter();
+          filter.type = soundProfile.filterType || "lowpass";
+          filter.frequency.value = (type === "RhythmLoop" ? 500 : type === "HarmonyPad" ? 320 : 700) + (brightness * 0.4 + soundProfile.brightness * 0.6) * (type === "HarmonyPad" ? 4200 : 6400);
+          filter.Q.value = 0.9 + soundProfile.resonance * 15;
+          const shaper = this.context.createWaveShaper();
+          shaper.curve = this.createDriveCurve(1 + soundProfile.drive * 18);
+          shaper.oversample = "2x";
+          const panner = this.context.createStereoPanner ? this.context.createStereoPanner() : null;
+          if (panner) {
+            panner.pan.value = clamp(pan * (0.85 + soundProfile.stereoSpread * 0.32), -1, 1);
+          }
+
+          output.connect(filter);
+          filter.connect(shaper);
+          if (panner) {
+            shaper.connect(panner);
+            panner.connect(this.master);
+          } else {
+            shaper.connect(this.master);
+          }
+
+          const reverbSendNode = this.context.createGain();
+          reverbSendNode.gain.value = reverbSend * (0.35 + soundProfile.reverbBias * 1.1);
+          shaper.connect(reverbSendNode);
+          reverbSendNode.connect(this.reverbSend);
+
+          const delaySendNode = this.context.createGain();
+          delaySendNode.gain.value = delaySend * (0.24 + soundProfile.delayBias * 1.08);
+          shaper.connect(delaySendNode);
+          delaySendNode.connect(this.delay);
+
+          let lfo = null;
+          if (soundProfile.filterMotion > 0.08) {
+            lfo = this.context.createOscillator();
+            lfo.type = "sine";
+            lfo.frequency.value = type === "RhythmLoop" ? 3 + soundProfile.modDepth * 10 : type === "MelodyLine" ? 1.2 + soundProfile.modDepth * 7 : 0.25 + soundProfile.modDepth * 2.2;
+            const lfoGain = this.context.createGain();
+            lfoGain.gain.value = filter.frequency.value * (0.04 + soundProfile.filterMotion * 0.18);
+            lfo.connect(lfoGain).connect(filter.frequency);
+            lfo.start(startTime);
+            lfo.stop(startTime + voiceDuration + 0.12);
+          }
+
+          return { output, filter, shaper, lfo };
+        },
+
+        playDrum({ voiceType, lane, time, velocity, pan, brightness, depth, fxSend, soundProfile }) {
+          if (!this.context) {
+            return;
+          }
+          const voiceDuration = lane === "kick" ? 0.34 : lane === "snare" ? 0.24 : lane === "perc" ? 0.18 : 0.1;
+          const reverbSend = fxSend * (0.3 + depth * 0.55);
+          const delaySend = fxSend * (0.1 + soundProfile.delayBias * 0.5);
+          const gainAmount = clamp((1.02 - depth * 0.45) * velocity * (0.72 + soundProfile.body * 0.42), 0.05, 1.0);
+          const chain = this.createVoiceChain({
+            pan,
+            brightness,
+            gain: gainAmount,
+            reverbSend,
+            delaySend,
+            soundProfile,
+            type: "RhythmLoop",
+            startTime: time,
+            voiceDuration,
+          });
+
+          if (lane === "kick") {
+            const osc = this.context.createOscillator();
+            const amp = this.context.createGain();
+            const click = this.context.createBufferSource();
+            const clickBuffer = this.context.createBuffer(1, this.context.sampleRate * 0.02, this.context.sampleRate);
+            const clickData = clickBuffer.getChannelData(0);
+            for (let index = 0; index < clickData.length; index += 1) {
+              clickData[index] = (Math.random() * 2 - 1) * (1 - index / clickData.length);
+            }
+            click.buffer = clickBuffer;
+            const clickFilter = this.context.createBiquadFilter();
+            clickFilter.type = "highpass";
+            clickFilter.frequency.value = 1800 + soundProfile.transientSharpness * 5000;
+            const clickAmp = this.context.createGain();
+            clickAmp.gain.setValueAtTime(0.0001, time);
+            clickAmp.gain.exponentialRampToValueAtTime(0.12 + soundProfile.transientSharpness * 0.2, time + 0.002);
+            clickAmp.gain.exponentialRampToValueAtTime(0.0001, time + 0.026);
+            click.connect(clickFilter).connect(clickAmp).connect(chain.output);
+
+            osc.type = soundProfile.transientSharpness > 0.58 ? "triangle" : soundProfile.body > 0.62 ? "sine" : "triangle";
+            osc.frequency.setValueAtTime((voiceType === "trap-drums" ? 122 : 96) + soundProfile.body * 52, time);
+            osc.frequency.exponentialRampToValueAtTime(34 + soundProfile.body * 18, time + 0.12 + soundProfile.releaseBias * 0.12);
+            amp.gain.setValueAtTime(0.001, time);
+            amp.gain.exponentialRampToValueAtTime(gainAmount, time + 0.004);
+            amp.gain.exponentialRampToValueAtTime(0.0001, time + 0.14 + soundProfile.releaseBias * 0.18);
+            osc.connect(amp).connect(chain.output);
+            click.start(time);
+            click.stop(time + 0.03);
+            osc.start(time);
+            osc.stop(time + 0.34);
+            return;
+          }
+
+          if (lane === "snare") {
+            const noiseBuffer = this.context.createBuffer(1, this.context.sampleRate * 0.2, this.context.sampleRate);
+            const data = noiseBuffer.getChannelData(0);
+            for (let index = 0; index < data.length; index += 1) {
+              data[index] = Math.random() * 2 - 1;
+            }
+            const noise = this.context.createBufferSource();
+            noise.buffer = noiseBuffer;
+            const noiseFilter = this.context.createBiquadFilter();
+            noiseFilter.type = "highpass";
+            noiseFilter.frequency.value = (voiceType === "trap-drums" ? 1700 : 1100) + soundProfile.brightness * 2800;
+            noiseFilter.Q.value = 0.7 + soundProfile.resonance * 8;
+            const amp = this.context.createGain();
+            amp.gain.setValueAtTime(0.001, time);
+            amp.gain.exponentialRampToValueAtTime(gainAmount, time + 0.003);
+            amp.gain.exponentialRampToValueAtTime(0.0001, time + 0.08 + soundProfile.releaseBias * 0.14);
+            noise.connect(noiseFilter).connect(amp).connect(chain.output);
+            if (soundProfile.body > 0.44) {
+              const tone = this.context.createOscillator();
+              const toneAmp = this.context.createGain();
+              tone.type = "triangle";
+              tone.frequency.value = 180 + soundProfile.body * 120;
+              toneAmp.gain.setValueAtTime(0.001, time);
+              toneAmp.gain.exponentialRampToValueAtTime(gainAmount * 0.34, time + 0.004);
+              toneAmp.gain.exponentialRampToValueAtTime(0.0001, time + 0.1);
+              tone.connect(toneAmp).connect(chain.output);
+              tone.start(time);
+              tone.stop(time + 0.12);
+            }
+            noise.start(time);
+            noise.stop(time + 0.22);
+            return;
+          }
+
+          const noiseBuffer = this.context.createBuffer(1, this.context.sampleRate * 0.08, this.context.sampleRate);
+          const data = noiseBuffer.getChannelData(0);
+          for (let index = 0; index < data.length; index += 1) {
+            data[index] = Math.random() * 2 - 1;
+          }
+          const noise = this.context.createBufferSource();
+          noise.buffer = noiseBuffer;
+          const filter = this.context.createBiquadFilter();
+          filter.type = lane === "perc" ? "bandpass" : "highpass";
+          filter.frequency.value = lane === "perc"
+            ? 1000 + soundProfile.body * 600 + soundProfile.brightness * 2200
+            : (voiceType === "dream-perc" ? 6200 : 7600) + soundProfile.brightness * 2400;
+          filter.Q.value = 0.8 + soundProfile.resonance * 10;
+          const amp = this.context.createGain();
+          amp.gain.setValueAtTime(0.001, time);
+          amp.gain.exponentialRampToValueAtTime(gainAmount * (lane === "perc" ? 0.54 : 0.4), time + 0.002);
+          amp.gain.exponentialRampToValueAtTime(0.0001, time + (lane === "perc" ? 0.08 + soundProfile.releaseBias * 0.14 : 0.03 + soundProfile.transientSharpness * 0.06));
+          noise.connect(filter).connect(amp).connect(chain.output);
+          noise.start(time);
+          noise.stop(time + 0.2);
+        },
+
+        playNote({ voiceType, midi, time, duration, velocity, pan, brightness, depth, fxSend, soundProfile, glide = 0, type = "MelodyLine" }) {
+          if (!this.context) {
+            return;
+          }
+
+          const frequency = midiToFrequency(midi);
+          const reverbSend = fxSend * (0.3 + depth * 0.7);
+          const delaySend = fxSend * (0.18 + soundProfile.delayBias * 0.8);
+          const gainAmount = clamp((1.02 - depth * 0.4) * velocity * (0.72 + soundProfile.body * 0.32), 0.04, 0.95);
+          const envelope = PRESETS.find((preset) => preset.voiceType === voiceType)?.envelope ?? { attack: 0.01, release: 0.4 };
+          const attack = clamp(envelope.attack * (0.35 + soundProfile.attackBias * 1.6), 0.003, type === "HarmonyPad" ? 1.6 : 0.24);
+          const release = clamp(envelope.release * (0.45 + soundProfile.releaseBias * 1.9), 0.08, type === "HarmonyPad" ? 4.2 : 1.4);
+          const chain = this.createVoiceChain({
+            pan,
+            brightness,
+            gain: gainAmount,
+            reverbSend,
+            delaySend,
+            soundProfile,
+            type,
+            startTime: time,
+            voiceDuration: duration + release,
+          });
+          const amp = this.context.createGain();
+          amp.gain.setValueAtTime(0.0001, time);
+          amp.gain.exponentialRampToValueAtTime(gainAmount, time + attack + 0.005);
+          amp.gain.exponentialRampToValueAtTime(0.0001, time + duration + release);
+          amp.connect(chain.output);
+
+          const oscillatorA = this.context.createOscillator();
+          oscillatorA.type = soundProfile.waveA;
+          oscillatorA.frequency.setValueAtTime(frequency * Math.pow(2, glide * (0.18 + soundProfile.filterMotion * 0.24) / 12), time);
+          oscillatorA.frequency.exponentialRampToValueAtTime(frequency, time + Math.max(0.015, attack * 1.4));
+          oscillatorA.detune.value = soundProfile.detune * (voiceType.includes("bass") ? 8 : 16) - (voiceType.includes("bass") ? 2 : 0);
+          oscillatorA.connect(amp);
+
+          let oscillatorB = null;
+          let vibrato = null;
+          if (soundProfile.modDepth > 0.1) {
+            vibrato = this.context.createOscillator();
+            vibrato.type = "sine";
+            vibrato.frequency.value = 3.2 + soundProfile.modDepth * (type === "HarmonyPad" ? 2.5 : 6.5);
+            const vibratoGain = this.context.createGain();
+            vibratoGain.gain.value = (voiceType.includes("bass") ? 4 : 10) + soundProfile.modDepth * 26;
+            vibrato.connect(vibratoGain).connect(oscillatorA.detune);
+            vibrato.start(time);
+            vibrato.stop(time + duration + release + 0.1);
+          }
+
+          if (!voiceType.includes("bass") || type === "HarmonyPad") {
+            oscillatorB = this.context.createOscillator();
+            oscillatorB.type = soundProfile.waveB;
+            oscillatorB.frequency.value = frequency * (voiceType.includes("bell") ? 2 : 1.003 + soundProfile.detune * 0.02);
+            oscillatorB.detune.value = (voiceType.includes("dream") ? 6 : 10) + soundProfile.detune * 24;
+            const detuneGain = this.context.createGain();
+            detuneGain.gain.value = voiceType.includes("bell") ? 0.14 + soundProfile.brightness * 0.06 : 0.16 + soundProfile.body * 0.14;
+            oscillatorB.connect(detuneGain).connect(amp);
+            oscillatorB.start(time);
+            oscillatorB.stop(time + duration + release + 0.1);
+          }
+
+          oscillatorA.start(time);
+          oscillatorA.stop(time + duration + release + 0.1);
+        },
+
+        playChord({ voiceType, chord, time, duration, velocity, pan, brightness, depth, fxSend, soundProfile }) {
+          chord.forEach((midi, index) => {
+            this.playNote({
+              voiceType,
+              midi,
+              time: time + index * 0.01,
+              duration,
+              velocity: velocity * (index === 0 ? 0.9 : 0.72),
+              pan: clamp(pan + (index - 1.5) * 0.12, -1, 1),
+              brightness,
+              depth,
+              fxSend,
+              soundProfile,
+              type: "HarmonyPad",
+            });
+          });
+        },
+      };
+
+      const sequencer = {
+        transport: {
+          playing: false,
+          mode: "scene",
+          nextNoteTime: 0,
+          sceneStep: 0,
+          slotIndex: -1,
+          slotStep: 0,
+          playbackSceneId: null,
+          absoluteBar: 1,
+          timerId: null,
+        },
+        lastTriggerAt: {},
+
+        isPlaying() {
+          return this.transport.playing;
+        },
+
+        hasArrangement() {
+          return store.state.arrangement.some((slot) => slot.sceneId);
+        },
+
+        getPlaybackSceneId() {
+          if (!this.transport.playing) {
+            return store.state.activeSceneId;
+          }
+          return this.transport.playbackSceneId || store.state.activeSceneId;
+        },
+
+        getActiveSlotId() {
+          if (!this.transport.playing || this.transport.mode !== "arrangement" || this.transport.slotIndex < 0) {
+            return null;
+          }
+          return store.state.arrangement[this.transport.slotIndex]?.id || null;
+        },
+
+        describeTransport(playbackSceneId) {
+          if (!this.transport.playing) {
+            const arrangementLabel = this.hasArrangement() ? `${store.state.arrangement.filter((slot) => slot.sceneId).length} slot blocks ready` : "Scene loop mode";
+            return `<strong>Idle</strong> ${arrangementLabel}`;
+          }
+          if (this.transport.mode === "arrangement") {
+            const slot = store.state.arrangement[this.transport.slotIndex];
+            return `<strong>Playing</strong> ${store.getScene(playbackSceneId)?.name || ""} · ${slot?.id.replace("slot-", "Slot ")} · Bar ${this.transport.absoluteBar}`;
+          }
+          return `<strong>Playing</strong> ${store.getScene(playbackSceneId)?.name || ""} · Bar ${this.transport.absoluteBar}`;
+        },
+
+        getPulse(instanceId) {
+          const lastTrigger = this.lastTriggerAt[instanceId];
+          if (!lastTrigger) {
+            return 0;
+          }
+          const elapsed = performance.now() - lastTrigger;
+          return clamp(1 - elapsed / 480, 0, 1);
+        },
+
+        getLastTrigger(instanceId) {
+          return this.lastTriggerAt[instanceId] || 0;
+        },
+
+        getPhaseForPattern(pattern, instanceId) {
+          if (!this.transport.playing) {
+            return null;
+          }
+          const sceneId = store.getInstance(instanceId)?.sceneId;
+          if (sceneId !== store.state.activeSceneId) {
+            return null;
+          }
+          const localStep = this.transport.mode === "arrangement" ? this.transport.slotStep : this.transport.sceneStep;
+          const totalSteps = pattern.derivedSequence.totalSteps || BAR_STEPS;
+          return (localStep % totalSteps) / Math.max(1, totalSteps - 1);
+        },
+
+        async start() {
+          const ready = await audioEngine.ensureStarted();
+          if (!ready) {
+            return;
+          }
+
+          if (this.transport.playing) {
+            return;
+          }
+
+          const hasArrangement = this.hasArrangement();
+          this.transport.playing = true;
+          this.transport.mode = hasArrangement ? "arrangement" : "scene";
+          this.transport.nextNoteTime = audioEngine.context.currentTime + 0.05;
+          this.transport.sceneStep = 0;
+          this.transport.slotStep = 0;
+          this.transport.absoluteBar = 1;
+          this.transport.slotIndex = hasArrangement ? store.state.arrangement.findIndex((slot) => slot.sceneId) : -1;
+          this.transport.playbackSceneId = hasArrangement
+            ? store.state.arrangement[this.transport.slotIndex]?.sceneId || store.state.activeSceneId
+            : store.state.activeSceneId;
+
+          this.tick();
+          renderer.renderTopbar();
+          renderer.renderSceneStrip();
+          renderer.renderArrangement();
+        },
+
+        stop() {
+          if (!this.transport.playing) {
+            return;
+          }
+          this.transport.playing = false;
+          clearTimeout(this.transport.timerId);
+          this.transport.timerId = null;
+          renderer.renderTopbar();
+          renderer.renderSceneStrip();
+          renderer.renderArrangement();
+        },
+
+        tick() {
+          if (!this.transport.playing || !audioEngine.context) {
+            return;
+          }
+
+          while (this.transport.nextNoteTime < audioEngine.context.currentTime + 0.12) {
+            this.scheduleCurrentStep(this.transport.nextNoteTime);
+            this.advanceTransport();
+            this.transport.nextNoteTime += this.stepDuration();
+          }
+
+          this.transport.timerId = window.setTimeout(() => this.tick(), 25);
+          renderer.renderTopbar();
+          renderer.renderSceneStrip();
+          renderer.renderArrangement();
+        },
+
+        stepDuration() {
+          return 60 / store.state.tempo / 4;
+        },
+
+        scheduleCurrentStep(time) {
+          const sceneId = this.transport.playbackSceneId;
+          const instances = store.getSceneInstances(sceneId).filter((instance) => !instance.muted);
+          const currentStep = this.transport.mode === "arrangement" ? this.transport.slotStep : this.transport.sceneStep;
+
+          instances.forEach((instance) => {
+            const pattern = store.getPattern(instance.patternId);
+            if (!pattern) {
+              return;
+            }
+            const presetId = store.getEffectivePresetId(instance, pattern);
+            const preset = store.getPreset(presetId);
+            const group = store.getGroup(pattern.groupId);
+            const effectiveSound = store.getEffectiveSoundProfile(instance, pattern);
+            const localStep = currentStep % (pattern.derivedSequence.totalSteps || BAR_STEPS);
+            const stepTime = this.stepDuration();
+
+            if (pattern.type === "RhythmLoop") {
+              pattern.derivedSequence.events
+                .filter((event) => event.step === localStep)
+                .forEach((event) => {
+                  const swingOffset = event.step % 2 === 1 ? (pattern.derivedSequence.swing || 0) * stepTime * 0.45 : 0;
+                  const microShift = (event.microShift || 0) * stepTime;
+                  audioEngine.playDrum({
+                    voiceType: preset.voiceType,
+                    lane: event.lane,
+                    time: time + swingOffset + microShift,
+                    velocity: event.velocity,
+                    pan: instance.pan,
+                    brightness: instance.brightness,
+                    depth: instance.depth,
+                    fxSend: preset.fxSend + group.busFx.reverb * 0.2,
+                    soundProfile: effectiveSound,
+                  });
+                  this.lastTriggerAt[instance.id] = performance.now();
+                });
+              return;
+            }
+
+            if (pattern.type === "MelodyLine") {
+              pattern.derivedSequence.notes
+                .filter((note) => note.step === localStep)
+                .forEach((note) => {
+                  audioEngine.playNote({
+                    voiceType: preset.voiceType,
+                    midi: note.midi,
+                    time,
+                    duration: note.durationSteps * stepTime,
+                    velocity: note.velocity,
+                    pan: instance.pan,
+                    brightness: instance.brightness,
+                    depth: instance.depth,
+                    fxSend: preset.fxSend + group.busFx.delay * 0.1,
+                    soundProfile: effectiveSound,
+                    glide: note.glide || 0,
+                    type: "MelodyLine",
+                  });
+                  this.lastTriggerAt[instance.id] = performance.now();
+                });
+              return;
+            }
+
+            if (localStep === 0) {
+              audioEngine.playChord({
+                voiceType: preset.voiceType,
+                chord: pattern.derivedSequence.chord,
+                time,
+                duration: Math.min(pattern.derivedSequence.totalSteps, this.transport.mode === "arrangement" ? (store.state.arrangement[this.transport.slotIndex]?.bars || pattern.bars) * BAR_STEPS : pattern.derivedSequence.totalSteps) * this.stepDuration() * 0.96,
+                velocity: 0.38,
+                pan: instance.pan,
+                brightness: instance.brightness,
+                depth: instance.depth,
+                fxSend: preset.fxSend + group.busFx.reverb * 0.18,
+                soundProfile: effectiveSound,
+              });
+              this.lastTriggerAt[instance.id] = performance.now();
+            }
+          });
+        },
+
+        advanceTransport() {
+          if (this.transport.mode === "arrangement") {
+            const slot = store.state.arrangement[this.transport.slotIndex];
+            this.transport.slotStep += 1;
+            if (this.transport.slotStep % BAR_STEPS === 0) {
+              this.transport.absoluteBar += 1;
+            }
+            if (this.transport.slotStep >= (slot?.bars || 4) * BAR_STEPS) {
+              const nextIndex = this.findNextPopulatedSlot(this.transport.slotIndex);
+              this.transport.slotIndex = nextIndex;
+              this.transport.slotStep = 0;
+              this.transport.playbackSceneId = store.state.arrangement[nextIndex]?.sceneId || store.state.activeSceneId;
+            }
+            return;
+          }
+
+          this.transport.sceneStep += 1;
+          if (this.transport.sceneStep % BAR_STEPS === 0) {
+            this.transport.absoluteBar += 1;
+            if (store.state.queuedSceneId) {
+              this.transport.playbackSceneId = store.state.queuedSceneId;
+              store.state.activeSceneId = store.state.queuedSceneId;
+              store.state.queuedSceneId = null;
+              this.transport.sceneStep = 0;
+              renderer.render();
+            }
+          }
+        },
+
+        findNextPopulatedSlot(currentIndex) {
+          const populated = store.state.arrangement.map((slot, index) => ({ slot, index })).filter(({ slot }) => slot.sceneId);
+          if (populated.length === 0) {
+            return -1;
+          }
+          const currentPosition = populated.findIndex((item) => item.index === currentIndex);
+          return populated[(currentPosition + 1) % populated.length].index;
+        },
+      };
+
+      const interactionController = {
+        workspaceRect: { width: 0, height: 0, left: 0, top: 0 },
+        drawPoints: [],
+        pendingDraft: null,
+        pointerId: null,
+        dragState: {
+          instanceId: null,
+          pointerId: null,
+          moved: false,
+        },
+
+        init() {
+          this.workspaceRect = refs.workspace.getBoundingClientRect();
+          window.addEventListener("resize", () => renderer.resizeCanvas());
+
+          document.querySelectorAll(".tab-button").forEach((button) => {
+            button.addEventListener("click", () => store.setActiveTab(button.getAttribute("data-tab")));
+          });
+
+          document.querySelectorAll("[data-draw-mode]").forEach((button) => {
+            button.addEventListener("click", () => store.setDrawMode(button.getAttribute("data-draw-mode")));
+          });
+
+          refs.workspace.addEventListener("pointerdown", (event) => this.handleWorkspacePointerDown(event));
+          window.addEventListener("pointermove", (event) => this.handlePointerMove(event));
+          window.addEventListener("pointerup", (event) => this.handlePointerUp(event));
+          refs.dockContent.addEventListener("click", (event) => this.handlePanelClick(event));
+          refs.sceneStrip.addEventListener("click", (event) => this.handlePanelClick(event));
+          refs.inspectorContent.addEventListener("click", (event) => this.handlePanelClick(event));
+          refs.inspectorContent.addEventListener("input", (event) => this.handleInspectorInput(event));
+          refs.arrangementStrip.addEventListener("change", (event) => this.handleArrangementChange(event));
+          refs.pendingSave.addEventListener("click", () => this.savePending(false));
+          refs.pendingDuplicate.addEventListener("click", () => this.savePending(true));
+          refs.pendingDiscard.addEventListener("click", () => this.discardPending());
+          refs.pendingName.addEventListener("input", () => {
+            if (this.pendingDraft) {
+              this.pendingDraft.name = refs.pendingName.value.trim() || this.pendingDraft.name;
+              renderer.renderPendingCard();
+            }
+          });
+          refs.playToggle.addEventListener("click", async () => {
+            if (sequencer.isPlaying()) {
+              sequencer.stop();
+            } else {
+              await sequencer.start();
+            }
+          });
+          refs.audioToggle.addEventListener("click", async () => {
+            const ready = await audioEngine.ensureStarted();
+            if (ready) {
+              toast.show("Audio context unlocked.");
+            }
+          });
+          refs.loadDemo.addEventListener("click", () => store.loadDemo());
+          refs.resetSession.addEventListener("click", () => store.reset());
+          refs.tempoInput.addEventListener("change", () => store.setTempo(refs.tempoInput.value));
+          refs.keySelect.addEventListener("change", () => store.setKey(refs.keySelect.value));
+        },
+
+        handleWorkspacePointerDown(event) {
+          this.workspaceRect = refs.workspace.getBoundingClientRect();
+          const targetInstance = event.target.closest("[data-instance-id]");
+          if (targetInstance) {
+            const instanceId = targetInstance.getAttribute("data-instance-id");
+            this.dragState.instanceId = instanceId;
+            this.dragState.pointerId = event.pointerId;
+            this.dragState.moved = false;
+            store.setSelectedInstance(instanceId);
+            event.preventDefault();
+            return;
+          }
+
+          if (this.pendingDraft) {
+            toast.show("Save or discard the current draft before drawing a new pattern.");
+            return;
+          }
+
+          audioEngine.ensureStarted();
+          this.pointerId = event.pointerId;
+          this.drawPoints = [this.localPoint(event)];
+          store.setSelectedInstance(null);
+          event.preventDefault();
+        },
+
+        handlePointerMove(event) {
+          if (this.pointerId === event.pointerId && this.drawPoints.length > 0) {
+            this.drawPoints.push(this.localPoint(event));
+            return;
+          }
+
+          if (this.dragState.pointerId === event.pointerId && this.dragState.instanceId) {
+            const local = this.localPoint(event);
+            const normalized = {
+              x: clamp(local.x / this.workspaceRect.width, 0.08, 0.92),
+              y: clamp(local.y / this.workspaceRect.height, 0.1, 0.9),
+            };
+            this.dragState.moved = true;
+            store.updateInstance(this.dragState.instanceId, normalized);
+          }
+        },
+
+        handlePointerUp(event) {
+          if (this.pointerId === event.pointerId && this.drawPoints.length > 2) {
+            const draft = buildDraftFromStroke(store.state.drawMode, this.drawPoints, store.state);
+            this.drawPoints = [];
+            this.pointerId = null;
+            if (draft.error) {
+              toast.show(draft.error);
+              return;
+            }
+            this.pendingDraft = draft;
+            renderer.renderPendingCard();
+            renderer.renderStageInstances();
+            return;
+          }
+
+          if (this.dragState.pointerId === event.pointerId && this.dragState.instanceId) {
+            if (!this.dragState.moved) {
+              store.setSelectedInstance(this.dragState.instanceId);
+            }
+            this.dragState.instanceId = null;
+            this.dragState.pointerId = null;
+            this.dragState.moved = false;
+            renderer.renderStageInstances();
+          }
+        },
+
+        localPoint(event) {
+          return {
+            x: clamp(event.clientX - this.workspaceRect.left, 0, this.workspaceRect.width),
+            y: clamp(event.clientY - this.workspaceRect.top, 0, this.workspaceRect.height),
+          };
+        },
+
+        savePending(duplicate) {
+          if (!this.pendingDraft) {
+            return;
+          }
+          this.pendingDraft.name = refs.pendingName.value.trim() || this.pendingDraft.name;
+          store.reserveName(this.pendingDraft.type);
+          store.commitDraft(this.pendingDraft, duplicate);
+          this.pendingDraft = null;
+          renderer.renderPendingCard();
+        },
+
+        discardPending() {
+          this.pendingDraft = null;
+          renderer.renderPendingCard();
+          toast.show("Draft discarded.");
+        },
+
+        handlePanelClick(event) {
+          const button = event.target.closest("[data-action]");
+          if (!button) {
+            return;
+          }
+          const action = button.getAttribute("data-action");
+          if (action === "set-group") {
+            store.setActiveGroup(button.getAttribute("data-group-id"));
+            return;
+          }
+          if (action === "spawn-pattern") {
+            store.spawnPattern(button.getAttribute("data-pattern-id"));
+            return;
+          }
+          if (action === "clone-pattern") {
+            store.clonePattern(button.getAttribute("data-pattern-id"));
+            return;
+          }
+          if (action === "select-scene") {
+            store.setActiveScene(button.getAttribute("data-scene-id"));
+            return;
+          }
+          if (action === "copy-scene") {
+            store.copyScene(store.state.activeSceneId, button.getAttribute("data-scene-id"));
+            return;
+          }
+          if (action === "duplicate-instance") {
+            store.duplicateInstance(button.getAttribute("data-instance-id"));
+            return;
+          }
+          if (action === "toggle-mute-instance") {
+            const instance = store.getInstance(button.getAttribute("data-instance-id"));
+            if (instance) {
+              store.updateInstance(instance.id, { muted: !instance.muted });
+              renderer.render();
+            }
+            return;
+          }
+          if (action === "remove-instance") {
+            store.removeInstance(button.getAttribute("data-instance-id"));
+          }
+        },
+
+        handleInspectorInput(event) {
+          if (!store.state.selectedInstanceId) {
+            return;
+          }
+          const target = event.target;
+          const type = target.getAttribute("data-inspector");
+          if (type === "preset") {
+            store.setPresetOverride(store.state.selectedInstanceId, target.value);
+            toast.show("Preset swap applied to the selected instance.");
+            return;
+          }
+          if (type === "depth") {
+            store.updateInstance(store.state.selectedInstanceId, { depth: Number(target.value) });
+          }
+        },
+
+        handleArrangementChange(event) {
+          const sceneSlotId = event.target.getAttribute("data-arrangement-scene");
+          const barsSlotId = event.target.getAttribute("data-arrangement-bars");
+          if (sceneSlotId) {
+            store.updateArrangement(sceneSlotId, { sceneId: event.target.value });
+            return;
+          }
+          if (barsSlotId) {
+            store.updateArrangement(barsSlotId, { bars: Number(event.target.value) });
+          }
+        },
+      };
+
+      store.init();
+      renderer.init();
+      interactionController.init();
+      renderer.render();
+    })();
+  </script>
+</body>
+</html>

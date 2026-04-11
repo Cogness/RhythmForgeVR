@@ -91,13 +91,14 @@ namespace RhythmForge.Bootstrap
         }
 
         private bool _panelsPositioned;
+        private float _panelPositionTimer;
 
         private void Start()
         {
             // Re-locate the VR rig now that the simulator has initialized.
             _rig = VRRigLocator.Find();
-            // NOTE: RepositionPanels deferred to first Update() — OVR tracking
-            // needs at least one frame to report valid head position/rotation.
+            // NOTE: RepositionPanels deferred — OVR tracking needs ~0.5s to report
+            // valid head position/rotation after tracking initializes.
 
             // Initialize subsystems and panels before loading the demo.
             if (_manager != null)
@@ -112,9 +113,24 @@ namespace RhythmForge.Bootstrap
         {
             if (!_panelsPositioned)
             {
-                _panelsPositioned = true;
-                _rig = VRRigLocator.Find();
-                RepositionPanels();
+                _panelPositionTimer += Time.deltaTime;
+                // Wait 0.5s for tracking to stabilize, then validate head forward is valid
+                if (_panelPositionTimer >= 0.5f)
+                {
+                    _rig = VRRigLocator.Find();
+                    Transform head = _rig?.CenterEye;
+                    if (head != null)
+                    {
+                        Vector3 fwd = head.forward;
+                        fwd.y = 0f;
+                        // Only position once we have a valid non-zero forward
+                        if (fwd.sqrMagnitude > 0.001f)
+                        {
+                            _panelsPositioned = true;
+                            RepositionPanels();
+                        }
+                    }
+                }
             }
         }
 
@@ -162,11 +178,6 @@ namespace RhythmForge.Bootstrap
                 right = Vector3.Cross(Vector3.up, fwd).normalized;
             }
 
-            // Canvas local +Z should point toward the user so the front face is visible.
-            // LookRotation(dir) sets local +Z = dir, so we pass the direction FROM panel TO user = -fwd.
-            // But we also need local +Y = world up to avoid upside-down rendering.
-            Quaternion facingUser = Quaternion.LookRotation(-fwd, Vector3.up);
-
             foreach (var (canvas, x, y, z) in _panelPositions)
             {
                 if (canvas == null) continue;
@@ -179,8 +190,16 @@ namespace RhythmForge.Bootstrap
                     + right * x
                     + Vector3.up * y;
 
+                // Per-panel facing: look at head from panel position (same as PanelDragger)
+                Vector3 toUser = headPos - worldPos;
+                toUser.y = 0f; // flatten to horizontal
+                if (toUser.sqrMagnitude > 0.001f)
+                {
+                    Quaternion panelFacing = Quaternion.LookRotation(-toUser.normalized, Vector3.up);
+                    canvas.transform.rotation = panelFacing;
+                }
+
                 canvas.transform.position = worldPos;
-                canvas.transform.rotation = facingUser;
             }
 
             // Disable canvas component on inactive panels so they are fully invisible.

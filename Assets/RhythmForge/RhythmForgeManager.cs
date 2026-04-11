@@ -86,6 +86,7 @@ namespace RhythmForge
         // Core state
         private SessionStore _store;
         private Dictionary<string, PatternVisualizer> _visualizers = new Dictionary<string, PatternVisualizer>();
+        private bool _showParamLabels = true;
 
         private void Awake()
         {
@@ -122,7 +123,12 @@ namespace RhythmForge
             if (_commitCard) _commitCard.Initialize(_strokeCapture);
             if (_inspectorPanel) _inspectorPanel.Initialize(_store);
             if (_dockPanel) _dockPanel.Initialize(_store, _drawModeController);
-            if (_transportPanel) _transportPanel.Initialize(_store, _sequencer, _drawModeController);
+            if (_transportPanel)
+            {
+                _transportPanel.Initialize(_store, _sequencer, _drawModeController);
+                _transportPanel.OnParamsVisibilityChanged += OnParamsVisibilityChanged;
+                _showParamLabels = _transportPanel.ShowParams;
+            }
             if (_sceneStripPanel) _sceneStripPanel.Initialize(_store, _sequencer);
             if (_arrangementPanel) _arrangementPanel.Initialize(_store, _sequencer);
 
@@ -156,6 +162,8 @@ namespace RhythmForge
                 _sequencer.OnTransportChanged -= OnTransportChanged;
             if (_drawModeController != null)
                 _drawModeController.OnModeChanged -= OnDrawModeChanged;
+            if (_transportPanel != null)
+                _transportPanel.OnParamsVisibilityChanged -= OnParamsVisibilityChanged;
         }
 
         private void Update()
@@ -226,6 +234,13 @@ namespace RhythmForge
                 _store.SetDrawMode(mode);
         }
 
+        private void OnParamsVisibilityChanged(bool visible)
+        {
+            _showParamLabels = visible;
+            foreach (var kvp in _visualizers)
+                kvp.Value.SetParameterLabelVisible(visible);
+        }
+
         // --- Instance visual management ---
 
         private void RebuildInstanceVisuals()
@@ -247,6 +262,7 @@ namespace RhythmForge
                     existing.RefreshGeometry(pattern, instance, GetMaterialForType(pattern.type), _userHead);
                     existing.SetMuted(instance.muted);
                     existing.SetSelected(instance.id == _store.State.selectedInstanceId);
+                    existing.SetParameterLabelVisible(_showParamLabels);
                 }
                 else
                 {
@@ -259,6 +275,7 @@ namespace RhythmForge
                     vis.Initialize(pattern, instance, mat, _userHead);
                     vis.SetMuted(instance.muted);
                     vis.SetSelected(instance.id == _store.State.selectedInstanceId);
+                    vis.SetParameterLabelVisible(_showParamLabels);
 
                     // Add a collider for raycasting
                     var col = go.AddComponent<SphereCollider>();

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
 using RhythmForge.Core.Data;
+using RhythmForge.Core.Analysis;
 
 namespace RhythmForge.UI
 {
@@ -23,6 +24,7 @@ namespace RhythmForge.UI
         private bool _isSelected;
         private float _currentPulse;
         private bool _isMuted;
+        private ShapeParameterLabel _paramLabel;
 
         public string InstanceId => _instanceId;
 
@@ -35,6 +37,12 @@ namespace RhythmForge.UI
                 _lineRenderer.alignment = LineAlignment.View;
                 _lineRenderer.shadowCastingMode = ShadowCastingMode.Off;
                 _lineRenderer.receiveShadows = false;
+            }
+
+            if (_paramLabel == null)
+            {
+                _paramLabel = gameObject.AddComponent<ShapeParameterLabel>();
+                _paramLabel.Initialize(userHead);
             }
 
             RefreshGeometry(pattern, instance, material, userHead);
@@ -54,6 +62,13 @@ namespace RhythmForge.UI
             transform.position = instance.position;
             transform.rotation = ResolveRenderRotation(pattern, instance, userHead);
             UpdateAppearance();
+
+            if (_paramLabel != null)
+            {
+                var sp = pattern.shapeProfile;
+                var snd = pattern.soundProfile ?? SoundProfileMapper.Derive(pattern.type, sp);
+                _paramLabel.SetData(pattern.type, sp, snd);
+            }
         }
 
         private void RenderPoints(List<Vector2> normalizedPoints)
@@ -99,6 +114,18 @@ namespace RhythmForge.UI
         public void UpdatePosition(Vector3 worldPos)
         {
             transform.position = worldPos;
+        }
+
+        public void SetParameterLabelVisible(bool visible)
+        {
+            if (_paramLabel != null)
+                _paramLabel.SetVisible(visible);
+        }
+
+        public void UpdateParameterData(PatternType type, ShapeProfile sp, SoundProfile snd)
+        {
+            if (_paramLabel != null)
+                _paramLabel.SetData(type, sp, snd);
         }
 
         private void UpdateAppearance()

@@ -495,6 +495,11 @@ namespace RhythmForge.Bootstrap
                 new Rect(8, 8, 100, 84), MaterialFactory.ButtonActive, Color.white, 20, null);
             var playLabel = playBtn.GetComponentInChildren<Text>();
 
+            // Params toggle button (near Mode)
+            var paramsBtn = UIFactory.CreateButton(canvas.transform, "ToggleParamsButton", "Params\nON",
+                new Rect(420, 8, 100, 84), new Color(0.28f, 0.32f, 0.42f), Color.white, 16, null);
+            var paramsLabel = paramsBtn.GetComponentInChildren<Text>();
+
             // Mode button
             var modeBtn = UIFactory.CreateButton(canvas.transform, "ModeButton", "Mode\nRhythm",
                 new Rect(532, 8, 100, 84), TypeColors.RhythmLoop, Color.white, 18, null);
@@ -512,7 +517,7 @@ namespace RhythmForge.Bootstrap
                 new Rect(120, 6, 400, 22));
 
             var panel = canvas.gameObject.AddComponent<TransportPanel>();
-            panel.SetUIRefs(playBtn, playLabel, modeBtn, modeLabel, bpmText, keyText, statusText);
+            panel.SetUIRefs(playBtn, playLabel, modeBtn, modeLabel, bpmText, keyText, statusText, paramsBtn, paramsLabel);
             return panel;
         }
 

@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 using RhythmForge.Core.Data;
@@ -19,6 +20,12 @@ namespace RhythmForge.UI.Panels
         [SerializeField] private Text _bpmText;
         [SerializeField] private Text _keyText;
         [SerializeField] private Text _transportStatus;
+        [SerializeField] private Button _toggleParamsButton;
+        [SerializeField] private Text _toggleParamsLabel;
+
+        private bool _showParams = true;
+
+        public event Action<bool> OnParamsVisibilityChanged;
 
         private SessionStore _store;
         private Sequencer.Sequencer _sequencer;
@@ -27,15 +34,18 @@ namespace RhythmForge.UI.Panels
         /// <summary>Called by RhythmForgeBootstrapper to inject UI element references.</summary>
         public void SetUIRefs(Button playStopButton, Text playStopLabel,
             Button modeButton, Text modeButtonLabel,
-            Text bpmText, Text keyText, Text transportStatus)
+            Text bpmText, Text keyText, Text transportStatus,
+            Button toggleParamsButton = null, Text toggleParamsLabel = null)
         {
-            _playStopButton  = playStopButton;
-            _playStopLabel   = playStopLabel;
-            _modeButton      = modeButton;
-            _modeButtonLabel = modeButtonLabel;
-            _bpmText         = bpmText;
-            _keyText         = keyText;
-            _transportStatus = transportStatus;
+            _playStopButton      = playStopButton;
+            _playStopLabel       = playStopLabel;
+            _modeButton          = modeButton;
+            _modeButtonLabel     = modeButtonLabel;
+            _bpmText             = bpmText;
+            _keyText             = keyText;
+            _transportStatus     = transportStatus;
+            _toggleParamsButton  = toggleParamsButton;
+            _toggleParamsLabel   = toggleParamsLabel;
         }
 
         public void Initialize(SessionStore store, Sequencer.Sequencer sequencer, DrawModeController drawMode)
@@ -48,6 +58,10 @@ namespace RhythmForge.UI.Panels
                 _playStopButton.onClick.AddListener(() => _sequencer.TogglePlayback());
             if (_modeButton && _drawMode != null)
                 _modeButton.onClick.AddListener(() => _drawMode.CycleMode());
+            if (_toggleParamsButton)
+                _toggleParamsButton.onClick.AddListener(ToggleParams);
+
+            RefreshParamsButton();
 
             if (_store != null) _store.OnStateChanged += Refresh;
             if (_sequencer != null) _sequencer.OnTransportChanged += Refresh;
@@ -96,6 +110,21 @@ namespace RhythmForge.UI.Panels
                 }
             }
         }
+
+        private void ToggleParams()
+        {
+            _showParams = !_showParams;
+            RefreshParamsButton();
+            OnParamsVisibilityChanged?.Invoke(_showParams);
+        }
+
+        private void RefreshParamsButton()
+        {
+            if (_toggleParamsLabel != null)
+                _toggleParamsLabel.text = _showParams ? "Params\nON" : "Params\nOFF";
+        }
+
+        public bool ShowParams => _showParams;
 
         private void RefreshModeButton(PatternType mode)
         {

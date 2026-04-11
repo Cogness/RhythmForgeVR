@@ -88,14 +88,6 @@ namespace RhythmForge.UI.Panels
             if (_drawMode != null) _drawMode.OnModeChanged -= OnModeChanged;
         }
 
-        private void Update()
-        {
-            if (_lookAtTarget == null) return;
-            Vector3 dir = _lookAtTarget.position - transform.position;
-            if (dir.sqrMagnitude > 0.001f)
-                transform.rotation = Quaternion.LookRotation(-dir.normalized, Vector3.up);
-        }
-
         private void SetTab(string tab)
         {
             _activeTab = tab;

@@ -135,32 +135,49 @@ namespace RhythmForge.Bootstrap
         }
 
         // Holds canvas transforms so Start() can reposition them after rig is found
-        private readonly List<(Canvas canvas, float x, float y, float z)> _panelPositions
-            = new List<(Canvas, float, float, float)>();
+        private readonly List<(Canvas canvas, float x, float y, float z, PanelDragCoordinator.DragMembership membership)> _panelPositions
+            = new List<(Canvas, float, float, float, PanelDragCoordinator.DragMembership)>();
 
         private InputMapper _inputMapperRef; // set after BuildSubsystems, used by RegisterPanel
 
-        private void RegisterPanel(Canvas canvas, float x, float y, float z)
-        {
-            _panelPositions.Add((canvas, x, y, z));
+        private PanelDragCoordinator _dragCoordinator;
 
-            // Attach dragger immediately; Configure() called once inputMapper is ready
-            canvas.gameObject.AddComponent<PanelDragger>();
+        private void RegisterPanel(Canvas canvas, float x, float y, float z,
+            PanelDragCoordinator.DragMembership membership = PanelDragCoordinator.DragMembership.Independent)
+        {
+            _panelPositions.Add((canvas, x, y, z, membership));
+            // Panels registered with coordinator after it's created
         }
 
-        private void WirePanelDraggers(InputMapper input)
+        private void CreateDragCoordinator(InputMapper input)
         {
-            foreach (var (canvas, _, _, _) in _panelPositions)
+            // Remove old individual draggers first (clean up from previous versions)
+            foreach (var (canvas, _, _, _, _) in _panelPositions)
             {
-                if (canvas == null) continue;
-                var dragger = canvas.GetComponent<PanelDragger>();
-                if (dragger != null) dragger.Configure(input);
+                if (canvas != null)
+                {
+                    var oldDragger = canvas.GetComponent<PanelDragger>();
+                    if (oldDragger != null) DestroyImmediate(oldDragger);
+                }
+            }
+
+            var go = new GameObject("PanelDragCoordinator");
+            go.transform.SetParent(transform);
+            _dragCoordinator = go.AddComponent<PanelDragCoordinator>();
+            _dragCoordinator.Configure(input, _rig != null ? _rig.CenterEye : null);
+
+            // Register all panels with the coordinator
+            foreach (var (canvas, _, _, _, membership) in _panelPositions)
+            {
+                if (canvas != null)
+                    _dragCoordinator.RegisterPanel(canvas, membership);
             }
         }
 
         private void RepositionPanels()
         {
             Transform head = _rig?.CenterEye;
+            _dragCoordinator?.SetLookAtTarget(head);
 
             // Use head's actual position but clamp to a sensible standing height.
             Vector3 headPos = head != null ? head.position : new Vector3(0f, 1.6f, 0f);
@@ -178,7 +195,9 @@ namespace RhythmForge.Bootstrap
                 right = Vector3.Cross(Vector3.up, fwd).normalized;
             }
 
-            foreach (var (canvas, x, y, z) in _panelPositions)
+            Quaternion mainGroupFacing = Quaternion.LookRotation(fwd, Vector3.up);
+
+            foreach (var (canvas, x, y, z, membership) in _panelPositions)
             {
                 if (canvas == null) continue;
 
@@ -190,20 +209,26 @@ namespace RhythmForge.Bootstrap
                     + right * x
                     + Vector3.up * y;
 
-                // Per-panel facing: look at head from panel position (same as PanelDragger)
-                Vector3 toUser = headPos - worldPos;
-                toUser.y = 0f; // flatten to horizontal
-                if (toUser.sqrMagnitude > 0.001f)
-                {
-                    Quaternion panelFacing = Quaternion.LookRotation(-toUser.normalized, Vector3.up);
-                    canvas.transform.rotation = panelFacing;
-                }
-
                 canvas.transform.position = worldPos;
+
+                if (membership == PanelDragCoordinator.DragMembership.MainGroup)
+                {
+                    canvas.transform.rotation = mainGroupFacing;
+                }
+                else
+                {
+                    Vector3 toUser = headPos - worldPos;
+                    toUser.y = 0f; // flatten to horizontal
+                    if (toUser.sqrMagnitude > 0.001f)
+                    {
+                        Quaternion panelFacing = Quaternion.LookRotation(-toUser.normalized, Vector3.up);
+                        canvas.transform.rotation = panelFacing;
+                    }
+                }
             }
 
             // Disable canvas component on inactive panels so they are fully invisible.
-            foreach (var (canvas, _, _, _) in _panelPositions)
+            foreach (var (canvas, _, _, _, _) in _panelPositions)
             {
                 if (canvas == null) continue;
                 if (!canvas.gameObject.activeSelf)
@@ -230,8 +255,8 @@ namespace RhythmForge.Bootstrap
             // ── 4. UI panels ──
             var panels = BuildUIPanels(subsystems.strokeCapture, subsystems.drawMode);
 
-            // ── 4b. Wire panel draggers now that inputMapper exists ──
-            WirePanelDraggers(subsystems.inputMapper);
+            // ── 4b. Create drag coordinator (replaces individual panel draggers) ──
+            CreateDragCoordinator(subsystems.inputMapper);
 
             // ── 5. Instance container ──
             var instanceContainer = new GameObject("InstanceContainer").transform;
@@ -459,7 +484,7 @@ namespace RhythmForge.Bootstrap
             var canvas = UIFactory.CreateWorldCanvas("TransportPanel",
                 transform, new Vector2(520, 100),
                 PositionInFront(0f, -0.22f, 1.1f), 0.001f);
-            RegisterPanel(canvas, 0f, -0.22f, 1.1f);
+            RegisterPanel(canvas, 0f, -0.22f, 1.1f, PanelDragCoordinator.DragMembership.MainGroup);
 
             UIFactory.CreateBackground(canvas.transform,
                 new Vector2(520, 100), MaterialFactory.PanelBg);
@@ -492,7 +517,7 @@ namespace RhythmForge.Bootstrap
             var canvas = UIFactory.CreateWorldCanvas("SceneStripPanel",
                 transform, new Vector2(540, 70),
                 PositionInFront(0f, -0.36f, 1.1f), 0.001f);
-            RegisterPanel(canvas, 0f, -0.36f, 1.1f);
+            RegisterPanel(canvas, 0f, -0.36f, 1.1f, PanelDragCoordinator.DragMembership.MainGroup);
 
             UIFactory.CreateBackground(canvas.transform,
                 new Vector2(540, 70), MaterialFactory.PanelBg);
@@ -575,8 +600,8 @@ namespace RhythmForge.Bootstrap
         {
             var canvas = UIFactory.CreateWorldCanvas("InspectorPanel",
                 transform, new Vector2(340, 420),
-                PositionInFront(0.45f, 0.05f, 1.15f), 0.001f);
-            RegisterPanel(canvas, 0.45f, 0.05f, 1.15f);
+                PositionInFront(0.45f, 0.05f, 1.1f), 0.001f);
+            RegisterPanel(canvas, 0.45f, 0.05f, 1.1f);
 
             UIFactory.CreateBackground(canvas.transform,
                 new Vector2(340, 420), MaterialFactory.PanelBg);
@@ -656,8 +681,8 @@ namespace RhythmForge.Bootstrap
         {
             var canvas = UIFactory.CreateWorldCanvas("DockPanel",
                 transform, new Vector2(340, 380),
-                PositionInFront(-0.45f, 0.05f, 1.15f), 0.001f);
-            RegisterPanel(canvas, -0.45f, 0.05f, 1.15f);
+                PositionInFront(-0.45f, 0.05f, 1.1f), 0.001f);
+            RegisterPanel(canvas, -0.45f, 0.05f, 1.1f, PanelDragCoordinator.DragMembership.MainGroup);
 
             UIFactory.CreateBackground(canvas.transform,
                 new Vector2(340, 380), MaterialFactory.PanelBg);
@@ -724,7 +749,7 @@ namespace RhythmForge.Bootstrap
             var canvas = UIFactory.CreateWorldCanvas("ArrangementPanel",
                 transform, new Vector2(560, 100),
                 PositionInFront(0f, -0.50f, 1.1f), 0.001f);
-            RegisterPanel(canvas, 0f, -0.50f, 1.1f);
+            RegisterPanel(canvas, 0f, -0.50f, 1.1f, PanelDragCoordinator.DragMembership.MainGroup);
 
             UIFactory.CreateBackground(canvas.transform,
                 new Vector2(560, 100), MaterialFactory.PanelBg);

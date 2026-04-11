@@ -26,7 +26,8 @@ namespace RhythmForge.Interaction
         public bool BackDoubleTap => _stylusHandler != null && _stylusHandler.CurrentState.cluster_back_double_tap_value;
         public Pose StylusPose => _stylusHandler != null ? _stylusHandler.CurrentState.inkingPose : new Pose();
 
-        public bool IsDrawing => TipPressure > 0.05f;
+        public float DrawPressure => Mathf.Max(TipPressure, MiddlePressure);
+        public bool IsDrawing => DrawPressure > 0.05f;
 
         // Left controller state (OVRInput)
         public bool LeftTrigger => OVRInput.Get(OVRInput.Button.PrimaryIndexTrigger, OVRInput.Controller.LTouch);

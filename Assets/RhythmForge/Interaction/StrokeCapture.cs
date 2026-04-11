@@ -82,7 +82,7 @@ namespace RhythmForge.Interaction
                 return;
             }
 
-            float pressure = _input.TipPressure;
+            float pressure = _input.DrawPressure;
 
             // Suppress drawing while back button held (panel dragging) or hovering UI
             if (_input.BackButton) pressure = 0f;

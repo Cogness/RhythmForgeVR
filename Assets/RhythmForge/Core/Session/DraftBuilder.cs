@@ -18,6 +18,8 @@ namespace RhythmForge.Core.Session
         public string groupId;
         public string presetId;
         public List<Vector2> points;
+        public Quaternion renderRotation;
+        public bool hasRenderRotation;
         public Vector3 spawnPosition;
         public DerivedSequence derivedSequence;
         public List<string> tags;
@@ -32,7 +34,7 @@ namespace RhythmForge.Core.Session
     public static class DraftBuilder
     {
         public static DraftResult BuildFromStroke(PatternType type, List<Vector2> rawPoints,
-            Vector3 strokeCenter, AppState state, SessionStore store)
+            Vector3 strokeCenter, Quaternion renderRotation, AppState state, SessionStore store)
         {
             var metrics = StrokeAnalyzer.Analyze(rawPoints);
 
@@ -108,6 +110,8 @@ namespace RhythmForge.Core.Session
                 groupId = groupId,
                 presetId = presetId,
                 points = normalizedPoints,
+                renderRotation = renderRotation,
+                hasRenderRotation = true,
                 spawnPosition = strokeCenter,
                 derivedSequence = derivedSequence,
                 tags = tags,

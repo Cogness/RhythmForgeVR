@@ -23,7 +23,8 @@ namespace RhythmForge.Core.Session
             // --- Demo Rhythm: a rough circle ---
             var circlePoints = GenerateCircle(24, 0.14f);
             var rhythmDraft = DraftBuilder.BuildFromStroke(
-                PatternType.RhythmLoop, circlePoints, new Vector3(0.35f, 0.34f, 0.3f), state, store);
+                PatternType.RhythmLoop, circlePoints, new Vector3(0.35f, 0.34f, 0.3f),
+                Quaternion.identity, state, store);
 
             if (rhythmDraft.success)
             {
@@ -34,7 +35,8 @@ namespace RhythmForge.Core.Session
             // --- Demo Melody: a wavy line ---
             var wavePoints = GenerateWave(32, 0.2f, 0.08f);
             var melodyDraft = DraftBuilder.BuildFromStroke(
-                PatternType.MelodyLine, wavePoints, new Vector3(0.66f, 0.36f, 0.28f), state, store);
+                PatternType.MelodyLine, wavePoints, new Vector3(0.66f, 0.36f, 0.28f),
+                Quaternion.identity, state, store);
 
             if (melodyDraft.success)
             {
@@ -45,7 +47,8 @@ namespace RhythmForge.Core.Session
             // --- Demo Harmony: a broad diagonal stroke ---
             var padPoints = GeneratePadStroke(20, 0.18f, 0.06f);
             var harmonyDraft = DraftBuilder.BuildFromStroke(
-                PatternType.HarmonyPad, padPoints, new Vector3(0.5f, 0.58f, 0.5f), state, store);
+                PatternType.HarmonyPad, padPoints, new Vector3(0.5f, 0.58f, 0.5f),
+                Quaternion.identity, state, store);
 
             if (harmonyDraft.success)
             {
@@ -69,6 +72,8 @@ namespace RhythmForge.Core.Session
                 groupId = draft.groupId,
                 presetId = draft.presetId,
                 points = draft.points,
+                renderRotation = draft.renderRotation,
+                hasRenderRotation = draft.hasRenderRotation,
                 derivedSequence = draft.derivedSequence,
                 tags = draft.tags,
                 color = draft.color,

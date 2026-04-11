@@ -166,6 +166,8 @@ namespace RhythmForge.Core.Session
                 groupId = draft.groupId,
                 presetId = draft.presetId,
                 points = draft.points,
+                renderRotation = draft.renderRotation,
+                hasRenderRotation = draft.hasRenderRotation,
                 derivedSequence = draft.derivedSequence,
                 tags = draft.tags,
                 color = draft.color,
@@ -357,7 +359,8 @@ namespace RhythmForge.Core.Session
         private void NormalizeState()
         {
             var fallback = AppStateFactory.CreateEmpty();
-            State.version = 2;
+            int loadedVersion = State.version;
+            State.version = 3;
 
             if (State.scenes == null || State.scenes.Count != 4)
                 State.scenes = fallback.scenes;
@@ -374,7 +377,57 @@ namespace RhythmForge.Core.Session
             State.drawMode = GetDrawMode().ToString();
             if (string.IsNullOrEmpty(State.activeSceneId)) State.activeSceneId = "scene-a";
 
+            NormalizePatternOrientations(loadedVersion);
+
             CleanupSceneMembership();
+        }
+
+        private void NormalizePatternOrientations(int loadedVersion)
+        {
+            foreach (var pattern in State.patterns)
+            {
+                if (pattern == null) continue;
+
+                bool hasValidRotation = pattern.hasRenderRotation && IsValidRotation(pattern.renderRotation);
+                if (loadedVersion < 3 || !hasValidRotation)
+                {
+                    pattern.renderRotation = Quaternion.identity;
+                    pattern.hasRenderRotation = false;
+                    continue;
+                }
+
+                pattern.renderRotation = NormalizeQuaternion(pattern.renderRotation);
+            }
+        }
+
+        private static bool IsValidRotation(Quaternion rotation)
+        {
+            if (float.IsNaN(rotation.x) || float.IsNaN(rotation.y) ||
+                float.IsNaN(rotation.z) || float.IsNaN(rotation.w))
+                return false;
+
+            return rotation.x * rotation.x +
+                   rotation.y * rotation.y +
+                   rotation.z * rotation.z +
+                   rotation.w * rotation.w > 0.0001f;
+        }
+
+        private static Quaternion NormalizeQuaternion(Quaternion rotation)
+        {
+            float magnitude = Mathf.Sqrt(
+                rotation.x * rotation.x +
+                rotation.y * rotation.y +
+                rotation.z * rotation.z +
+                rotation.w * rotation.w);
+
+            if (magnitude <= 0.0001f)
+                return Quaternion.identity;
+
+            return new Quaternion(
+                rotation.x / magnitude,
+                rotation.y / magnitude,
+                rotation.z / magnitude,
+                rotation.w / magnitude);
         }
 
         private void CleanupSceneMembership()

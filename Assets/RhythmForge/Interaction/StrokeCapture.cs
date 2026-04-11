@@ -163,18 +163,19 @@ namespace RhythmForge.Interaction
                 return;
             }
 
-            // Project 3D points to 2D for analysis
-            // Use a plane facing the user at the time of drawing
-            List<Vector2> projected = ProjectTo2D(_worldPoints);
-
             // Calculate 3D stroke center for spawn position
             Vector3 center = Vector3.zero;
             foreach (var p in _worldPoints) center += p;
             center /= _worldPoints.Count;
 
+            // Preserve the stroke's own plane instead of flattening onto a head-facing plane.
+            var strokeFrame = BuildStrokeFrame(_worldPoints, center);
+            List<Vector2> projected = ProjectTo2D(_worldPoints, center, strokeFrame.right, strokeFrame.up);
+
             // Build draft
             PatternType type = _drawMode != null ? _drawMode.CurrentMode : PatternType.RhythmLoop;
-            var draft = DraftBuilder.BuildFromStroke(type, projected, center, _store.State, _store);
+            var draft = DraftBuilder.BuildFromStroke(
+                type, projected, center, strokeFrame.rotation, _store.State, _store);
 
             if (!draft.success)
             {
@@ -187,23 +188,112 @@ namespace RhythmForge.Interaction
             OnDraftCreated?.Invoke(draft);
         }
 
-        /// <summary>
-        /// Projects 3D world points onto a 2D plane facing the user.
-        /// The plane's normal is the user's forward direction.
-        /// X maps to local right, Y maps to local up.
-        /// </summary>
-        private List<Vector2> ProjectTo2D(List<Vector3> worldPoints)
+        private StrokeFrame BuildStrokeFrame(List<Vector3> worldPoints, Vector3 center)
         {
-            Vector3 center = Vector3.zero;
-            foreach (var p in worldPoints) center += p;
-            center /= worldPoints.Count;
+            const float epsilon = 0.000001f;
 
-            // Use user's head orientation to define the projection plane
+            float maxDistanceSq = 0f;
+            Vector3 planeRight = Vector3.right;
+            for (int i = 0; i < worldPoints.Count - 1; i++)
+            {
+                for (int j = i + 1; j < worldPoints.Count; j++)
+                {
+                    Vector3 delta = worldPoints[j] - worldPoints[i];
+                    float distanceSq = delta.sqrMagnitude;
+                    if (distanceSq > maxDistanceSq)
+                    {
+                        maxDistanceSq = distanceSq;
+                        planeRight = delta;
+                    }
+                }
+            }
+
+            if (maxDistanceSq <= epsilon)
+                return BuildFallbackStrokeFrame();
+
+            planeRight.Normalize();
+
+            float maxOffsetSq = 0f;
+            Vector3 planeSecondary = Vector3.zero;
+            foreach (var point in worldPoints)
+            {
+                Vector3 relative = point - center;
+                Vector3 onAxis = Vector3.Dot(relative, planeRight) * planeRight;
+                Vector3 offset = relative - onAxis;
+                float offsetSq = offset.sqrMagnitude;
+                if (offsetSq > maxOffsetSq)
+                {
+                    maxOffsetSq = offsetSq;
+                    planeSecondary = offset;
+                }
+            }
+
+            if (maxOffsetSq <= epsilon)
+                return BuildFallbackStrokeFrame();
+
+            Vector3 planeNormal = Vector3.Cross(planeRight, planeSecondary);
+            if (planeNormal.sqrMagnitude <= epsilon)
+                return BuildFallbackStrokeFrame();
+
+            planeNormal.Normalize();
+
+            Vector3 toHead = _userHead != null ? (_userHead.position - center) : Vector3.forward;
+            if (toHead.sqrMagnitude > epsilon && Vector3.Dot(planeNormal, toHead.normalized) < 0f)
+                planeNormal = -planeNormal;
+
+            Vector3 planeUp = Vector3.Cross(planeNormal, planeRight);
+            if (planeUp.sqrMagnitude <= epsilon)
+                return BuildFallbackStrokeFrame();
+
+            planeUp.Normalize();
+
+            Vector3 referenceUp = _userHead != null ? _userHead.up : Vector3.up;
+            if (Vector3.Dot(planeUp, referenceUp) < 0f)
+            {
+                planeUp = -planeUp;
+                planeRight = -planeRight;
+            }
+
+            return new StrokeFrame
+            {
+                right = planeRight,
+                up = planeUp,
+                rotation = Quaternion.LookRotation(planeNormal, planeUp)
+            };
+        }
+
+        private StrokeFrame BuildFallbackStrokeFrame()
+        {
             Vector3 forward = _userHead != null ? _userHead.forward : Vector3.forward;
             Vector3 up = _userHead != null ? _userHead.up : Vector3.up;
-            Vector3 right = Vector3.Cross(up, forward).normalized;
-            up = Vector3.Cross(forward, right).normalized;
+            Vector3 right = Vector3.Cross(up, forward);
+            if (right.sqrMagnitude <= 0.000001f)
+                right = Vector3.right;
+            else
+                right.Normalize();
 
+            up = Vector3.Cross(forward, right);
+            if (up.sqrMagnitude <= 0.000001f)
+                up = Vector3.up;
+            else
+                up.Normalize();
+
+            forward = Vector3.Cross(right, up);
+            if (forward.sqrMagnitude <= 0.000001f)
+                forward = Vector3.forward;
+            else
+                forward.Normalize();
+
+            return new StrokeFrame
+            {
+                right = right,
+                up = up,
+                rotation = Quaternion.LookRotation(forward, up)
+            };
+        }
+
+        private List<Vector2> ProjectTo2D(List<Vector3> worldPoints, Vector3 center, Vector3 right, Vector3 up)
+        {
             var result = new List<Vector2>(worldPoints.Count);
             foreach (var p in worldPoints)
             {
@@ -213,6 +303,13 @@ namespace RhythmForge.Interaction
                 result.Add(new Vector2(x, y));
             }
             return result;
+        }
+
+        private struct StrokeFrame
+        {
+            public Vector3 right;
+            public Vector3 up;
+            public Quaternion rotation;
         }
 
         public void ConfirmDraft(bool duplicate)

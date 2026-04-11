@@ -16,6 +16,8 @@ namespace RhythmForge.Core.Data
         public string groupId;
         public string presetId;
         public List<Vector2> points = new List<Vector2>(); // normalized 0-1
+        public Quaternion renderRotation = Quaternion.identity;
+        public bool hasRenderRotation;
         public DerivedSequence derivedSequence;
         public List<string> tags = new List<string>();
         public Color color;
@@ -38,6 +40,8 @@ namespace RhythmForge.Core.Data
                 groupId = groupId,
                 presetId = presetId,
                 points = new List<Vector2>(points),
+                renderRotation = renderRotation,
+                hasRenderRotation = hasRenderRotation,
                 derivedSequence = derivedSequence,
                 tags = new List<string>(tags),
                 color = color,

@@ -281,7 +281,8 @@ namespace RhythmForge.Bootstrap
                 rhythmMat,
                 melodyMat,
                 harmonyMat,
-                instanceContainer
+                instanceContainer,
+                _rig != null ? _rig.CenterEye : null
             );
 
             // Cache for inspector readout

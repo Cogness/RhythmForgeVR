@@ -40,6 +40,7 @@ namespace RhythmForge
 
         [Header("Scene")]
         [SerializeField] private Transform _instanceContainer;
+        [SerializeField] private Transform _userHead;
 
         /// <summary>Called by RhythmForgeBootstrapper to inject all subsystem and UI references.</summary>
         public void Configure(
@@ -59,7 +60,8 @@ namespace RhythmForge
             Material rhythmMaterial,
             Material melodyMaterial,
             Material harmonyMaterial,
-            Transform instanceContainer)
+            Transform instanceContainer,
+            Transform userHead)
         {
             _audioEngine        = audioEngine;
             _sequencer          = sequencer;
@@ -78,6 +80,7 @@ namespace RhythmForge
             _melodyMaterial     = melodyMaterial;
             _harmonyMaterial    = harmonyMaterial;
             _instanceContainer  = instanceContainer;
+            _userHead           = userHead;
         }
 
         // Core state
@@ -241,8 +244,7 @@ namespace RhythmForge
 
                 if (_visualizers.TryGetValue(instance.id, out var existing))
                 {
-                    // Update position and state
-                    existing.UpdatePosition(instance.position);
+                    existing.RefreshGeometry(pattern, instance, GetMaterialForType(pattern.type), _userHead);
                     existing.SetMuted(instance.muted);
                     existing.SetSelected(instance.id == _store.State.selectedInstanceId);
                 }
@@ -254,7 +256,7 @@ namespace RhythmForge
 
                     var vis = go.AddComponent<PatternVisualizer>();
                     Material mat = GetMaterialForType(pattern.type);
-                    vis.Initialize(pattern, instance, mat);
+                    vis.Initialize(pattern, instance, mat, _userHead);
                     vis.SetMuted(instance.muted);
                     vis.SetSelected(instance.id == _store.State.selectedInstanceId);
 

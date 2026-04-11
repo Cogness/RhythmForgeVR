@@ -76,8 +76,10 @@ namespace RhythmForge.Interaction
             Vector3 direction = pose.rotation * Vector3.forward;
 
             Button foundButton = null;
-            Vector3 hitPoint = origin + direction * _maxRayDistance;
-            float closestDist = _maxRayDistance;
+            Vector3 rayEnd      = origin + direction * _maxRayDistance;
+            Vector3 dotPosition = rayEnd;  // cursor dot shown on nearest canvas surface
+            float closestDist   = _maxRayDistance;
+            bool hitAnyCanvas   = false;
 
             var raycasters = Object.FindObjectsByType<GraphicRaycaster>(FindObjectsSortMode.None);
 
@@ -87,7 +89,7 @@ namespace RhythmForge.Interaction
                 var canvas = gr.GetComponent<Canvas>();
                 if (canvas == null || canvas.renderMode != RenderMode.WorldSpace) continue;
 
-                // Intersect ray with canvas plane (canvas faces +Z in local space)
+                // Intersect ray with canvas plane
                 var canvasPlane = new Plane(canvas.transform.forward, canvas.transform.position);
                 float dist;
                 if (!canvasPlane.Raycast(new Ray(origin, direction), out dist)) continue;
@@ -95,8 +97,7 @@ namespace RhythmForge.Interaction
 
                 Vector3 worldHit = origin + direction * dist;
 
-                // worldHit → canvas local space (unscaled)
-                // Canvas localScale is 0.001, so InverseTransformPoint gives pixel coords
+                // worldHit → canvas local space (pixel coords because localScale = 0.001)
                 Vector3 localHit = canvas.transform.InverseTransformPoint(worldHit);
                 var canvasRt = canvas.GetComponent<RectTransform>();
                 Vector2 canvasSize = canvasRt.sizeDelta;
@@ -106,7 +107,12 @@ namespace RhythmForge.Interaction
                     localHit.y < 0f || localHit.y > canvasSize.y)
                     continue;
 
-                // Hit is on this canvas — now find which Button contains the pixel point
+                // Canvas was hit — update dot position (offset slightly toward user)
+                hitAnyCanvas = true;
+                closestDist = dist;
+                dotPosition = worldHit - direction * 0.002f; // 2mm in front of surface
+
+                // Find which Button contains this pixel point
                 var buttons = gr.GetComponentsInChildren<Button>(false);
                 foreach (var btn in buttons)
                 {
@@ -114,19 +120,16 @@ namespace RhythmForge.Interaction
                     var btnRt = btn.GetComponent<RectTransform>();
                     if (btnRt == null) continue;
 
-                    // Button local space: InverseTransformPoint handles any nesting
                     Vector3 btnLocal = btnRt.InverseTransformPoint(worldHit);
                     if (btnRt.rect.Contains(new Vector2(btnLocal.x, btnLocal.y)))
                     {
                         foundButton = btn;
-                        closestDist = dist;
-                        hitPoint = worldHit;
                         break;
                     }
                 }
             }
 
-            SetRay(true, origin, hitPoint, hitPoint);
+            SetRay(true, origin, hitAnyCanvas ? dotPosition : rayEnd, dotPosition);
 
             // Hover: apply/remove tint and update cursor dot color
             if (foundButton != _hoveredButton)

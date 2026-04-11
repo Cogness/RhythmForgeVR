@@ -6,6 +6,7 @@ namespace RhythmForge.Interaction
     /// Centralizes input mapping from MX Ink stylus and left Quest controller
     /// into unified application actions.
     /// </summary>
+    [DefaultExecutionOrder(-10)]
     public class InputMapper : MonoBehaviour
     {
         [SerializeField] private StylusHandler _stylusHandler;
@@ -51,11 +52,13 @@ namespace RhythmForge.Interaction
 
         private void Update()
         {
+            // Reset consumed flags first — other systems running later this frame may set them.
+            FrontButtonConsumed = false;
+
             FrontButtonDown     = FrontButton && !_prevFrontButton;
             BackButtonDown      = BackButton  && !_prevBackButton;
             _prevFrontButton    = FrontButton;
             _prevBackButton     = BackButton;
-            FrontButtonConsumed = false; // reset each frame
         }
     }
 }

@@ -54,9 +54,24 @@ namespace RhythmForge.Bootstrap
 
             Debug.Log("[RhythmForge] Bootstrapper starting...");
             SuppressStylusInEditor();
+            DisableLogitechSampleDrawing();
             _rig = VRRigLocator.Find();
             BuildAll();
             Debug.Log("[RhythmForge] Bootstrapper complete. System ready.");
+        }
+
+        /// <summary>
+        /// Disable Logitech's sample LineDrawing component — it draws independent
+        /// blue lines on tip/middle press, conflicting with RhythmForge's StrokeCapture.
+        /// </summary>
+        private static void DisableLogitechSampleDrawing()
+        {
+            var lineDrawing = Object.FindFirstObjectByType<LineDrawing>();
+            if (lineDrawing != null)
+            {
+                lineDrawing.enabled = false;
+                Debug.Log("[RhythmForge] Disabled Logitech LineDrawing sample (replaced by StrokeCapture).");
+            }
         }
 
         private static void SuppressStylusInEditor()
@@ -75,12 +90,14 @@ namespace RhythmForge.Bootstrap
 #endif
         }
 
+        private bool _panelsPositioned;
+
         private void Start()
         {
-            // Re-locate the VR rig now that the simulator has initialized,
-            // then reposition all panels relative to the actual camera.
+            // Re-locate the VR rig now that the simulator has initialized.
             _rig = VRRigLocator.Find();
-            RepositionPanels();
+            // NOTE: RepositionPanels deferred to first Update() — OVR tracking
+            // needs at least one frame to report valid head position/rotation.
 
             // Initialize subsystems and panels before loading the demo.
             if (_manager != null)
@@ -88,6 +105,16 @@ namespace RhythmForge.Bootstrap
                 _manager.InitializeSubsystems();
                 if (_loadDemoOnStart)
                     _manager.LoadDemoSession();
+            }
+        }
+
+        private void Update()
+        {
+            if (!_panelsPositioned)
+            {
+                _panelsPositioned = true;
+                _rig = VRRigLocator.Find();
+                RepositionPanels();
             }
         }
 

@@ -11,6 +11,7 @@ namespace RhythmForge.Interaction
     /// Captures MX Ink stylus strokes in 3D space, renders them with a LineRenderer,
     /// projects to 2D for analysis, and invokes the draft builder.
     /// </summary>
+    [DefaultExecutionOrder(20)]
     public class StrokeCapture : MonoBehaviour
     {
         [Header("References")]
@@ -83,8 +84,9 @@ namespace RhythmForge.Interaction
 
             float pressure = _input.TipPressure;
 
-            // Suppress drawing while back button held (reserved for panel dragging)
+            // Suppress drawing while back button held (panel dragging) or hovering UI
             if (_input.BackButton) pressure = 0f;
+            if (_uiPointer != null && _uiPointer.IsHoveringUI) pressure = 0f;
 
             if (pressure > 0.05f)
             {

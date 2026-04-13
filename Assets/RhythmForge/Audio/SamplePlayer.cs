@@ -1,44 +1,178 @@
 using System.Collections.Generic;
 using UnityEngine;
-using RhythmForge.Core;
 using RhythmForge.Core.Data;
 
 namespace RhythmForge.Audio
 {
     /// <summary>
-    /// Placeholder audio player using AudioClip samples.
-    /// Manages a pool of AudioSources for polyphonic playback.
+    /// Runtime procedural clip player with pooled AudioSources and bounded clip caching.
     /// </summary>
     public class SamplePlayer : MonoBehaviour
     {
-        [Header("Drum Samples")]
-        [SerializeField] private AudioClip _kickClip;
-        [SerializeField] private AudioClip _snareClip;
-        [SerializeField] private AudioClip _hatClip;
-        [SerializeField] private AudioClip _percClip;
-
-        [Header("Tonal Sample")]
-        [SerializeField] private AudioClip _toneClip; // C4 reference tone
-
         [Header("Pool Settings")]
-        [SerializeField] private int _poolSize = 16;
+        [SerializeField] private int _poolSize = 24;
 
-        private List<AudioSource> _pool = new List<AudioSource>();
+        [Header("Cache Settings")]
+        [SerializeField] private int _maxCachedClips = 96;
+
+        private readonly List<AudioSource> _pool = new List<AudioSource>();
+        private readonly Dictionary<string, CachedClip> _voiceCache = new Dictionary<string, CachedClip>();
         private int _nextPoolIndex;
+        private long _cacheAge;
 
-        /// <summary>Called by RhythmForgeBootstrapper to inject synthesized clips at runtime.</summary>
-        public void Configure(AudioClip kick, AudioClip snare, AudioClip hat,
-            AudioClip perc, AudioClip tone)
+        private sealed class CachedClip
         {
-            _kickClip  = kick;
-            _snareClip = snare;
-            _hatClip   = hat;
-            _percClip  = perc;
-            _toneClip  = tone;
+            public AudioClip clip;
+            public long lastUsed;
+        }
+
+        public void Configure()
+        {
+            // Intentionally empty. The richer procedural path renders clips on demand.
+            EnsurePool();
+        }
+
+        public void Configure(AudioClip kick, AudioClip snare, AudioClip hat, AudioClip perc, AudioClip tone)
+        {
+            // Legacy compatibility: bootstrap code used to inject pre-baked clips.
+            Configure();
         }
 
         private void Awake()
         {
+            EnsurePool();
+        }
+
+        private void OnDestroy()
+        {
+            foreach (var entry in _voiceCache.Values)
+            {
+                if (entry?.clip != null)
+                    ReleaseClip(entry.clip);
+            }
+            _voiceCache.Clear();
+        }
+
+        public void PlayDrum(InstrumentPreset preset, string lane, float velocity, float pan,
+            float brightness, float gain, float fxSend, SoundProfile profile)
+        {
+            var spec = VoiceSpecResolver.ResolveDrum(lane, preset, profile, brightness, fxSend);
+            PlayClip(spec, Mathf.Clamp01(velocity * gain), pan, 0f);
+        }
+
+        public void PlayNote(InstrumentPreset preset, int midi, float velocity, float duration,
+            float pan, float brightness, float gain, float fxSend, SoundProfile profile,
+            PatternType type, float glide = 0f, float startDelay = 0f)
+        {
+            ResolvedVoiceSpec spec = type == PatternType.HarmonyPad
+                ? VoiceSpecResolver.ResolveHarmony(preset, profile, midi, duration, brightness, fxSend)
+                : VoiceSpecResolver.ResolveMelody(preset, profile, midi, duration, brightness, fxSend, glide);
+
+            float voiceGain = type == PatternType.HarmonyPad ? 0.66f : 0.72f;
+            PlayClip(spec, Mathf.Clamp01(velocity * gain * voiceGain), pan, startDelay);
+        }
+
+        public void PlayChord(InstrumentPreset preset, List<int> chord, float velocity, float duration,
+            float pan, float brightness, float gain, float fxSend, SoundProfile profile)
+        {
+            if (chord == null) return;
+
+            for (int i = 0; i < chord.Count; i++)
+            {
+                float chordPan = Mathf.Clamp(pan + (i - 1.5f) * 0.12f, -1f, 1f);
+                float chordVelocity = velocity * (i == 0 ? 0.9f : 0.72f);
+                float startDelay = i * 0.01f;
+                PlayNote(preset, chord[i], chordVelocity, duration, chordPan, brightness, gain,
+                    fxSend, profile, PatternType.HarmonyPad, 0f, startDelay);
+            }
+        }
+
+        private void PlayClip(ResolvedVoiceSpec spec, float volume, float pan, float startDelay)
+        {
+            AudioClip clip = GetOrCreateClip(spec);
+            if (clip == null) return;
+
+            var source = GetNextSource();
+            source.clip = clip;
+            source.volume = Mathf.Clamp01(volume);
+            source.panStereo = Mathf.Clamp(pan, -1f, 1f);
+            source.pitch = 1f;
+            source.time = 0f;
+
+            if (startDelay > 0f)
+                source.PlayDelayed(startDelay);
+            else
+                source.Play();
+        }
+
+        private AudioSource GetNextSource()
+        {
+            EnsurePool();
+
+            var source = _pool[_nextPoolIndex];
+            _nextPoolIndex = (_nextPoolIndex + 1) % _pool.Count;
+
+            if (source.isPlaying)
+                source.Stop();
+
+            return source;
+        }
+
+        private AudioClip GetOrCreateClip(ResolvedVoiceSpec spec)
+        {
+            string cacheKey = spec.GetCacheKey();
+            if (_voiceCache.TryGetValue(cacheKey, out var cached))
+            {
+                cached.lastUsed = ++_cacheAge;
+                return cached.clip;
+            }
+
+            AudioClip clip = spec.patternType == PatternType.RhythmLoop
+                ? ProceduralSynthesizer.RenderDrum(spec)
+                : ProceduralSynthesizer.RenderTone(spec);
+
+            _voiceCache[cacheKey] = new CachedClip
+            {
+                clip = clip,
+                lastUsed = ++_cacheAge
+            };
+
+            TrimCacheIfNeeded();
+            return clip;
+        }
+
+        private void TrimCacheIfNeeded()
+        {
+            while (_voiceCache.Count > _maxCachedClips)
+            {
+                string oldestKey = null;
+                long oldestAge = long.MaxValue;
+
+                foreach (var pair in _voiceCache)
+                {
+                    if (pair.Value.lastUsed < oldestAge && !IsClipInUse(pair.Value.clip))
+                    {
+                        oldestAge = pair.Value.lastUsed;
+                        oldestKey = pair.Key;
+                    }
+                }
+
+                if (oldestKey == null) return;
+
+                var clip = _voiceCache[oldestKey].clip;
+                if (IsClipInUse(clip))
+                    return;
+
+                _voiceCache.Remove(oldestKey);
+                if (clip != null)
+                    ReleaseClip(clip);
+            }
+        }
+
+        private void EnsurePool()
+        {
+            if (_pool.Count > 0) return;
+
             for (int i = 0; i < _poolSize; i++)
             {
                 var go = new GameObject($"VoicePool_{i}");
@@ -51,74 +185,29 @@ namespace RhythmForge.Audio
             }
         }
 
-        private AudioSource GetNextSource()
+        private bool IsClipInUse(AudioClip clip)
         {
-            var source = _pool[_nextPoolIndex];
-            _nextPoolIndex = (_nextPoolIndex + 1) % _pool.Count;
+            if (clip == null)
+                return false;
 
-            // If the source is still playing, stop it
-            if (source.isPlaying)
-                source.Stop();
-
-            return source;
-        }
-
-        public void PlayDrum(string lane, float velocity, float pan, float gain, SoundProfile profile)
-        {
-            AudioClip clip = GetDrumClip(lane);
-            if (clip == null) return;
-
-            var source = GetNextSource();
-            source.clip = clip;
-            source.volume = Mathf.Clamp01(velocity * gain);
-            source.panStereo = Mathf.Clamp(pan, -1f, 1f);
-
-            // Slight pitch variation driven by sound profile
-            float pitchVariation = 1f + (profile.brightness - 0.5f) * 0.15f;
-            source.pitch = Mathf.Clamp(pitchVariation, 0.8f, 1.3f);
-
-            source.Play();
-        }
-
-        public void PlayNote(int midi, float velocity, float duration, float pan, float gain, SoundProfile profile)
-        {
-            if (_toneClip == null) return;
-
-            var source = GetNextSource();
-            source.clip = _toneClip;
-            source.volume = Mathf.Clamp01(velocity * gain * 0.7f);
-            source.panStereo = Mathf.Clamp(pan, -1f, 1f);
-
-            // Pitch the C4 sample to target MIDI note
-            // C4 = MIDI 60, so semitone offset = midi - 60
-            float semitones = midi - 60f;
-            source.pitch = Mathf.Pow(2f, semitones / 12f);
-
-            source.Play();
-        }
-
-        public void PlayChord(List<int> chord, float velocity, float duration, float pan, float gain, SoundProfile profile)
-        {
-            if (chord == null) return;
-
-            for (int i = 0; i < chord.Count; i++)
+            for (int i = 0; i < _pool.Count; i++)
             {
-                float chordPan = Mathf.Clamp(pan + (i - 1.5f) * 0.12f, -1f, 1f);
-                float chordVel = velocity * (i == 0 ? 0.9f : 0.72f);
-                PlayNote(chord[i], chordVel, duration, chordPan, gain, profile);
+                if (_pool[i] != null && _pool[i].isPlaying && _pool[i].clip == clip)
+                    return true;
             }
+
+            return false;
         }
 
-        private AudioClip GetDrumClip(string lane)
+        private static void ReleaseClip(AudioClip clip)
         {
-            switch (lane)
-            {
-                case "kick": return _kickClip;
-                case "snare": return _snareClip;
-                case "hat": return _hatClip;
-                case "perc": return _percClip;
-                default: return _percClip;
-            }
+            if (clip == null)
+                return;
+
+            if (Application.isPlaying)
+                Destroy(clip);
+            else
+                DestroyImmediate(clip);
         }
     }
 }

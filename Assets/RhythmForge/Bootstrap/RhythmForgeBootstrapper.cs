@@ -242,7 +242,7 @@ namespace RhythmForge.Bootstrap
             EnsureEventSystem();
 
             // ── 1. Audio ──
-            var audioClips = BuildAudio();
+            BuildAudio();
 
             // ── 2. Materials ──
             var rhythmMat  = MaterialFactory.CreateStrokeMaterial(PatternType.RhythmLoop);
@@ -250,7 +250,7 @@ namespace RhythmForge.Bootstrap
             var harmonyMat = MaterialFactory.CreateStrokeMaterial(PatternType.HarmonyPad);
 
             // ── 3. Core subsystems ──
-            var subsystems = BuildSubsystems(audioClips, rhythmMat);
+            var subsystems = BuildSubsystems(rhythmMat);
 
             // ── 4. UI panels ──
             var panels = BuildUIPanels(subsystems.strokeCapture, subsystems.drawMode);
@@ -299,12 +299,7 @@ namespace RhythmForge.Bootstrap
         //  AUDIO
         // ──────────────────────────────────────────────────────────
 
-        private struct AudioClips
-        {
-            public AudioClip kick, snare, hat, perc, tone;
-        }
-
-        private AudioClips BuildAudio()
+        private void BuildAudio()
         {
             var audioGo = new GameObject("AudioEngine");
             audioGo.transform.SetParent(transform);
@@ -314,20 +309,8 @@ namespace RhythmForge.Bootstrap
 
             _samplePlayer = playerGo.AddComponent<SamplePlayer>();
             _audioEngine  = audioGo.AddComponent<AudioEngine>();
-
-            var clips = new AudioClips
-            {
-                kick  = ProceduralSynthesizer.GenerateKick(),
-                snare = ProceduralSynthesizer.GenerateSnare(),
-                hat   = ProceduralSynthesizer.GenerateHat(),
-                perc  = ProceduralSynthesizer.GeneratePerc(),
-                tone  = ProceduralSynthesizer.GenerateTone()
-            };
-
-            _samplePlayer.Configure(clips.kick, clips.snare, clips.hat, clips.perc, clips.tone);
+            _samplePlayer.Configure();
             _audioEngine.Configure(_samplePlayer);
-
-            return clips;
         }
 
         // ──────────────────────────────────────────────────────────
@@ -345,7 +328,7 @@ namespace RhythmForge.Bootstrap
             public Sequencer.Sequencer sequencer;
         }
 
-        private SubsystemRefs BuildSubsystems(AudioClips clips, Material defaultStrokeMat)
+        private SubsystemRefs BuildSubsystems(Material defaultStrokeMat)
         {
             var refs = new SubsystemRefs();
 

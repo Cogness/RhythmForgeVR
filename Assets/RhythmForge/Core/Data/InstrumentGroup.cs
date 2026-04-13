@@ -139,6 +139,17 @@ namespace RhythmForge.Core.Data
             return All[0];
         }
 
+        public static InstrumentPreset GetDefaultForVoice(string voiceType)
+        {
+            foreach (var preset in All)
+            {
+                if (preset.voiceType == voiceType)
+                    return preset;
+            }
+
+            return All.Count > 0 ? All[0] : null;
+        }
+
         private static void Initialize()
         {
             _presets = new List<InstrumentPreset>

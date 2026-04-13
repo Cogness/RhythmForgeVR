@@ -140,6 +140,7 @@ namespace RhythmForge.Sequencer
                 float microShift = evt.microShift * stepDur;
 
                 _audioEngine.PlayDrumEvent(
+                    preset,
                     evt.lane,
                     evt.velocity,
                     instance.pan,
@@ -164,6 +165,7 @@ namespace RhythmForge.Sequencer
                 if (note.step != localStep) continue;
 
                 _audioEngine.PlayMelodyNote(
+                    preset,
                     note.midi,
                     note.velocity,
                     note.durationSteps * stepDur,
@@ -196,6 +198,7 @@ namespace RhythmForge.Sequencer
             float duration = effectiveSteps * stepDur * 0.96f;
 
             _audioEngine.PlayHarmonyChord(
+                preset,
                 pattern.derivedSequence.chord,
                 0.38f,
                 duration,

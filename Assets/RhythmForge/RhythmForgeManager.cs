@@ -277,11 +277,6 @@ namespace RhythmForge
                     vis.SetSelected(instance.id == _store.State.selectedInstanceId);
                     vis.SetParameterLabelVisible(_showParamLabels);
 
-                    // Add a collider for raycasting
-                    var col = go.AddComponent<SphereCollider>();
-                    col.radius = 0.08f;
-                    col.isTrigger = true;
-
                     _visualizers[instance.id] = vis;
                 }
             }

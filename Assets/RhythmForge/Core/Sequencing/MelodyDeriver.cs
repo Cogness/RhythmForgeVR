@@ -26,6 +26,8 @@ namespace RhythmForge.Core.Sequencing
             string keyName, string groupId,
             ShapeProfile sp, SoundProfile sound)
         {
+            float sizeFactor = ShapeProfileSizing.GetSizeFactor(PatternType.MelodyLine, sp);
+            string sizeWord = ShapeProfileSizing.DescribeSize(PatternType.MelodyLine, sp);
             int bars = metrics.length > FourBarThreshold ? 4 : 2;
             int totalSteps = bars * AppStateFactory.BarSteps;
             int sliceCount = (metrics.length > SixteenSliceThreshold || sp.pathLength > 0.68f) ? 16 : 8;
@@ -55,7 +57,7 @@ namespace RhythmForge.Core.Sequencing
                 // World-space speed thresholds (pilot: 24px, 40px)
                 int durationBase = speed < 0.025f ? 6 : speed < 0.042f ? 4 : 2;
                 int durationSteps = Mathf.Clamp(
-                    Mathf.RoundToInt(durationBase + (1f - sp.speedVariance) * 1.5f - sound.transientSharpness * 1.2f),
+                    Mathf.RoundToInt(durationBase + (1f - sp.speedVariance) * 1.2f - sound.transientSharpness * 1.1f + sizeFactor * 2f),
                     2, 7);
 
                 float slope = Mathf.Clamp(
@@ -88,8 +90,8 @@ namespace RhythmForge.Core.Sequencing
                     totalSteps = totalSteps,
                     notes = notes
                 },
-                summary = $"{sliceCount} slices, {bars} bars, wide contour {Mathf.Round(sp.verticalSpan * 100f)}%, {voiceWord} voice.",
-                details = "Vertical span drives octave reach, angularity sharpens tone, and direction bias adds glide pull into notes."
+                summary = $"{sizeWord} line, {sliceCount} slices, {bars} bars, contour {Mathf.Round(sp.verticalSpan * 100f)}%, {voiceWord} voice.",
+                details = "Size pushes sustain, width, and modulation depth, while vertical span drives octave reach and direction bias adds glide pull into notes."
             };
         }
     }

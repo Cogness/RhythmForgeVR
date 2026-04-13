@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Text;
 using RhythmForge.Core.Data;
+using RhythmForge.Core.Analysis;
 
 namespace RhythmForge.UI
 {
@@ -26,15 +27,16 @@ namespace RhythmForge.UI
             switch (type)
             {
                 case PatternType.RhythmLoop:
+                    list.Add(new ParamEntry { label = "size", value = ShapeProfileSizing.GetSizeFactor(type, sp) });
                     list.Add(new ParamEntry { label = "ang", value = sp.angularity });
                     list.Add(new ParamEntry { label = "circ", value = sp.circularity });
                     list.Add(new ParamEntry { label = "sym", value = sp.symmetry });
                     list.Add(new ParamEntry { label = "wob", value = sp.wobble });
                     list.Add(new ParamEntry { label = "curvVar", value = sp.curvatureVariance });
-                    list.Add(new ParamEntry { label = "aspect", value = sp.aspectRatio });
                     break;
 
                 case PatternType.MelodyLine:
+                    list.Add(new ParamEntry { label = "size", value = ShapeProfileSizing.GetSizeFactor(type, sp) });
                     list.Add(new ParamEntry { label = "ang", value = sp.angularity });
                     list.Add(new ParamEntry { label = "centH", value = sp.centroidHeight });
                     list.Add(new ParamEntry { label = "vSpan", value = sp.verticalSpan });
@@ -46,6 +48,7 @@ namespace RhythmForge.UI
                     break;
 
                 default: // HarmonyPad
+                    list.Add(new ParamEntry { label = "size", value = ShapeProfileSizing.GetSizeFactor(type, sp) });
                     list.Add(new ParamEntry { label = "centH", value = sp.centroidHeight });
                     list.Add(new ParamEntry { label = "ang", value = sp.angularity });
                     list.Add(new ParamEntry { label = "tilt", value = sp.tiltSigned });

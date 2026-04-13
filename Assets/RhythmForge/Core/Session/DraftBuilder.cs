@@ -33,6 +33,22 @@ namespace RhythmForge.Core.Session
 
     public static class DraftBuilder
     {
+        public static string ComposeDetails(string details, string shapeSummary)
+        {
+            if (string.IsNullOrEmpty(shapeSummary))
+                return details ?? string.Empty;
+
+            string baseDetails = details ?? string.Empty;
+            int shapeIndex = baseDetails.IndexOf(" Shape DNA:");
+            if (shapeIndex >= 0)
+                baseDetails = baseDetails.Substring(0, shapeIndex);
+
+            if (string.IsNullOrWhiteSpace(baseDetails))
+                return $"Shape DNA: {shapeSummary}.";
+
+            return $"{baseDetails} Shape DNA: {shapeSummary}.";
+        }
+
         public static DraftResult BuildFromStroke(PatternType type, List<Vector2> rawPoints,
             Vector3 strokeCenter, Quaternion renderRotation, AppState state, SessionStore store)
         {
@@ -120,7 +136,7 @@ namespace RhythmForge.Core.Session
                 soundProfile = soundProfile,
                 shapeSummary = shapeSummary,
                 summary = summary,
-                details = $"{details} Shape DNA: {shapeSummary}."
+                details = ComposeDetails(details, shapeSummary)
             };
         }
     }

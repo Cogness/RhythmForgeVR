@@ -21,5 +21,38 @@ namespace RhythmForge.Core.Data
         public float tilt;
         public float tiltSigned;
         public float wobble;
+        public float worldWidth;
+        public float worldHeight;
+        public float worldLength;
+        public float worldAverageSize;
+        public float worldMaxDimension;
+
+        public ShapeProfile Clone()
+        {
+            return new ShapeProfile
+            {
+                closedness = closedness,
+                circularity = circularity,
+                aspectRatio = aspectRatio,
+                angularity = angularity,
+                symmetry = symmetry,
+                verticalSpan = verticalSpan,
+                horizontalSpan = horizontalSpan,
+                pathLength = pathLength,
+                speedVariance = speedVariance,
+                curvatureMean = curvatureMean,
+                curvatureVariance = curvatureVariance,
+                centroidHeight = centroidHeight,
+                directionBias = directionBias,
+                tilt = tilt,
+                tiltSigned = tiltSigned,
+                wobble = wobble,
+                worldWidth = worldWidth,
+                worldHeight = worldHeight,
+                worldLength = worldLength,
+                worldAverageSize = worldAverageSize,
+                worldMaxDimension = worldMaxDimension
+            };
+        }
     }
 }

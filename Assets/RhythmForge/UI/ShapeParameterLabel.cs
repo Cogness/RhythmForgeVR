@@ -12,6 +12,7 @@ namespace RhythmForge.UI
         private TextMesh _textMesh;
         private MeshRenderer _renderer;
         private Transform _userHead;
+        private Transform _textTransform;
         private bool _visible = true;
 
         private static readonly float FontSize = 24;
@@ -25,6 +26,7 @@ namespace RhythmForge.UI
             var child = new GameObject("ParamLabel");
             child.transform.SetParent(transform, false);
             child.transform.localPosition = Offset;
+            _textTransform = child.transform;
 
             _textMesh = child.AddComponent<TextMesh>();
             _textMesh.fontSize = (int)FontSize;
@@ -59,6 +61,12 @@ namespace RhythmForge.UI
             _visible = visible;
             if (_renderer != null)
                 _renderer.enabled = _visible;
+        }
+
+        public void SetLocalOffset(Vector3 localOffset)
+        {
+            if (_textTransform != null)
+                _textTransform.localPosition = localOffset;
         }
 
         public bool IsVisible => _visible;

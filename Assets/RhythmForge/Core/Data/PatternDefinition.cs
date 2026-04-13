@@ -45,7 +45,7 @@ namespace RhythmForge.Core.Data
                 derivedSequence = derivedSequence,
                 tags = new List<string>(tags),
                 color = color,
-                shapeProfile = shapeProfile,
+                shapeProfile = shapeProfile?.Clone(),
                 soundProfile = soundProfile?.Clone(),
                 shapeSummary = shapeSummary,
                 summary = summary,

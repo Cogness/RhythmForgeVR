@@ -18,7 +18,9 @@ namespace RhythmForge.Core.Analysis
                     horizontalSpan = 0f, pathLength = 0f, speedVariance = 0f,
                     curvatureMean = 0f, curvatureVariance = 0f,
                     centroidHeight = 0.5f, directionBias = 0.5f,
-                    tilt = 0.5f, tiltSigned = 0f, wobble = 0f
+                    tilt = 0.5f, tiltSigned = 0f, wobble = 0f,
+                    worldWidth = 0f, worldHeight = 0f, worldLength = 0f,
+                    worldAverageSize = 0f, worldMaxDimension = 0f
                 };
             }
 
@@ -123,7 +125,12 @@ namespace RhythmForge.Core.Analysis
                 directionBias = directionBias,
                 tilt = Mathf.Clamp01((tiltSigned + 1f) / 2f),
                 tiltSigned = tiltSigned,
-                wobble = wobble
+                wobble = wobble,
+                worldWidth = metrics.width,
+                worldHeight = metrics.height,
+                worldLength = metrics.length,
+                worldAverageSize = metrics.averageSize,
+                worldMaxDimension = Mathf.Max(metrics.width, metrics.height)
             };
         }
 
@@ -146,6 +153,90 @@ namespace RhythmForge.Core.Analysis
             }
 
             return Mathf.Clamp01(1f - error / (samples.Count * 0.55f));
+        }
+    }
+
+    public static class ShapeProfileSizing
+    {
+        public const float LegacySpanNormalization = 0.95f;
+        public const float LegacyPathNormalization = 2.75f;
+
+        public static float GetSizeFactor(PatternType type, ShapeProfile sp)
+        {
+            if (sp == null)
+                return 0f;
+
+            float width = Mathf.Max(0f, sp.worldWidth);
+            float height = Mathf.Max(0f, sp.worldHeight);
+            float length = Mathf.Max(0f, sp.worldLength);
+            float averageSize = Mathf.Max(0f, sp.worldAverageSize);
+            float maxDimension = Mathf.Max(0f, sp.worldMaxDimension);
+
+            switch (type)
+            {
+                case PatternType.RhythmLoop:
+                    return NormalizeRange(Mathf.Max(averageSize, maxDimension * 0.92f), 0.14f, 0.52f);
+
+                case PatternType.MelodyLine:
+                {
+                    float melodicExtent = Mathf.Max(length * 0.7f, averageSize * 1.15f + maxDimension * 0.2f);
+                    return NormalizeRange(melodicExtent, 0.18f, 1.05f);
+                }
+
+                default:
+                {
+                    float harmonicExtent = Mathf.Max(length * 0.58f, averageSize * 1.35f + width * 0.22f + height * 0.22f);
+                    return NormalizeRange(harmonicExtent, 0.16f, 0.92f);
+                }
+            }
+        }
+
+        public static string DescribeSize(PatternType type, ShapeProfile sp)
+        {
+            float sizeFactor = GetSizeFactor(type, sp);
+            if (sizeFactor < 0.33f) return "compact";
+            if (sizeFactor > 0.68f) return "expanded";
+            return "medium";
+        }
+
+        public static void BackfillLegacyWorldMetrics(ShapeProfile sp)
+        {
+            if (sp == null) return;
+
+            sp.worldWidth = BackfillLegacyMetric(sp.worldWidth, sp.horizontalSpan, LegacySpanNormalization, 1.08f);
+            sp.worldHeight = BackfillLegacyMetric(sp.worldHeight, sp.verticalSpan, LegacySpanNormalization, 1.08f);
+            sp.worldLength = BackfillLegacyMetric(sp.worldLength, sp.pathLength, LegacyPathNormalization, 1.06f);
+
+            float fallbackAverage = (Mathf.Max(0f, sp.worldWidth) + Mathf.Max(0f, sp.worldHeight)) * 0.5f;
+            sp.worldAverageSize = sp.worldAverageSize > 0.0001f
+                ? sp.worldAverageSize
+                : fallbackAverage > 0.0001f ? fallbackAverage : sp.worldLength * 0.18f;
+
+            sp.worldMaxDimension = sp.worldMaxDimension > 0.0001f
+                ? sp.worldMaxDimension
+                : Mathf.Max(Mathf.Max(sp.worldWidth, sp.worldHeight), sp.worldAverageSize);
+        }
+
+        private static float BackfillLegacyMetric(float currentValue, float normalizedValue, float range, float saturatedBoost)
+        {
+            if (currentValue > 0.0001f)
+                return currentValue;
+
+            if (normalizedValue <= 0.0001f)
+                return 0f;
+
+            if (normalizedValue >= 0.999f)
+                return range * saturatedBoost;
+
+            return normalizedValue * range;
+        }
+
+        private static float NormalizeRange(float value, float min, float max)
+        {
+            if (max <= min)
+                return 0f;
+
+            return Mathf.Clamp01((value - min) / (max - min));
         }
     }
 }

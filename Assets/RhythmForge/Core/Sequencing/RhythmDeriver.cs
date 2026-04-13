@@ -24,16 +24,18 @@ namespace RhythmForge.Core.Sequencing
             List<Vector2> points, StrokeMetrics metrics,
             string groupId, ShapeProfile sp, SoundProfile sound)
         {
+            float sizeFactor = ShapeProfileSizing.GetSizeFactor(PatternType.RhythmLoop, sp);
+            string sizeWord = ShapeProfileSizing.DescribeSize(PatternType.RhythmLoop, sp);
             int bars = metrics.averageSize > FourBarThreshold ? 4 : 2;
             int totalSteps = bars * AppStateFactory.BarSteps;
             var group = InstrumentGroups.Get(groupId);
             string presetId = group.defaultPresetByType.RhythmLoop;
 
             int density = Mathf.Clamp(
-                Mathf.RoundToInt(6f + sp.angularity * 4f + (1f - sp.symmetry) * 3f + sp.wobble * 3f),
+                Mathf.RoundToInt(6f + sp.angularity * 4f + (1f - sp.symmetry) * 3f + sp.wobble * 3f + sizeFactor * 4f),
                 6, 14);
             float swing = MathUtils.RoundTo(
-                Mathf.Clamp(sound.grooveInstability * 0.34f + sp.wobble * 0.08f, 0f, 0.42f), 2);
+                Mathf.Clamp(sound.grooveInstability * 0.34f + sp.wobble * 0.08f + sizeFactor * 0.06f, 0f, 0.42f), 2);
 
             var events = new List<RhythmEvent>();
 
@@ -50,7 +52,7 @@ namespace RhythmForge.Core.Sequencing
             int[] snarePattern = sp.symmetry > 0.6f ? new[] { 8 } : new[] { 5, 8, 13 };
 
             // Hat stride
-            int hatStride = sp.angularity > 0.68f ? 1 : 2;
+            int hatStride = (sp.angularity > 0.68f || sizeFactor > 0.68f) ? 1 : 2;
 
             for (int bar = 0; bar < bars; bar++)
             {
@@ -102,7 +104,7 @@ namespace RhythmForge.Core.Sequencing
                 }
 
                 // Ghost notes for high density
-                if (density > 11 || sp.symmetry < 0.45f)
+                if (density > 11 || sp.symmetry < 0.45f || sizeFactor > 0.72f)
                 {
                     int[] ghostSteps = { 3, 11, 15 };
                     foreach (int step in ghostSteps)
@@ -132,8 +134,8 @@ namespace RhythmForge.Core.Sequencing
                     swing = swing,
                     events = events
                 },
-                summary = $"Closed loop, {bars} bars, {density} accents, swing {Mathf.Round(swing * 100f)}%, {angularWord} transient DNA.",
-                details = "Circularity drives kick weight, angularity pushes transient bite and drive, and symmetry loss adds broken micro-timing."
+                summary = $"{sizeWord} closed loop, {bars} bars, {density} accents, swing {Mathf.Round(swing * 100f)}%, {angularWord} transient DNA.",
+                details = "Size pushes body, tail, space, and groove looseness, while circularity drives kick weight and angularity sharpens the transient bite."
             };
         }
 

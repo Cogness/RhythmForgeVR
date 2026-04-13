@@ -16,8 +16,11 @@ namespace RhythmForge.UI
         [SerializeField] private float _renderScale = 0.15f;
         [SerializeField] private float _lineWidth = 0.003f;
         [SerializeField] private float _selectedLineWidth = 0.005f;
+        [SerializeField] private float _minInteractionRadius = 0.05f;
+        [SerializeField] private float _labelPadding = 0.035f;
 
         private LineRenderer _lineRenderer;
+        private SphereCollider _interactionCollider;
         private string _instanceId;
         private PatternType _type;
         private Color _baseColor;
@@ -25,6 +28,8 @@ namespace RhythmForge.UI
         private float _currentPulse;
         private bool _isMuted;
         private ShapeParameterLabel _paramLabel;
+        private float _renderedWidth;
+        private float _renderedHeight;
 
         public string InstanceId => _instanceId;
 
@@ -45,6 +50,14 @@ namespace RhythmForge.UI
                 _paramLabel.Initialize(userHead);
             }
 
+            if (_interactionCollider == null)
+            {
+                _interactionCollider = gameObject.GetComponent<SphereCollider>();
+                if (_interactionCollider == null)
+                    _interactionCollider = gameObject.AddComponent<SphereCollider>();
+                _interactionCollider.isTrigger = true;
+            }
+
             RefreshGeometry(pattern, instance, material, userHead);
         }
 
@@ -58,7 +71,7 @@ namespace RhythmForge.UI
                 _lineRenderer.material = material ? material : new Material(Shader.Find("Sprites/Default"));
 
             _lineRenderer.loop = pattern.type == PatternType.RhythmLoop;
-            RenderPoints(pattern.points);
+            RenderPoints(pattern.points, pattern.shapeProfile);
             transform.position = instance.position;
             transform.rotation = ResolveRenderRotation(pattern, instance, userHead);
             UpdateAppearance();
@@ -71,26 +84,42 @@ namespace RhythmForge.UI
             }
         }
 
-        private void RenderPoints(List<Vector2> normalizedPoints)
+        private void RenderPoints(List<Vector2> normalizedPoints, ShapeProfile shapeProfile)
         {
             if (normalizedPoints == null || normalizedPoints.Count == 0)
             {
                 _lineRenderer.positionCount = 0;
+                UpdateInteractionBounds(0f, 0f);
                 return;
             }
 
             _lineRenderer.positionCount = normalizedPoints.Count;
+            float renderScale = GetRenderScale(shapeProfile);
 
             // Center the points around origin
             Vector2 center = Vector2.zero;
             foreach (var p in normalizedPoints) center += p;
             center /= normalizedPoints.Count;
 
+            float minX = float.MaxValue;
+            float maxX = float.MinValue;
+            float minY = float.MaxValue;
+            float maxY = float.MinValue;
+
             for (int i = 0; i < normalizedPoints.Count; i++)
             {
                 Vector2 p = normalizedPoints[i] - center;
-                _lineRenderer.SetPosition(i, new Vector3(p.x * _renderScale, p.y * _renderScale, 0f));
+                var position = new Vector3(p.x * renderScale, p.y * renderScale, 0f);
+                _lineRenderer.SetPosition(i, position);
+                minX = Mathf.Min(minX, position.x);
+                maxX = Mathf.Max(maxX, position.x);
+                minY = Mathf.Min(minY, position.y);
+                maxY = Mathf.Max(maxY, position.y);
             }
+
+            _renderedWidth = maxX - minX;
+            _renderedHeight = maxY - minY;
+            UpdateInteractionBounds(_renderedWidth, _renderedHeight);
         }
 
         public void SetSelected(bool selected)
@@ -167,6 +196,32 @@ namespace RhythmForge.UI
             }
 
             return Quaternion.identity;
+        }
+
+        private float GetRenderScale(ShapeProfile shapeProfile)
+        {
+            if (shapeProfile != null && shapeProfile.worldMaxDimension > 0.0001f)
+                return shapeProfile.worldMaxDimension;
+
+            return _renderScale;
+        }
+
+        private void UpdateInteractionBounds(float renderedWidth, float renderedHeight)
+        {
+            float maxDimension = Mathf.Max(renderedWidth, renderedHeight);
+            float radius = Mathf.Max(_minInteractionRadius, maxDimension * 0.6f + 0.015f);
+
+            if (_interactionCollider != null)
+            {
+                _interactionCollider.center = Vector3.zero;
+                _interactionCollider.radius = radius;
+            }
+
+            if (_paramLabel != null)
+            {
+                float offsetY = -Mathf.Max(0.06f, renderedHeight * 0.5f + _labelPadding);
+                _paramLabel.SetLocalOffset(new Vector3(0f, offsetY, 0f));
+            }
         }
 
         private static bool IsValidRotation(Quaternion rotation)

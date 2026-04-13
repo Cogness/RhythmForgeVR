@@ -26,6 +26,8 @@ namespace RhythmForge.Core.Sequencing
             string keyName, string groupId,
             ShapeProfile sp, SoundProfile sound)
         {
+            float sizeFactor = ShapeProfileSizing.GetSizeFactor(PatternType.HarmonyPad, sp);
+            string sizeWord = ShapeProfileSizing.DescribeSize(PatternType.HarmonyPad, sp);
             int bars = metrics.length > EightBarThreshold ? 8 : metrics.length > FourBarThreshold ? 4 : 2;
             int totalSteps = bars * AppStateFactory.BarSteps;
             var group = InstrumentGroups.Get(groupId);
@@ -52,14 +54,14 @@ namespace RhythmForge.Core.Sequencing
                 chordIntervals = new[] { 0, 3, 7, 10 };
             }
 
-            int spread = Mathf.RoundToInt(sp.horizontalSpan * 10f);
+            int spread = Mathf.RoundToInt(sp.horizontalSpan * 10f + sizeFactor * 6f);
             var chord = new List<int>();
 
             for (int i = 0; i < chordIntervals.Length; i++)
             {
                 int note = rootMidi + chordIntervals[i];
 
-                if (i == 0 && sp.horizontalSpan > 0.72f)
+                if (i == 0 && (sp.horizontalSpan > 0.72f || sizeFactor > 0.66f))
                     note -= 12;
                 else if (i == 2)
                     note += Mathf.RoundToInt(spread * 0.45f);
@@ -83,8 +85,8 @@ namespace RhythmForge.Core.Sequencing
                     rootMidi = rootMidi,
                     chord = chord
                 },
-                summary = $"{bars} bars, {flavor} chord, wide voicing {Mathf.Round(sp.horizontalSpan * 100f)}%, filter motion {Mathf.Round(sound.filterMotion * 100f)}%.",
-                details = "Tilt controls chord family and filter movement, width opens the voicing, and path length pushes bloom and tail size."
+                summary = $"{sizeWord} pad, {bars} bars, {flavor} chord, voicing {Mathf.Round(sp.horizontalSpan * 100f)}%, filter motion {Mathf.Round(sound.filterMotion * 100f)}%.",
+                details = "Size pushes voicing width, bloom, detune, and movement, while tilt controls chord family and filter direction."
             };
         }
     }

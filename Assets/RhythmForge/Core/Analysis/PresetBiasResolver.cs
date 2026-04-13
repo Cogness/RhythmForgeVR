@@ -130,6 +130,7 @@ namespace RhythmForge.Core.Analysis
 
         public static string SummarizeShapeDNA(PatternType type, ShapeProfile sp, SoundProfile sound)
         {
+            string sizeWord = ShapeProfileSizing.DescribeSize(type, sp);
             string shapeWord = sp.angularity > 0.7f ? "spiky" : sp.angularity > 0.45f ? "creased" : "smooth";
             string balanceWord = sp.symmetry > 0.65f ? "balanced" : sp.symmetry < 0.35f ? "off-balance" : "tilted";
 
@@ -138,18 +139,18 @@ namespace RhythmForge.Core.Analysis
                 case PatternType.RhythmLoop:
                     string bodyWord = sound.body > 0.65f ? "heavy body"
                         : sound.transientSharpness > 0.68f ? "hard transient edge" : "tight body";
-                    return $"{shapeWord} {balanceWord} loop with {bodyWord}";
+                    return $"{sizeWord} {shapeWord} {balanceWord} loop with {bodyWord}";
 
                 case PatternType.MelodyLine:
                     string motionWord = sound.modDepth > 0.6f ? "singing modulation"
                         : sound.transientSharpness > 0.6f ? "biting attack" : "soft contour";
                     string registerWord = sp.verticalSpan > 0.55f ? "wide register reach" : "contained register";
-                    return $"{shapeWord} line with {motionWord} and {registerWord}";
+                    return $"{sizeWord} {shapeWord} line with {motionWord} and {registerWord}";
 
                 default:
                     string bloomWord = sound.reverbBias > 0.6f ? "wide bloom"
                         : sound.filterMotion > 0.6f ? "moving filter color" : "steady bed";
-                    return $"{shapeWord} pad with {bloomWord} and {balanceWord} voicing";
+                    return $"{sizeWord} {shapeWord} pad with {bloomWord} and {balanceWord} voicing";
             }
         }
     }

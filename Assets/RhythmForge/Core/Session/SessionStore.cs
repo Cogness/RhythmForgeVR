@@ -373,7 +373,7 @@ namespace RhythmForge.Core.Session
         {
             var fallback = AppStateFactory.CreateEmpty();
             int loadedVersion = State.version;
-            State.version = 3;
+            State.version = 4;
 
             if (State.scenes == null || State.scenes.Count != 4)
                 State.scenes = fallback.scenes;
@@ -390,9 +390,31 @@ namespace RhythmForge.Core.Session
             State.drawMode = GetDrawMode().ToString();
             if (string.IsNullOrEmpty(State.activeSceneId)) State.activeSceneId = "scene-a";
 
+            NormalizePatternShapeData(loadedVersion);
             NormalizePatternOrientations(loadedVersion);
 
             CleanupSceneMembership();
+        }
+
+        private void NormalizePatternShapeData(int loadedVersion)
+        {
+            foreach (var pattern in State.patterns)
+            {
+                if (pattern?.shapeProfile == null) continue;
+
+                bool missingSize = pattern.shapeProfile.worldMaxDimension <= 0.0001f ||
+                    pattern.shapeProfile.worldAverageSize <= 0.0001f;
+                bool backfilledSize = false;
+
+                if (loadedVersion < 4 || missingSize)
+                {
+                    ShapeProfileSizing.BackfillLegacyWorldMetrics(pattern.shapeProfile);
+                    backfilledSize = true;
+                }
+
+                if (loadedVersion < 4 || backfilledSize || pattern.soundProfile == null || string.IsNullOrEmpty(pattern.shapeSummary))
+                    RefreshPatternDescriptors(pattern);
+            }
         }
 
         private void NormalizePatternOrientations(int loadedVersion)
@@ -441,6 +463,34 @@ namespace RhythmForge.Core.Session
                 rotation.y / magnitude,
                 rotation.z / magnitude,
                 rotation.w / magnitude);
+        }
+
+        private void RefreshPatternDescriptors(PatternDefinition pattern)
+        {
+            if (pattern?.shapeProfile == null) return;
+
+            pattern.soundProfile = SoundProfileMapper.Derive(pattern.type, pattern.shapeProfile);
+            pattern.shapeSummary = PresetBiasResolver.SummarizeShapeDNA(pattern.type, pattern.shapeProfile, pattern.soundProfile);
+            pattern.details = DraftBuilder.ComposeDetails(pattern.details, pattern.shapeSummary);
+            pattern.summary = ComposeSummary(pattern.summary, pattern.type, pattern.shapeProfile);
+        }
+
+        private static string ComposeSummary(string summary, PatternType type, ShapeProfile shapeProfile)
+        {
+            string sizeWord = ShapeProfileSizing.DescribeSize(type, shapeProfile);
+            if (string.IsNullOrWhiteSpace(summary))
+                return $"{sizeWord} {type}";
+
+            string normalized = summary.Trim();
+            if (normalized.StartsWith("compact ", StringComparison.OrdinalIgnoreCase) ||
+                normalized.StartsWith("medium ", StringComparison.OrdinalIgnoreCase) ||
+                normalized.StartsWith("expanded ", StringComparison.OrdinalIgnoreCase))
+                return normalized;
+
+            if (normalized.Length == 1)
+                return $"{sizeWord} {normalized.ToLowerInvariant()}";
+
+            return $"{sizeWord} {char.ToLowerInvariant(normalized[0])}{normalized.Substring(1)}";
         }
 
         private void CleanupSceneMembership()

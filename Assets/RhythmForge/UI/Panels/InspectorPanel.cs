@@ -183,18 +183,18 @@ namespace RhythmForge.UI.Panels
             switch (pattern.type)
             {
                 case PatternType.RhythmLoop:
-                    labels = new[] { "Circularity", "Angularity", "Symmetry", "Aspect", "Wobble", "Path" };
-                    values = new[] { sp.circularity, sp.angularity, sp.symmetry, sp.aspectRatio, sp.wobble, sp.pathLength };
+                    labels = new[] { "Size", "Circularity", "Angularity", "Symmetry", "Wobble", "Path" };
+                    values = new[] { ShapeProfileSizing.GetSizeFactor(pattern.type, sp), sp.circularity, sp.angularity, sp.symmetry, sp.wobble, sp.pathLength };
                     break;
                 case PatternType.MelodyLine:
-                    labels = new[] { "V-Span", "Angularity", "Curvature", "Speed Var", "Dir Bias", "Symmetry" };
-                    values = new[] { sp.verticalSpan, sp.angularity, sp.curvatureMean, sp.speedVariance,
-                        Mathf.Abs(sp.directionBias - 0.5f) * 2f, sp.symmetry };
+                    labels = new[] { "Size", "V-Span", "Angularity", "Curvature", "Speed Var", "Dir Bias" };
+                    values = new[] { ShapeProfileSizing.GetSizeFactor(pattern.type, sp), sp.verticalSpan, sp.angularity, sp.curvatureMean,
+                        sp.speedVariance, Mathf.Abs(sp.directionBias - 0.5f) * 2f };
                     break;
                 default:
-                    labels = new[] { "Width", "Height", "Tilt", "Smooth", "Symmetry", "Path" };
-                    values = new[] { sp.horizontalSpan, sp.centroidHeight, Mathf.Abs(sp.tiltSigned),
-                        1f - sp.angularity, sp.symmetry, sp.pathLength };
+                    labels = new[] { "Size", "Width", "Height", "Tilt", "Symmetry", "Path" };
+                    values = new[] { ShapeProfileSizing.GetSizeFactor(pattern.type, sp), sp.horizontalSpan, sp.centroidHeight,
+                        Mathf.Abs(sp.tiltSigned), sp.symmetry, sp.pathLength };
                     break;
             }
 

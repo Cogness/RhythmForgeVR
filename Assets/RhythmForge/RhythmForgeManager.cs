@@ -168,15 +168,7 @@ namespace RhythmForge
 
         private void Update()
         {
-            // Update pulse on all visualizers during playback
-            if (_sequencer != null && _sequencer.IsPlaying)
-            {
-                foreach (var kvp in _visualizers)
-                {
-                    float pulse = _sequencer.GetPulse(kvp.Key);
-                    kvp.Value.SetPulse(pulse);
-                }
-            }
+            UpdatePlaybackVisuals();
 
             // Left controller thumbstick L/R to switch scenes
             if (_inputMapper != null)
@@ -209,6 +201,7 @@ namespace RhythmForge
         private void OnStateChanged()
         {
             RebuildInstanceVisuals();
+            UpdatePlaybackVisuals();
         }
 
         private void OnDraftCreated(DraftResult draft)
@@ -225,7 +218,8 @@ namespace RhythmForge
 
         private void OnTransportChanged()
         {
-            // Could trigger visual updates, haptics, etc.
+            RebuildInstanceVisuals();
+            UpdatePlaybackVisuals();
         }
 
         private void OnDrawModeChanged(PatternType mode)
@@ -247,8 +241,8 @@ namespace RhythmForge
         {
             if (_store == null) return;
 
-            string activeSceneId = _store.State.activeSceneId;
-            var sceneInstances = _store.GetSceneInstances(activeSceneId);
+            string visibleSceneId = ResolveVisibleSceneId();
+            var sceneInstances = _store.GetSceneInstances(visibleSceneId);
             var activeIds = new HashSet<string>();
 
             foreach (var instance in sceneInstances)
@@ -256,6 +250,7 @@ namespace RhythmForge
                 activeIds.Add(instance.id);
                 var pattern = _store.GetPattern(instance.patternId);
                 if (pattern == null) continue;
+                var effectiveSound = _store.GetEffectiveSoundProfile(instance, pattern);
 
                 if (_visualizers.TryGetValue(instance.id, out var existing))
                 {
@@ -263,6 +258,7 @@ namespace RhythmForge
                     existing.SetMuted(instance.muted);
                     existing.SetSelected(instance.id == _store.State.selectedInstanceId);
                     existing.SetParameterLabelVisible(_showParamLabels);
+                    existing.UpdateParameterData(pattern.type, pattern.shapeProfile, effectiveSound);
                 }
                 else
                 {
@@ -276,6 +272,7 @@ namespace RhythmForge
                     vis.SetMuted(instance.muted);
                     vis.SetSelected(instance.id == _store.State.selectedInstanceId);
                     vis.SetParameterLabelVisible(_showParamLabels);
+                    vis.UpdateParameterData(pattern.type, pattern.shapeProfile, effectiveSound);
 
                     _visualizers[instance.id] = vis;
                 }
@@ -296,6 +293,38 @@ namespace RhythmForge
                     _visualizers.Remove(id);
                 }
             }
+        }
+
+        private void UpdatePlaybackVisuals()
+        {
+            foreach (var kvp in _visualizers)
+            {
+                var instance = _store?.GetInstance(kvp.Key);
+                var pattern = instance != null ? _store.GetPattern(instance.patternId) : null;
+                if (instance == null || pattern == null)
+                    continue;
+
+                if (_sequencer != null && _sequencer.TryGetPlaybackVisualState(pattern, kvp.Key, out var state))
+                {
+                    kvp.Value.SetPlaybackState(state);
+                    continue;
+                }
+
+                var effectiveSound = _store.GetEffectiveSoundProfile(instance, pattern);
+                kvp.Value.SetPlaybackState(
+                    RhythmForge.Sequencer.PatternPlaybackVisualState.CreateInactive(
+                        pattern.type,
+                        effectiveSound,
+                        _sequencer?.GetPlaybackSceneId()));
+            }
+        }
+
+        private string ResolveVisibleSceneId()
+        {
+            if (_sequencer != null && _sequencer.IsPlaying)
+                return _sequencer.GetPlaybackSceneId() ?? _store.State.activeSceneId;
+
+            return _store.State.activeSceneId;
         }
 
         private Material GetMaterialForType(PatternType type)

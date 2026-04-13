@@ -61,6 +61,18 @@ namespace RhythmForge.Editor
         }
 
         [Test]
+        public void ClearArrangementScene_UnpopulatesSlot()
+        {
+            var store = new SessionStore();
+            store.UpdateArrangement("slot-1", sceneId: "scene-d");
+
+            store.ClearArrangementScene("slot-1");
+
+            Assert.That(store.State.arrangement[0].sceneId, Is.Null);
+            Assert.That(store.State.arrangement[0].IsPopulated, Is.False);
+        }
+
+        [Test]
         public void Arrangement_SkipsEmptySlots_WhenAdvancing()
         {
             var store = new SessionStore();

@@ -73,8 +73,10 @@ namespace RhythmForge.UI.Panels
 
             int currentIndex = GetSceneIndex(slot.sceneId);
             int nextIndex = (currentIndex + 1) % _sceneOptions.Length;
-            string nextSceneId = string.IsNullOrEmpty(_sceneOptions[nextIndex]) ? null : _sceneOptions[nextIndex];
-            _store.UpdateArrangement(slot.id, sceneId: nextSceneId);
+            if (nextIndex == 0)
+                _store.ClearArrangementScene(slot.id);
+            else
+                _store.UpdateArrangement(slot.id, sceneId: _sceneOptions[nextIndex]);
         }
 
         private void CycleBars(int index)

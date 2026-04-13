@@ -354,6 +354,19 @@ namespace RhythmForge.Core.Session
             OnStateChanged?.Invoke();
         }
 
+        public void ClearArrangementScene(string slotId)
+        {
+            foreach (var slot in State.arrangement)
+            {
+                if (slot.id == slotId)
+                {
+                    slot.sceneId = null;
+                    break;
+                }
+            }
+            OnStateChanged?.Invoke();
+        }
+
         // --- State normalization ---
 
         private void NormalizeState()

@@ -772,22 +772,25 @@ namespace RhythmForge.Bootstrap
             {
                 float sx = 6f + i * (sw + gap);
 
-                UIFactory.CreateRectText(canvas.transform, $"Slot{i + 1}Label",
+                var slotLabel = UIFactory.CreateRectText(canvas.transform, $"Slot{i + 1}Label",
                     $"Slot {i + 1}", 11, new Color(0.5f, 0.6f, 0.7f), TextAnchor.MiddleCenter,
                     new Rect(sx, 78, sw, 18));
 
-                var sceneDrop = UIFactory.CreateDropdown(canvas.transform, $"SceneDrop{i}",
-                    new List<string> { "--", "A", "B", "C", "D" },
-                    new Rect(sx, 46, sw, 28), null);
+                var sceneBtn = UIFactory.CreateButton(canvas.transform, $"SceneBtn{i}", "--",
+                    new Rect(sx, 46, sw, 28), MaterialFactory.ButtonDefault, Color.white, 11, null);
+                var sceneLabel = sceneBtn.GetComponentInChildren<Text>();
 
-                var barsDrop = UIFactory.CreateDropdown(canvas.transform, $"BarsDrop{i}",
-                    new List<string> { "4", "8", "16" },
-                    new Rect(sx, 14, sw, 28), null);
+                var barsBtn = UIFactory.CreateButton(canvas.transform, $"BarsBtn{i}", "4",
+                    new Rect(sx, 14, sw, 28), MaterialFactory.ButtonDefault, Color.white, 11, null);
+                var barsLabel = barsBtn.GetComponentInChildren<Text>();
 
                 slotUIs.Add(new ArrangementPanel.SlotUI
                 {
-                    sceneDropdown = sceneDrop,
-                    barsDropdown  = barsDrop
+                    sceneButton = sceneBtn,
+                    sceneLabel  = sceneLabel,
+                    barsButton  = barsBtn,
+                    barsLabel   = barsLabel,
+                    slotLabel   = slotLabel
                 });
             }
 

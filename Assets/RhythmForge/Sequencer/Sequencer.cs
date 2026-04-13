@@ -48,8 +48,7 @@ namespace RhythmForge.Sequencer
             if (hasArrangement)
             {
                 _transport.slotIndex = FindFirstPopulatedSlot();
-                _transport.playbackSceneId = _store.State.arrangement[_transport.slotIndex]?.sceneId
-                    ?? _store.State.activeSceneId;
+                SetPlaybackScene(_store.State.arrangement[_transport.slotIndex]?.sceneId);
             }
             else
             {
@@ -214,9 +213,13 @@ namespace RhythmForge.Sequencer
         {
             if (_transport.mode == "arrangement")
             {
+                bool transportChanged = false;
                 _transport.slotStep++;
                 if (_transport.slotStep % AppStateFactory.BarSteps == 0)
+                {
                     _transport.absoluteBar++;
+                    transportChanged = true;
+                }
 
                 var slot = _store.State.arrangement[_transport.slotIndex];
                 int slotTotalSteps = (slot?.bars ?? 4) * AppStateFactory.BarSteps;
@@ -226,9 +229,12 @@ namespace RhythmForge.Sequencer
                     int nextIndex = FindNextPopulatedSlot(_transport.slotIndex);
                     _transport.slotIndex = nextIndex;
                     _transport.slotStep = 0;
-                    _transport.playbackSceneId = _store.State.arrangement[nextIndex]?.sceneId
-                        ?? _store.State.activeSceneId;
+                    SetPlaybackScene(_store.State.arrangement[nextIndex]?.sceneId);
+                    transportChanged = true;
                 }
+
+                if (transportChanged)
+                    OnTransportChanged?.Invoke();
                 return;
             }
 
@@ -236,16 +242,18 @@ namespace RhythmForge.Sequencer
             _transport.sceneStep++;
             if (_transport.sceneStep % AppStateFactory.BarSteps == 0)
             {
+                bool transportChanged = true;
                 _transport.absoluteBar++;
 
                 if (!string.IsNullOrEmpty(_store.State.queuedSceneId))
                 {
-                    _transport.playbackSceneId = _store.State.queuedSceneId;
-                    _store.State.activeSceneId = _store.State.queuedSceneId;
-                    _store.State.queuedSceneId = null;
+                    string queuedSceneId = _store.State.queuedSceneId;
+                    SetPlaybackScene(queuedSceneId);
                     _transport.sceneStep = 0;
-                    OnTransportChanged?.Invoke();
                 }
+
+                if (transportChanged)
+                    OnTransportChanged?.Invoke();
             }
         }
 
@@ -303,6 +311,21 @@ namespace RhythmForge.Sequencer
             if (populated.Count == 0) return 0;
             int currentPos = populated.IndexOf(currentIndex);
             return populated[(currentPos + 1) % populated.Count];
+        }
+
+        private void SetPlaybackScene(string sceneId)
+        {
+            string resolvedSceneId = !string.IsNullOrEmpty(sceneId)
+                ? sceneId
+                : _store.State.activeSceneId;
+
+            _transport.playbackSceneId = resolvedSceneId;
+
+            if (_store == null || string.IsNullOrEmpty(resolvedSceneId)) return;
+            if (_store.State.activeSceneId == resolvedSceneId &&
+                string.IsNullOrEmpty(_store.State.queuedSceneId)) return;
+
+            _store.SetActiveScene(resolvedSceneId);
         }
     }
 }

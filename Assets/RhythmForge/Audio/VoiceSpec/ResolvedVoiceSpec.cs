@@ -57,6 +57,11 @@ namespace RhythmForge.Audio
         public bool isLoFi;
         public bool isTrap;
         public bool isDream;
+        public string genreId;
+
+        public bool isNewAge => genreId == "newage";
+        public bool isJazz   => genreId == "jazz";
+        public bool isElectronic => string.IsNullOrEmpty(genreId) || genreId == "electronic";
 
         public string GetCacheKey()
         {
@@ -64,6 +69,7 @@ namespace RhythmForge.Audio
                 patternType,
                 voiceType ?? string.Empty,
                 lane ?? string.Empty,
+                genreId ?? string.Empty,
                 midi,
                 Quantize(durationSeconds, 24f),
                 Quantize(glide + 2f, 12f),

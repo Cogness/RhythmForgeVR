@@ -4,6 +4,7 @@ using RhythmForge.Bootstrap;
 using RhythmForge.Core.Data;
 using RhythmForge.Core.Events;
 using RhythmForge.Core.Session;
+using RhythmForge.Core.PatternBehavior;
 using RhythmForge.Audio;
 using RhythmForge.Interaction;
 using RhythmForge.UI;
@@ -29,13 +30,14 @@ namespace RhythmForge
     /// </summary>
     public struct ManagerPanels
     {
-        public CommitCardPanel commitCard;
-        public InspectorPanel inspector;
-        public DockPanel dock;
-        public TransportPanel transport;
-        public SceneStripPanel sceneStrip;
-        public ArrangementPanel arrangement;
-        public ToastMessage toast;
+        public CommitCardPanel   commitCard;
+        public InspectorPanel    inspector;
+        public DockPanel         dock;
+        public TransportPanel    transport;
+        public SceneStripPanel   sceneStrip;
+        public ArrangementPanel  arrangement;
+        public ToastMessage      toast;
+        public GenreSelectorPanel genreSelector;
     }
 
     /// <summary>
@@ -52,13 +54,14 @@ namespace RhythmForge
         [SerializeField] private InstanceGrabber _instanceGrabber;
 
         [Header("UI Panels")]
-        [SerializeField] private CommitCardPanel _commitCard;
-        [SerializeField] private InspectorPanel _inspectorPanel;
-        [SerializeField] private DockPanel _dockPanel;
-        [SerializeField] private TransportPanel _transportPanel;
-        [SerializeField] private SceneStripPanel _sceneStripPanel;
+        [SerializeField] private CommitCardPanel  _commitCard;
+        [SerializeField] private InspectorPanel   _inspectorPanel;
+        [SerializeField] private DockPanel        _dockPanel;
+        [SerializeField] private TransportPanel   _transportPanel;
+        [SerializeField] private SceneStripPanel  _sceneStripPanel;
         [SerializeField] private ArrangementPanel _arrangementPanel;
-        [SerializeField] private ToastMessage _toast;
+        [SerializeField] private ToastMessage     _toast;
+        [SerializeField] private GenreSelectorPanel _genreSelectorPanel;
 
         [Header("Scene")]
         [SerializeField] private Transform _instanceContainer;
@@ -93,8 +96,9 @@ namespace RhythmForge
             _dockPanel          = panels.dock;
             _transportPanel     = panels.transport;
             _sceneStripPanel    = panels.sceneStrip;
-            _arrangementPanel   = panels.arrangement;
-            _toast              = panels.toast;
+            _arrangementPanel     = panels.arrangement;
+            _toast                = panels.toast;
+            _genreSelectorPanel   = panels.genreSelector;
             _instanceContainer  = instanceContainer;
             _userHead           = userHead;
         }
@@ -149,6 +153,8 @@ namespace RhythmForge
                 _sceneStripPanel.Initialize(_store, _sequencer);
             if (_arrangementPanel)
                 _arrangementPanel.Initialize(_store, _sequencer);
+            if (_genreSelectorPanel)
+                _genreSelectorPanel.Initialize(_store);
 
             _visualizerManager = new VisualizerManager(
                 _store,
@@ -223,6 +229,7 @@ namespace RhythmForge
             _eventBus.Subscribe<TransportChangedEvent>(HandleTransportChanged);
             _eventBus.Subscribe<DrawModeChangedEvent>(HandleDrawModeChanged);
             _eventBus.Subscribe<ParameterLabelsVisibilityChangedEvent>(HandleParameterLabelsVisibilityChanged);
+            _eventBus.Subscribe<GenreChangedEvent>(HandleGenreChanged);
         }
 
         private void UnsubscribeFromEventBus()
@@ -236,6 +243,7 @@ namespace RhythmForge
             _eventBus.Unsubscribe<TransportChangedEvent>(HandleTransportChanged);
             _eventBus.Unsubscribe<DrawModeChangedEvent>(HandleDrawModeChanged);
             _eventBus.Unsubscribe<ParameterLabelsVisibilityChangedEvent>(HandleParameterLabelsVisibilityChanged);
+            _eventBus.Unsubscribe<GenreChangedEvent>(HandleGenreChanged);
         }
 
         private void HandleSessionStateChanged(SessionStateChangedEvent evt)
@@ -266,6 +274,15 @@ namespace RhythmForge
         private void HandleParameterLabelsVisibilityChanged(ParameterLabelsVisibilityChangedEvent evt)
         {
             OnParamsVisibilityChanged(evt.Visible);
+        }
+
+        private void HandleGenreChanged(GenreChangedEvent evt)
+        {
+            var genre = GenreRegistry.Get(evt.NewGenreId);
+            if (_toast && genre != null)
+                _toast.Show($"Genre: {genre.DisplayName}");
+            // Rebuild visuals — colors have changed
+            _visualizerManager?.RebuildInstanceVisuals(_showParamLabels);
         }
 
         private void HandleSceneAndTransportInput()

@@ -141,4 +141,16 @@ namespace RhythmForge.Core.Events
 
         public bool Visible { get; }
     }
+
+    public readonly struct GenreChangedEvent
+    {
+        public GenreChangedEvent(string previousGenreId, string newGenreId)
+        {
+            PreviousGenreId = previousGenreId;
+            NewGenreId = newGenreId;
+        }
+
+        public string PreviousGenreId { get; }
+        public string NewGenreId { get; }
+    }
 }

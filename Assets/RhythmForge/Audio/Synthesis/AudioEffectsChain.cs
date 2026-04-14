@@ -21,16 +21,28 @@ namespace RhythmForge.Audio
                 baseCutoff *= 1.06f;
             if (spec.isDream)
                 baseCutoff *= 0.94f;
+            // New Age: very soft, no harsh highs
+            if (spec.isNewAge)
+                baseCutoff *= 0.72f;
+            // Jazz: warm mid-range cut
+            if (spec.isJazz)
+                baseCutoff *= 0.88f;
 
             float resonanceQ = 0.18f + spec.resonance * 0.8f;
             float motionRate = spec.patternType == PatternType.RhythmLoop
                 ? 3f + spec.modDepth * 10f
                 : spec.patternType == PatternType.MelodyLine ? 1.2f + spec.modDepth * 7f
                 : 0.25f + spec.modDepth * 2.2f;
+            // New Age: very slow filter motion for breathing feel
+            if (spec.isNewAge)
+                motionRate *= 0.2f;
             float motionDepth = spec.filterMotion > 0.08f
                 ? 0.04f + spec.filterMotion * 0.18f
                 : 0f;
             float driveAmount = 1f + spec.drive * 1.8f + (spec.isTrap ? 0.32f : spec.isLoFi ? 0.12f : 0f);
+            // New Age: no drive saturation; Jazz: very mild warmth
+            if (spec.isNewAge) driveAmount = Mathf.Min(driveAmount, 1.08f);
+            if (spec.isJazz)   driveAmount = Mathf.Min(driveAmount, 1.18f);
             float spreadOffset = 1f + spec.stereoSpread * 0.08f;
 
             for (int i = 0; i < left.Length; i++)
@@ -52,10 +64,13 @@ namespace RhythmForge.Audio
 
         public static void ApplyAmbience(ResolvedVoiceSpec spec, float[] left, float[] right)
         {
-            float delayMix = spec.fxSend * (spec.patternType == PatternType.RhythmLoop
+            float genreDelayScale = spec.isNewAge ? 1.6f : spec.isJazz ? 0.8f : 1.0f;
+            float genreBloomScale = spec.isNewAge ? 2.2f : spec.isJazz ? 1.1f : 1.0f;
+
+            float delayMix = spec.fxSend * genreDelayScale * (spec.patternType == PatternType.RhythmLoop
                 ? 0.04f + spec.delayBias * 0.08f
                 : 0.07f + spec.delayBias * 0.14f);
-            float bloomMix = spec.fxSend * (spec.patternType == PatternType.HarmonyPad
+            float bloomMix = spec.fxSend * genreBloomScale * (spec.patternType == PatternType.HarmonyPad
                 ? 0.12f + spec.reverbBias * 0.2f
                 : 0.05f + spec.reverbBias * 0.12f);
 

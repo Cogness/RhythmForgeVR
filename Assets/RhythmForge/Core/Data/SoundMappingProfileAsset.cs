@@ -194,7 +194,11 @@ namespace RhythmForge.Core.Data
 
         public static PatternSoundMappingProfile Get(PatternType type)
         {
-            return SoundMappingProfileRuntime.Get(type);
+            // If an asset override is set, use it; otherwise delegate to active genre
+            var fromRuntime = SoundMappingProfileRuntime.GetFromAssetOnly(type);
+            if (fromRuntime != null)
+                return fromRuntime;
+            return GenreRegistry.GetActive().GetSoundMapping(type);
         }
     }
 
@@ -229,6 +233,20 @@ namespace RhythmForge.Core.Data
 
                 default:
                     return profile?.rhythmLoop ?? DefaultRhythm;
+            }
+        }
+
+        /// <summary>Returns a mapping from the loaded asset only, or null if no asset is active.</summary>
+        public static PatternSoundMappingProfile GetFromAssetOnly(PatternType type)
+        {
+            var profile = ResolveProfile();
+            if (profile == null) return null;
+
+            switch (type)
+            {
+                case PatternType.MelodyLine: return profile.melodyLine;
+                case PatternType.HarmonyPad: return profile.harmonyPad;
+                default:                     return profile.rhythmLoop;
             }
         }
 

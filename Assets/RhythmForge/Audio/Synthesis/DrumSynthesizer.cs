@@ -71,13 +71,17 @@ namespace RhythmForge.Audio
             switch (spec.lane)
             {
                 case "kick":
-                    RenderKick(spec, left, right, seed);
+                    if (spec.isNewAge) RenderSingingBowlStrike(spec, left, right, seed);
+                    else               RenderKick(spec, left, right, seed);
                     break;
                 case "snare":
-                    RenderSnare(spec, left, right, seed);
+                    if (spec.isJazz)   RenderBrushSnare(spec, left, right, seed);
+                    else               RenderSnare(spec, left, right, seed);
                     break;
                 case "hat":
-                    RenderHat(spec, left, right, seed);
+                    if (spec.isNewAge) RenderShaker(spec, left, right, seed);
+                    else if (spec.isJazz) RenderRideCymbal(spec, left, right, seed);
+                    else               RenderHat(spec, left, right, seed);
                     break;
                 default:
                     RenderPercussion(spec, left, right, seed);
@@ -210,6 +214,103 @@ namespace RhythmForge.Audio
                 float source = noise * 0.54f + tone;
                 left[i] = SynthUtilities.ProcessFilter(ref filterLeft, source, cutoff, q, VoiceFilterMode.BandPass);
                 right[i] = SynthUtilities.ProcessFilter(ref filterRight, source, cutoff * 1.03f, q, VoiceFilterMode.BandPass);
+            }
+        }
+
+        // ── New Age synthesis ──────────────────────────────────────────────────
+
+        private static void RenderSingingBowlStrike(ResolvedVoiceSpec spec, float[] left, float[] right, int seed)
+        {
+            // Singing bowl: strong sine fundamental + weaker harmonic, very long slow decay
+            float fundamentalFreq = 220f + spec.body * 180f + spec.brightness * 80f;
+            float harmonicFreq    = fundamentalFreq * 2.74f; // non-integer partial for bowl character
+            float decayTime = 0.9f + spec.releaseBias * 2.2f + spec.body * 0.8f;
+            float phase1 = 0f, phase2 = 0f;
+
+            // Very gentle attack
+            float attackTime = 0.012f + spec.attackBias * 0.06f;
+
+            for (int i = 0; i < left.Length; i++)
+            {
+                float t = (float)i / SynthUtilities.SampleRate;
+                float env = SynthUtilities.EnvelopeDecay(t, decayTime)
+                          * Mathf.Clamp01(t / attackTime);
+                float fund = Mathf.Sin(Mathf.PI * 2f * phase1) * 0.68f * env;
+                float harm = Mathf.Sin(Mathf.PI * 2f * phase2) * 0.22f * SynthUtilities.EnvelopeDecay(t, decayTime * 0.7f);
+                phase1 = SynthUtilities.AdvancePhase(phase1, fundamentalFreq);
+                phase2 = SynthUtilities.AdvancePhase(phase2, harmonicFreq);
+
+                float spreadL = spec.stereoSpread > 0.2f ? 1.06f : 1f;
+                float spreadR = spec.stereoSpread > 0.2f ? 0.94f : 1f;
+                left[i]  = (fund + harm) * spreadL;
+                right[i] = (fund + harm) * spreadR;
+            }
+        }
+
+        private static void RenderShaker(ResolvedVoiceSpec spec, float[] left, float[] right, int seed)
+        {
+            // Shaker: gentle filtered noise with soft envelope
+            var rng = new System.Random(seed);
+            var filterLeft = new SvfState();
+            var filterRight = new SvfState();
+            float cutoff = 3200f + spec.brightness * 2800f;
+            float q = 0.5f + spec.resonance * 0.3f;
+            float decayTime = 0.04f + spec.releaseBias * 0.1f + spec.body * 0.06f;
+
+            for (int i = 0; i < left.Length; i++)
+            {
+                float t = (float)i / SynthUtilities.SampleRate;
+                float env = SynthUtilities.EnvelopeDecay(t, decayTime);
+                float noise = (float)(rng.NextDouble() * 2.0 - 1.0) * env * 0.6f;
+                left[i]  = SynthUtilities.ProcessFilter(ref filterLeft,  noise, cutoff,        q, VoiceFilterMode.BandPass);
+                right[i] = SynthUtilities.ProcessFilter(ref filterRight, noise, cutoff * 1.03f, q, VoiceFilterMode.BandPass);
+            }
+        }
+
+        // ── Jazz synthesis ─────────────────────────────────────────────────────
+
+        private static void RenderBrushSnare(ResolvedVoiceSpec spec, float[] left, float[] right, int seed)
+        {
+            // Brush snare: very soft, airy filtered noise — much gentler than stick snare
+            var rng = new System.Random(seed);
+            var filterLeft = new SvfState();
+            var filterRight = new SvfState();
+            float noiseCutoff = 900f + spec.brightness * 2200f;
+            float q = 0.55f + spec.resonance * 0.25f;
+            float decayTime = 0.12f + spec.releaseBias * 0.22f;
+
+            for (int i = 0; i < left.Length; i++)
+            {
+                float t = (float)i / SynthUtilities.SampleRate;
+                float env = SynthUtilities.EnvelopeDecay(t, decayTime);
+                // Much softer than electronic snare
+                float noise = (float)(rng.NextDouble() * 2.0 - 1.0) * env * 0.42f;
+                left[i]  = SynthUtilities.ProcessFilter(ref filterLeft,  noise, noiseCutoff,        q, VoiceFilterMode.BandPass);
+                right[i] = SynthUtilities.ProcessFilter(ref filterRight, noise, noiseCutoff * 1.02f, q, VoiceFilterMode.BandPass);
+            }
+        }
+
+        private static void RenderRideCymbal(ResolvedVoiceSpec spec, float[] left, float[] right, int seed)
+        {
+            // Ride cymbal: metallic shimmer with lower cutoff and longer sustain than hi-hat
+            var rng = new System.Random(seed);
+            var filterLeft = new SvfState();
+            var filterRight = new SvfState();
+            float cutoff = 4800f + spec.brightness * 2000f; // lower than electronic hat
+            float q = 0.7f + spec.resonance * 0.35f;
+            float decayTime = 0.18f + spec.releaseBias * 0.3f; // longer sustain = ride character
+
+            for (int i = 0; i < left.Length; i++)
+            {
+                float t = (float)i / SynthUtilities.SampleRate;
+                float env = SynthUtilities.EnvelopeDecay(t, decayTime);
+                float noise = (float)(rng.NextDouble() * 2.0 - 1.0);
+                // Metallic partials for ride bell character
+                float bell = Mathf.Sin(Mathf.PI * 2f * 3400f * t) * 0.2f
+                           + Mathf.Sin(Mathf.PI * 2f * 5100f * t) * 0.1f;
+                float source = (noise * 0.65f + bell) * env;
+                left[i]  = SynthUtilities.ProcessFilter(ref filterLeft,  source, cutoff,        q, VoiceFilterMode.HighPass);
+                right[i] = SynthUtilities.ProcessFilter(ref filterRight, source, cutoff * 1.01f, q, VoiceFilterMode.HighPass);
             }
         }
     }

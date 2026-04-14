@@ -14,6 +14,7 @@ namespace RhythmForge.Core.Data
         public float tempoBase;
         public string key;
         public string groupId;
+        public string genreId;
         public string presetId;
         public List<Vector2> points = new List<Vector2>(); // normalized 0-1
         public Quaternion renderRotation = Quaternion.identity;
@@ -38,6 +39,7 @@ namespace RhythmForge.Core.Data
                 tempoBase = tempoBase,
                 key = key,
                 groupId = groupId,
+                genreId = genreId,
                 presetId = presetId,
                 points = new List<Vector2>(points),
                 renderRotation = renderRotation,

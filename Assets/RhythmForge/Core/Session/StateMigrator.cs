@@ -12,7 +12,7 @@ namespace RhythmForge.Core.Session
         {
             var fallback = AppStateFactory.CreateEmpty();
             int loadedVersion = state.version;
-            state.version = 4;
+            state.version = 5;
 
             if (state.scenes == null || state.scenes.Count != 4)
                 state.scenes = fallback.scenes;
@@ -29,6 +29,9 @@ namespace RhythmForge.Core.Session
 
             if (string.IsNullOrEmpty(state.activeGroupId))
                 state.activeGroupId = "lofi";
+            // v4→v5: migrate activeGroupId to activeGenreId
+            if (string.IsNullOrEmpty(state.activeGenreId))
+                state.activeGenreId = "electronic";
             if (string.IsNullOrEmpty(state.drawMode))
                 state.drawMode = PatternType.RhythmLoop.ToString();
             if (string.IsNullOrEmpty(state.activeSceneId))
@@ -47,7 +50,14 @@ namespace RhythmForge.Core.Session
         {
             foreach (var pattern in state.patterns)
             {
-                if (pattern?.shapeProfile == null)
+                if (pattern == null)
+                    continue;
+
+                // v4→v5: backfill genreId from legacy groupId
+                if (string.IsNullOrEmpty(pattern.genreId))
+                    pattern.genreId = "electronic";
+
+                if (pattern.shapeProfile == null)
                     continue;
 
                 bool missingSize = pattern.shapeProfile.worldMaxDimension <= 0.0001f ||

@@ -401,7 +401,11 @@ namespace RhythmForge.Core.Data
 
         public static PatternColorPalette GetTypeColors()
         {
-            return ResolveProfile()?.typeColors ?? DefaultTypeColors;
+            // If a ScriptableObject override is set, use it; otherwise use active genre colors
+            var profile = ResolveProfile();
+            if (profile != null)
+                return profile.typeColors;
+            return GenreRegistry.GetActive().ColorPalette;
         }
 
         public static UIPalette GetUI()

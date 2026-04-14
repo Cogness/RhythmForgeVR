@@ -95,7 +95,8 @@ namespace RhythmForge.Audio
                 isBell = voiceDescriptor.Contains("bell"),
                 isLoFi = familyIdentity.Contains("lofi"),
                 isTrap = familyIdentity.Contains("trap"),
-                isDream = familyIdentity.Contains("dream")
+                isDream = familyIdentity.Contains("dream"),
+                genreId = GenreRegistry.GetActive().Id
             };
         }
 
@@ -110,6 +111,22 @@ namespace RhythmForge.Audio
 
         private static void ResolveWaveforms(ref ResolvedVoiceSpec spec)
         {
+            // New Age: always use soft sine/triangle — no harsh waveforms
+            if (spec.isNewAge)
+            {
+                spec.waveA = spec.body > 0.55f ? VoiceWaveform.Triangle : VoiceWaveform.Sine;
+                spec.waveB = VoiceWaveform.Sine;
+                return;
+            }
+
+            // Jazz: warm triangle/sine — avoid square/saw for organic Rhodes feel
+            if (spec.isJazz)
+            {
+                spec.waveA = VoiceWaveform.Triangle;
+                spec.waveB = spec.isBell ? VoiceWaveform.Sine : VoiceWaveform.Triangle;
+                return;
+            }
+
             if (spec.patternType == PatternType.HarmonyPad)
             {
                 spec.waveA = spec.waveMorph > 0.55f ? VoiceWaveform.Sawtooth : VoiceWaveform.Triangle;

@@ -22,7 +22,8 @@ namespace RhythmForge.Core.PatternBehavior.Behaviors
             ShapeProfile shapeProfile,
             SoundProfile soundProfile)
         {
-            var result = MelodyDeriver.Derive(points, metrics, keyName, groupId, shapeProfile, soundProfile);
+            var genre = GenreRegistry.GetActive();
+            var result = genre.MelodyDeriver.Derive(points, metrics, keyName, shapeProfile, soundProfile, genre);
             return new PatternDerivationResult
             {
                 bars = result.bars,
@@ -36,7 +37,7 @@ namespace RhythmForge.Core.PatternBehavior.Behaviors
 
         public SoundProfile DeriveSoundProfile(ShapeProfile shapeProfile)
         {
-            return SoundProfileMapper.DeriveMelody(shapeProfile);
+            return GenreRegistry.GetActive().GetSoundMapping(PatternType.MelodyLine).Evaluate(PatternType.MelodyLine, shapeProfile);
         }
 
         public void Schedule(PatternSchedulingContext context)

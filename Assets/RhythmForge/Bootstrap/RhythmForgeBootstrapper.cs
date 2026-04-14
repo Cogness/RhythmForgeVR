@@ -289,13 +289,14 @@ namespace RhythmForge.Bootstrap
                 },
                 new ManagerPanels
                 {
-                    commitCard  = panels.commitCard,
-                    inspector   = panels.inspector,
-                    dock        = panels.dock,
-                    transport   = panels.transport,
-                    sceneStrip  = panels.sceneStrip,
-                    arrangement = panels.arrangement,
-                    toast       = panels.toast
+                    commitCard    = panels.commitCard,
+                    inspector     = panels.inspector,
+                    dock          = panels.dock,
+                    transport     = panels.transport,
+                    sceneStrip    = panels.sceneStrip,
+                    arrangement   = panels.arrangement,
+                    toast         = panels.toast,
+                    genreSelector = panels.genreSelector
                 },
                 instanceContainer,
                 _rig != null ? _rig.CenterEye : null
@@ -433,13 +434,14 @@ namespace RhythmForge.Bootstrap
 
         private struct PanelRefs
         {
-            public CommitCardPanel  commitCard;
-            public InspectorPanel   inspector;
-            public DockPanel        dock;
-            public TransportPanel   transport;
-            public SceneStripPanel  sceneStrip;
-            public ArrangementPanel arrangement;
-            public ToastMessage     toast;
+            public CommitCardPanel    commitCard;
+            public InspectorPanel     inspector;
+            public DockPanel          dock;
+            public TransportPanel     transport;
+            public SceneStripPanel    sceneStrip;
+            public ArrangementPanel   arrangement;
+            public ToastMessage       toast;
+            public GenreSelectorPanel genreSelector;
         }
 
         private PanelRefs BuildUIPanels(StrokeCapture strokeCapture, DrawModeController drawMode)
@@ -448,13 +450,14 @@ namespace RhythmForge.Bootstrap
             // Use CenterEye if available now; RepositionPanels() in Start() corrects positions.
             Transform head = _rig.CenterEye;
 
-            refs.toast       = BuildToastPanel(head);
-            refs.transport   = BuildTransportPanel(head);
-            refs.sceneStrip  = BuildSceneStripPanel(head);
-            refs.commitCard  = BuildCommitCardPanel(head, strokeCapture);
-            refs.inspector   = BuildInspectorPanel(head);
-            refs.dock        = BuildDockPanel(head, drawMode);
-            refs.arrangement = BuildArrangementPanel(head);
+            refs.toast         = BuildToastPanel(head);
+            refs.transport     = BuildTransportPanel(head);
+            refs.sceneStrip    = BuildSceneStripPanel(head);
+            refs.commitCard    = BuildCommitCardPanel(head, strokeCapture);
+            refs.inspector     = BuildInspectorPanel(head);
+            refs.dock          = BuildDockPanel(head, drawMode);
+            refs.arrangement   = BuildArrangementPanel(head);
+            refs.genreSelector = BuildGenreSelectorPanel(head);
 
             return refs;
         }
@@ -795,6 +798,80 @@ namespace RhythmForge.Bootstrap
 
             var panel = canvas.gameObject.AddComponent<ArrangementPanel>();
             SetPrivateField(panel, "_slots", slotUIs);
+            return panel;
+        }
+
+        // ──────── Genre Selector ────────
+
+        private GenreSelectorPanel BuildGenreSelectorPanel(Transform head)
+        {
+            var canvas = UIFactory.CreateWorldCanvas("GenreSelectorPanel",
+                transform, new Vector2(400, 200),
+                PositionInFront(0.5f, 0.25f, 1.1f), 0.001f);
+            RegisterPanel(canvas, 0.5f, 0.25f, 1.1f);
+
+            UIFactory.CreateBackground(canvas.transform,
+                new Vector2(400, 200), MaterialFactory.PanelBg);
+
+            // Title
+            UIFactory.CreateRectText(canvas.transform, "GenreTitle",
+                "GENRE", 14, new Color(0.5f, 0.6f, 0.8f), TextAnchor.MiddleCenter,
+                new Rect(0, 172, 400, 22));
+
+            var genres   = new System.Collections.Generic.List<string>   { "electronic", "newage", "jazz" };
+            var labels   = new System.Collections.Generic.List<string>   { "Electronic", "New Age", "Jazz" };
+            var buttons  = new System.Collections.Generic.List<Button>();
+            var btnTexts = new System.Collections.Generic.List<Text>();
+            var descLines = new string[]
+            {
+                "Lo-Fi, Trap & Dream synthesis",
+                "Meditative bowls, kalimba & drones",
+                "Brush kit, Rhodes & jazz voicings"
+            };
+
+            float bw = 114f, bh = 56f, gap = 8f, startX = 13f, by = 96f;
+
+            for (int i = 0; i < genres.Count; i++)
+            {
+                float bx = startX + i * (bw + gap);
+                var color = i == 0
+                    ? new Color(0.24f, 0.72f, 0.96f, 1f)   // electronic blue
+                    : i == 1
+                        ? new Color(0.36f, 0.66f, 0.44f, 1f)  // new age green
+                        : new Color(0.62f, 0.44f, 0.28f, 1f); // jazz amber
+
+                var btn = UIFactory.CreateButton(canvas.transform, $"GenreBtn_{genres[i]}",
+                    labels[i],
+                    new Rect(bx, by, bw, bh),
+                    new Color(0.18f, 0.18f, 0.24f, 1f), Color.white, 15, null);
+                buttons.Add(btn);
+                btnTexts.Add(btn.GetComponentInChildren<Text>());
+            }
+
+            // Description label
+            var descLabel = UIFactory.CreateRectText(canvas.transform, "GenreDescription",
+                "Lo-Fi, Trap & Dream synthesis", 12,
+                new Color(0.6f, 0.7f, 0.85f), TextAnchor.MiddleCenter,
+                new Rect(8, 56, 384, 34));
+
+            // Sub-labels for each genre
+            float lby = 74f;
+            for (int i = 0; i < genres.Count; i++)
+            {
+                float lbx = startX + i * (bw + gap);
+                UIFactory.CreateRectText(canvas.transform, $"GenreDesc_{genres[i]}",
+                    descLines[i], 10, new Color(0.45f, 0.5f, 0.6f), TextAnchor.UpperCenter,
+                    new Rect(lbx, lby, bw, 20));
+            }
+
+            // Info line at bottom
+            UIFactory.CreateRectText(canvas.transform, "GenreInfo",
+                "Switching genre re-derives all patterns", 11,
+                new Color(0.38f, 0.4f, 0.5f), TextAnchor.MiddleCenter,
+                new Rect(8, 8, 384, 18));
+
+            var panel = canvas.gameObject.AddComponent<GenreSelectorPanel>();
+            panel.SetUIRefs(buttons, btnTexts, genres, descLabel);
             return panel;
         }
 

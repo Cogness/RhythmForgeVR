@@ -49,11 +49,40 @@ namespace RhythmForge.Core.Data
 
         public static InstrumentGroup Get(string groupId)
         {
+            // If groupId matches a genre id, build a virtual group from the active genre
+            var genre = GenreRegistry.Get(groupId);
+            if (genre != null && genre.Id == groupId)
+                return GenreToGroup(genre);
+
             foreach (var g in All)
             {
                 if (g.id == groupId) return g;
             }
-            return All[0];
+            // Fallback: return active genre as virtual group
+            return GenreToGroup(GenreRegistry.GetActive());
+        }
+
+        /// <summary>Converts a GenreProfile into an InstrumentGroup for legacy callsites.</summary>
+        internal static InstrumentGroup GenreToGroup(GenreProfile genre)
+        {
+            return new InstrumentGroup
+            {
+                id = genre.Id,
+                name = genre.DisplayName,
+                defaultPresetByType = new GroupDefaultPresets
+                {
+                    RhythmLoop = genre.GetDefaultPresetId(PatternType.RhythmLoop),
+                    MelodyLine = genre.GetDefaultPresetId(PatternType.MelodyLine),
+                    HarmonyPad = genre.GetDefaultPresetId(PatternType.HarmonyPad)
+                },
+                busFx = genre.BusFx,
+                swatches = new[]
+                {
+                    genre.ColorPalette.rhythmLoop,
+                    genre.ColorPalette.melodyLine,
+                    genre.ColorPalette.harmonyPad
+                }
+            };
         }
 
         public static void SetRegistry(InstrumentRegistryAsset registry)
@@ -126,6 +155,14 @@ namespace RhythmForge.Core.Data
             foreach (var p in All)
             {
                 if (p.id == presetId) return p;
+            }
+            // Search genre presets (new age, jazz)
+            foreach (var genre in GenreRegistry.All)
+            {
+                foreach (var p in genre.GetPresets())
+                {
+                    if (p.id == presetId) return p;
+                }
             }
             return All[0];
         }

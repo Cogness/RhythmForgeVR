@@ -104,6 +104,13 @@ namespace RhythmForge.Audio
             float wowDepth = spec.isLoFi ? 0.0018f + spec.detune * 0.0024f : 0f;
             float flutterRate = spec.isLoFi ? 3.8f + spec.modDepth * 3.2f : 0f;
             float flutterDepth = spec.isLoFi ? 0.0006f + spec.detune * 0.0011f : 0f;
+            // New Age: slow, gentle LFO breathing on pads
+            float newAgeBreathRate = spec.isNewAge ? 0.18f + spec.modDepth * 0.4f : 0f;
+            float newAgeBreathDepth = spec.isNewAge && spec.patternType == PatternType.HarmonyPad
+                ? 0.0012f + spec.detune * 0.002f : 0f;
+            // Jazz: subtle expressive vibrato for Rhodes feel
+            float jazzVibratoRate = spec.isJazz ? 4.2f + spec.modDepth * 2.8f : 0f;
+            float jazzVibratoDepth = spec.isJazz && spec.modDepth > 0.2f ? 6f + spec.modDepth * 14f : 0f;
             float vibratoRate = spec.modDepth > 0.1f
                 ? (spec.patternType == PatternType.HarmonyPad ? 3.2f + spec.modDepth * 2.5f : 3.2f + spec.modDepth * 6.5f)
                 : 0f;
@@ -126,8 +133,10 @@ namespace RhythmForge.Audio
                     glideTime <= 0f ? 1f : Mathf.Clamp01(t / glideTime));
                 float wow = wowDepth > 0f ? Mathf.Sin(Mathf.PI * 2f * wowRate * t) * wowDepth : 0f;
                 float flutter = flutterDepth > 0f ? Mathf.Sin(Mathf.PI * 2f * flutterRate * t) * flutterDepth : 0f;
+                float breath = newAgeBreathDepth > 0f ? Mathf.Sin(Mathf.PI * 2f * newAgeBreathRate * t) * newAgeBreathDepth : 0f;
                 float vibratoCents = vibratoDepthCents > 0f ? Mathf.Sin(Mathf.PI * 2f * vibratoRate * t) * vibratoDepthCents : 0f;
-                float oscAFrequency = frequency * (1f + wow + flutter) * Mathf.Pow(2f, vibratoCents / 1200f);
+                float jazzVibCents = jazzVibratoDepth > 0f ? Mathf.Sin(Mathf.PI * 2f * jazzVibratoRate * t) * jazzVibratoDepth : 0f;
+                float oscAFrequency = frequency * (1f + wow + flutter + breath) * Mathf.Pow(2f, (vibratoCents + jazzVibCents) / 1200f);
                 float oscASample = SynthUtilities.SampleWave(spec.waveA, phaseA) * oscAGain * env;
                 phaseA = SynthUtilities.AdvancePhase(phaseA, oscAFrequency);
 
@@ -149,11 +158,21 @@ namespace RhythmForge.Audio
                     SynthUtilities.MixStereo(ref leftSample, ref rightSample, oscASample * 0.24f, spread * 0.16f);
                 }
 
-                if (spec.isLoFi)
+                if (spec.isLoFi && !spec.isNewAge)
                 {
                     float hiss = (Mathf.PerlinNoise(t * 12f, 0.5f) - 0.5f) * 0.012f * env;
                     leftSample += hiss * 0.8f;
                     rightSample += hiss * 0.6f;
+                }
+
+                // Jazz Rhodes: bright bell transient that decays quickly (tine-like attack)
+                if (spec.isJazz && spec.patternType != PatternType.RhythmLoop)
+                {
+                    float tineEnv = Mathf.Exp(-t / Mathf.Max(0.02f, spec.attackSeconds * 0.5f));
+                    float tineFreq = targetFrequency * 3.2f; // inharmonic tine partial
+                    float tine = Mathf.Sin(Mathf.PI * 2f * tineFreq * t) * 0.14f * tineEnv * env;
+                    leftSample  += tine * 0.9f;
+                    rightSample += tine * 0.8f;
                 }
 
                 left[i] = leftSample;

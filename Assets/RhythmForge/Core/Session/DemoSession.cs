@@ -18,7 +18,9 @@ namespace RhythmForge.Core.Session
             state.tempo = 85f;
             state.key = "A minor";
             state.activeGroupId = "lofi";
+            state.activeGenreId = "electronic";
             state.activeSceneId = "scene-a";
+            GenreRegistry.SetActive("electronic");
 
             // --- Demo Rhythm: a rough circle ---
             var circlePoints = GenerateCircle(24, 0.14f);
@@ -70,6 +72,7 @@ namespace RhythmForge.Core.Session
                 tempoBase = draft.tempoBase,
                 key = draft.key,
                 groupId = draft.groupId,
+                genreId = GenreRegistry.GetActive().Id,
                 presetId = draft.presetId,
                 points = draft.points,
                 renderRotation = draft.renderRotation,

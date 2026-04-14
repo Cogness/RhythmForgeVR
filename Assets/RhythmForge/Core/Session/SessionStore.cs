@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using RhythmForge.Core.Analysis;
 using RhythmForge.Core.Data;
 using RhythmForge.Core.Events;
 using RhythmForge.Core.PatternBehavior;
@@ -34,6 +35,8 @@ namespace RhythmForge.Core.Session
         {
             State = state ?? AppStateFactory.CreateEmpty();
             _stateMigrator.NormalizeState(State);
+            // Sync registry to the loaded genre
+            GenreRegistry.SetActive(State.activeGenreId ?? "electronic");
             NotifyStateChanged();
         }
 
@@ -161,6 +164,60 @@ namespace RhythmForge.Core.Session
             => Scenes.UpdateArrangement(slotId, sceneId, bars);
 
         public void ClearArrangementScene(string slotId) => Scenes.ClearArrangementScene(slotId);
+
+        public string GetActiveGenreId() => State.activeGenreId ?? "electronic";
+
+        /// <summary>
+        /// Switches the active genre and re-derives all existing patterns with the new genre's algorithms.
+        /// This is a destructive operation — existing sequence data is replaced.
+        /// </summary>
+        public void SetGenre(string genreId)
+        {
+            string previousId = State.activeGenreId ?? "electronic";
+            if (previousId == genreId)
+                return;
+
+            GenreRegistry.SetActive(genreId);
+            State.activeGenreId = genreId;
+
+            RederivePatternsForGenre();
+
+            EventBus.Publish(new GenreChangedEvent(previousId, genreId));
+            NotifyStateChanged();
+        }
+
+        private void RederivePatternsForGenre()
+        {
+            var genre = GenreRegistry.GetActive();
+
+            foreach (var pattern in State.patterns)
+            {
+                if (pattern?.shapeProfile == null || pattern.points == null || pattern.points.Count < 3)
+                    continue;
+
+                var behavior = PatternBehaviorRegistry.Get(pattern.type);
+                var metrics  = StrokeAnalyzer.Analyze(pattern.points);
+
+                // Re-derive sound profile and sequence with new genre
+                var soundProfile = behavior.DeriveSoundProfile(pattern.shapeProfile);
+                var derivation   = behavior.Derive(
+                    pattern.points, metrics,
+                    pattern.key ?? State.key,
+                    genre.Id,
+                    pattern.shapeProfile,
+                    soundProfile);
+
+                pattern.genreId        = genre.Id;
+                pattern.presetId       = derivation.presetId;
+                pattern.soundProfile   = soundProfile;
+                pattern.derivedSequence = derivation.derivedSequence;
+                pattern.bars           = derivation.bars;
+                pattern.tags           = derivation.tags;
+                pattern.summary        = derivation.summary;
+                pattern.details        = DraftBuilder.ComposeDetails(derivation.details, pattern.shapeSummary);
+                pattern.color          = genre.ColorPalette.Get(pattern.type);
+            }
+        }
 
         private void NotifyStateChanged()
         {

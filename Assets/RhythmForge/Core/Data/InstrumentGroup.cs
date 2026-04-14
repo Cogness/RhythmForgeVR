@@ -42,16 +42,9 @@ namespace RhythmForge.Core.Data
 
     public static class InstrumentGroups
     {
-        private static List<InstrumentGroup> _groups;
-
         public static List<InstrumentGroup> All
         {
-            get
-            {
-                if (_groups == null)
-                    Initialize();
-                return _groups;
-            }
+            get => InstrumentRegistryRuntime.GetGroups();
         }
 
         public static InstrumentGroup Get(string groupId)
@@ -63,9 +56,14 @@ namespace RhythmForge.Core.Data
             return All[0];
         }
 
-        private static void Initialize()
+        public static void SetRegistry(InstrumentRegistryAsset registry)
         {
-            _groups = new List<InstrumentGroup>
+            InstrumentRegistryRuntime.SetActiveRegistry(registry);
+        }
+
+        internal static List<InstrumentGroup> CreateDefaults()
+        {
+            return new List<InstrumentGroup>
             {
                 new InstrumentGroup
                 {
@@ -118,16 +116,9 @@ namespace RhythmForge.Core.Data
 
     public static class InstrumentPresets
     {
-        private static List<InstrumentPreset> _presets;
-
         public static List<InstrumentPreset> All
         {
-            get
-            {
-                if (_presets == null)
-                    Initialize();
-                return _presets;
-            }
+            get => InstrumentRegistryRuntime.GetPresets();
         }
 
         public static InstrumentPreset Get(string presetId)
@@ -150,9 +141,14 @@ namespace RhythmForge.Core.Data
             return All.Count > 0 ? All[0] : null;
         }
 
-        private static void Initialize()
+        public static void SetRegistry(InstrumentRegistryAsset registry)
         {
-            _presets = new List<InstrumentPreset>
+            InstrumentRegistryRuntime.SetActiveRegistry(registry);
+        }
+
+        internal static List<InstrumentPreset> CreateDefaults()
+        {
+            return new List<InstrumentPreset>
             {
                 new InstrumentPreset("lofi-drums", "Lo-Fi Drums", "lofi-drums", "lofi", 0.18f, 0.005f, 0.3f),
                 new InstrumentPreset("lofi-piano", "Lo-Fi Piano", "lofi-piano", "lofi", 0.22f, 0.01f, 0.6f),
@@ -164,6 +160,110 @@ namespace RhythmForge.Core.Data
                 new InstrumentPreset("dream-bell", "Dream Bell", "dream-bell", "dream", 0.34f, 0.006f, 0.8f),
                 new InstrumentPreset("dream-pad", "Dream Pad", "dream-pad", "dream", 0.4f, 0.6f, 2.4f),
             };
+        }
+    }
+
+    internal static class InstrumentRegistryRuntime
+    {
+        private const string RegistryResourcePath = "RhythmForge/InstrumentRegistry";
+        private const string GroupResourcesPath = "RhythmForge/InstrumentGroups";
+        private const string PresetResourcesPath = "RhythmForge/InstrumentPresets";
+
+        private static InstrumentRegistryAsset _activeRegistry;
+        private static List<InstrumentGroup> _groups;
+        private static List<InstrumentPreset> _presets;
+
+        public static void SetActiveRegistry(InstrumentRegistryAsset registry)
+        {
+            _activeRegistry = registry;
+            _groups = null;
+            _presets = null;
+        }
+
+        public static List<InstrumentGroup> GetGroups()
+        {
+            EnsureLoaded();
+            return _groups;
+        }
+
+        public static List<InstrumentPreset> GetPresets()
+        {
+            EnsureLoaded();
+            return _presets;
+        }
+
+        private static void EnsureLoaded()
+        {
+            if (_groups != null && _presets != null)
+                return;
+
+            if (TryLoadFromRegistry(_activeRegistry) || TryLoadFromRegistry(Resources.Load<InstrumentRegistryAsset>(RegistryResourcePath)))
+                return;
+
+            if (TryLoadFromResources())
+                return;
+
+            _groups = InstrumentGroups.CreateDefaults();
+            _presets = InstrumentPresets.CreateDefaults();
+        }
+
+        private static bool TryLoadFromRegistry(InstrumentRegistryAsset registry)
+        {
+            if (registry == null)
+                return false;
+
+            var groups = new List<InstrumentGroup>();
+            var presets = new List<InstrumentPreset>();
+
+            if (registry.groups != null)
+            {
+                foreach (var groupAsset in registry.groups)
+                {
+                    if (groupAsset != null)
+                        groups.Add(groupAsset.ToRuntime());
+                }
+            }
+
+            if (registry.presets != null)
+            {
+                foreach (var presetAsset in registry.presets)
+                {
+                    if (presetAsset != null)
+                        presets.Add(presetAsset.ToRuntime());
+                }
+            }
+
+            if (groups.Count == 0 || presets.Count == 0)
+                return false;
+
+            _groups = groups;
+            _presets = presets;
+            return true;
+        }
+
+        private static bool TryLoadFromResources()
+        {
+            var groupAssets = Resources.LoadAll<InstrumentGroupAsset>(GroupResourcesPath);
+            var presetAssets = Resources.LoadAll<InstrumentPresetAsset>(PresetResourcesPath);
+
+            if (groupAssets == null || groupAssets.Length == 0 || presetAssets == null || presetAssets.Length == 0)
+                return false;
+
+            _groups = new List<InstrumentGroup>(groupAssets.Length);
+            foreach (var groupAsset in groupAssets)
+            {
+                if (groupAsset != null)
+                    _groups.Add(groupAsset.ToRuntime());
+            }
+
+            _presets = new List<InstrumentPreset>(presetAssets.Length);
+            foreach (var presetAsset in presetAssets)
+            {
+                if (presetAsset != null)
+                    _presets.Add(presetAsset.ToRuntime());
+            }
+
+            return _groups.Count > 0 && _presets.Count > 0;
         }
     }
 }

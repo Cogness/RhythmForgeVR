@@ -67,14 +67,7 @@ namespace RhythmForge.Core.PatternBehavior.Behaviors
 
         public PlaybackVisualSpec AdjustVisualSpec(PlaybackVisualSpec baseSpec, SoundProfile soundProfile)
         {
-            var spec = baseSpec;
-            soundProfile = soundProfile ?? new SoundProfile();
-            spec.markerScale = Mathf.Clamp01(spec.markerScale + 0.12f);
-            spec.haloStrength = Mathf.Clamp01(spec.haloStrength * 0.55f + soundProfile.body * 0.08f);
-            spec.secondaryStrength = Mathf.Clamp01(spec.secondaryStrength * 0.42f + soundProfile.grooveInstability * 0.28f);
-            spec.phaseJitter = Mathf.Clamp01(spec.phaseJitter + soundProfile.grooveInstability * 0.22f);
-            spec.motionSpeed = Mathf.Lerp(0.85f, 1.9f, soundProfile.grooveInstability * 0.45f + soundProfile.transientSharpness * 0.55f);
-            return spec;
+            return VisualGrammarProfiles.GetRhythmLoop().Apply(baseSpec, soundProfile);
         }
 
         public AnimationEnergies ComputeAnimation(
@@ -84,20 +77,7 @@ namespace RhythmForge.Core.PatternBehavior.Behaviors
             float renderedHeight,
             float timeSeconds)
         {
-            return new AnimationEnergies
-            {
-                lineEnergy = pulse * 0.72f + sustain * 0.22f,
-                haloEnergy = pulse * 0.55f + sustain * 0.18f,
-                markerEnergy = state.phase >= 0f ? Mathf.Max(0.15f, pulse, sustain * 0.3f) : 0f,
-                markerPhase = state.phase >= 0f
-                    ? Mathf.Repeat(
-                        state.phase + Mathf.Sin(timeSeconds * (1.6f + state.visualSpec.motionSpeed * 0.8f)) * state.visualSpec.phaseJitter * 0.015f,
-                        1f)
-                    : -1f,
-                markerScale = state.visualSpec.markerScale * (0.72f + pulse * 0.84f + sustain * 0.2f),
-                normalOffset = Mathf.Sin(timeSeconds * (2.2f + state.visualSpec.motionSpeed)) * renderedHeight * 0.02f * state.visualSpec.secondaryStrength,
-                haloBreath = 1f
-            };
+            return VisualGrammarProfiles.GetRhythmLoop().Animate(state, pulse, sustain, renderedHeight, timeSeconds);
         }
 
         private static float GetVisualDuration(string lane, SoundProfile sound)

@@ -4,9 +4,9 @@ namespace RhythmForge.Core.Data
 {
     public static class TypeColors
     {
-        public static readonly Color RhythmLoop = HexColor("#51d7ff");
-        public static readonly Color MelodyLine = HexColor("#f7c975");
-        public static readonly Color HarmonyPad = HexColor("#62f3d3");
+        public static Color RhythmLoop => VisualGrammarProfiles.GetTypeColor(PatternType.RhythmLoop);
+        public static Color MelodyLine => VisualGrammarProfiles.GetTypeColor(PatternType.MelodyLine);
+        public static Color HarmonyPad => VisualGrammarProfiles.GetTypeColor(PatternType.HarmonyPad);
 
         public static Color GetColor(PatternType type)
         {
@@ -17,12 +17,6 @@ namespace RhythmForge.Core.Data
                 case PatternType.HarmonyPad: return HarmonyPad;
                 default: return Color.white;
             }
-        }
-
-        private static Color HexColor(string hex)
-        {
-            ColorUtility.TryParseHtmlString(hex, out var color);
-            return color;
         }
     }
 }

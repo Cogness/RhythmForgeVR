@@ -26,6 +26,12 @@ namespace RhythmForge.Bootstrap
         [SerializeField] private OVRCameraRig _cameraRigOverride;
         [Tooltip("Leave null to auto-find in scene")]
         [SerializeField] private StylusHandler _stylusOverride;
+        [Tooltip("Leave null to load instrument data from Resources or built-in defaults")]
+        [SerializeField] private InstrumentRegistryAsset _instrumentRegistryOverride;
+        [Tooltip("Leave null to load sound mapping data from Resources or built-in defaults")]
+        [SerializeField] private SoundMappingProfileAsset _soundMappingProfileOverride;
+        [Tooltip("Leave null to load visual grammar data from Resources or built-in defaults")]
+        [SerializeField] private VisualGrammarProfileAsset _visualGrammarProfileOverride;
 
         [Header("Demo")]
         [SerializeField] private bool _loadDemoOnStart = true;
@@ -55,9 +61,17 @@ namespace RhythmForge.Bootstrap
             Debug.Log("[RhythmForge] Bootstrapper starting...");
             SuppressStylusInEditor();
             DisableLogitechSampleDrawing();
+            ApplyConfigurationOverrides();
             _rig = VRRigLocator.Find();
             BuildAll();
             Debug.Log("[RhythmForge] Bootstrapper complete. System ready.");
+        }
+
+        private void ApplyConfigurationOverrides()
+        {
+            InstrumentGroups.SetRegistry(_instrumentRegistryOverride);
+            SoundMappingProfiles.SetActiveProfile(_soundMappingProfileOverride);
+            VisualGrammarProfiles.SetActiveProfile(_visualGrammarProfileOverride);
         }
 
         /// <summary>

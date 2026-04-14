@@ -71,13 +71,7 @@ namespace RhythmForge.Core.PatternBehavior.Behaviors
 
         public PlaybackVisualSpec AdjustVisualSpec(PlaybackVisualSpec baseSpec, SoundProfile soundProfile)
         {
-            var spec = baseSpec;
-            soundProfile = soundProfile ?? new SoundProfile();
-            spec.markerScale = Mathf.Clamp01(spec.markerScale + 0.04f);
-            spec.haloStrength = Mathf.Clamp01(spec.haloStrength * 0.72f + soundProfile.releaseBias * 0.16f);
-            spec.secondaryStrength = Mathf.Clamp01(spec.secondaryStrength + soundProfile.modDepth * 0.2f);
-            spec.motionSpeed = Mathf.Lerp(0.55f, 1.3f, soundProfile.filterMotion * 0.4f + soundProfile.modDepth * 0.6f);
-            return spec;
+            return VisualGrammarProfiles.GetMelodyLine().Apply(baseSpec, soundProfile);
         }
 
         public AnimationEnergies ComputeAnimation(
@@ -87,16 +81,7 @@ namespace RhythmForge.Core.PatternBehavior.Behaviors
             float renderedHeight,
             float timeSeconds)
         {
-            return new AnimationEnergies
-            {
-                lineEnergy = pulse * 0.36f + sustain * 0.46f,
-                haloEnergy = pulse * 0.3f + sustain * 0.54f,
-                markerEnergy = Mathf.Max(pulse * 0.95f, sustain * 0.85f),
-                markerPhase = state.phase,
-                markerScale = state.visualSpec.markerScale * (0.6f + pulse * 0.56f + sustain * 0.34f),
-                normalOffset = Mathf.Sin(timeSeconds * (1.2f + state.visualSpec.motionSpeed * 2.4f)) * renderedHeight * 0.12f * state.visualSpec.motionAmplitude,
-                haloBreath = 1f + Mathf.Sin(timeSeconds * (1.1f + state.visualSpec.motionSpeed * 1.4f)) * 0.06f * state.visualSpec.secondaryStrength
-            };
+            return VisualGrammarProfiles.GetMelodyLine().Animate(state, pulse, sustain, renderedHeight, timeSeconds);
         }
 
         private static float GetVisualDuration(float noteDuration, SoundProfile sound)

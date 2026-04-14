@@ -76,14 +76,7 @@ namespace RhythmForge.Core.PatternBehavior.Behaviors
 
         public PlaybackVisualSpec AdjustVisualSpec(PlaybackVisualSpec baseSpec, SoundProfile soundProfile)
         {
-            var spec = baseSpec;
-            soundProfile = soundProfile ?? new SoundProfile();
-            spec.markerScale = Mathf.Clamp01(spec.markerScale * 0.72f + soundProfile.body * 0.08f);
-            spec.haloStrength = Mathf.Clamp01(spec.haloStrength + soundProfile.stereoSpread * 0.2f + soundProfile.reverbBias * 0.18f);
-            spec.secondaryStrength = Mathf.Clamp01(spec.secondaryStrength + soundProfile.releaseBias * 0.2f + soundProfile.modDepth * 0.16f);
-            spec.motionSpeed = Mathf.Lerp(0.2f, 0.72f, soundProfile.filterMotion * 0.45f + soundProfile.modDepth * 0.55f);
-            spec.phaseJitter = Mathf.Clamp01(spec.phaseJitter * 0.35f);
-            return spec;
+            return VisualGrammarProfiles.GetHarmonyPad().Apply(baseSpec, soundProfile);
         }
 
         public AnimationEnergies ComputeAnimation(
@@ -93,19 +86,7 @@ namespace RhythmForge.Core.PatternBehavior.Behaviors
             float renderedHeight,
             float timeSeconds)
         {
-            return new AnimationEnergies
-            {
-                lineEnergy = pulse * 0.16f + sustain * 0.5f,
-                haloEnergy = Mathf.Max(sustain * 0.92f, state.isActive ? 0.18f : 0f) + pulse * 0.14f,
-                markerEnergy = Mathf.Max(sustain * 0.42f, pulse * 0.18f),
-                markerPhase = state.phase >= 0f
-                    ? Mathf.Repeat(state.phase * 0.35f + timeSeconds * (0.04f + state.visualSpec.motionSpeed * 0.08f), 1f)
-                    : -1f,
-                markerScale = state.visualSpec.markerScale * (0.52f + sustain * 0.42f),
-                normalOffset = Mathf.Sin(timeSeconds * (0.8f + state.visualSpec.motionSpeed * 1.2f)) * renderedHeight * 0.08f *
-                    (0.3f + state.visualSpec.motionAmplitude * 0.7f),
-                haloBreath = 1f + Mathf.Sin(timeSeconds * (0.9f + state.visualSpec.motionSpeed * 0.6f)) * 0.12f * state.visualSpec.motionAmplitude
-            };
+            return VisualGrammarProfiles.GetHarmonyPad().Animate(state, pulse, sustain, renderedHeight, timeSeconds);
         }
 
         private static float GetVisualDuration(float chordDuration, SoundProfile sound)

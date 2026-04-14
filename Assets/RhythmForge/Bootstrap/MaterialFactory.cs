@@ -9,15 +9,15 @@ namespace RhythmForge.Bootstrap
     public static class MaterialFactory
     {
         // Pattern type colors (match TypeColors.cs)
-        public static readonly Color RhythmColor = new Color(0.20f, 0.85f, 1.00f, 1f);  // cyan
-        public static readonly Color MelodyColor  = new Color(0.97f, 0.78f, 0.46f, 1f);  // amber
-        public static readonly Color HarmonyColor = new Color(0.38f, 0.95f, 0.83f, 1f);  // teal
+        public static Color RhythmColor => TypeColors.RhythmLoop;
+        public static Color MelodyColor => TypeColors.MelodyLine;
+        public static Color HarmonyColor => TypeColors.HarmonyPad;
 
         // UI accent colors
-        public static readonly Color PanelBg       = new Color(0.08f, 0.08f, 0.12f, 0.88f);
-        public static readonly Color ButtonDefault  = new Color(0.18f, 0.18f, 0.24f, 1f);
-        public static readonly Color ButtonActive   = new Color(0.24f, 0.72f, 0.96f, 1f);
-        public static readonly Color ButtonDanger   = new Color(0.80f, 0.22f, 0.22f, 1f);
+        public static Color PanelBg => VisualGrammarProfiles.GetUI().panelBg;
+        public static Color ButtonDefault => VisualGrammarProfiles.GetUI().buttonDefault;
+        public static Color ButtonActive => VisualGrammarProfiles.GetUI().buttonActive;
+        public static Color ButtonDanger => VisualGrammarProfiles.GetUI().buttonDanger;
         public static readonly Color White          = Color.white;
 
         private static Shader _spritesDefault;
@@ -50,13 +50,7 @@ namespace RhythmForge.Bootstrap
 
         public static Color GetTypeColor(PatternType type)
         {
-            switch (type)
-            {
-                case PatternType.RhythmLoop: return RhythmColor;
-                case PatternType.MelodyLine: return MelodyColor;
-                case PatternType.HarmonyPad: return HarmonyColor;
-                default: return RhythmColor;
-            }
+            return TypeColors.GetColor(type);
         }
     }
 }

@@ -97,43 +97,46 @@ namespace RhythmForge.Audio
         private static void RenderKick(ResolvedVoiceSpec spec, float[] left, float[] right, int seed)
         {
             var rng = new System.Random(seed);
-            float phase = 0f;
-            float clickLp = 0f;
+            float phase    = 0f;
+            float subPhase = 0f;
+            float clickLp  = 0f;
 
-            float startFrequency = (spec.isTrap ? 122f : 96f) + spec.body * 52f;
-            float endFrequency = 34f + spec.body * 18f;
-            float pitchDuration = 0.12f + spec.releaseBias * 0.12f;
-            float bodyDecay = 0.14f + spec.releaseBias * 0.18f;
+            float startFreq    = (spec.isTrap ? 120f : 90f) + spec.body * 50f;
+            float endFreq      = 30f + spec.body * 16f;
+            float pitchDur     = 0.10f + spec.releaseBias * 0.14f;
+            float bodyDecay    = 0.16f + spec.releaseBias * 0.20f;
+            float subDecay     = bodyDecay * 1.7f;
+            float subGain      = 0.22f + spec.body * 0.12f;
+            float clickDecay   = 0.005f + spec.transientSharpness * 0.006f;
 
             for (int i = 0; i < left.Length; i++)
             {
                 float t = (float)i / SynthUtilities.SampleRate;
-                float pitchProgress = pitchDuration <= 0f ? 1f : Mathf.Clamp01(t / pitchDuration);
-                float frequency = SynthUtilities.ExponentialLerp(startFrequency, endFrequency, pitchProgress);
-                VoiceWaveform waveform = spec.transientSharpness > 0.58f
-                    ? VoiceWaveform.Triangle
-                    : spec.body > 0.62f ? VoiceWaveform.Sine : VoiceWaveform.Triangle;
+                float pitchProg = pitchDur <= 0f ? 1f : Mathf.Clamp01(t / pitchDur);
+                float freq = SynthUtilities.ExponentialLerp(startFreq, endFreq, pitchProg);
 
-                float body = SynthUtilities.SampleWave(waveform, phase) * Mathf.Exp(-t / Mathf.Max(0.04f, bodyDecay));
-                phase = SynthUtilities.AdvancePhase(phase, frequency);
+                // Pure sine body — no aliasing triangle
+                float body = Mathf.Sin(Mathf.PI * 2f * phase) * Mathf.Exp(-t / Mathf.Max(0.04f, bodyDecay));
+                phase = SynthUtilities.AdvancePhase(phase, freq);
 
-                float sub = spec.body > 0.52f
-                    ? Mathf.Sin(Mathf.PI * 2f * (frequency * 0.5f) * t) * 0.18f * Mathf.Exp(-t / (bodyDecay * 1.6f))
-                    : 0f;
+                // Sub-octave sine layer for weight
+                float sub = Mathf.Sin(Mathf.PI * 2f * subPhase) * subGain
+                          * Mathf.Exp(-t / Mathf.Max(0.04f, subDecay));
+                subPhase = SynthUtilities.AdvancePhase(subPhase, freq * 0.5f);
 
+                // Noise click transient (high-pass filtered burst)
                 float click = 0f;
-                if (t <= 0.03f)
+                if (t <= 0.028f)
                 {
                     float noise = (float)(rng.NextDouble() * 2.0 - 1.0);
-                    clickLp += 0.18f * (noise - clickLp);
+                    clickLp += 0.22f * (noise - clickLp);
                     float high = noise - clickLp;
-                    float clickCut = 1800f + spec.transientSharpness * 5000f;
-                    click = high * (0.12f + spec.transientSharpness * 0.2f) *
-                        Mathf.Exp(-t / Mathf.Max(0.004f, 0.008f + 2000f / Mathf.Max(2000f, clickCut * 2f)));
+                    click = high * (0.14f + spec.transientSharpness * 0.18f)
+                          * Mathf.Exp(-t / clickDecay);
                 }
 
                 float sample = body + sub + click;
-                left[i] = sample;
+                left[i]  = sample;
                 right[i] = sample;
             }
         }
@@ -141,33 +144,43 @@ namespace RhythmForge.Audio
         private static void RenderSnare(ResolvedVoiceSpec spec, float[] left, float[] right, int seed)
         {
             var rng = new System.Random(seed);
-            var filterLeft = new SvfState();
+            var filterLeft  = new SvfState();
             var filterRight = new SvfState();
-            float phase = 0f;
+            float phase    = 0f;
+            float fmPhase  = 0f; // FM modulator phase for body resonance
             float noiseCutoff = (spec.isTrap ? 1700f : 1100f) + spec.brightness * 2800f;
-            float q = 0.7f + spec.resonance * 0.35f;
-            float bodyFrequency = 180f + spec.body * 120f;
+            float q           = 0.7f + spec.resonance * 0.35f;
+            float bodyFreq    = 180f + spec.body * 120f;
+            float fmRatio     = 1.82f; // inharmonic modulator for snare crack texture
+            float fmDepth     = bodyFreq * (0.4f + spec.body * 0.6f);
+            float noiseDecay  = 0.08f + spec.releaseBias * 0.14f;
+            float bodyDecay   = 0.07f + spec.releaseBias * 0.10f;
 
             for (int i = 0; i < left.Length; i++)
             {
                 float t = (float)i / SynthUtilities.SampleRate;
-                float noiseEnv = SynthUtilities.EnvelopeDecay(t, 0.08f + spec.releaseBias * 0.14f);
-                float noise = (float)(rng.NextDouble() * 2.0 - 1.0) * noiseEnv;
-                float filteredLeft = SynthUtilities.ProcessFilter(ref filterLeft, noise, noiseCutoff, q, VoiceFilterMode.HighPass);
+
+                // Noise layer (snare wires)
+                float noiseEnv     = SynthUtilities.EnvelopeDecay(t, noiseDecay);
+                float noise        = (float)(rng.NextDouble() * 2.0 - 1.0) * noiseEnv;
+                float filteredLeft  = SynthUtilities.ProcessFilter(ref filterLeft,  noise, noiseCutoff,        q, VoiceFilterMode.HighPass);
                 float filteredRight = SynthUtilities.ProcessFilter(ref filterRight, noise, noiseCutoff * 1.02f, q, VoiceFilterMode.HighPass);
 
-                float sampleLeft = filteredLeft;
+                float sampleLeft  = filteredLeft;
                 float sampleRight = filteredRight;
 
-                if (spec.body > 0.44f)
-                {
-                    float tone = SynthUtilities.SampleWave(VoiceWaveform.Triangle, phase) * 0.34f * SynthUtilities.EnvelopeDecay(t, 0.1f);
-                    phase = SynthUtilities.AdvancePhase(phase, bodyFrequency);
-                    sampleLeft += tone;
-                    sampleRight += tone;
-                }
+                // FM body tone: carrier modulated by inharmonic ratio for snare crack
+                float fmMod  = Mathf.Sin(Mathf.PI * 2f * fmPhase);
+                float instFreq = bodyFreq + fmMod * fmDepth;
+                fmPhase  = SynthUtilities.AdvancePhase(fmPhase, bodyFreq * fmRatio);
+                float bodyEnv = SynthUtilities.EnvelopeDecay(t, bodyDecay);
+                float tone = Mathf.Sin(Mathf.PI * 2f * phase) * 0.30f * bodyEnv;
+                phase = SynthUtilities.AdvancePhase(phase, Mathf.Max(60f, instFreq));
 
-                left[i] = sampleLeft;
+                sampleLeft  += tone;
+                sampleRight += tone;
+
+                left[i]  = sampleLeft;
                 right[i] = sampleRight;
             }
         }
@@ -175,20 +188,40 @@ namespace RhythmForge.Audio
         private static void RenderHat(ResolvedVoiceSpec spec, float[] left, float[] right, int seed)
         {
             var rng = new System.Random(seed);
-            var filterLeft = new SvfState();
+            var filterLeft  = new SvfState();
             var filterRight = new SvfState();
-            float cutoff = (spec.isDream ? 6200f : 7600f) + spec.brightness * 2400f;
-            float q = 0.8f + spec.resonance * 0.4f;
+            float cutoff = (spec.isDream ? 6000f : 7400f) + spec.brightness * 2400f;
+            float q      = 0.75f + spec.resonance * 0.35f;
+            float decay  = 0.025f + spec.transientSharpness * 0.055f;
+
+            // 6-partial inharmonic metallic oscillators (classic cymbal synthesis ratios).
+            // Ratios taken from Yamaha DX7 cymbal algorithm and Chowning FM cymbal research.
+            float[] metalRatios = { 1.0f, 1.4142f, 1.5157f, 1.7411f, 2.0f, 2.4f };
+            float[] metalDecays = { decay, decay * 0.9f, decay * 0.85f, decay * 0.8f, decay * 0.7f, decay * 0.6f };
+            float[] metalAmps   = { 0.28f, 0.22f, 0.20f, 0.16f, 0.10f, 0.06f };
+            float baseFreq = 220f * (1f + spec.brightness * 0.8f); // tunable metallic base
+            float[] metalPhase = new float[6];
 
             for (int i = 0; i < left.Length; i++)
             {
-                float t = (float)i / SynthUtilities.SampleRate;
-                float env = SynthUtilities.EnvelopeDecay(t, 0.03f + spec.transientSharpness * 0.06f);
-                float noise = (float)(rng.NextDouble() * 2.0 - 1.0);
-                float shimmer = Mathf.Sin(Mathf.PI * 2f * 8372f * t) * 0.15f
-                              + Mathf.Sin(Mathf.PI * 2f * 10548f * t) * 0.1f;
-                float source = (noise * 0.78f + shimmer) * env;
-                left[i] = SynthUtilities.ProcessFilter(ref filterLeft, source, cutoff, q, VoiceFilterMode.HighPass);
+                float t   = (float)i / SynthUtilities.SampleRate;
+                float env = SynthUtilities.EnvelopeDecay(t, decay);
+
+                // Metallic partials
+                float metallic = 0f;
+                for (int m = 0; m < 6; m++)
+                {
+                    metallic += Mathf.Sin(Mathf.PI * 2f * metalPhase[m])
+                              * metalAmps[m]
+                              * SynthUtilities.EnvelopeDecay(t, metalDecays[m]);
+                    metalPhase[m] = SynthUtilities.AdvancePhase(metalPhase[m], baseFreq * metalRatios[m]);
+                }
+
+                // Noise component
+                float noise  = (float)(rng.NextDouble() * 2.0 - 1.0) * env * 0.45f;
+                float source = metallic + noise;
+
+                left[i]  = SynthUtilities.ProcessFilter(ref filterLeft,  source, cutoff,        q, VoiceFilterMode.HighPass);
                 right[i] = SynthUtilities.ProcessFilter(ref filterRight, source, cutoff * 1.01f, q, VoiceFilterMode.HighPass);
             }
         }

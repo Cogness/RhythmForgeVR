@@ -14,7 +14,11 @@ namespace RhythmForge.Audio
                 return 0f;
 
             if (time < spec.attackSeconds)
-                return Mathf.Clamp01(time / Mathf.Max(0.001f, spec.attackSeconds));
+            {
+                // Exponential-curve attack: fast rise with smooth shoulder (sounds more natural than linear)
+                float progress = Mathf.Clamp01(time / Mathf.Max(0.001f, spec.attackSeconds));
+                return 1f - Mathf.Exp(-5f * progress);
+            }
 
             if (time <= releaseStart)
                 return 1f;
@@ -50,16 +54,36 @@ namespace RhythmForge.Audio
 
         public static float SampleWave(VoiceWaveform waveform, float phase)
         {
+            return SampleWaveWithDt(waveform, phase, 0f);
+        }
+
+        // Band-limited waveform with PolyBLEP correction (pass dt = frequency/SampleRate).
+        public static float SampleWaveWithDt(VoiceWaveform waveform, float phase, float dt)
+        {
             phase -= Mathf.Floor(phase);
 
             switch (waveform)
             {
                 case VoiceWaveform.Triangle:
+                    // Triangle has no hard discontinuity — integrated square is already band-limited enough.
                     return 1f - 4f * Mathf.Abs(phase - 0.5f);
                 case VoiceWaveform.Square:
-                    return phase < 0.5f ? 1f : -1f;
+                {
+                    float s = phase < 0.5f ? 1f : -1f;
+                    if (dt > 0f)
+                    {
+                        s += PolyBlep(phase, dt);
+                        s -= PolyBlep((phase + 0.5f) % 1f, dt);
+                    }
+                    return s;
+                }
                 case VoiceWaveform.Sawtooth:
-                    return phase * 2f - 1f;
+                {
+                    float s = phase * 2f - 1f;
+                    if (dt > 0f)
+                        s -= PolyBlep(phase, dt);
+                    return s;
+                }
                 default:
                     return Mathf.Sin(Mathf.PI * 2f * phase);
             }
@@ -98,7 +122,46 @@ namespace RhythmForge.Audio
 
         public static float SoftClip(float x)
         {
-            return (float)Math.Tanh(x);
+            // Cubic soft-knee clip: linear below 0.7, smooth shoulder up to 1.0.
+            // Much less harsh than tanh on near-unity signals.
+            float ax = Math.Abs(x);
+            if (ax <= 0.7f)
+                return x;
+            if (ax >= 1.4f)
+                return x < 0f ? -1f : 1f;
+            float t = (ax - 0.7f) / 0.7f;
+            float knee = 0.7f + 0.3f * (t * (3f - 2f * t));
+            return x < 0f ? -knee : knee;
+        }
+
+        // PolyBLEP correction term — eliminates aliasing step/ramp discontinuities.
+        private static float PolyBlep(float t, float dt)
+        {
+            if (t < dt)
+            {
+                t /= dt;
+                return t + t - t * t - 1f;
+            }
+            if (t > 1f - dt)
+            {
+                t = (t - 1f) / dt;
+                return t * t + t + t + 1f;
+            }
+            return 0f;
+        }
+
+        // Sum a set of harmonic partials with independent amplitudes for a given phase.
+        // harmonicAmps[0] = fundamental, [1] = 2nd harmonic, etc.
+        public static float SampleAdditive(float[] harmonicAmps, float fundamentalPhase)
+        {
+            float sample = 0f;
+            for (int h = 0; h < harmonicAmps.Length; h++)
+            {
+                if (harmonicAmps[h] == 0f) continue;
+                float hp = (fundamentalPhase * (h + 1f)) % 1f;
+                sample += Mathf.Sin(Mathf.PI * 2f * hp) * harmonicAmps[h];
+            }
+            return sample;
         }
 
         public static AudioClip BuildClip(string name, float[] left, float[] right)

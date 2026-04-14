@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using RhythmForge.Core.Data;
 using RhythmForge.Core.Analysis;
+using RhythmForge.Core.PatternBehavior;
 using RhythmForge.Core.Sequencing;
 
 namespace RhythmForge.Core.Session
@@ -52,9 +53,10 @@ namespace RhythmForge.Core.Session
         public static DraftResult BuildFromStroke(PatternType type, List<Vector2> rawPoints,
             Vector3 strokeCenter, Quaternion renderRotation, AppState state, SessionStore store)
         {
+            var behavior = PatternBehaviorRegistry.Get(type);
             var metrics = StrokeAnalyzer.Analyze(rawPoints);
 
-            if (type == PatternType.RhythmLoop && !metrics.closed)
+            if (behavior.PrefersClosedStroke && !metrics.closed)
             {
                 // Soft warning only — on-device VR drawing rarely closes perfectly.
                 // Proceed with the stroke; the rhythm deriver will handle it gracefully.
@@ -68,75 +70,34 @@ namespace RhythmForge.Core.Session
 
             // Build shape DNA
             var shapeProfile = ShapeProfileCalculator.Derive(normalizedPoints, metrics, type);
-            var soundProfile = SoundProfileMapper.Derive(type, shapeProfile);
+            var soundProfile = behavior.DeriveSoundProfile(shapeProfile);
             string shapeSummary = PresetBiasResolver.SummarizeShapeDNA(type, shapeProfile, soundProfile);
 
             // Derive sequence
-            int bars;
-            string presetId;
-            List<string> tags;
-            DerivedSequence derivedSequence;
-            string summary, details;
-
-            switch (type)
-            {
-                case PatternType.RhythmLoop:
-                {
-                    var result = RhythmDeriver.Derive(rawPoints, metrics, groupId, shapeProfile, soundProfile);
-                    bars = result.bars;
-                    presetId = result.presetId;
-                    tags = result.tags;
-                    derivedSequence = result.derivedSequence;
-                    summary = result.summary;
-                    details = result.details;
-                    break;
-                }
-                case PatternType.MelodyLine:
-                {
-                    var result = MelodyDeriver.Derive(rawPoints, metrics, keyName, groupId, shapeProfile, soundProfile);
-                    bars = result.bars;
-                    presetId = result.presetId;
-                    tags = result.tags;
-                    derivedSequence = result.derivedSequence;
-                    summary = result.summary;
-                    details = result.details;
-                    break;
-                }
-                default:
-                {
-                    var result = HarmonyDeriver.Derive(rawPoints, metrics, keyName, groupId, shapeProfile, soundProfile);
-                    bars = result.bars;
-                    presetId = result.presetId;
-                    tags = result.tags;
-                    derivedSequence = result.derivedSequence;
-                    summary = result.summary;
-                    details = result.details;
-                    break;
-                }
-            }
+            var derivation = behavior.Derive(rawPoints, metrics, keyName, groupId, shapeProfile, soundProfile);
 
             return new DraftResult
             {
                 success = true,
                 type = type,
                 name = name,
-                bars = bars,
+                bars = derivation.bars,
                 tempoBase = state.tempo,
                 key = keyName,
                 groupId = groupId,
-                presetId = presetId,
+                presetId = derivation.presetId,
                 points = normalizedPoints,
                 renderRotation = renderRotation,
                 hasRenderRotation = true,
                 spawnPosition = strokeCenter,
-                derivedSequence = derivedSequence,
-                tags = tags,
+                derivedSequence = derivation.derivedSequence,
+                tags = derivation.tags,
                 color = TypeColors.GetColor(type),
                 shapeProfile = shapeProfile,
                 soundProfile = soundProfile,
                 shapeSummary = shapeSummary,
-                summary = summary,
-                details = ComposeDetails(details, shapeSummary)
+                summary = derivation.summary,
+                details = ComposeDetails(derivation.details, shapeSummary)
             };
         }
     }

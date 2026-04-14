@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using RhythmForge.Core.Data;
+using RhythmForge.Core.PatternBehavior;
 
 namespace RhythmForge.Sequencer
 {
@@ -37,32 +38,7 @@ namespace RhythmForge.Sequencer
                 secondaryStrength = Mathf.Clamp01(sound.modDepth * 0.32f + sound.filterMotion * 0.24f + sound.reverbBias * 0.18f + sound.releaseBias * 0.26f),
                 sharpness = Mathf.Clamp01(0.14f + sound.transientSharpness * 0.86f)
             };
-
-            switch (type)
-            {
-                case PatternType.RhythmLoop:
-                    spec.markerScale = Mathf.Clamp01(spec.markerScale + 0.12f);
-                    spec.haloStrength = Mathf.Clamp01(spec.haloStrength * 0.55f + sound.body * 0.08f);
-                    spec.secondaryStrength = Mathf.Clamp01(spec.secondaryStrength * 0.42f + sound.grooveInstability * 0.28f);
-                    spec.phaseJitter = Mathf.Clamp01(spec.phaseJitter + sound.grooveInstability * 0.22f);
-                    spec.motionSpeed = Mathf.Lerp(0.85f, 1.9f, sound.grooveInstability * 0.45f + sound.transientSharpness * 0.55f);
-                    break;
-                case PatternType.MelodyLine:
-                    spec.markerScale = Mathf.Clamp01(spec.markerScale + 0.04f);
-                    spec.haloStrength = Mathf.Clamp01(spec.haloStrength * 0.72f + sound.releaseBias * 0.16f);
-                    spec.secondaryStrength = Mathf.Clamp01(spec.secondaryStrength + sound.modDepth * 0.2f);
-                    spec.motionSpeed = Mathf.Lerp(0.55f, 1.3f, sound.filterMotion * 0.4f + sound.modDepth * 0.6f);
-                    break;
-                case PatternType.HarmonyPad:
-                    spec.markerScale = Mathf.Clamp01(spec.markerScale * 0.72f + sound.body * 0.08f);
-                    spec.haloStrength = Mathf.Clamp01(spec.haloStrength + sound.stereoSpread * 0.2f + sound.reverbBias * 0.18f);
-                    spec.secondaryStrength = Mathf.Clamp01(spec.secondaryStrength + sound.releaseBias * 0.2f + sound.modDepth * 0.16f);
-                    spec.motionSpeed = Mathf.Lerp(0.2f, 0.72f, sound.filterMotion * 0.45f + sound.modDepth * 0.55f);
-                    spec.phaseJitter = Mathf.Clamp01(spec.phaseJitter * 0.35f);
-                    break;
-            }
-
-            return spec;
+            return PatternBehaviorRegistry.Get(type).AdjustVisualSpec(spec, sound);
         }
     }
 

@@ -7,7 +7,7 @@ namespace RhythmForge.Interaction
     /// into unified application actions.
     /// </summary>
     [DefaultExecutionOrder(-10)]
-    public class InputMapper : MonoBehaviour
+    public class InputMapper : MonoBehaviour, IInputProvider
     {
         [SerializeField] private StylusHandler _stylusHandler;
 

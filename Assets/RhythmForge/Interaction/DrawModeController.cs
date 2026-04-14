@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using RhythmForge.Core.Data;
+using RhythmForge.Core.PatternBehavior;
 
 namespace RhythmForge.Interaction
 {
@@ -20,20 +21,25 @@ namespace RhythmForge.Interaction
 
         public void CycleMode()
         {
-            PatternType nextMode;
-            switch (_currentMode)
+            var registeredTypes = PatternBehaviorRegistry.GetRegisteredTypes();
+            if (registeredTypes.Count == 0)
             {
-                case PatternType.RhythmLoop:
-                    nextMode = PatternType.MelodyLine;
-                    break;
-                case PatternType.MelodyLine:
-                    nextMode = PatternType.HarmonyPad;
-                    break;
-                default:
-                    nextMode = PatternType.RhythmLoop;
-                    break;
+                SetMode(PatternType.RhythmLoop);
+                return;
             }
-            SetMode(nextMode);
+
+            int currentIndex = 0;
+            for (int i = 0; i < registeredTypes.Count; i++)
+            {
+                if (registeredTypes[i] == _currentMode)
+                {
+                    currentIndex = i;
+                    break;
+                }
+            }
+
+            int nextIndex = (currentIndex + 1) % registeredTypes.Count;
+            SetMode(registeredTypes[nextIndex]);
         }
 
         public Color GetCurrentColor()
@@ -48,12 +54,7 @@ namespace RhythmForge.Interaction
 
         public static string GetModeLabel(PatternType mode)
         {
-            switch (mode)
-            {
-                case PatternType.RhythmLoop: return "Rhythm";
-                case PatternType.MelodyLine: return "Melody";
-                default: return "Harmony";
-            }
+            return PatternBehaviorRegistry.Get(mode).DisplayName;
         }
     }
 }

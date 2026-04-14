@@ -24,15 +24,17 @@ namespace RhythmForge.Interaction
         private string _grabbedInstanceId;
         private Vector3 _grabOffset;
         private bool _hasMoved;
+        private IInputProvider _inputProvider;
 
         // The currently hovered visualizer (for highlighting)
         private PatternVisualizer _hoveredVisualizer;
 
         /// <summary>Called by RhythmForgeBootstrapper to inject component references.</summary>
-        public void Configure(InputMapper input, Transform leftController,
+        public void Configure(IInputProvider input, Transform leftController,
             LineRenderer rayLine, LayerMask instanceLayer)
         {
-            _input = input;
+            _inputProvider = input;
+            _input = input as InputMapper ?? _input;
             _leftControllerTransform = leftController;
             _rayVisual = rayLine;
             _instanceLayer = instanceLayer;
@@ -45,22 +47,23 @@ namespace RhythmForge.Interaction
 
         private void Update()
         {
-            if (_store == null || _input == null) return;
+            var input = _inputProvider ?? (IInputProvider)_input;
+            if (_store == null || input == null) return;
 
             // Grab start
-            if (_input.LeftTriggerDown)
+            if (input.LeftTriggerDown)
             {
                 TryGrab();
             }
 
             // Grab move
-            if (_input.LeftTrigger && _grabbedInstanceId != null)
+            if (input.LeftTrigger && _grabbedInstanceId != null)
             {
                 DragInstance();
             }
 
             // Grab release
-            if (_input.LeftTriggerUp)
+            if (input.LeftTriggerUp)
             {
                 if (_grabbedInstanceId != null)
                 {
@@ -144,7 +147,8 @@ namespace RhythmForge.Interaction
         {
             if (_rayVisual == null || _leftControllerTransform == null) return;
 
-            if (_input.LeftTrigger || _grabbedInstanceId != null)
+            var input = _inputProvider ?? (IInputProvider)_input;
+            if (input != null && (input.LeftTrigger || _grabbedInstanceId != null))
             {
                 _rayVisual.enabled = true;
                 _rayVisual.SetPosition(0, _leftControllerTransform.position);

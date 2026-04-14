@@ -22,6 +22,7 @@ namespace RhythmForge.Interaction
 
         // Hover highlight: bright white tint
         private static readonly Color HoverTint = new Color(1f, 1f, 1f, 1f);
+        private IInputProvider _inputProvider;
 
         /// <summary>True while the stylus ray is over an interactive UI button.</summary>
         public bool IsHoveringUI => _hoveredButton != null;
@@ -32,9 +33,10 @@ namespace RhythmForge.Interaction
         /// </summary>
         public bool DidClickUI { get; private set; }
 
-        public void Configure(InputMapper input, LineRenderer rayVisual, LayerMask uiLayer)
+        public void Configure(IInputProvider input, LineRenderer rayVisual, LayerMask uiLayer)
         {
-            _input = input;
+            _inputProvider = input;
+            _input = input as InputMapper ?? _input;
             _rayVisual = rayVisual;
 
             // Style ray: thin white like Quest system pointer
@@ -62,16 +64,17 @@ namespace RhythmForge.Interaction
         {
             DidClickUI = false;
 
-            if (_input == null) return;
+            var input = _inputProvider ?? (IInputProvider)_input;
+            if (input == null) return;
 
-            if (!_input.IsStylusActive)
+            if (!input.IsStylusActive)
             {
                 SetRay(false, Vector3.zero, Vector3.zero, Vector3.zero);
                 ClearHover();
                 return;
             }
 
-            var pose = _input.StylusPose;
+            var pose = input.StylusPose;
             Vector3 origin = pose.position;
             Vector3 direction = pose.rotation * Vector3.forward;
 
@@ -166,10 +169,10 @@ namespace RhythmForge.Interaction
             }
 
             // Click — only fires when hovering a button; marks input as consumed
-            if (_input.FrontButtonDown && _hoveredButton != null)
+            if (input.FrontButtonDown && _hoveredButton != null)
             {
                 DidClickUI = true;
-                _input.FrontButtonConsumed = true;
+                input.FrontButtonConsumed = true;
                 var ed = new PointerEventData(EventSystem.current);
                 ExecuteEvents.Execute(_hoveredButton.gameObject, ed, ExecuteEvents.pointerDownHandler);
                 ExecuteEvents.Execute(_hoveredButton.gameObject, ed, ExecuteEvents.pointerClickHandler);
@@ -208,4 +211,3 @@ namespace RhythmForge.Interaction
         }
     }
 }
-

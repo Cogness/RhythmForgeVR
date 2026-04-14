@@ -42,6 +42,7 @@ namespace RhythmForge
         private SessionStore _store;
         private VisualizerManager _visualizerManager;
         private AutosaveController _autosaveController;
+        private IInputProvider _inputProvider;
         private bool _showParamLabels = true;
         private bool _initialized;
         private float _sceneSwapCooldown;
@@ -72,6 +73,7 @@ namespace RhythmForge
             _strokeCapture = strokeCapture;
             _drawModeController = drawModeController;
             _inputMapper = inputMapper;
+            _inputProvider = inputMapper;
             _instanceGrabber = instanceGrabber;
             _commitCard = commitCard;
             _inspectorPanel = inspectorPanel;
@@ -223,16 +225,17 @@ namespace RhythmForge
 
         private void HandleSceneAndTransportInput()
         {
-            if (_inputMapper == null)
+            var input = _inputProvider ?? (IInputProvider)_inputMapper;
+            if (input == null)
                 return;
 
-            Vector2 stick = _inputMapper.LeftThumbstick;
+            Vector2 stick = input.LeftThumbstick;
             if (stick.x < -0.7f)
                 SwitchSceneRelative(-1);
             else if (stick.x > 0.7f)
                 SwitchSceneRelative(1);
 
-            if (_inputMapper.ButtonTwo && _sequencer != null)
+            if (input.ButtonTwo && _sequencer != null)
                 _sequencer.TogglePlayback();
         }
 

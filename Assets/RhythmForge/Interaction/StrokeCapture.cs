@@ -45,13 +45,15 @@ namespace RhythmForge.Interaction
         // External references
         private SessionStore _store;
         private StylusUIPointer _uiPointer;
+        private IInputProvider _inputProvider;
 
         /// <summary>Called by RhythmForgeBootstrapper to inject component references.</summary>
-        public void Configure(InputMapper input, DrawModeController drawMode,
+        public void Configure(IInputProvider input, DrawModeController drawMode,
             Transform userHead, Material strokeMaterial = null,
             StylusUIPointer uiPointer = null)
         {
-            _input = input;
+            _inputProvider = input;
+            _input = input as InputMapper ?? _input;
             _drawMode = drawMode;
             _userHead = userHead;
             _uiPointer = uiPointer;
@@ -65,27 +67,28 @@ namespace RhythmForge.Interaction
 
         private void Update()
         {
-            if (_store == null || _input == null) return;
+            var input = _inputProvider ?? (IInputProvider)_input;
+            if (_store == null || input == null) return;
 
             // Don't allow new drawing while there's a pending draft
             if (HasPendingDraft)
             {
                 // If a UI button was clicked this frame (Save/Discard in CommitCardPanel)
                 // the button's onClick handles it — don't also confirm via pen logic.
-                if (!_input.FrontButtonConsumed)
+                if (!input.FrontButtonConsumed)
                 {
-                    if (_input.FrontButtonDown)
+                    if (input.FrontButtonDown)
                         ConfirmDraft(false);
-                    else if (_input.BackButtonDown || _input.BackDoubleTap)
+                    else if (input.BackButtonDown || input.BackDoubleTap)
                         DiscardPending();
                 }
                 return;
             }
 
-            float pressure = _input.DrawPressure;
+            float pressure = input.DrawPressure;
 
             // Suppress drawing while back button held (panel dragging) or hovering UI
-            if (_input.BackButton) pressure = 0f;
+            if (input.BackButton) pressure = 0f;
             if (_uiPointer != null && _uiPointer.IsHoveringUI) pressure = 0f;
 
             if (pressure > 0.05f)
@@ -95,7 +98,7 @@ namespace RhythmForge.Interaction
                     StartStroke();
                     _isDrawing = true;
                 }
-                AddPoint(_input.StylusPose.position, pressure);
+                AddPoint(input.StylusPose.position, pressure);
             }
             else if (_isDrawing)
             {
@@ -104,7 +107,7 @@ namespace RhythmForge.Interaction
             }
 
             // Back button undoes last stroke
-            if (_input.BackButtonDown && !_isDrawing && !HasPendingDraft)
+            if (input.BackButtonDown && !_isDrawing && !HasPendingDraft)
                 ClearCurrentStroke();
         }
 

@@ -51,13 +51,15 @@ namespace RhythmForge.Interaction
         private Vector3 _dragAnchorStartPosition;
         private Quaternion _dragAnchorStartRotation;
         private Vector3 _singlePanelGrabOffset;
+        private IInputProvider _inputProvider;
 
         /// <summary>True when any panel is being dragged (back button held).</summary>
         public static bool IsDragging { get; private set; }
 
-        public void Configure(InputMapper input, Transform lookAtTarget)
+        public void Configure(IInputProvider input, Transform lookAtTarget)
         {
-            _input = input;
+            _inputProvider = input;
+            _input = input as InputMapper ?? _input;
             _lookAtTarget = lookAtTarget;
         }
 
@@ -80,15 +82,16 @@ namespace RhythmForge.Interaction
 
         private void Update()
         {
-            if (_input == null) return;
-            if (!_input.IsStylusActive) return;
+            var input = _inputProvider ?? (IInputProvider)_input;
+            if (input == null) return;
+            if (!input.IsStylusActive) return;
 
-            var pose = _input.StylusPose;
+            var pose = input.StylusPose;
             Vector3 origin = pose.position;
             Vector3 direction = pose.rotation * Vector3.forward;
 
             // Check if back button is held and we're pointing at any panel
-            bool holdingBack = _input.BackButton;
+            bool holdingBack = input.BackButton;
 
             if (holdingBack && !_isDragging)
             {

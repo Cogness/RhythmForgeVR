@@ -29,7 +29,7 @@ namespace RhythmForge.UI.Rendering
             _haloRenderer.enabled = false;
         }
 
-        public void Update(PlaybackVisualSpec spec, PatternType type, bool isMuted, float haloEnergy, float baseWidth, Color lineColor)
+        public void Update(PlaybackVisualSpec spec, bool isMuted, float haloEnergy, float baseWidth, Color lineColor, float breath)
         {
             if (_haloRenderer == null || _haloRenderer.material == null || _haloRenderer.positionCount == 0 || isMuted || haloEnergy <= 0.01f)
             {
@@ -39,16 +39,6 @@ namespace RhythmForge.UI.Rendering
             }
 
             _haloRenderer.enabled = true;
-
-            float breath = 1f;
-            if (type == PatternType.HarmonyPad)
-            {
-                breath += Mathf.Sin(Time.time * (0.9f + spec.motionSpeed * 0.6f)) * 0.12f * spec.motionAmplitude;
-            }
-            else if (type == PatternType.MelodyLine)
-            {
-                breath += Mathf.Sin(Time.time * (1.1f + spec.motionSpeed * 1.4f)) * 0.06f * spec.secondaryStrength;
-            }
 
             float haloWidth = baseWidth * _haloWidthScale *
                 Mathf.Lerp(0.75f, 1.55f, spec.haloStrength) *

@@ -1,5 +1,6 @@
 using UnityEngine;
 using RhythmForge.Core.Data;
+using RhythmForge.Core.PatternBehavior;
 
 namespace RhythmForge.Core.Analysis
 {
@@ -7,24 +8,13 @@ namespace RhythmForge.Core.Analysis
     {
         public static SoundProfile Derive(PatternType type, ShapeProfile sp)
         {
-            float smoothness = 1f - sp.angularity;
-            float asymmetry = 1f - sp.symmetry;
-            float tiltAmount = Mathf.Abs(sp.tiltSigned);
-            float sizeFactor = ShapeProfileSizing.GetSizeFactor(type, sp);
-
-            switch (type)
-            {
-                case PatternType.RhythmLoop:
-                    return DeriveRhythm(sp, smoothness, asymmetry, sizeFactor);
-                case PatternType.MelodyLine:
-                    return DeriveMelody(sp, smoothness, asymmetry, tiltAmount, sizeFactor);
-                default:
-                    return DeriveHarmony(sp, smoothness, asymmetry, tiltAmount, sizeFactor);
-            }
+            return PatternBehaviorRegistry.Get(type).DeriveSoundProfile(sp);
         }
 
-        private static SoundProfile DeriveRhythm(ShapeProfile sp, float smoothness, float asymmetry, float sizeFactor)
+        internal static SoundProfile DeriveRhythm(ShapeProfile sp)
         {
+            float asymmetry = 1f - sp.symmetry;
+            float sizeFactor = ShapeProfileSizing.GetSizeFactor(PatternType.RhythmLoop, sp);
             float instability = Mathf.Clamp01(
                 sp.wobble * 0.7f + asymmetry * 0.55f + sp.curvatureVariance * 0.35f);
             float compactness = 1f - sizeFactor;
@@ -49,8 +39,11 @@ namespace RhythmForge.Core.Analysis
             };
         }
 
-        private static SoundProfile DeriveMelody(ShapeProfile sp, float smoothness, float asymmetry, float tiltAmount, float sizeFactor)
+        internal static SoundProfile DeriveMelody(ShapeProfile sp)
         {
+            float smoothness = 1f - sp.angularity;
+            float asymmetry = 1f - sp.symmetry;
+            float sizeFactor = ShapeProfileSizing.GetSizeFactor(PatternType.MelodyLine, sp);
             float contourPull = Mathf.Abs(sp.directionBias - 0.5f) * 2f;
             float compactness = 1f - sizeFactor;
 
@@ -74,8 +67,12 @@ namespace RhythmForge.Core.Analysis
             };
         }
 
-        private static SoundProfile DeriveHarmony(ShapeProfile sp, float smoothness, float asymmetry, float tiltAmount, float sizeFactor)
+        internal static SoundProfile DeriveHarmony(ShapeProfile sp)
         {
+            float smoothness = 1f - sp.angularity;
+            float asymmetry = 1f - sp.symmetry;
+            float tiltAmount = Mathf.Abs(sp.tiltSigned);
+            float sizeFactor = ShapeProfileSizing.GetSizeFactor(PatternType.HarmonyPad, sp);
             float compactness = 1f - sizeFactor;
 
             return new SoundProfile

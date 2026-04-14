@@ -15,22 +15,25 @@ namespace RhythmForge.Interaction
         private bool _isDragging;
         private Vector3 _grabOffset;     // offset from panel origin to ray hit in world space
         private float _grabDistance;     // distance along ray at grab time
+        private IInputProvider _inputProvider;
 
-        public void Configure(InputMapper input)
+        public void Configure(IInputProvider input)
         {
-            _input = input;
+            _inputProvider = input;
+            _input = input as InputMapper ?? _input;
         }
 
         private void Update()
         {
-            if (_input == null) return;
-            if (!_input.IsStylusActive) return;
+            var input = _inputProvider ?? (IInputProvider)_input;
+            if (input == null) return;
+            if (!input.IsStylusActive) return;
 
-            var pose      = _input.StylusPose;
+            var pose      = input.StylusPose;
             Vector3 origin    = pose.position;
             Vector3 direction = pose.rotation * Vector3.forward;
 
-            bool holdingBack = _input.BackButton;
+            bool holdingBack = input.BackButton;
 
             if (holdingBack && !_isDragging)
             {

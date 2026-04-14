@@ -184,7 +184,8 @@ namespace RhythmForge.Core.Data
                     * renderedHeight
                     * normalOffsetHeightWeight
                     * state.visualSpec.secondaryStrength,
-                haloBreath = 1f
+                haloBreath = 1f,
+                extraLineWidth = 0f
             };
         }
 
@@ -250,7 +251,8 @@ namespace RhythmForge.Core.Data
                     * state.visualSpec.motionAmplitude,
                 haloBreath = haloBreathBase + Mathf.Sin(timeSeconds * (haloBreathBaseSpeed + state.visualSpec.motionSpeed * haloBreathMotionSpeedWeight))
                     * haloBreathAmplitude
-                    * state.visualSpec.secondaryStrength
+                    * state.visualSpec.secondaryStrength,
+                extraLineWidth = 0f
             };
         }
 
@@ -312,10 +314,11 @@ namespace RhythmForge.Core.Data
 
         public AnimationEnergies Animate(PatternPlaybackVisualState state, float pulse, float sustain, float renderedHeight, float timeSeconds)
         {
+            float haloEnergy = Mathf.Max(sustain * haloEnergySustainWeight, state.isActive ? haloEnergyActiveMinimum : 0f) + pulse * haloEnergyPulseWeight;
             return new AnimationEnergies
             {
                 lineEnergy = pulse * lineEnergyPulseWeight + sustain * lineEnergySustainWeight,
-                haloEnergy = Mathf.Max(sustain * haloEnergySustainWeight, state.isActive ? haloEnergyActiveMinimum : 0f) + pulse * haloEnergyPulseWeight,
+                haloEnergy = haloEnergy,
                 markerEnergy = Mathf.Max(sustain * markerSustainWeight, pulse * markerPulseWeight),
                 markerPhase = state.phase >= 0f
                     ? Mathf.Repeat(state.phase * markerPhaseScale + timeSeconds * (markerPhaseBaseSpeed + state.visualSpec.motionSpeed * markerPhaseMotionSpeedWeight), 1f)
@@ -327,7 +330,8 @@ namespace RhythmForge.Core.Data
                     * (normalOffsetAmplitudeBase + state.visualSpec.motionAmplitude * normalOffsetAmplitudeMotionWeight),
                 haloBreath = haloBreathBase + Mathf.Sin(timeSeconds * (haloBreathBaseSpeed + state.visualSpec.motionSpeed * haloBreathMotionSpeedWeight))
                     * haloBreathAmplitude
-                    * state.visualSpec.motionAmplitude
+                    * state.visualSpec.motionAmplitude,
+                extraLineWidth = haloEnergy * 0.0012f
             };
         }
 

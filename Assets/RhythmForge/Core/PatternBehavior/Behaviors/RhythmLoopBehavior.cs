@@ -12,6 +12,7 @@ namespace RhythmForge.Core.PatternBehavior.Behaviors
         public PatternType Type => PatternType.RhythmLoop;
         public string DisplayName => "Rhythm";
         public bool PrefersClosedStroke => true;
+        public string DraftNamePrefix => "Beat";
 
         public PatternDerivationResult Derive(
             List<Vector2> points,

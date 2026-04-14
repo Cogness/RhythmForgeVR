@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using UnityEngine;
+using RhythmForge.Bootstrap;
 using RhythmForge.Core.Data;
 using RhythmForge.Core.Events;
 using RhythmForge.Core.Session;
@@ -9,6 +11,33 @@ using RhythmForge.UI.Panels;
 
 namespace RhythmForge
 {
+    /// <summary>
+    /// Subsystem references passed to RhythmForgeManager.Configure.
+    /// </summary>
+    public struct ManagerSubsystems
+    {
+        public AudioEngine audioEngine;
+        public Sequencer.Sequencer sequencer;
+        public StrokeCapture strokeCapture;
+        public DrawModeController drawMode;
+        public InputMapper inputMapper;
+        public InstanceGrabber instanceGrabber;
+    }
+
+    /// <summary>
+    /// Panel references passed to RhythmForgeManager.Configure.
+    /// </summary>
+    public struct ManagerPanels
+    {
+        public CommitCardPanel commitCard;
+        public InspectorPanel inspector;
+        public DockPanel dock;
+        public TransportPanel transport;
+        public SceneStripPanel sceneStrip;
+        public ArrangementPanel arrangement;
+        public ToastMessage toast;
+    }
+
     /// <summary>
     /// Top-level manager that owns all subsystems and wires lifecycle events between them.
     /// </summary>
@@ -31,11 +60,6 @@ namespace RhythmForge
         [SerializeField] private ArrangementPanel _arrangementPanel;
         [SerializeField] private ToastMessage _toast;
 
-        [Header("Visual Settings")]
-        [SerializeField] private Material _rhythmMaterial;
-        [SerializeField] private Material _melodyMaterial;
-        [SerializeField] private Material _harmonyMaterial;
-
         [Header("Scene")]
         [SerializeField] private Transform _instanceContainer;
         [SerializeField] private Transform _userHead;
@@ -48,47 +72,31 @@ namespace RhythmForge
         private bool _showParamLabels = true;
         private bool _initialized;
         private float _sceneSwapCooldown;
+        private readonly Dictionary<PatternType, Material> _materialCache = new Dictionary<PatternType, Material>();
 
         /// <summary>Called by RhythmForgeBootstrapper to inject all subsystem and UI references.</summary>
         public void Configure(
-            AudioEngine audioEngine,
-            Sequencer.Sequencer sequencer,
-            StrokeCapture strokeCapture,
-            DrawModeController drawModeController,
-            InputMapper inputMapper,
-            InstanceGrabber instanceGrabber,
-            CommitCardPanel commitCard,
-            InspectorPanel inspectorPanel,
-            DockPanel dockPanel,
-            TransportPanel transportPanel,
-            SceneStripPanel sceneStripPanel,
-            ArrangementPanel arrangementPanel,
-            ToastMessage toast,
-            Material rhythmMaterial,
-            Material melodyMaterial,
-            Material harmonyMaterial,
+            ManagerSubsystems subsystems,
+            ManagerPanels panels,
             Transform instanceContainer,
             Transform userHead)
         {
-            _audioEngine = audioEngine;
-            _sequencer = sequencer;
-            _strokeCapture = strokeCapture;
-            _drawModeController = drawModeController;
-            _inputMapper = inputMapper;
-            _inputProvider = inputMapper;
-            _instanceGrabber = instanceGrabber;
-            _commitCard = commitCard;
-            _inspectorPanel = inspectorPanel;
-            _dockPanel = dockPanel;
-            _transportPanel = transportPanel;
-            _sceneStripPanel = sceneStripPanel;
-            _arrangementPanel = arrangementPanel;
-            _toast = toast;
-            _rhythmMaterial = rhythmMaterial;
-            _melodyMaterial = melodyMaterial;
-            _harmonyMaterial = harmonyMaterial;
-            _instanceContainer = instanceContainer;
-            _userHead = userHead;
+            _audioEngine        = subsystems.audioEngine;
+            _sequencer          = subsystems.sequencer;
+            _strokeCapture      = subsystems.strokeCapture;
+            _drawModeController = subsystems.drawMode;
+            _inputMapper        = subsystems.inputMapper;
+            _inputProvider      = subsystems.inputMapper;
+            _instanceGrabber    = subsystems.instanceGrabber;
+            _commitCard         = panels.commitCard;
+            _inspectorPanel     = panels.inspector;
+            _dockPanel          = panels.dock;
+            _transportPanel     = panels.transport;
+            _sceneStripPanel    = panels.sceneStrip;
+            _arrangementPanel   = panels.arrangement;
+            _toast              = panels.toast;
+            _instanceContainer  = instanceContainer;
+            _userHead           = userHead;
         }
 
         private void Awake()
@@ -278,17 +286,12 @@ namespace RhythmForge
 
         private Material GetMaterialForType(PatternType type)
         {
-            switch (type)
+            if (!_materialCache.TryGetValue(type, out var mat))
             {
-                case PatternType.RhythmLoop:
-                    return _rhythmMaterial;
-                case PatternType.MelodyLine:
-                    return _melodyMaterial;
-                case PatternType.HarmonyPad:
-                    return _harmonyMaterial;
-                default:
-                    return _rhythmMaterial;
+                mat = MaterialFactory.CreateStrokeMaterial(type);
+                _materialCache[type] = mat;
             }
+            return mat;
         }
 
         private void SwitchSceneRelative(int direction)

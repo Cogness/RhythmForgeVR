@@ -12,6 +12,7 @@ namespace RhythmForge.Core.PatternBehavior.Behaviors
         public PatternType Type => PatternType.HarmonyPad;
         public string DisplayName => "Harmony";
         public bool PrefersClosedStroke => false;
+        public string DraftNamePrefix => "Pad";
 
         public PatternDerivationResult Derive(
             List<Vector2> points,

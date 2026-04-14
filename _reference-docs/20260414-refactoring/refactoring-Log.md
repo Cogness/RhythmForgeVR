@@ -114,3 +114,185 @@ _reference-docs/20260414-refactoring/Refactoring-Plan.md
 
 Refactered architecture:
 _reference-docs/20260414-refactoring/Refactoring-Architecture-Evolution.md
+
+# Gap Analysis
+
+Ready for review
+Select text to add comments on the plan
+Fix Four Refactoring Gaps
+Context
+The Phase 1-4 refactoring was well executed overall, but the post-refactoring analysis identified four concrete gaps where the code doesn't meet the plan's own stated goals:
+
+RhythmForgeManager.Configure() still takes 18 parameters (plan target: <8)
+Residual PatternType switches that would break when adding a new type
+AudioEngine has duplicate public method names (old + interface)
+SessionStore exposes sub-objects publicly but no caller uses them — dual-path confusion
+Fix 1: Collapse Configure() from 18 params to 4
+Root cause: The bootstrapper passes every individual component even though the manager doesn't use most of them directly — it just forwards them to VisualizerManager or subscribes to their events.
+
+Approach: Introduce two grouping structs + eliminate the 3 material parameters entirely.
+
+1a. Materials — eliminate from Configure
+The manager's GetMaterialForType is a type-switch that returns one of 3 serialized material fields. But MaterialFactory.CreateStrokeMaterial(PatternType) already creates the right material from TypeColors. The manager should create/cache materials on demand instead of receiving them.
+
+Files:
+
+RhythmForgeManager.cs — remove _rhythmMaterial, _melodyMaterial, _harmonyMaterial fields; replace GetMaterialForType with:
+private readonly Dictionary<PatternType, Material> _materialCache = new();
+private Material GetMaterialForType(PatternType type)
+{
+    if (!_materialCache.TryGetValue(type, out var mat))
+    {
+        mat = MaterialFactory.CreateStrokeMaterial(type);
+        _materialCache[type] = mat;
+    }
+    return mat;
+}
+RhythmForgeBootstrapper.cs — stop passing rhythmMat, melodyMat, harmonyMat to Configure(). The bootstrapper still creates one for StrokeCapture's default stroke material, which is separate.
+This eliminates the type-switch and 3 parameters in one move.
+
+1b. Group remaining params into structs
+Create two structs in RhythmForgeManager.cs:
+
+public struct SubsystemRefs
+{
+    public AudioEngine audioEngine;
+    public Sequencer.Sequencer sequencer;
+    public StrokeCapture strokeCapture;
+    public DrawModeController drawMode;
+    public InputMapper inputMapper;
+    public InstanceGrabber instanceGrabber;
+}
+
+public struct PanelRefs
+{
+    public CommitCardPanel commitCard;
+    public InspectorPanel inspector;
+    public DockPanel dock;
+    public TransportPanel transport;
+    public SceneStripPanel sceneStrip;
+    public ArrangementPanel arrangement;
+    public ToastMessage toast;
+}
+New signature:
+
+public void Configure(SubsystemRefs subsystems, PanelRefs panels,
+    Transform instanceContainer, Transform userHead)
+4 parameters. The bootstrapper builds the structs from its existing SubsystemRefs (which already has the same shape) and a new PanelRefs.
+
+Files:
+
+RhythmForgeManager.cs — new structs, new Configure signature, unpack in body
+RhythmForgeBootstrapper.cs — construct the structs at the call site (lines 281-297)
+Fix 2: Eliminate residual type switches
+2a. PlaybackAnimator HarmonyPad width leak
+Current: PlaybackAnimator.cs:53-54:
+
+if (type == PatternType.HarmonyPad)
+    width += animation.haloEnergy * 0.0012f;
+Fix: Add extraLineWidth field to AnimationEnergies struct. Each behavior's ComputeAnimation sets it. The animator applies it unconditionally.
+
+Files:
+
+IPatternBehavior.cs — add public float extraLineWidth; to AnimationEnergies
+HarmonyPadBehavior.cs (Animate via the HarmonyPadVisualProfile) — set extraLineWidth = haloEnergy * 0.0012f (move the constant there)
+RhythmLoopBehavior.cs / MelodyLineBehavior.cs (via their profiles) — set extraLineWidth = 0f (explicit)
+PlaybackAnimator.cs — replace the if (type == HarmonyPad) block with width += animation.extraLineWidth
+Since the animation is computed by the visual profiles (RhythmLoopVisualProfile.Animate, etc.), the extraLineWidth field goes in AnimationEnergies and each profile's Animate method sets it.
+
+2b. NextDraftName / ReserveName type switch
+Current: SessionStore.cs:46-75 — switches on PatternType for name prefix and counter field.
+
+Fix: Add DraftNamePrefix to IPatternBehavior and use a Dictionary<PatternType, int> for counters.
+
+Files:
+
+IPatternBehavior.cs — add string DraftNamePrefix { get; } to interface
+RhythmLoopBehavior.cs — DraftNamePrefix => "Beat"
+MelodyLineBehavior.cs — DraftNamePrefix => "Melody"
+HarmonyPadBehavior.cs — DraftNamePrefix => "Pad"
+AppState.cs / DraftCounters — add Dictionary<string, int> typeCounters alongside existing fields for backwards compat
+SessionStore.cs — NextDraftName and ReserveName use PatternBehaviorRegistry.Get(type).DraftNamePrefix and the dictionary counter. Falls back to the old fields if the dictionary key is missing (migration safety).
+StateMigrator.cs — migrate old rhythm/melody/harmony counter fields into the dictionary on load
+Fix 3: Clean AudioEngine dual API
+Finding from exploration: No external code calls PlayDrumEvent, PlayMelodyNote, or PlayHarmonyChord. All behavior implementations call through IAudioDispatcher (PlayDrum, PlayMelody, PlayChord). The old names are only called internally within AudioEngine itself.
+
+Fix: Rename the implementation methods to match the interface, remove the forwarding wrappers.
+
+Files:
+
+AudioEngine.cs:
+Rename PlayDrumEvent(InstrumentPreset, ...) → make PlayDrum the implementation (remove the wrapper)
+Rename PlayMelodyNote(InstrumentPreset, ...) → make PlayMelody the implementation
+Rename PlayHarmonyChord(InstrumentPreset, ...) → make PlayChord the implementation
+Keep the convenience overloads (no-preset versions) but name them consistently: PlayDrum(string lane, ...), PlayMelody(int midi, ...), PlayChord(List<int> chord, ...)
+Total public methods: 6 → 6 (3 interface + 3 convenience), but no more name duplication
+Fix 4: Remove public sub-object properties from SessionStore
+Finding from exploration: Zero callers use store.Patterns.X(), store.Scenes.X(), or store.SoundResolver.X() directly. Every single caller uses the forwarding methods on SessionStore itself.
+
+Pragmatic fix: Make Patterns, Scenes, SoundResolver internal instead of public. The facade IS the API — callers don't need two paths. The sub-objects exist for internal organization and testability, not for external consumption.
+
+Files:
+
+SessionStore.cs:
+Change public PatternRepository Patterns { get; } → internal PatternRepository Patterns { get; }
+Change public SceneController Scenes { get; } → internal SceneController Scenes { get; }
+Change public SoundProfileResolver SoundResolver { get; } → internal SoundProfileResolver SoundResolver { get; }
+Tests in the Editor assembly still have access via InternalsVisibleTo("Assembly-CSharp-Editor") which is already declared in AssemblyInfo.cs.
+
+File Change Summary
+File	Change
+RhythmForgeManager.cs	Add SubsystemRefs/PanelRefs structs, new Configure signature, replace GetMaterialForType with cached MaterialFactory call, remove 3 material serialized fields
+RhythmForgeBootstrapper.cs	Update Configure call to use structs, stop passing materials
+IPatternBehavior.cs	Add DraftNamePrefix property, add extraLineWidth to AnimationEnergies
+RhythmLoopBehavior.cs	Add DraftNamePrefix => "Beat"
+MelodyLineBehavior.cs	Add DraftNamePrefix => "Melody"
+HarmonyPadBehavior.cs	Add DraftNamePrefix => "Pad"
+VisualGrammarProfileAsset.cs	Each visual profile's Animate sets extraLineWidth (only HarmonyPad sets non-zero)
+PlaybackAnimator.cs	Replace if (type == HarmonyPad) with width += animation.extraLineWidth
+AudioEngine.cs	Consolidate dual method names into single set
+SessionStore.cs	Make sub-object properties internal, update NextDraftName/ReserveName to use registry
+AppState.cs	Add typeCounters dictionary to DraftCounters
+StateMigrator.cs	Migrate legacy counter fields into dictionary
+Verification
+git diff --check — no whitespace issues
+All existing edit-mode tests pass without modification (the sub-object access in tests works via InternalsVisibleTo)
+Confirm Configure now takes 4 params by inspection
+Grep for PatternType.HarmonyPad in PlaybackAnimator.cs — should return zero matches
+Grep for PlayDrumEvent|PlayMelodyNote|PlayHarmonyChord outside AudioEngine.cs — should return zero
+Grep for public.*PatternRepository\|public.*SceneController\|public.*SoundProfileResolver in SessionStore.cs — should return zero (all internal)
+
+Update Todos
+
+Fix 1: Collapse Configure() to 4 params (structs + material cache)
+
+Fix 2a: Add extraLineWidth to AnimationEnergies, remove HarmonyPad switch in PlaybackAnimator
+
+Fix 2b: Add DraftNamePrefix to IPatternBehavior, remove type switch in SessionStore naming
+
+Fix 3: Consolidate AudioEngine dual API (remove old method names)
+
+Fix 4: Make SessionStore sub-objects internal
+All four fixes are in. Here's the summary of every change made:
+
+Fix 1 — Configure(): 18 → 4 params
+
+RhythmForgeManager.cs: Added ManagerSubsystems and ManagerPanels structs. Configure() now takes those two structs + instanceContainer + userHead. Removed 3 _rhythmMaterial/_melodyMaterial/_harmonyMaterial serialized fields. GetMaterialForType replaced with a Dictionary<PatternType, Material> cache that calls MaterialFactory.CreateStrokeMaterial(type) — eliminating the type switch too.
+RhythmForgeBootstrapper.cs: BuildAll now constructs the two structs inline and calls Configure with 4 args. Only one default stroke material is created (for StrokeCapture).
+Fix 2a — HarmonyPad switch in PlaybackAnimator
+
+IPatternBehavior.cs: Added extraLineWidth to AnimationEnergies.
+VisualGrammarProfileAsset.cs: RhythmLoopVisualProfile.Animate and MelodyLineVisualProfile.Animate set extraLineWidth = 0f. HarmonyPadVisualProfile.Animate sets extraLineWidth = haloEnergy * 0.0012f.
+PlaybackAnimator.cs: Replaced if (type == PatternType.HarmonyPad) width += ... with width += animation.extraLineWidth.
+Fix 2b — type switch in NextDraftName/ReserveName
+
+IPatternBehavior.cs: Added string DraftNamePrefix { get; } to the interface.
+All three behaviors: RhythmLoopBehavior → "Beat", MelodyLineBehavior → "Melody", HarmonyPadBehavior → "Pad".
+AppState.cs: Added GetCount(PatternType) and Increment(PatternType) to DraftCounters — the switch lives here where it belongs, serialization unchanged.
+SessionStore.cs: NextDraftName and ReserveName now use PatternBehaviorRegistry.Get(type).DraftNamePrefix and DraftCounters methods — no switch.
+Fix 3 — AudioEngine dual API
+
+AudioEngine.cs: Removed PlayDrumEvent, PlayMelodyNote, PlayHarmonyChord. The three interface method names (PlayDrum, PlayMelody, PlayChord) are now the single implementation. Convenience no-preset overloads kept but renamed consistently.
+Fix 4 — SessionStore sub-objects
+
+SessionStore.cs: Patterns, Scenes, SoundResolver changed from public to internal. Tests in the editor assembly retain access via the existing InternalsVisibleTo declaration.

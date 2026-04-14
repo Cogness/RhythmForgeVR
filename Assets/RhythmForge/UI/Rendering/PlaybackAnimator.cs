@@ -50,8 +50,7 @@ namespace RhythmForge.UI.Rendering
 
             float width = isSelected ? _selectedLineWidth : _lineWidth;
             width += animation.lineEnergy * (0.0014f + spec.thickness * 0.0032f);
-            if (type == PatternType.HarmonyPad)
-                width += animation.haloEnergy * 0.0012f;
+            width += animation.extraLineWidth;
 
             _lineRenderer.startWidth = width;
             _lineRenderer.endWidth = width;

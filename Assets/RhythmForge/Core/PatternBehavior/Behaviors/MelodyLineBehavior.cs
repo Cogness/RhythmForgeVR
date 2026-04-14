@@ -12,6 +12,7 @@ namespace RhythmForge.Core.PatternBehavior.Behaviors
         public PatternType Type => PatternType.MelodyLine;
         public string DisplayName => "Melody";
         public bool PrefersClosedStroke => false;
+        public string DraftNamePrefix => "Melody";
 
         public PatternDerivationResult Derive(
             List<Vector2> points,

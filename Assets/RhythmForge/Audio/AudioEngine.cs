@@ -21,13 +21,14 @@ namespace RhythmForge.Audio
             _samplePlayer = samplePlayer;
         }
 
-        public void PlayDrumEvent(string lane, float velocity, float pan, float brightness,
+        // Convenience overload — uses default lofi-drums preset.
+        public void PlayDrum(string lane, float velocity, float pan, float brightness,
             float depth, float fxSend, SoundProfile soundProfile)
         {
-            PlayDrumEvent(InstrumentPresets.Get("lofi-drums"), lane, velocity, pan, brightness, depth, fxSend, soundProfile);
+            PlayDrum(InstrumentPresets.Get("lofi-drums"), lane, velocity, pan, brightness, depth, fxSend, soundProfile);
         }
 
-        public void PlayDrumEvent(InstrumentPreset preset, string lane, float velocity, float pan, float brightness,
+        public void PlayDrum(InstrumentPreset preset, string lane, float velocity, float pan, float brightness,
             float depth, float fxSend, SoundProfile soundProfile)
         {
             if (!IsReady) return;
@@ -47,21 +48,16 @@ namespace RhythmForge.Audio
                 soundProfile);
         }
 
-        public void PlayDrum(InstrumentPreset preset, string lane, float velocity, float pan, float brightness,
-            float depth, float fxSend, SoundProfile soundProfile)
-        {
-            PlayDrumEvent(preset, lane, velocity, pan, brightness, depth, fxSend, soundProfile);
-        }
-
-        public void PlayMelodyNote(int midi, float velocity, float duration,
+        // Convenience overload — uses default lofi-piano preset.
+        public void PlayMelody(int midi, float velocity, float duration,
             float pan, float brightness, float depth, float fxSend,
             SoundProfile soundProfile, float glide = 0f)
         {
-            PlayMelodyNote(InstrumentPresets.Get("lofi-piano"), midi, velocity, duration,
+            PlayMelody(InstrumentPresets.Get("lofi-piano"), midi, velocity, duration,
                 pan, brightness, depth, fxSend, soundProfile, glide);
         }
 
-        public void PlayMelodyNote(InstrumentPreset preset, int midi, float velocity, float duration,
+        public void PlayMelody(InstrumentPreset preset, int midi, float velocity, float duration,
             float pan, float brightness, float depth, float fxSend,
             SoundProfile soundProfile, float glide = 0f)
         {
@@ -85,22 +81,16 @@ namespace RhythmForge.Audio
                 glide);
         }
 
-        public void PlayMelody(InstrumentPreset preset, int midi, float velocity, float duration,
-            float pan, float brightness, float depth, float fxSend,
-            SoundProfile soundProfile, float glide = 0f)
-        {
-            PlayMelodyNote(preset, midi, velocity, duration, pan, brightness, depth, fxSend, soundProfile, glide);
-        }
-
-        public void PlayHarmonyChord(List<int> chord, float velocity,
+        // Convenience overload — uses default lofi-pad preset.
+        public void PlayChord(List<int> chord, float velocity,
             float duration, float pan, float brightness, float depth,
             float fxSend, SoundProfile soundProfile)
         {
-            PlayHarmonyChord(InstrumentPresets.Get("lofi-pad"), chord, velocity, duration,
+            PlayChord(InstrumentPresets.Get("lofi-pad"), chord, velocity, duration,
                 pan, brightness, depth, fxSend, soundProfile);
         }
 
-        public void PlayHarmonyChord(InstrumentPreset preset, List<int> chord, float velocity,
+        public void PlayChord(InstrumentPreset preset, List<int> chord, float velocity,
             float duration, float pan, float brightness, float depth,
             float fxSend, SoundProfile soundProfile)
         {
@@ -120,13 +110,6 @@ namespace RhythmForge.Audio
                 gainAmount * _masterVolume,
                 fxSend,
                 soundProfile);
-        }
-
-        public void PlayChord(InstrumentPreset preset, List<int> chord, float velocity,
-            float duration, float pan, float brightness, float depth,
-            float fxSend, SoundProfile soundProfile)
-        {
-            PlayHarmonyChord(preset, chord, velocity, duration, pan, brightness, depth, fxSend, soundProfile);
         }
     }
 }

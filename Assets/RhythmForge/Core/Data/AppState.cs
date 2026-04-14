@@ -28,6 +28,26 @@ namespace RhythmForge.Core.Data
         public int rhythm = 1;
         public int melody = 1;
         public int harmony = 1;
+
+        public int GetCount(PatternType type)
+        {
+            switch (type)
+            {
+                case PatternType.RhythmLoop: return rhythm;
+                case PatternType.MelodyLine: return melody;
+                default:                     return harmony;
+            }
+        }
+
+        public void Increment(PatternType type)
+        {
+            switch (type)
+            {
+                case PatternType.RhythmLoop: rhythm++;  break;
+                case PatternType.MelodyLine: melody++;  break;
+                default:                     harmony++; break;
+            }
+        }
     }
 
     public static class AppStateFactory

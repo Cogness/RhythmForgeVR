@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Rendering;
 using UnityEngine.EventSystems;
+using RhythmForge;
 using RhythmForge.Audio;
 using RhythmForge.Core.Data;
 using RhythmForge.Core.Session;
@@ -258,13 +259,11 @@ namespace RhythmForge.Bootstrap
             // ── 1. Audio ──
             BuildAudio();
 
-            // ── 2. Materials ──
-            var rhythmMat  = MaterialFactory.CreateStrokeMaterial(PatternType.RhythmLoop);
-            var melodyMat  = MaterialFactory.CreateStrokeMaterial(PatternType.MelodyLine);
-            var harmonyMat = MaterialFactory.CreateStrokeMaterial(PatternType.HarmonyPad);
+            // ── 2. Default stroke material (StrokeCapture only; manager creates per-type materials itself) ──
+            var defaultStrokeMat = MaterialFactory.CreateStrokeMaterial(PatternType.RhythmLoop);
 
             // ── 3. Core subsystems ──
-            var subsystems = BuildSubsystems(rhythmMat);
+            var subsystems = BuildSubsystems(defaultStrokeMat);
 
             // ── 4. UI panels ──
             var panels = BuildUIPanels(subsystems.strokeCapture, subsystems.drawMode);
@@ -276,37 +275,40 @@ namespace RhythmForge.Bootstrap
             var instanceContainer = new GameObject("InstanceContainer").transform;
             instanceContainer.SetParent(transform);
 
-            // ── 6. Manager configuration ──
+            // ── 6. Manager configuration (4 params) ──
             _manager = GetOrAdd<RhythmForgeManager>(gameObject);
             _manager.Configure(
-                subsystems.audioEngine,
-                subsystems.sequencer,
-                subsystems.strokeCapture,
-                subsystems.drawMode,
-                subsystems.inputMapper,
-                subsystems.instanceGrabber,
-                panels.commitCard,
-                panels.inspector,
-                panels.dock,
-                panels.transport,
-                panels.sceneStrip,
-                panels.arrangement,
-                panels.toast,
-                rhythmMat,
-                melodyMat,
-                harmonyMat,
+                new ManagerSubsystems
+                {
+                    audioEngine   = subsystems.audioEngine,
+                    sequencer     = subsystems.sequencer,
+                    strokeCapture = subsystems.strokeCapture,
+                    drawMode      = subsystems.drawMode,
+                    inputMapper   = subsystems.inputMapper,
+                    instanceGrabber = subsystems.instanceGrabber
+                },
+                new ManagerPanels
+                {
+                    commitCard  = panels.commitCard,
+                    inspector   = panels.inspector,
+                    dock        = panels.dock,
+                    transport   = panels.transport,
+                    sceneStrip  = panels.sceneStrip,
+                    arrangement = panels.arrangement,
+                    toast       = panels.toast
+                },
                 instanceContainer,
                 _rig != null ? _rig.CenterEye : null
             );
 
             // Cache for inspector readout
-            _inputMapper    = subsystems.inputMapper;
-            _drawMode       = subsystems.drawMode;
-            _strokeCapture  = subsystems.strokeCapture;
+            _inputMapper     = subsystems.inputMapper;
+            _drawMode        = subsystems.drawMode;
+            _strokeCapture   = subsystems.strokeCapture;
             _instanceGrabber = subsystems.instanceGrabber;
-            _audioEngine    = subsystems.audioEngine;
-            _samplePlayer   = subsystems.samplePlayer;
-            _sequencer      = subsystems.sequencer;
+            _audioEngine     = subsystems.audioEngine;
+            _samplePlayer    = subsystems.samplePlayer;
+            _sequencer       = subsystems.sequencer;
         }
 
         // ──────────────────────────────────────────────────────────

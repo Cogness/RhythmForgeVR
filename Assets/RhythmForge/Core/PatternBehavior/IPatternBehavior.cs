@@ -13,6 +13,8 @@ namespace RhythmForge.Core.PatternBehavior
         PatternType Type { get; }
         string DisplayName { get; }
         bool PrefersClosedStroke { get; }
+        /// <summary>Prefix used when auto-naming drafts of this type (e.g. "Beat", "Melody", "Pad").</summary>
+        string DraftNamePrefix { get; }
 
         PatternDerivationResult Derive(
             List<Vector2> points,
@@ -71,5 +73,10 @@ namespace RhythmForge.Core.PatternBehavior
         public float markerScale;
         public float normalOffset;
         public float haloBreath;
+        /// <summary>
+        /// Extra width added to the line on top of the energy-driven base.
+        /// Set by each pattern type's animation profile (HarmonyPad uses a non-zero value).
+        /// </summary>
+        public float extraLineWidth;
     }
 }

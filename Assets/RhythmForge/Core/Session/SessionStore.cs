@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using RhythmForge.Core.Data;
 using RhythmForge.Core.Events;
+using RhythmForge.Core.PatternBehavior;
 
 namespace RhythmForge.Core.Session
 {
@@ -11,9 +12,9 @@ namespace RhythmForge.Core.Session
         public AppState State { get; private set; }
         public RhythmForgeEventBus EventBus { get; }
 
-        public PatternRepository Patterns { get; }
-        public SceneController Scenes { get; }
-        public SoundProfileResolver SoundResolver { get; }
+        internal PatternRepository Patterns { get; }
+        internal SceneController Scenes { get; }
+        internal SoundProfileResolver SoundResolver { get; }
 
         private readonly StateMigrator _stateMigrator;
 
@@ -44,33 +45,15 @@ namespace RhythmForge.Core.Session
 
         public string NextDraftName(PatternType type)
         {
-            switch (type)
-            {
-                case PatternType.RhythmLoop:
-                    return $"Beat-{State.counters.rhythm:D2}";
-                case PatternType.MelodyLine:
-                    return $"Melody-{State.counters.melody:D2}";
-                default:
-                    return $"Pad-{State.counters.harmony:D2}";
-            }
+            string prefix = PatternBehaviorRegistry.Get(type).DraftNamePrefix;
+            int count = State.counters.GetCount(type);
+            return $"{prefix}-{count:D2}";
         }
 
         public string ReserveName(PatternType type)
         {
             string name = NextDraftName(type);
-            switch (type)
-            {
-                case PatternType.RhythmLoop:
-                    State.counters.rhythm++;
-                    break;
-                case PatternType.MelodyLine:
-                    State.counters.melody++;
-                    break;
-                default:
-                    State.counters.harmony++;
-                    break;
-            }
-
+            State.counters.Increment(type);
             return name;
         }
 

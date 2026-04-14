@@ -1,5 +1,6 @@
 using UnityEngine;
 using RhythmForge.Core.Data;
+using RhythmForge.Core.Events;
 using RhythmForge.Core.Session;
 using RhythmForge.Audio;
 using RhythmForge.Interaction;
@@ -40,6 +41,7 @@ namespace RhythmForge
         [SerializeField] private Transform _userHead;
 
         private SessionStore _store;
+        private RhythmForgeEventBus _eventBus;
         private VisualizerManager _visualizerManager;
         private AutosaveController _autosaveController;
         private IInputProvider _inputProvider;
@@ -112,6 +114,9 @@ namespace RhythmForge
                 return;
 
             _initialized = true;
+            _eventBus = _store != null ? _store.EventBus : null;
+            if (_drawModeController != null)
+                _drawModeController.SetEventBus(_eventBus);
             SyncDrawModeFromStore();
 
             if (_sequencer)
@@ -130,7 +135,6 @@ namespace RhythmForge
             if (_transportPanel)
             {
                 _transportPanel.Initialize(_store, _sequencer, _drawModeController);
-                _transportPanel.OnParamsVisibilityChanged += OnParamsVisibilityChanged;
                 _showParamLabels = _transportPanel.ShowParams;
             }
             if (_sceneStripPanel)
@@ -145,37 +149,14 @@ namespace RhythmForge
                 _userHead,
                 GetMaterialForType);
 
-            _store.OnStateChanged += OnStateChanged;
-
-            if (_strokeCapture)
-            {
-                _strokeCapture.OnDraftCreated += OnDraftCreated;
-                _strokeCapture.OnDraftDiscarded += OnDraftDiscarded;
-            }
-
-            if (_sequencer)
-                _sequencer.OnTransportChanged += OnTransportChanged;
-            if (_drawModeController != null)
-                _drawModeController.OnModeChanged += OnDrawModeChanged;
+            SubscribeToEventBus();
 
             _visualizerManager.RebuildInstanceVisuals(_showParamLabels);
         }
 
         private void OnDestroy()
         {
-            if (_store != null)
-                _store.OnStateChanged -= OnStateChanged;
-            if (_strokeCapture != null)
-            {
-                _strokeCapture.OnDraftCreated -= OnDraftCreated;
-                _strokeCapture.OnDraftDiscarded -= OnDraftDiscarded;
-            }
-            if (_sequencer != null)
-                _sequencer.OnTransportChanged -= OnTransportChanged;
-            if (_drawModeController != null)
-                _drawModeController.OnModeChanged -= OnDrawModeChanged;
-            if (_transportPanel != null)
-                _transportPanel.OnParamsVisibilityChanged -= OnParamsVisibilityChanged;
+            UnsubscribeFromEventBus();
 
             _visualizerManager?.Dispose();
         }
@@ -221,6 +202,62 @@ namespace RhythmForge
         {
             _showParamLabels = visible;
             _visualizerManager?.SetParameterLabelVisible(visible);
+        }
+
+        private void SubscribeToEventBus()
+        {
+            if (_eventBus == null)
+                return;
+
+            _eventBus.Subscribe<SessionStateChangedEvent>(HandleSessionStateChanged);
+            _eventBus.Subscribe<DraftCreatedEvent>(HandleDraftCreated);
+            _eventBus.Subscribe<DraftDiscardedEvent>(HandleDraftDiscarded);
+            _eventBus.Subscribe<TransportChangedEvent>(HandleTransportChanged);
+            _eventBus.Subscribe<DrawModeChangedEvent>(HandleDrawModeChanged);
+            _eventBus.Subscribe<ParameterLabelsVisibilityChangedEvent>(HandleParameterLabelsVisibilityChanged);
+        }
+
+        private void UnsubscribeFromEventBus()
+        {
+            if (_eventBus == null)
+                return;
+
+            _eventBus.Unsubscribe<SessionStateChangedEvent>(HandleSessionStateChanged);
+            _eventBus.Unsubscribe<DraftCreatedEvent>(HandleDraftCreated);
+            _eventBus.Unsubscribe<DraftDiscardedEvent>(HandleDraftDiscarded);
+            _eventBus.Unsubscribe<TransportChangedEvent>(HandleTransportChanged);
+            _eventBus.Unsubscribe<DrawModeChangedEvent>(HandleDrawModeChanged);
+            _eventBus.Unsubscribe<ParameterLabelsVisibilityChangedEvent>(HandleParameterLabelsVisibilityChanged);
+        }
+
+        private void HandleSessionStateChanged(SessionStateChangedEvent evt)
+        {
+            OnStateChanged();
+        }
+
+        private void HandleDraftCreated(DraftCreatedEvent evt)
+        {
+            OnDraftCreated(evt.Draft);
+        }
+
+        private void HandleDraftDiscarded(DraftDiscardedEvent evt)
+        {
+            OnDraftDiscarded();
+        }
+
+        private void HandleTransportChanged(TransportChangedEvent evt)
+        {
+            OnTransportChanged();
+        }
+
+        private void HandleDrawModeChanged(DrawModeChangedEvent evt)
+        {
+            OnDrawModeChanged(evt.Mode);
+        }
+
+        private void HandleParameterLabelsVisibilityChanged(ParameterLabelsVisibilityChangedEvent evt)
+        {
+            OnParamsVisibilityChanged(evt.Visible);
         }
 
         private void HandleSceneAndTransportInput()

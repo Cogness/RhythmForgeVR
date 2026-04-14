@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using RhythmForge.Core.Data;
+using RhythmForge.Core.Events;
 using RhythmForge.Core.Session;
 using RhythmForge.Interaction;
 
@@ -26,6 +27,7 @@ namespace RhythmForge.UI.Panels
         [SerializeField] private Transform _lookAtTarget; // camera
 
         private StrokeCapture _strokeCapture;
+        private RhythmForgeEventBus _eventBus;
         private DraftResult _currentDraft;
 
         /// <summary>Called by RhythmForgeBootstrapper to inject all UI element references.</summary>
@@ -47,9 +49,18 @@ namespace RhythmForge.UI.Panels
         public void Initialize(StrokeCapture strokeCapture)
         {
             _strokeCapture = strokeCapture;
+            _eventBus = strokeCapture != null ? strokeCapture.EventBus : null;
 
-            _strokeCapture.OnDraftCreated += ShowDraft;
-            _strokeCapture.OnDraftDiscarded += Hide;
+            if (_eventBus != null)
+            {
+                _eventBus.Subscribe<DraftCreatedEvent>(HandleDraftCreated);
+                _eventBus.Subscribe<DraftDiscardedEvent>(HandleDraftDiscarded);
+            }
+            else if (_strokeCapture != null)
+            {
+                _strokeCapture.OnDraftCreated += ShowDraft;
+                _strokeCapture.OnDraftDiscarded += Hide;
+            }
 
             if (_saveButton) _saveButton.onClick.AddListener(() => Confirm(false));
             if (_saveDupButton) _saveDupButton.onClick.AddListener(() => Confirm(true));
@@ -60,11 +71,26 @@ namespace RhythmForge.UI.Panels
 
         private void OnDestroy()
         {
-            if (_strokeCapture != null)
+            if (_eventBus != null)
+            {
+                _eventBus.Unsubscribe<DraftCreatedEvent>(HandleDraftCreated);
+                _eventBus.Unsubscribe<DraftDiscardedEvent>(HandleDraftDiscarded);
+            }
+            else if (_strokeCapture != null)
             {
                 _strokeCapture.OnDraftCreated -= ShowDraft;
                 _strokeCapture.OnDraftDiscarded -= Hide;
             }
+        }
+
+        private void HandleDraftCreated(DraftCreatedEvent evt)
+        {
+            ShowDraft(evt.Draft);
+        }
+
+        private void HandleDraftDiscarded(DraftDiscardedEvent evt)
+        {
+            Hide();
         }
 
         private void Update()

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using RhythmForge.Core.Data;
+using RhythmForge.Core.Events;
 using RhythmForge.Core.Session;
 
 namespace RhythmForge.UI.Panels
@@ -30,6 +31,7 @@ namespace RhythmForge.UI.Panels
 
         private SessionStore _store;
         private Sequencer.Sequencer _sequencer;
+        private RhythmForgeEventBus _eventBus;
         private readonly string[] _sceneOptions = { "", "scene-a", "scene-b", "scene-c", "scene-d" };
         private readonly int[] _barsOptions = { 4, 8, 16 };
         private bool _updating;
@@ -38,6 +40,7 @@ namespace RhythmForge.UI.Panels
         {
             _store = store;
             _sequencer = sequencer;
+            _eventBus = _store != null ? _store.EventBus : null;
 
             for (int i = 0; i < _slots.Count && i < AppStateFactory.MaxArrangementSlots; i++)
             {
@@ -53,15 +56,31 @@ namespace RhythmForge.UI.Panels
                     slot.slotLabel.text = $"Slot {i + 1}";
             }
 
-            _store.OnStateChanged += Refresh;
-            if (_sequencer != null) _sequencer.OnTransportChanged += Refresh;
+            if (_eventBus != null)
+            {
+                _eventBus.Subscribe<SessionStateChangedEvent>(HandleSessionStateChanged);
+                _eventBus.Subscribe<TransportChangedEvent>(HandleTransportChanged);
+            }
             Refresh();
         }
 
         private void OnDestroy()
         {
-            if (_store != null) _store.OnStateChanged -= Refresh;
-            if (_sequencer != null) _sequencer.OnTransportChanged -= Refresh;
+            if (_eventBus == null)
+                return;
+
+            _eventBus.Unsubscribe<SessionStateChangedEvent>(HandleSessionStateChanged);
+            _eventBus.Unsubscribe<TransportChangedEvent>(HandleTransportChanged);
+        }
+
+        private void HandleSessionStateChanged(SessionStateChangedEvent evt)
+        {
+            Refresh();
+        }
+
+        private void HandleTransportChanged(TransportChangedEvent evt)
+        {
+            Refresh();
         }
 
         private void CycleScene(int index)

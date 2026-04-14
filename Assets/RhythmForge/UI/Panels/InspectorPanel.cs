@@ -4,6 +4,7 @@ using UnityEngine.UI;
 using RhythmForge.Core.Data;
 using RhythmForge.Core.Session;
 using RhythmForge.Core.Analysis;
+using RhythmForge.Core.Events;
 
 namespace RhythmForge.UI.Panels
 {
@@ -42,6 +43,7 @@ namespace RhythmForge.UI.Panels
         [SerializeField] private Transform _lookAtTarget;
 
         private SessionStore _store;
+        private RhythmForgeEventBus _eventBus;
         private bool _updating;
 
         /// <summary>Called by RhythmForgeBootstrapper to inject all UI element references.</summary>
@@ -76,6 +78,7 @@ namespace RhythmForge.UI.Panels
         public void Initialize(SessionStore store)
         {
             _store = store;
+            _eventBus = _store != null ? _store.EventBus : null;
 
             if (_depthSlider) _depthSlider.onValueChanged.AddListener(OnDepthChanged);
             if (_muteButton) _muteButton.onClick.AddListener(OnToggleMute);
@@ -91,13 +94,15 @@ namespace RhythmForge.UI.Panels
                 _presetDropdown.onValueChanged.AddListener(OnPresetChanged);
             }
 
-            _store.OnStateChanged += Refresh;
+            if (_eventBus != null)
+                _eventBus.Subscribe<SessionStateChangedEvent>(HandleSessionStateChanged);
             gameObject.SetActive(false);
         }
 
         private void OnDestroy()
         {
-            if (_store != null) _store.OnStateChanged -= Refresh;
+            if (_eventBus != null)
+                _eventBus.Unsubscribe<SessionStateChangedEvent>(HandleSessionStateChanged);
         }
 
         private void Update()
@@ -170,6 +175,11 @@ namespace RhythmForge.UI.Panels
             if (_brightnessText) _brightnessText.text = $"Bright: {instance.brightness:F2}";
 
             _updating = false;
+        }
+
+        private void HandleSessionStateChanged(SessionStateChangedEvent evt)
+        {
+            Refresh();
         }
 
         private void UpdateMetricBars(PatternDefinition pattern)

@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 using RhythmForge.Core.Data;
+using RhythmForge.Core.Events;
 using RhythmForge.Core.Session;
 using RhythmForge.Interaction;
 
@@ -30,6 +31,7 @@ namespace RhythmForge.UI.Panels
         private SessionStore _store;
         private Sequencer.Sequencer _sequencer;
         private DrawModeController _drawMode;
+        private RhythmForgeEventBus _eventBus;
 
         /// <summary>Called by RhythmForgeBootstrapper to inject UI element references.</summary>
         public void SetUIRefs(Button playStopButton, Text playStopLabel,
@@ -53,6 +55,7 @@ namespace RhythmForge.UI.Panels
             _store = store;
             _sequencer = sequencer;
             _drawMode = drawMode;
+            _eventBus = _store != null ? _store.EventBus : null;
 
             if (_playStopButton)
                 _playStopButton.onClick.AddListener(() => _sequencer.TogglePlayback());
@@ -63,17 +66,23 @@ namespace RhythmForge.UI.Panels
 
             RefreshParamsButton();
 
-            if (_store != null) _store.OnStateChanged += Refresh;
-            if (_sequencer != null) _sequencer.OnTransportChanged += Refresh;
-            if (_drawMode != null) _drawMode.OnModeChanged += OnModeChanged;
+            if (_eventBus != null)
+            {
+                _eventBus.Subscribe<SessionStateChangedEvent>(HandleSessionStateChanged);
+                _eventBus.Subscribe<TransportChangedEvent>(HandleTransportChanged);
+                _eventBus.Subscribe<DrawModeChangedEvent>(HandleDrawModeChanged);
+            }
             Refresh();
         }
 
         private void OnDestroy()
         {
-            if (_store != null) _store.OnStateChanged -= Refresh;
-            if (_sequencer != null) _sequencer.OnTransportChanged -= Refresh;
-            if (_drawMode != null) _drawMode.OnModeChanged -= OnModeChanged;
+            if (_eventBus == null)
+                return;
+
+            _eventBus.Unsubscribe<SessionStateChangedEvent>(HandleSessionStateChanged);
+            _eventBus.Unsubscribe<TransportChangedEvent>(HandleTransportChanged);
+            _eventBus.Unsubscribe<DrawModeChangedEvent>(HandleDrawModeChanged);
         }
 
         private void OnModeChanged(PatternType mode)
@@ -116,6 +125,7 @@ namespace RhythmForge.UI.Panels
             _showParams = !_showParams;
             RefreshParamsButton();
             OnParamsVisibilityChanged?.Invoke(_showParams);
+            _eventBus?.Publish(new ParameterLabelsVisibilityChangedEvent(_showParams));
         }
 
         private void RefreshParamsButton()
@@ -125,6 +135,21 @@ namespace RhythmForge.UI.Panels
         }
 
         public bool ShowParams => _showParams;
+
+        private void HandleSessionStateChanged(SessionStateChangedEvent evt)
+        {
+            Refresh();
+        }
+
+        private void HandleTransportChanged(TransportChangedEvent evt)
+        {
+            Refresh();
+        }
+
+        private void HandleDrawModeChanged(DrawModeChangedEvent evt)
+        {
+            OnModeChanged(evt.Mode);
+        }
 
         private void RefreshModeButton(PatternType mode)
         {

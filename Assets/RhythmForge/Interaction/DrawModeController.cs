@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using RhythmForge.Core.Data;
+using RhythmForge.Core.Events;
 using RhythmForge.Core.PatternBehavior;
 
 namespace RhythmForge.Interaction
@@ -8,15 +9,22 @@ namespace RhythmForge.Interaction
     public class DrawModeController : MonoBehaviour
     {
         private PatternType _currentMode = PatternType.RhythmLoop;
+        private RhythmForgeEventBus _eventBus;
 
         public PatternType CurrentMode => _currentMode;
 
         public event Action<PatternType> OnModeChanged;
 
+        public void SetEventBus(RhythmForgeEventBus eventBus)
+        {
+            _eventBus = eventBus;
+        }
+
         public void SetMode(PatternType mode)
         {
             _currentMode = mode;
             OnModeChanged?.Invoke(_currentMode);
+            _eventBus?.Publish(new DrawModeChangedEvent(_currentMode));
         }
 
         public void CycleMode()

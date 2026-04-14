@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using RhythmForge.Core.Data;
+using RhythmForge.Core.Events;
 using RhythmForge.Core.PatternBehavior;
 using RhythmForge.Core.Session;
 using RhythmForge.Audio;
@@ -20,6 +21,7 @@ namespace RhythmForge.Sequencer
         private ArrangementNavigator _arrangementNavigator;
         private TransportController _transportController;
         private PlaybackVisualTracker _playbackVisualTracker;
+        private RhythmForgeEventBus _eventBus;
         private readonly Transport _fallbackTransport = new Transport();
 
         private const float LookaheadSeconds = 0.12f;
@@ -35,6 +37,7 @@ namespace RhythmForge.Sequencer
                 _transportController.OnPlaybackSceneChanged -= HandlePlaybackSceneChanged;
 
             _store = store;
+            _eventBus = store != null ? store.EventBus : null;
             _arrangementNavigator = new ArrangementNavigator(store);
             _transportController = new TransportController(store, _arrangementNavigator, GetDspTime);
             _transportController.OnPlaybackSceneChanged += HandlePlaybackSceneChanged;
@@ -55,7 +58,7 @@ namespace RhythmForge.Sequencer
 
             _playbackVisualTracker?.Clear();
             _transportController.Play();
-            OnTransportChanged?.Invoke();
+            NotifyTransportChanged();
         }
 
         public void Stop()
@@ -65,7 +68,7 @@ namespace RhythmForge.Sequencer
 
             _transportController.Stop();
             _playbackVisualTracker?.Clear();
-            OnTransportChanged?.Invoke();
+            NotifyTransportChanged();
         }
 
         public void TogglePlayback()
@@ -89,7 +92,7 @@ namespace RhythmForge.Sequencer
             {
                 ScheduleCurrentStep(transport.nextNoteTime);
                 if (_transportController.AdvanceTransport())
-                    OnTransportChanged?.Invoke();
+                    NotifyTransportChanged();
                 transport.nextNoteTime += stepDur;
             }
 
@@ -195,6 +198,8 @@ namespace RhythmForge.Sequencer
         {
             if (!string.IsNullOrEmpty(previousSceneId))
                 _playbackVisualTracker?.Clear(previousSceneId, _store);
+
+            _eventBus?.Publish(new PlaybackSceneChangedEvent(previousSceneId, currentSceneId));
         }
 
         private void RecordTrigger(string instanceId, double scheduledTime, float activeDuration)
@@ -205,6 +210,12 @@ namespace RhythmForge.Sequencer
                 activeDuration,
                 GetDspTime(),
                 GetVisualTimeSeconds());
+        }
+
+        private void NotifyTransportChanged()
+        {
+            OnTransportChanged?.Invoke();
+            _eventBus?.Publish(new TransportChangedEvent(CurrentTransport, GetPlaybackSceneId(), IsPlaying));
         }
     }
 }

@@ -2,12 +2,14 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using RhythmForge.Core.Data;
+using RhythmForge.Core.Events;
 
 namespace RhythmForge.Core.Session
 {
     public class SessionStore
     {
         public AppState State { get; private set; }
+        public RhythmForgeEventBus EventBus { get; }
 
         public PatternRepository Patterns { get; }
         public SceneController Scenes { get; }
@@ -17,8 +19,9 @@ namespace RhythmForge.Core.Session
 
         public event Action OnStateChanged;
 
-        public SessionStore()
+        public SessionStore(RhythmForgeEventBus eventBus = null)
         {
+            EventBus = eventBus ?? new RhythmForgeEventBus();
             State = AppStateFactory.CreateEmpty();
             Patterns = new PatternRepository(() => State, GetScene, NotifyStateChanged, ReserveName);
             Scenes = new SceneController(() => State, GetScene, GetInstance, NotifyStateChanged);
@@ -179,6 +182,7 @@ namespace RhythmForge.Core.Session
         private void NotifyStateChanged()
         {
             OnStateChanged?.Invoke();
+            EventBus.Publish(new SessionStateChangedEvent(this));
         }
     }
 }

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using RhythmForge.Core.Data;
+using RhythmForge.Core.Events;
 using RhythmForge.Core.Session;
 
 namespace RhythmForge.UI.Panels
@@ -22,6 +23,7 @@ namespace RhythmForge.UI.Panels
 
         private SessionStore _store;
         private Sequencer.Sequencer _sequencer;
+        private RhythmForgeEventBus _eventBus;
         private string[] _sceneIds = { "scene-a", "scene-b", "scene-c", "scene-d" };
 
         /// <summary>Called by RhythmForgeBootstrapper to inject UI button and label references.</summary>
@@ -35,6 +37,7 @@ namespace RhythmForge.UI.Panels
         {
             _store = store;
             _sequencer = sequencer;
+            _eventBus = _store != null ? _store.EventBus : null;
 
             for (int i = 0; i < _sceneButtons.Count && i < _sceneIds.Length; i++)
             {
@@ -42,15 +45,31 @@ namespace RhythmForge.UI.Panels
                 _sceneButtons[i].onClick.AddListener(() => OnSceneClicked(index));
             }
 
-            _store.OnStateChanged += Refresh;
-            _sequencer.OnTransportChanged += Refresh;
+            if (_eventBus != null)
+            {
+                _eventBus.Subscribe<SessionStateChangedEvent>(HandleSessionStateChanged);
+                _eventBus.Subscribe<TransportChangedEvent>(HandleTransportChanged);
+            }
             Refresh();
         }
 
         private void OnDestroy()
         {
-            if (_store != null) _store.OnStateChanged -= Refresh;
-            if (_sequencer != null) _sequencer.OnTransportChanged -= Refresh;
+            if (_eventBus == null)
+                return;
+
+            _eventBus.Unsubscribe<SessionStateChangedEvent>(HandleSessionStateChanged);
+            _eventBus.Unsubscribe<TransportChangedEvent>(HandleTransportChanged);
+        }
+
+        private void HandleSessionStateChanged(SessionStateChangedEvent evt)
+        {
+            Refresh();
+        }
+
+        private void HandleTransportChanged(TransportChangedEvent evt)
+        {
+            Refresh();
         }
 
         private void OnSceneClicked(int index)

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
 using RhythmForge.Core.Data;
+using RhythmForge.Core.Events;
 using RhythmForge.Core.Session;
 
 namespace RhythmForge.Interaction
@@ -44,8 +45,10 @@ namespace RhythmForge.Interaction
 
         // External references
         private SessionStore _store;
+        private RhythmForgeEventBus _eventBus;
         private StylusUIPointer _uiPointer;
         private IInputProvider _inputProvider;
+        public RhythmForgeEventBus EventBus => _eventBus;
 
         /// <summary>Called by RhythmForgeBootstrapper to inject component references.</summary>
         public void Configure(IInputProvider input, DrawModeController drawMode,
@@ -63,6 +66,7 @@ namespace RhythmForge.Interaction
         public void Initialize(SessionStore store)
         {
             _store = store;
+            _eventBus = store != null ? store.EventBus : null;
         }
 
         private void Update()
@@ -132,6 +136,7 @@ namespace RhythmForge.Interaction
             _previousPoint = Vector3.positiveInfinity;
 
             OnStrokeStarted?.Invoke();
+            _eventBus?.Publish(new StrokeStartedEvent());
         }
 
         private void AddPoint(Vector3 worldPos, float pressure)
@@ -189,6 +194,7 @@ namespace RhythmForge.Interaction
 
             PendingDraft = draft;
             OnDraftCreated?.Invoke(draft);
+            _eventBus?.Publish(new DraftCreatedEvent(draft));
         }
 
         private StrokeFrame BuildStrokeFrame(List<Vector3> worldPoints, Vector3 center)
@@ -320,7 +326,9 @@ namespace RhythmForge.Interaction
             if (PendingDraft == null || !PendingDraft.success) return;
 
             _store.ReserveName(PendingDraft.type);
-            _store.CommitDraft(PendingDraft, duplicate);
+            var draft = PendingDraft;
+            var instance = _store.CommitDraft(draft, duplicate);
+            _eventBus?.Publish(new DraftCommittedEvent(draft, instance, duplicate));
             PendingDraft = null;
             ClearCurrentStroke();
         }
@@ -330,6 +338,7 @@ namespace RhythmForge.Interaction
             PendingDraft = null;
             ClearCurrentStroke();
             OnDraftDiscarded?.Invoke();
+            _eventBus?.Publish(new DraftDiscardedEvent());
         }
 
         private void ClearCurrentStroke()

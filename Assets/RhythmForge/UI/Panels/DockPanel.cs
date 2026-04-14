@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using RhythmForge.Core.Data;
+using RhythmForge.Core.Events;
 using RhythmForge.Core.Session;
 using RhythmForge.Interaction;
 
@@ -42,6 +43,7 @@ namespace RhythmForge.UI.Panels
 
         private SessionStore _store;
         private DrawModeController _drawMode;
+        private RhythmForgeEventBus _eventBus;
         private string _activeTab = "instruments";
 
         /// <summary>Called by RhythmForgeBootstrapper to inject all UI references (no prefabs required).</summary>
@@ -70,13 +72,17 @@ namespace RhythmForge.UI.Panels
         {
             _store = store;
             _drawMode = drawMode;
+            _eventBus = _store != null ? _store.EventBus : null;
 
             if (_instrumentsTab) _instrumentsTab.onClick.AddListener(() => SetTab("instruments"));
             if (_patternsTab) _patternsTab.onClick.AddListener(() => SetTab("patterns"));
             if (_scenesTab) _scenesTab.onClick.AddListener(() => SetTab("scenes"));
 
-            if (_drawMode != null) _drawMode.OnModeChanged += OnModeChanged;
-            _store.OnStateChanged += Refresh;
+            if (_eventBus != null)
+            {
+                _eventBus.Subscribe<SessionStateChangedEvent>(HandleSessionStateChanged);
+                _eventBus.Subscribe<DrawModeChangedEvent>(HandleDrawModeChanged);
+            }
 
             SetTab("instruments");
             Refresh();
@@ -84,8 +90,11 @@ namespace RhythmForge.UI.Panels
 
         private void OnDestroy()
         {
-            if (_store != null) _store.OnStateChanged -= Refresh;
-            if (_drawMode != null) _drawMode.OnModeChanged -= OnModeChanged;
+            if (_eventBus == null)
+                return;
+
+            _eventBus.Unsubscribe<SessionStateChangedEvent>(HandleSessionStateChanged);
+            _eventBus.Unsubscribe<DrawModeChangedEvent>(HandleDrawModeChanged);
         }
 
         private void SetTab(string tab)
@@ -100,6 +109,16 @@ namespace RhythmForge.UI.Panels
         {
             if (_drawModeLabel)
                 _drawModeLabel.text = $"Mode: {DrawModeController.GetModeLabel(mode)}";
+        }
+
+        private void HandleSessionStateChanged(SessionStateChangedEvent evt)
+        {
+            Refresh();
+        }
+
+        private void HandleDrawModeChanged(DrawModeChangedEvent evt)
+        {
+            OnModeChanged(evt.Mode);
         }
 
         private void Refresh()

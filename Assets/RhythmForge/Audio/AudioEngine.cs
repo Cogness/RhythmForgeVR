@@ -7,7 +7,7 @@ namespace RhythmForge.Audio
     /// <summary>
     /// Dispatches sequencer events into the runtime procedural voice renderer.
     /// </summary>
-    public class AudioEngine : MonoBehaviour
+    public class AudioEngine : MonoBehaviour, IAudioDispatcher
     {
         [SerializeField] private SamplePlayer _samplePlayer;
 
@@ -47,6 +47,12 @@ namespace RhythmForge.Audio
                 soundProfile);
         }
 
+        public void PlayDrum(InstrumentPreset preset, string lane, float velocity, float pan, float brightness,
+            float depth, float fxSend, SoundProfile soundProfile)
+        {
+            PlayDrumEvent(preset, lane, velocity, pan, brightness, depth, fxSend, soundProfile);
+        }
+
         public void PlayMelodyNote(int midi, float velocity, float duration,
             float pan, float brightness, float depth, float fxSend,
             SoundProfile soundProfile, float glide = 0f)
@@ -79,6 +85,13 @@ namespace RhythmForge.Audio
                 glide);
         }
 
+        public void PlayMelody(InstrumentPreset preset, int midi, float velocity, float duration,
+            float pan, float brightness, float depth, float fxSend,
+            SoundProfile soundProfile, float glide = 0f)
+        {
+            PlayMelodyNote(preset, midi, velocity, duration, pan, brightness, depth, fxSend, soundProfile, glide);
+        }
+
         public void PlayHarmonyChord(List<int> chord, float velocity,
             float duration, float pan, float brightness, float depth,
             float fxSend, SoundProfile soundProfile)
@@ -107,6 +120,13 @@ namespace RhythmForge.Audio
                 gainAmount * _masterVolume,
                 fxSend,
                 soundProfile);
+        }
+
+        public void PlayChord(InstrumentPreset preset, List<int> chord, float velocity,
+            float duration, float pan, float brightness, float depth,
+            float fxSend, SoundProfile soundProfile)
+        {
+            PlayHarmonyChord(preset, chord, velocity, duration, pan, brightness, depth, fxSend, soundProfile);
         }
     }
 }

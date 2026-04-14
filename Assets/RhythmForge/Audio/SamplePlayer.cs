@@ -127,9 +127,7 @@ namespace RhythmForge.Audio
                 return cached.clip;
             }
 
-            AudioClip clip = spec.patternType == PatternType.RhythmLoop
-                ? ProceduralSynthesizer.RenderDrum(spec)
-                : ProceduralSynthesizer.RenderTone(spec);
+            AudioClip clip = VoiceRendererRegistry.Render(spec);
 
             _voiceCache[cacheKey] = new CachedClip
             {

@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 using RhythmForge.Core.Data;
 using RhythmForge.Core.Session;
@@ -10,9 +9,7 @@ using RhythmForge.UI.Panels;
 namespace RhythmForge
 {
     /// <summary>
-    /// Top-level manager that owns all subsystems, wires events,
-    /// and manages the lifecycle of pattern instance visuals.
-    /// Attach to a single root GameObject in the scene.
+    /// Top-level manager that owns all subsystems and wires lifecycle events between them.
     /// </summary>
     public class RhythmForgeManager : MonoBehaviour
     {
@@ -42,6 +39,13 @@ namespace RhythmForge
         [SerializeField] private Transform _instanceContainer;
         [SerializeField] private Transform _userHead;
 
+        private SessionStore _store;
+        private VisualizerManager _visualizerManager;
+        private AutosaveController _autosaveController;
+        private bool _showParamLabels = true;
+        private bool _initialized;
+        private float _sceneSwapCooldown;
+
         /// <summary>Called by RhythmForgeBootstrapper to inject all subsystem and UI references.</summary>
         public void Configure(
             AudioEngine audioEngine,
@@ -63,76 +67,82 @@ namespace RhythmForge
             Transform instanceContainer,
             Transform userHead)
         {
-            _audioEngine        = audioEngine;
-            _sequencer          = sequencer;
-            _strokeCapture      = strokeCapture;
+            _audioEngine = audioEngine;
+            _sequencer = sequencer;
+            _strokeCapture = strokeCapture;
             _drawModeController = drawModeController;
-            _inputMapper        = inputMapper;
-            _instanceGrabber    = instanceGrabber;
-            _commitCard         = commitCard;
-            _inspectorPanel     = inspectorPanel;
-            _dockPanel          = dockPanel;
-            _transportPanel     = transportPanel;
-            _sceneStripPanel    = sceneStripPanel;
-            _arrangementPanel   = arrangementPanel;
-            _toast              = toast;
-            _rhythmMaterial     = rhythmMaterial;
-            _melodyMaterial     = melodyMaterial;
-            _harmonyMaterial    = harmonyMaterial;
-            _instanceContainer  = instanceContainer;
-            _userHead           = userHead;
+            _inputMapper = inputMapper;
+            _instanceGrabber = instanceGrabber;
+            _commitCard = commitCard;
+            _inspectorPanel = inspectorPanel;
+            _dockPanel = dockPanel;
+            _transportPanel = transportPanel;
+            _sceneStripPanel = sceneStripPanel;
+            _arrangementPanel = arrangementPanel;
+            _toast = toast;
+            _rhythmMaterial = rhythmMaterial;
+            _melodyMaterial = melodyMaterial;
+            _harmonyMaterial = harmonyMaterial;
+            _instanceContainer = instanceContainer;
+            _userHead = userHead;
         }
-
-        // Core state
-        private SessionStore _store;
-        private Dictionary<string, PatternVisualizer> _visualizers = new Dictionary<string, PatternVisualizer>();
-        private bool _showParamLabels = true;
 
         private void Awake()
         {
             _store = new SessionStore();
+            _autosaveController = new AutosaveController();
 
-            // Try loading saved session
             var saved = SessionPersistence.Load();
             if (saved != null)
                 _store.LoadState(saved);
         }
 
-        private bool _initialized;
-
         private void Start()
         {
-            // Skip if already called by bootstrapper
-            if (!_initialized) InitializeSubsystems();
+            if (!_initialized)
+                InitializeSubsystems();
         }
 
         /// <summary>Called by RhythmForgeBootstrapper to initialize before LoadDemoSession.</summary>
         public void InitializeSubsystems()
         {
-            if (_initialized) return;
-            _initialized = true;
+            if (_initialized)
+                return;
 
+            _initialized = true;
             SyncDrawModeFromStore();
 
-            // Initialize subsystems
-            if (_sequencer) _sequencer.Initialize(_store);
-            if (_strokeCapture) _strokeCapture.Initialize(_store);
-            if (_instanceGrabber) _instanceGrabber.Initialize(_store);
+            if (_sequencer)
+                _sequencer.Initialize(_store);
+            if (_strokeCapture)
+                _strokeCapture.Initialize(_store);
+            if (_instanceGrabber)
+                _instanceGrabber.Initialize(_store);
 
-            // Initialize UI panels
-            if (_commitCard) _commitCard.Initialize(_strokeCapture);
-            if (_inspectorPanel) _inspectorPanel.Initialize(_store);
-            if (_dockPanel) _dockPanel.Initialize(_store, _drawModeController);
+            if (_commitCard)
+                _commitCard.Initialize(_strokeCapture);
+            if (_inspectorPanel)
+                _inspectorPanel.Initialize(_store);
+            if (_dockPanel)
+                _dockPanel.Initialize(_store, _drawModeController);
             if (_transportPanel)
             {
                 _transportPanel.Initialize(_store, _sequencer, _drawModeController);
                 _transportPanel.OnParamsVisibilityChanged += OnParamsVisibilityChanged;
                 _showParamLabels = _transportPanel.ShowParams;
             }
-            if (_sceneStripPanel) _sceneStripPanel.Initialize(_store, _sequencer);
-            if (_arrangementPanel) _arrangementPanel.Initialize(_store, _sequencer);
+            if (_sceneStripPanel)
+                _sceneStripPanel.Initialize(_store, _sequencer);
+            if (_arrangementPanel)
+                _arrangementPanel.Initialize(_store, _sequencer);
 
-            // Wire events
+            _visualizerManager = new VisualizerManager(
+                _store,
+                _sequencer,
+                _instanceContainer,
+                _userHead,
+                GetMaterialForType);
+
             _store.OnStateChanged += OnStateChanged;
 
             if (_strokeCapture)
@@ -146,13 +156,13 @@ namespace RhythmForge
             if (_drawModeController != null)
                 _drawModeController.OnModeChanged += OnDrawModeChanged;
 
-            // Initial visual build
-            RebuildInstanceVisuals();
+            _visualizerManager.RebuildInstanceVisuals(_showParamLabels);
         }
 
         private void OnDestroy()
         {
-            if (_store != null) _store.OnStateChanged -= OnStateChanged;
+            if (_store != null)
+                _store.OnStateChanged -= OnStateChanged;
             if (_strokeCapture != null)
             {
                 _strokeCapture.OnDraftCreated -= OnDraftCreated;
@@ -164,44 +174,21 @@ namespace RhythmForge
                 _drawModeController.OnModeChanged -= OnDrawModeChanged;
             if (_transportPanel != null)
                 _transportPanel.OnParamsVisibilityChanged -= OnParamsVisibilityChanged;
+
+            _visualizerManager?.Dispose();
         }
 
         private void Update()
         {
-            UpdatePlaybackVisuals();
-
-            // Left controller thumbstick L/R to switch scenes
-            if (_inputMapper != null)
-            {
-                Vector2 stick = _inputMapper.LeftThumbstick;
-                if (stick.x < -0.7f)
-                    SwitchSceneRelative(-1);
-                else if (stick.x > 0.7f)
-                    SwitchSceneRelative(1);
-
-                // Y button to toggle play
-                if (_inputMapper.ButtonTwo && _sequencer != null)
-                    _sequencer.TogglePlayback();
-            }
-
-            // Auto-save periodically (every 30s)
-            _saveTimer += Time.deltaTime;
-            if (_saveTimer > 30f)
-            {
-                _saveTimer = 0f;
-                SessionPersistence.Save(_store.State);
-            }
+            _visualizerManager?.UpdatePlaybackVisuals();
+            HandleSceneAndTransportInput();
+            _autosaveController?.Tick(Time.deltaTime, _store?.State);
         }
-
-        private float _saveTimer;
-        private float _sceneSwapCooldown;
-
-        // --- Event handlers ---
 
         private void OnStateChanged()
         {
-            RebuildInstanceVisuals();
-            UpdatePlaybackVisuals();
+            _visualizerManager?.RebuildInstanceVisuals(_showParamLabels);
+            _visualizerManager?.UpdatePlaybackVisuals();
         }
 
         private void OnDraftCreated(DraftResult draft)
@@ -218,8 +205,8 @@ namespace RhythmForge
 
         private void OnTransportChanged()
         {
-            RebuildInstanceVisuals();
-            UpdatePlaybackVisuals();
+            _visualizerManager?.RebuildInstanceVisuals(_showParamLabels);
+            _visualizerManager?.UpdatePlaybackVisuals();
         }
 
         private void OnDrawModeChanged(PatternType mode)
@@ -231,117 +218,45 @@ namespace RhythmForge
         private void OnParamsVisibilityChanged(bool visible)
         {
             _showParamLabels = visible;
-            foreach (var kvp in _visualizers)
-                kvp.Value.SetParameterLabelVisible(visible);
+            _visualizerManager?.SetParameterLabelVisible(visible);
         }
 
-        // --- Instance visual management ---
-
-        private void RebuildInstanceVisuals()
+        private void HandleSceneAndTransportInput()
         {
-            if (_store == null) return;
+            if (_inputMapper == null)
+                return;
 
-            string visibleSceneId = ResolveVisibleSceneId();
-            var sceneInstances = _store.GetSceneInstances(visibleSceneId);
-            var activeIds = new HashSet<string>();
+            Vector2 stick = _inputMapper.LeftThumbstick;
+            if (stick.x < -0.7f)
+                SwitchSceneRelative(-1);
+            else if (stick.x > 0.7f)
+                SwitchSceneRelative(1);
 
-            foreach (var instance in sceneInstances)
-            {
-                activeIds.Add(instance.id);
-                var pattern = _store.GetPattern(instance.patternId);
-                if (pattern == null) continue;
-                var effectiveSound = _store.GetEffectiveSoundProfile(instance, pattern);
-
-                if (_visualizers.TryGetValue(instance.id, out var existing))
-                {
-                    existing.RefreshGeometry(pattern, instance, GetMaterialForType(pattern.type), _userHead);
-                    existing.SetMuted(instance.muted);
-                    existing.SetSelected(instance.id == _store.State.selectedInstanceId);
-                    existing.SetParameterLabelVisible(_showParamLabels);
-                    existing.UpdateParameterData(pattern.type, pattern.shapeProfile, effectiveSound);
-                }
-                else
-                {
-                    // Create new visualizer
-                    var go = new GameObject($"Instance_{instance.id}");
-                    if (_instanceContainer) go.transform.SetParent(_instanceContainer);
-
-                    var vis = go.AddComponent<PatternVisualizer>();
-                    Material mat = GetMaterialForType(pattern.type);
-                    vis.Initialize(pattern, instance, mat, _userHead);
-                    vis.SetMuted(instance.muted);
-                    vis.SetSelected(instance.id == _store.State.selectedInstanceId);
-                    vis.SetParameterLabelVisible(_showParamLabels);
-                    vis.UpdateParameterData(pattern.type, pattern.shapeProfile, effectiveSound);
-
-                    _visualizers[instance.id] = vis;
-                }
-            }
-
-            // Remove visualizers no longer in the active scene
-            var toRemove = new List<string>();
-            foreach (var kvp in _visualizers)
-            {
-                if (!activeIds.Contains(kvp.Key))
-                    toRemove.Add(kvp.Key);
-            }
-            foreach (var id in toRemove)
-            {
-                if (_visualizers.TryGetValue(id, out var vis))
-                {
-                    Destroy(vis.gameObject);
-                    _visualizers.Remove(id);
-                }
-            }
-        }
-
-        private void UpdatePlaybackVisuals()
-        {
-            foreach (var kvp in _visualizers)
-            {
-                var instance = _store?.GetInstance(kvp.Key);
-                var pattern = instance != null ? _store.GetPattern(instance.patternId) : null;
-                if (instance == null || pattern == null)
-                    continue;
-
-                if (_sequencer != null && _sequencer.TryGetPlaybackVisualState(pattern, kvp.Key, out var state))
-                {
-                    kvp.Value.SetPlaybackState(state);
-                    continue;
-                }
-
-                var effectiveSound = _store.GetEffectiveSoundProfile(instance, pattern);
-                kvp.Value.SetPlaybackState(
-                    RhythmForge.Sequencer.PatternPlaybackVisualState.CreateInactive(
-                        pattern.type,
-                        effectiveSound,
-                        _sequencer?.GetPlaybackSceneId()));
-            }
-        }
-
-        private string ResolveVisibleSceneId()
-        {
-            if (_sequencer != null && _sequencer.IsPlaying)
-                return _sequencer.GetPlaybackSceneId() ?? _store.State.activeSceneId;
-
-            return _store.State.activeSceneId;
+            if (_inputMapper.ButtonTwo && _sequencer != null)
+                _sequencer.TogglePlayback();
         }
 
         private Material GetMaterialForType(PatternType type)
         {
             switch (type)
             {
-                case PatternType.RhythmLoop: return _rhythmMaterial;
-                case PatternType.MelodyLine: return _melodyMaterial;
-                case PatternType.HarmonyPad: return _harmonyMaterial;
-                default: return _rhythmMaterial;
+                case PatternType.RhythmLoop:
+                    return _rhythmMaterial;
+                case PatternType.MelodyLine:
+                    return _melodyMaterial;
+                case PatternType.HarmonyPad:
+                    return _harmonyMaterial;
+                default:
+                    return _rhythmMaterial;
             }
         }
 
         private void SwitchSceneRelative(int direction)
         {
             _sceneSwapCooldown -= Time.deltaTime;
-            if (_sceneSwapCooldown > 0f) return;
+            if (_sceneSwapCooldown > 0f || _store == null)
+                return;
+
             _sceneSwapCooldown = 0.4f;
 
             string[] ids = { "scene-a", "scene-b", "scene-c", "scene-d" };
@@ -357,28 +272,30 @@ namespace RhythmForge
                 _toast.Show($"Scene: {_store.GetScene(ids[next])?.name ?? ids[next]}");
         }
 
-        // --- Public API ---
-
         public void LoadDemoSession()
         {
             var demo = DemoSession.CreateDemoState(_store);
             _store.LoadState(demo);
             SyncDrawModeFromStore();
-            if (_toast) _toast.Show("Demo session loaded.");
+            if (_toast)
+                _toast.Show("Demo session loaded.");
         }
 
         public void ResetSession()
         {
             _store.Reset();
             SyncDrawModeFromStore();
+            _autosaveController?.ResetTimer();
             SessionPersistence.Delete();
-            if (_toast) _toast.Show("Session reset.");
+            if (_toast)
+                _toast.Show("Session reset.");
         }
 
         public void SaveSession()
         {
-            SessionPersistence.Save(_store.State);
-            if (_toast) _toast.Show("Session saved.");
+            _autosaveController?.SaveNow(_store?.State);
+            if (_toast)
+                _toast.Show("Session saved.");
         }
 
         private void SyncDrawModeFromStore()

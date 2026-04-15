@@ -280,11 +280,12 @@ namespace RhythmForge.Bootstrap
             _manager.Configure(
                 new ManagerSubsystems
                 {
-                    audioEngine   = subsystems.audioEngine,
-                    sequencer     = subsystems.sequencer,
-                    strokeCapture = subsystems.strokeCapture,
-                    drawMode      = subsystems.drawMode,
-                    inputMapper   = subsystems.inputMapper,
+                    audioEngine     = subsystems.audioEngine,
+                    samplePlayer    = subsystems.samplePlayer,
+                    sequencer       = subsystems.sequencer,
+                    strokeCapture   = subsystems.strokeCapture,
+                    drawMode        = subsystems.drawMode,
+                    inputMapper     = subsystems.inputMapper,
                     instanceGrabber = subsystems.instanceGrabber
                 },
                 new ManagerPanels

@@ -35,10 +35,17 @@ namespace RhythmForge.Audio
         // Keys currently being rendered in background — checked before starting a duplicate task.
         private readonly HashSet<string> _inFlightKeys = new HashSet<string>();
 
+        // ── Background render concurrency cap ─────────────────────────────────────
+        private const int MaxConcurrentRenders = 4;
+        private int _activeRenderCount;
+        private readonly Queue<(ResolvedVoiceSpec spec, float volume, float pan, float startDelay, bool warmOnly)>
+            _renderQueue = new Queue<(ResolvedVoiceSpec, float, float, float, bool)>();
+
         // ── LRU eviction scratch (reused) ────────────────────────────────────────
         private readonly HashSet<AudioClip> _inUseScratch = new HashSet<AudioClip>();
         private readonly List<KeyValuePair<string, CachedClip>> _evictCandidates =
             new List<KeyValuePair<string, CachedClip>>();
+        private readonly List<string> _invalidateScratch = new List<string>();
 
         private sealed class CachedClip
         {
@@ -85,9 +92,10 @@ namespace RhythmForge.Audio
 
         private void Update()
         {
-            // Promote completed background renders into the cache and play any pending audio.
+            // Drain completed renders — promote into cache, play pending audio.
             while (_completedRenders.TryDequeue(out var completed))
             {
+                if (_activeRenderCount > 0) _activeRenderCount--;
                 _inFlightKeys.Remove(completed.cacheKey);
 
                 if (!_voiceCache.ContainsKey(completed.cacheKey))
@@ -99,6 +107,18 @@ namespace RhythmForge.Audio
 
                 if (!completed.warmOnly && _voiceCache.TryGetValue(completed.cacheKey, out var c))
                     IssuePlay(c.clip, completed.volume, completed.pan, completed.startDelay);
+            }
+
+            // Drain the queued renders up to the concurrency cap.
+            while (_renderQueue.Count > 0 && _activeRenderCount < MaxConcurrentRenders)
+            {
+                var (spec, vol, pan, delay, warm) = _renderQueue.Dequeue();
+                string key = spec.GetCacheKey();
+                if (!_voiceCache.ContainsKey(key) && !_inFlightKeys.Contains(key))
+                {
+                    _inFlightKeys.Add(key);
+                    LaunchRenderTask(spec, vol, pan, delay, warm);
+                }
             }
 
             // Retry pending plays whose clip has since been promoted.
@@ -171,8 +191,58 @@ namespace RhythmForge.Audio
                 string key = spec.GetCacheKey();
                 if (_voiceCache.ContainsKey(key) || _inFlightKeys.Contains(key))
                     continue;
-                _inFlightKeys.Add(key);
                 DispatchBackgroundRender(spec, 0f, 0f, 0f, warmOnly: true);
+            }
+        }
+
+        /// <summary>
+        /// Evict all cached clips whose cache key was built with the given genreId.
+        /// Call after a genre switch so stale clips are released and new ones are pre-warmed.
+        /// </summary>
+        public void InvalidateGenre(string genreId)
+        {
+            if (string.IsNullOrEmpty(genreId)) return;
+
+            string token = "|" + genreId + "|";
+
+            // Evict cached clips for the old genre.
+            _invalidateScratch.Clear();
+            foreach (var pair in _voiceCache)
+            {
+                if (pair.Key.Contains(token))
+                    _invalidateScratch.Add(pair.Key);
+            }
+            foreach (var key in _invalidateScratch)
+            {
+                ReleaseClip(_voiceCache[key].clip);
+                _voiceCache.Remove(key);
+            }
+
+            // Cancel pending plays for evicted keys.
+            for (int i = _pendingPlays.Count - 1; i >= 0; i--)
+            {
+                if (_pendingPlays[i].cacheKey.Contains(token))
+                    _pendingPlays.RemoveAt(i);
+            }
+
+            // Remove in-flight keys for old genre (their Task will still complete and be silently
+            // dropped in Update because _voiceCache won't have them — they just won't be re-added).
+            _invalidateScratch.Clear();
+            foreach (var key in _inFlightKeys)
+            {
+                if (key.Contains(token))
+                    _invalidateScratch.Add(key);
+            }
+            foreach (var key in _invalidateScratch)
+                _inFlightKeys.Remove(key);
+
+            // Clear queued renders for old genre — no point launching them.
+            int queueCount = _renderQueue.Count;
+            for (int i = 0; i < queueCount; i++)
+            {
+                var entry = _renderQueue.Dequeue();
+                if (!entry.spec.GetCacheKey().Contains(token))
+                    _renderQueue.Enqueue(entry);
             }
         }
 
@@ -193,31 +263,42 @@ namespace RhythmForge.Audio
             _pendingPlays.Add(new PendingPlay { cacheKey = key, volume = volume, pan = pan, startDelay = startDelay });
 
             if (!_inFlightKeys.Contains(key))
-            {
-                _inFlightKeys.Add(key);
                 DispatchBackgroundRender(spec, volume, pan, startDelay, warmOnly: false);
-            }
         }
 
         private void DispatchBackgroundRender(ResolvedVoiceSpec spec, float volume, float pan, float startDelay, bool warmOnly)
         {
+            if (_activeRenderCount >= MaxConcurrentRenders)
+            {
+                _renderQueue.Enqueue((spec, volume, pan, startDelay, warmOnly));
+                return;
+            }
+
+            string key = spec.GetCacheKey();
+            if (_inFlightKeys.Contains(key)) return;
+            _inFlightKeys.Add(key);
+            LaunchRenderTask(spec, volume, pan, startDelay, warmOnly);
+        }
+
+        private void LaunchRenderTask(ResolvedVoiceSpec spec, float volume, float pan, float startDelay, bool warmOnly)
+        {
+            _activeRenderCount++;
             string key = spec.GetCacheKey();
             var queue = _completedRenders;
             Task.Run(() =>
             {
                 try
                 {
-                    // Render raw samples on background thread (no Unity API calls allowed here).
                     RawSamples raw = VoiceRendererRegistry.RenderRaw(spec);
                     queue.Enqueue(new CompletedRender
                     {
-                        cacheKey  = key,
-                        clipName  = raw.name,
-                        left      = raw.left,
-                        right     = raw.right,
-                        warmOnly  = warmOnly,
-                        volume    = volume,
-                        pan       = pan,
+                        cacheKey   = key,
+                        clipName   = raw.name,
+                        left       = raw.left,
+                        right      = raw.right,
+                        warmOnly   = warmOnly,
+                        volume     = volume,
+                        pan        = pan,
                         startDelay = startDelay
                     });
                 }

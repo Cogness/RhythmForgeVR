@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 using RhythmForge.Core.Analysis;
 using RhythmForge.Core.Data;
@@ -18,6 +20,12 @@ namespace RhythmForge.Core.Session
         internal SoundProfileResolver SoundResolver { get; }
 
         private readonly StateMigrator _stateMigrator;
+
+        // Main-thread dispatch queue: background tasks post completions here; Tick() drains it.
+        private readonly ConcurrentQueue<Action> _mainThreadQueue = new ConcurrentQueue<Action>();
+
+        /// <summary>Fired on the main thread after a background genre re-derivation completes.</summary>
+        public event Action<string> OnGenreRederived;
 
         public event Action OnStateChanged;
 
@@ -178,8 +186,18 @@ namespace RhythmForge.Core.Session
         }
 
         /// <summary>
-        /// Switches the active genre and re-derives all existing patterns with the new genre's algorithms.
-        /// This is a destructive operation — existing sequence data is replaced.
+        /// Drains the main-thread dispatch queue. Call from a MonoBehaviour.Update().
+        /// </summary>
+        public void Tick()
+        {
+            while (_mainThreadQueue.TryDequeue(out var action))
+                action();
+        }
+
+        /// <summary>
+        /// Switches the active genre and re-derives all existing patterns on a background thread.
+        /// GenreChangedEvent fires immediately; patterns update asynchronously. Listen to
+        /// OnGenreRederived to know when re-derivation and cache invalidation are complete.
         /// </summary>
         public void SetGenre(string genreId)
         {
@@ -190,43 +208,115 @@ namespace RhythmForge.Core.Session
             GenreRegistry.SetActive(genreId);
             State.activeGenreId = genreId;
 
-            RederivePatternsForGenre();
-
+            // Fire the UI-visible event immediately so buttons highlight without waiting.
             EventBus.Publish(new GenreChangedEvent(previousId, genreId));
-            NotifyStateChanged();
+
+            // Take a snapshot of pattern data safe to read off main thread.
+            var snapshot = BuildRederivationSnapshot(genreId);
+            var queue    = _mainThreadQueue;
+
+            Task.Run(() =>
+            {
+                var results = RederivePatternsBackground(snapshot);
+                queue.Enqueue(() => ApplyRederivationResults(results, genreId));
+            });
         }
 
-        private void RederivePatternsForGenre()
+        private struct PatternSnapshot
         {
-            var genre = GenreRegistry.GetActive();
+            public string patternId;
+            public PatternType type;
+            public ShapeProfile shapeProfile;
+            public List<Vector2> points;
+            public string key;
+            public string shapeSummary;
+        }
 
+        private struct PatternRederivation
+        {
+            public string patternId;
+            public string genreId;
+            public string presetId;
+            public SoundProfile soundProfile;
+            public DerivedSequence derivedSequence;
+            public int bars;
+            public List<string> tags;
+            public string summary;
+            public string details;
+            public Color color;
+        }
+
+        private List<PatternSnapshot> BuildRederivationSnapshot(string genreId)
+        {
+            var snapshots = new List<PatternSnapshot>(State.patterns.Count);
             foreach (var pattern in State.patterns)
             {
                 if (pattern?.shapeProfile == null || pattern.points == null || pattern.points.Count < 3)
                     continue;
-
-                var behavior = PatternBehaviorRegistry.Get(pattern.type);
-                var metrics  = StrokeAnalyzer.Analyze(pattern.points);
-
-                // Re-derive sound profile and sequence with new genre
-                var soundProfile = behavior.DeriveSoundProfile(pattern.shapeProfile);
-                var derivation   = behavior.Derive(
-                    pattern.points, metrics,
-                    pattern.key ?? State.key,
-                    genre.Id,
-                    pattern.shapeProfile,
-                    soundProfile);
-
-                pattern.genreId        = genre.Id;
-                pattern.presetId       = derivation.presetId;
-                pattern.soundProfile   = soundProfile;
-                pattern.derivedSequence = derivation.derivedSequence;
-                pattern.bars           = derivation.bars;
-                pattern.tags           = derivation.tags;
-                pattern.summary        = derivation.summary;
-                pattern.details        = DraftBuilder.ComposeDetails(derivation.details, pattern.shapeSummary);
-                pattern.color          = genre.ColorPalette.Get(pattern.type);
+                snapshots.Add(new PatternSnapshot
+                {
+                    patternId    = pattern.id,
+                    type         = pattern.type,
+                    shapeProfile = pattern.shapeProfile,
+                    points       = new List<Vector2>(pattern.points),
+                    key          = pattern.key ?? State.key,
+                    shapeSummary = pattern.shapeSummary
+                });
             }
+            return snapshots;
+        }
+
+        private static List<PatternRederivation> RederivePatternsBackground(List<PatternSnapshot> snapshots)
+        {
+            var genre   = GenreRegistry.GetActive();
+            var results = new List<PatternRederivation>(snapshots.Count);
+
+            foreach (var snap in snapshots)
+            {
+                var behavior     = PatternBehaviorRegistry.Get(snap.type);
+                var metrics      = StrokeAnalyzer.Analyze(snap.points);
+                var soundProfile = behavior.DeriveSoundProfile(snap.shapeProfile);
+                var derivation   = behavior.Derive(
+                    snap.points, metrics, snap.key,
+                    genre.Id, snap.shapeProfile, soundProfile);
+
+                results.Add(new PatternRederivation
+                {
+                    patternId       = snap.patternId,
+                    genreId         = genre.Id,
+                    presetId        = derivation.presetId,
+                    soundProfile    = soundProfile,
+                    derivedSequence = derivation.derivedSequence,
+                    bars            = derivation.bars,
+                    tags            = derivation.tags,
+                    summary         = derivation.summary,
+                    details         = DraftBuilder.ComposeDetails(derivation.details, snap.shapeSummary),
+                    color           = genre.ColorPalette.Get(snap.type)
+                });
+            }
+            return results;
+        }
+
+        private void ApplyRederivationResults(List<PatternRederivation> results, string genreId)
+        {
+            foreach (var r in results)
+            {
+                var pattern = GetPattern(r.patternId);
+                if (pattern == null) continue;
+
+                pattern.genreId         = r.genreId;
+                pattern.presetId        = r.presetId;
+                pattern.soundProfile    = r.soundProfile;
+                pattern.derivedSequence = r.derivedSequence;
+                pattern.bars            = r.bars;
+                pattern.tags            = r.tags;
+                pattern.summary         = r.summary;
+                pattern.details         = r.details;
+                pattern.color           = r.color;
+            }
+
+            NotifyStateChanged();
+            OnGenreRederived?.Invoke(genreId);
         }
 
         private void NotifyStateChanged()

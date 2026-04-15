@@ -58,6 +58,11 @@ namespace RhythmForge.Sequencer
             _samplePlayer = samplePlayer;
         }
 
+        public void ResetWarmBar()
+        {
+            _lastWarmBar = -1;
+        }
+
         protected virtual double GetDspTime() => AudioSettings.dspTime;
         protected virtual double GetVisualTimeSeconds() => Time.realtimeSinceStartup;
 

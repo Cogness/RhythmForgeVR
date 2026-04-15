@@ -18,6 +18,7 @@ namespace RhythmForge
     public struct ManagerSubsystems
     {
         public AudioEngine audioEngine;
+        public SamplePlayer samplePlayer;
         public Sequencer.Sequencer sequencer;
         public StrokeCapture strokeCapture;
         public DrawModeController drawMode;
@@ -76,6 +77,7 @@ namespace RhythmForge
         private bool _initialized;
         private float _sceneSwapCooldown;
         private readonly Dictionary<PatternType, Material> _materialCache = new Dictionary<PatternType, Material>();
+        private SamplePlayer _samplePlayer;
 
         /// <summary>Called by RhythmForgeBootstrapper to inject all subsystem and UI references.</summary>
         public void Configure(
@@ -85,6 +87,7 @@ namespace RhythmForge
             Transform userHead)
         {
             _audioEngine        = subsystems.audioEngine;
+            _samplePlayer       = subsystems.samplePlayer;
             _sequencer          = subsystems.sequencer;
             _strokeCapture      = subsystems.strokeCapture;
             _drawModeController = subsystems.drawMode;
@@ -133,6 +136,8 @@ namespace RhythmForge
 
             if (_sequencer)
                 _sequencer.Initialize(_store);
+            if (_store != null)
+                _store.OnGenreRederived += HandleGenreRederived;
             if (_strokeCapture)
                 _strokeCapture.Initialize(_store);
             if (_instanceGrabber)
@@ -168,8 +173,21 @@ namespace RhythmForge
             _visualizerManager.RebuildInstanceVisuals(_showParamLabels);
         }
 
+        public void SetSamplePlayer(SamplePlayer samplePlayer)
+        {
+            _samplePlayer = samplePlayer;
+        }
+
+        private void HandleGenreRederived(string genreId)
+        {
+            _samplePlayer?.InvalidateGenre(genreId);
+            _sequencer?.ResetWarmBar();
+        }
+
         private void OnDestroy()
         {
+            if (_store != null)
+                _store.OnGenreRederived -= HandleGenreRederived;
             UnsubscribeFromEventBus();
 
             _visualizerManager?.Dispose();
@@ -177,6 +195,7 @@ namespace RhythmForge
 
         private void Update()
         {
+            _store?.Tick();
             _visualizerManager?.UpdatePlaybackVisuals();
             HandleSceneAndTransportInput();
             _autosaveController?.Tick(Time.deltaTime, _store?.State);

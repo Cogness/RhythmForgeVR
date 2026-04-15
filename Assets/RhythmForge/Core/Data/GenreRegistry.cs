@@ -126,8 +126,8 @@ namespace RhythmForge.Core.Data
             var presets = new List<InstrumentPreset>
             {
                 new InstrumentPreset("newage-bowl",    "Singing Bowl",  "newage-bowl",    "newage", 0.42f, 0.05f, 1.8f),
-                new InstrumentPreset("newage-kalimba", "Kalimba",       "newage-kalimba", "newage", 0.28f, 0.006f, 0.7f),
-                new InstrumentPreset("newage-drone",   "Drone Pad",     "newage-drone",   "newage", 0.52f, 0.8f,  3.2f),
+                new InstrumentPreset("newage-kalimba", "Kalimba",       "newage-kalimba", "newage", 0.28f, 0.006f, 0.35f),
+                new InstrumentPreset("newage-drone",   "Drone Pad",     "newage-drone",   "newage", 0.52f, 0.45f, 2.2f),
             };
 
             var defaultPresets = new Dictionary<PatternType, string>

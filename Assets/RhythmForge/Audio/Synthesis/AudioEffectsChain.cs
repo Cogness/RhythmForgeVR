@@ -89,7 +89,8 @@ namespace RhythmForge.Audio
 
         public static void ApplyAmbience(ResolvedVoiceSpec spec, float[] left, float[] right)
         {
-            float genreReverbScale = spec.isNewAge ? 1.8f : spec.isJazz ? 0.9f : 1.0f;
+            // NewAge ambience now lives on the mixer bus. Keep only the short clip-local delay tap.
+            float genreReverbScale = spec.isNewAge ? 0f : spec.isJazz ? 0.9f : 1.0f;
             float genreDelayScale  = spec.isNewAge ? 1.4f : spec.isJazz ? 0.7f : 1.0f;
 
             float reverbMix = spec.fxSend * genreReverbScale * (spec.patternType == PatternType.HarmonyPad
@@ -212,6 +213,12 @@ namespace RhythmForge.Audio
 
         public static float GetAmbienceTail(ResolvedVoiceSpec spec)
         {
+            if (spec.isNewAge)
+            {
+                return spec.fxSend * (0.04f + spec.delayBias * 0.16f)
+                    + (spec.patternType == PatternType.HarmonyPad ? 0.03f : 0.01f);
+            }
+
             return spec.fxSend * (0.08f + spec.reverbBias * 0.18f + spec.delayBias * 0.16f)
                 + (spec.patternType == PatternType.HarmonyPad ? 0.12f : 0.04f);
         }

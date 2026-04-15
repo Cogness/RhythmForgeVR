@@ -44,15 +44,18 @@ namespace RhythmForge.Core.PatternBehavior.Behaviors
         public void CollectVoiceSpecs(PatternSchedulingContext context, int totalSteps, List<ResolvedVoiceSpec> results)
         {
             if (context.pattern.derivedSequence?.notes == null) return;
-            foreach (var note in context.pattern.derivedSequence.notes)
-                results.Add(VoiceSpecResolver.ResolveMelody(
-                    context.preset,
-                    context.sound,
-                    note.midi,
-                    note.durationSteps * context.stepDuration,
-                    context.instance.brightness,
-                    context.preset.fxSend,
-                    note.glide));
+            using (PatternContextScope.ForPattern(context.appState, context.pattern))
+            {
+                foreach (var note in context.pattern.derivedSequence.notes)
+                    results.Add(VoiceSpecResolver.ResolveMelody(
+                        context.preset,
+                        context.sound,
+                        note.midi,
+                        note.durationSteps * context.stepDuration,
+                        context.instance.brightness,
+                        context.preset.fxSend,
+                        note.glide));
+            }
         }
 
         public void Schedule(PatternSchedulingContext context)
@@ -67,17 +70,20 @@ namespace RhythmForge.Core.PatternBehavior.Behaviors
 
                 float duration = note.durationSteps * context.stepDuration;
 
-                context.audioDispatcher?.PlayMelody(
-                    context.preset,
-                    note.midi,
-                    note.velocity,
-                    duration,
-                    context.instance.pan,
-                    context.instance.brightness,
-                    context.instance.depth,
-                    context.preset.fxSend + context.group.busFx.delay * 0.1f,
-                    context.sound,
-                    note.glide);
+                using (PatternContextScope.ForPattern(context.appState, context.pattern))
+                {
+                    context.audioDispatcher?.PlayMelody(
+                        context.preset,
+                        note.midi,
+                        note.velocity,
+                        duration,
+                        context.instance.pan,
+                        context.instance.brightness,
+                        context.instance.depth,
+                        context.preset.fxSend + context.group.busFx.delay * 0.1f,
+                        context.sound,
+                        note.glide);
+                }
 
                 context.recordTrigger?.Invoke(
                     context.instance.id,

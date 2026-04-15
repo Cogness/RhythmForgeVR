@@ -162,7 +162,7 @@ namespace RhythmForge.Audio
             {
                 // Kalimba: fast-decaying bell spectrum — fundamentally different from piano or pad
                 float[] kalAmps = { 1.0f, 0.38f, 0.14f, 0.06f, 0.02f, 0.008f };
-                float kalBase = 0.06f + spec.releaseBias * 0.16f;
+                float kalBase = 0.12f + spec.releaseBias * 0.16f; // raised floor: fundamental doesn't vanish instantly
                 for (int h = 0; h < numPartials; h++)
                 {
                     partialGain[h]  = kalAmps[h];
@@ -201,8 +201,10 @@ namespace RhythmForge.Audio
             float oscBGain = spec.isBell ? 0.14f + spec.brightness * 0.06f : 0.16f + spec.body * 0.14f;
 
             // Pad extra chorus voices C + D for lush multi-voice width
+            // chorusWidthScale = 1/(1+roleIndex) so role-1+ pads sit narrower than role-0
             float phaseC = 0.53f, phaseD = 0.77f;
-            float padChorusGain = isPad ? 0.11f + spec.detune * 0.09f : 0f;
+            float chorusW = (isPad && spec.chorusWidthScale > 0f) ? spec.chorusWidthScale : 1f;
+            float padChorusGain = isPad ? (0.11f + spec.detune * 0.09f) * chorusW : 0f;
             float padCentC = isPad ? -(8f  + spec.detune * 18f) : 0f;
             float padCentD = isPad ?  (5f  + spec.detune * 14f) : 0f;
 
@@ -288,16 +290,27 @@ namespace RhythmForge.Audio
                 }
 
                 // ── Melody strike transient ────────────────────────────────────
-                // Short noise burst at note onset gives melody a pluck/hammer character
-                // that pads completely lack (pads have slow attack and no transient).
+                // Kalimba: 150 Hz sine body thump (finger on tine base) — warm, not clacky.
+                // Other melody (piano/Rhodes): short noise burst for hammer/pluck character.
                 if (isMelody && t < 0.032f)
                 {
-                    float transGain  = 0.035f + spec.transientSharpness * 0.075f;
-                    float transEnv   = Mathf.Exp(-t / 0.005f);
-                    float genreScale = spec.isJazz ? 1.4f : spec.isNewAge ? 0.3f : 1.0f;
-                    float transNoise = (Mathf.PerlinNoise(t * 9000f, spec.midi * 0.019f) - 0.5f) * 2f;
-                    leftSample  += transNoise * transGain * transEnv * genreScale;
-                    rightSample += transNoise * transGain * transEnv * genreScale * 0.88f;
+                    if (isKalimba)
+                    {
+                        float thumpEnv  = Mathf.Exp(-t / 0.020f);
+                        float thumpGain = 0.08f * (0.5f + spec.body * 0.5f);
+                        float thump     = Mathf.Sin(Mathf.PI * 2f * 150f * t) * thumpGain * thumpEnv;
+                        leftSample  += thump;
+                        rightSample += thump * 0.92f;
+                    }
+                    else
+                    {
+                        float transGain  = 0.035f + spec.transientSharpness * 0.075f;
+                        float transEnv   = Mathf.Exp(-t / 0.005f);
+                        float genreScale = spec.isJazz ? 1.4f : 1.0f;
+                        float transNoise = (Mathf.PerlinNoise(t * 9000f, spec.midi * 0.019f) - 0.5f) * 2f;
+                        leftSample  += transNoise * transGain * transEnv * genreScale;
+                        rightSample += transNoise * transGain * transEnv * genreScale * 0.88f;
+                    }
                 }
 
                 // ── Jazz Rhodes tine ───────────────────────────────────────────
@@ -313,6 +326,16 @@ namespace RhythmForge.Audio
 
                 left[i]  = leftSample;
                 right[i] = rightSample;
+            }
+
+            // Apply per-mode gain staging (baked in so the cached clip already has the right level)
+            if (spec.velocityScale > 0f && spec.velocityScale < 0.999f)
+            {
+                for (int i = 0; i < left.Length; i++)
+                {
+                    left[i]  *= spec.velocityScale;
+                    right[i] *= spec.velocityScale;
+                }
             }
 
             AudioEffectsChain.ApplyVoiceChain(spec, left, right);

@@ -73,11 +73,19 @@ namespace RhythmForge.Core.Session
             var soundProfile = behavior.DeriveSoundProfile(shapeProfile);
             string shapeSummary = PresetBiasResolver.SummarizeShapeDNA(type, shapeProfile, soundProfile);
 
-            // Publish current harmonic context so melody derivers can read it without interface changes.
-            HarmonicContextProvider.Set(store.GetHarmonicContext());
+            // Compute role index: count existing committed patterns of the same type → this shape's ensemble position.
+            int sameTypeCount = 0;
+            foreach (var p in store.State.patterns)
+                if (p?.type == type) sameTypeCount++;
 
             // Derive sequence
-            var derivation = behavior.Derive(rawPoints, metrics, keyName, groupId, shapeProfile, soundProfile);
+            PatternDerivationResult derivation;
+            using (PatternContextScope.Push(
+                new ShapeRole { index = sameTypeCount, count = sameTypeCount + 1 },
+                PatternContextScope.CloneHarmonicContext(store.GetHarmonicContext())))
+            {
+                derivation = behavior.Derive(rawPoints, metrics, keyName, groupId, shapeProfile, soundProfile);
+            }
 
             // Keep shared harmonic context up-to-date whenever a harmony pad is drawn.
             // Melody and bass derivers read this to constrain strong-beat pitches to chord tones.

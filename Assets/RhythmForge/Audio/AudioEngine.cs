@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Audio;
 using RhythmForge.Core.Data;
 
 namespace RhythmForge.Audio
@@ -19,6 +20,26 @@ namespace RhythmForge.Audio
         public void Configure(SamplePlayer samplePlayer)
         {
             _samplePlayer = samplePlayer;
+        }
+
+        /// <summary>
+        /// Extended configure: also injects the AudioMixer so the SamplePlayer can route
+        /// pooled AudioSources to the correct genre submix group.
+        /// </summary>
+        public void Configure(SamplePlayer samplePlayer, AudioMixer mixer)
+        {
+            _samplePlayer = samplePlayer;
+            if (mixer != null)
+                _samplePlayer.Configure(mixer);
+        }
+
+        /// <summary>
+        /// Re-routes all pooled AudioSources to the submix group matching <paramref name="genreId"/>.
+        /// Call this whenever the active genre changes at runtime.
+        /// </summary>
+        public void SetGenre(string genreId)
+        {
+            _samplePlayer?.SetMixerGroup(genreId);
         }
 
         // Convenience overload — uses default lofi-drums preset.

@@ -2,6 +2,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Audio;
 using RhythmForge.Core.Data;
 
 namespace RhythmForge.Audio
@@ -19,6 +20,10 @@ namespace RhythmForge.Audio
         [Header("Cache Settings")]
         [SerializeField] private int _maxCachedClips = 96;
 
+        [Header("Mixer Routing")]
+        [SerializeField] private AudioMixer _mixer;
+        private AudioMixerGroup _activeGroup;
+
         // ── Voice cache (main thread only) ──────────────────────────────────────
         private readonly List<AudioSource> _pool = new List<AudioSource>();
         private readonly Dictionary<string, CachedClip> _voiceCache = new Dictionary<string, CachedClip>();
@@ -32,14 +37,14 @@ namespace RhythmForge.Audio
         // Background tasks write raw float arrays; main thread finalises AudioClips.
         private readonly ConcurrentQueue<CompletedRender> _completedRenders =
             new ConcurrentQueue<CompletedRender>();
-        // Keys currently being rendered in background — checked before starting a duplicate task.
-        private readonly HashSet<string> _inFlightKeys = new HashSet<string>();
+        // Keys currently being rendered in background for the current generation.
+        private readonly Dictionary<string, int> _inFlightKeys = new Dictionary<string, int>();
 
         // ── Background render concurrency cap ─────────────────────────────────────
         private const int MaxConcurrentRenders = 4;
         private int _activeRenderCount;
-        private readonly Queue<(ResolvedVoiceSpec spec, float volume, float pan, float startDelay, bool warmOnly)>
-            _renderQueue = new Queue<(ResolvedVoiceSpec, float, float, float, bool)>();
+        private int _renderGeneration;
+        private readonly Queue<QueuedRender> _renderQueue = new Queue<QueuedRender>();
 
         // ── LRU eviction scratch (reused) ────────────────────────────────────────
         private readonly HashSet<AudioClip> _inUseScratch = new HashSet<AudioClip>();
@@ -61,18 +66,28 @@ namespace RhythmForge.Audio
             public float startDelay;
         }
 
+        private struct QueuedRender
+        {
+            public ResolvedVoiceSpec spec;
+            public float volume;
+            public float pan;
+            public float startDelay;
+            public bool warmOnly;
+            public int generation;
+        }
+
         private sealed class CompletedRender
         {
             public string cacheKey;
             public string clipName;
             public float[] left;
             public float[] right;
-            // If non-null, this was a WarmClip request (no playback on completion).
             public bool warmOnly;
-            // Pending-play context (volume/pan/delay) — filled if warmOnly==false.
             public float volume;
             public float pan;
             public float startDelay;
+            public int generation;
+            public bool failed;
         }
 
         public void Configure()
@@ -80,9 +95,46 @@ namespace RhythmForge.Audio
             EnsurePool();
         }
 
+        /// <summary>Inject the AudioMixer asset and immediately route all pool sources to the genre group.</summary>
+        public void Configure(AudioMixer mixer)
+        {
+            _mixer = mixer;
+            EnsurePool();
+        }
+
         public void Configure(AudioClip kick, AudioClip snare, AudioClip hat, AudioClip perc, AudioClip tone)
         {
             Configure();
+        }
+
+        /// <summary>
+        /// Re-routes every pooled AudioSource to the AudioMixerGroup whose name matches <paramref name="genreId"/>.
+        /// Call this whenever the active genre changes (e.g. "newage", "electronic", "jazz").
+        /// Group name matching is case-insensitive and falls back to Master if not found.
+        /// </summary>
+        public void SetMixerGroup(string genreId)
+        {
+            if (_mixer == null) return;
+
+            // Unity mixer group names set in Step 2: "NewAge", "Electronic", "Jazz".
+            // Map genre IDs (lower-case) to the Pascal-case group names used in the mixer asset.
+            string groupName = genreId switch
+            {
+                "newage"     => "NewAge",
+                "electronic" => "Electronic",
+                "jazz"       => "Jazz",
+                _            => "Master"
+            };
+
+            var groups = _mixer.FindMatchingGroups(groupName);
+            _activeGroup = groups.Length > 0 ? groups[0] : null;
+
+            EnsurePool();
+            foreach (var src in _pool)
+            {
+                if (src != null)
+                    src.outputAudioMixerGroup = _activeGroup;
+            }
         }
 
         private void Awake()
@@ -96,7 +148,14 @@ namespace RhythmForge.Audio
             while (_completedRenders.TryDequeue(out var completed))
             {
                 if (_activeRenderCount > 0) _activeRenderCount--;
-                _inFlightKeys.Remove(completed.cacheKey);
+                if (_inFlightKeys.TryGetValue(completed.cacheKey, out var inFlightGeneration)
+                    && inFlightGeneration == completed.generation)
+                {
+                    _inFlightKeys.Remove(completed.cacheKey);
+                }
+
+                if (completed.failed || completed.generation != _renderGeneration)
+                    continue;
 
                 if (!_voiceCache.ContainsKey(completed.cacheKey))
                 {
@@ -112,12 +171,15 @@ namespace RhythmForge.Audio
             // Drain the queued renders up to the concurrency cap.
             while (_renderQueue.Count > 0 && _activeRenderCount < MaxConcurrentRenders)
             {
-                var (spec, vol, pan, delay, warm) = _renderQueue.Dequeue();
-                string key = spec.GetCacheKey();
-                if (!_voiceCache.ContainsKey(key) && !_inFlightKeys.Contains(key))
+                var entry = _renderQueue.Dequeue();
+                if (entry.generation != _renderGeneration)
+                    continue;
+
+                string key = entry.spec.GetCacheKey();
+                if (!_voiceCache.ContainsKey(key) && !IsInFlight(key, entry.generation))
                 {
-                    _inFlightKeys.Add(key);
-                    LaunchRenderTask(spec, vol, pan, delay, warm);
+                    _inFlightKeys[key] = entry.generation;
+                    LaunchRenderTask(entry.spec, entry.volume, entry.pan, entry.startDelay, entry.warmOnly, entry.generation);
                 }
             }
 
@@ -189,61 +251,27 @@ namespace RhythmForge.Audio
             foreach (var spec in specs)
             {
                 string key = spec.GetCacheKey();
-                if (_voiceCache.ContainsKey(key) || _inFlightKeys.Contains(key))
+                if (_voiceCache.ContainsKey(key) || IsInFlight(key, _renderGeneration))
                     continue;
                 DispatchBackgroundRender(spec, 0f, 0f, 0f, warmOnly: true);
             }
         }
 
-        /// <summary>
-        /// Evict all cached clips whose cache key was built with the given genreId.
-        /// Call after a genre switch so stale clips are released and new ones are pre-warmed.
-        /// </summary>
-        public void InvalidateGenre(string genreId)
+        public void InvalidateAll()
         {
-            if (string.IsNullOrEmpty(genreId)) return;
+            _renderGeneration++;
 
-            string token = "|" + genreId + "|";
-
-            // Evict cached clips for the old genre.
-            _invalidateScratch.Clear();
-            foreach (var pair in _voiceCache)
+            foreach (var entry in _voiceCache.Values)
             {
-                if (pair.Key.Contains(token))
-                    _invalidateScratch.Add(pair.Key);
-            }
-            foreach (var key in _invalidateScratch)
-            {
-                ReleaseClip(_voiceCache[key].clip);
-                _voiceCache.Remove(key);
+                if (entry?.clip != null)
+                    ReleaseClip(entry.clip);
             }
 
-            // Cancel pending plays for evicted keys.
-            for (int i = _pendingPlays.Count - 1; i >= 0; i--)
-            {
-                if (_pendingPlays[i].cacheKey.Contains(token))
-                    _pendingPlays.RemoveAt(i);
-            }
-
-            // Remove in-flight keys for old genre (their Task will still complete and be silently
-            // dropped in Update because _voiceCache won't have them — they just won't be re-added).
-            _invalidateScratch.Clear();
-            foreach (var key in _inFlightKeys)
-            {
-                if (key.Contains(token))
-                    _invalidateScratch.Add(key);
-            }
-            foreach (var key in _invalidateScratch)
-                _inFlightKeys.Remove(key);
-
-            // Clear queued renders for old genre — no point launching them.
-            int queueCount = _renderQueue.Count;
-            for (int i = 0; i < queueCount; i++)
-            {
-                var entry = _renderQueue.Dequeue();
-                if (!entry.spec.GetCacheKey().Contains(token))
-                    _renderQueue.Enqueue(entry);
-            }
+            _voiceCache.Clear();
+            _pendingPlays.Clear();
+            _inFlightKeys.Clear();
+            _renderQueue.Clear();
+            _cacheAge = 0;
         }
 
         // ── Internal play path ────────────────────────────────────────────────────
@@ -262,25 +290,35 @@ namespace RhythmForge.Audio
             // Clip not ready — enqueue a pending play and start a background render if not already in flight.
             _pendingPlays.Add(new PendingPlay { cacheKey = key, volume = volume, pan = pan, startDelay = startDelay });
 
-            if (!_inFlightKeys.Contains(key))
+            if (!IsInFlight(key, _renderGeneration))
                 DispatchBackgroundRender(spec, volume, pan, startDelay, warmOnly: false);
         }
 
         private void DispatchBackgroundRender(ResolvedVoiceSpec spec, float volume, float pan, float startDelay, bool warmOnly)
         {
+            int generation = _renderGeneration;
+
             if (_activeRenderCount >= MaxConcurrentRenders)
             {
-                _renderQueue.Enqueue((spec, volume, pan, startDelay, warmOnly));
+                _renderQueue.Enqueue(new QueuedRender
+                {
+                    spec = spec,
+                    volume = volume,
+                    pan = pan,
+                    startDelay = startDelay,
+                    warmOnly = warmOnly,
+                    generation = generation
+                });
                 return;
             }
 
             string key = spec.GetCacheKey();
-            if (_inFlightKeys.Contains(key)) return;
-            _inFlightKeys.Add(key);
-            LaunchRenderTask(spec, volume, pan, startDelay, warmOnly);
+            if (IsInFlight(key, generation)) return;
+            _inFlightKeys[key] = generation;
+            LaunchRenderTask(spec, volume, pan, startDelay, warmOnly, generation);
         }
 
-        private void LaunchRenderTask(ResolvedVoiceSpec spec, float volume, float pan, float startDelay, bool warmOnly)
+        private void LaunchRenderTask(ResolvedVoiceSpec spec, float volume, float pan, float startDelay, bool warmOnly, int generation)
         {
             _activeRenderCount++;
             string key = spec.GetCacheKey();
@@ -299,12 +337,19 @@ namespace RhythmForge.Audio
                         warmOnly   = warmOnly,
                         volume     = volume,
                         pan        = pan,
-                        startDelay = startDelay
+                        startDelay = startDelay,
+                        generation = generation
                     });
                 }
                 catch (System.Exception ex)
                 {
                     UnityEngine.Debug.LogWarning($"[SamplePlayer] Background render failed for {key}: {ex.Message}");
+                    queue.Enqueue(new CompletedRender
+                    {
+                        cacheKey = key,
+                        generation = generation,
+                        failed = true
+                    });
                 }
             });
         }
@@ -338,6 +383,27 @@ namespace RhythmForge.Audio
             return source;
         }
 
+        private bool IsInFlight(string key, int generation)
+        {
+            return _inFlightKeys.TryGetValue(key, out var activeGeneration) && activeGeneration == generation;
+        }
+
+        private AudioClip GetOrCreateClip(ResolvedVoiceSpec spec)
+        {
+            string key = spec.GetCacheKey();
+            if (_voiceCache.TryGetValue(key, out var cached))
+            {
+                cached.lastUsed = ++_cacheAge;
+                return cached.clip;
+            }
+
+            var raw = VoiceRendererRegistry.RenderRaw(spec);
+            var clip = SynthUtilities.BuildClip(raw.name, raw.left, raw.right);
+            _voiceCache[key] = new CachedClip { clip = clip, lastUsed = ++_cacheAge };
+            TrimCacheIfNeeded();
+            return clip;
+        }
+
         private void EnsurePool()
         {
             if (_pool.Count > 0) return;
@@ -350,6 +416,8 @@ namespace RhythmForge.Audio
                 src.playOnAwake = false;
                 src.spatialize  = false;
                 src.loop        = false;
+                if (_activeGroup != null)
+                    src.outputAudioMixerGroup = _activeGroup;
                 _pool.Add(src);
             }
         }

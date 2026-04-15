@@ -276,35 +276,50 @@ namespace RhythmForge.Audio
 
         private static void RenderSingingBowlStrike(ResolvedVoiceSpec spec, float[] left, float[] right, int seed)
         {
-            // Singing bowl: strong sine fundamental + weaker harmonic, very long slow decay
-            float fundamentalFreq = 220f + spec.body * 180f + spec.brightness * 80f;
-            float harmonicFreq    = fundamentalFreq * 2.74f; // non-integer partial for bowl character
-            float decayTime = 0.9f + spec.releaseBias * 2.2f + spec.body * 0.8f;
-            float phase1 = 0f, phase2 = 0f;
+            // Tibetan singing bowl: raised fundamental into real bowl range (400–1200 Hz),
+            // four inharmonic partials with slow beating between partial 2a/2b for the
+            // characteristic shimmering wobble of two bowl walls resonating against each other.
+            float f0 = 440f + spec.body * 180f + spec.brightness * 140f; // real bowl range
+            float f1 = f0 * 2.74f;   // inharmonic partial 1
+            float f1b = f1 + 1.5f;   // slightly detuned twin → amplitude beating at ~1.5 Hz
+            float f2 = f0 * 5.43f;   // inharmonic partial 2
+            float f3 = f0 * 8.12f;   // inharmonic partial 3
+            float decayTime = 0.6f + spec.releaseBias * 1.8f + spec.body * 0.6f; // shorter floor to avoid self-overlap
+            float phase0 = 0f, phase1 = 0f, phase1b = 0f, phase2 = 0f, phase3 = 0f;
 
-            // Very gentle attack
             float attackTime = 0.012f + spec.attackBias * 0.06f;
 
             for (int i = 0; i < left.Length; i++)
             {
                 float t = (float)i / SynthUtilities.SampleRate;
-                float env = SynthUtilities.EnvelopeDecay(t, decayTime)
-                          * Mathf.Clamp01(t / attackTime);
-                float fund = Mathf.Sin(Mathf.PI * 2f * phase1) * 0.68f * env;
-                float harm = Mathf.Sin(Mathf.PI * 2f * phase2) * 0.22f * SynthUtilities.EnvelopeDecay(t, decayTime * 0.7f);
-                phase1 = SynthUtilities.AdvancePhase(phase1, fundamentalFreq);
-                phase2 = SynthUtilities.AdvancePhase(phase2, harmonicFreq);
+                float env  = SynthUtilities.EnvelopeDecay(t, decayTime) * Mathf.Clamp01(t / attackTime);
+                float env1 = SynthUtilities.EnvelopeDecay(t, decayTime * 0.72f);
+                float env2 = SynthUtilities.EnvelopeDecay(t, decayTime * 0.54f);
+                float env3 = SynthUtilities.EnvelopeDecay(t, decayTime * 0.38f);
 
+                float fund  = Mathf.Sin(Mathf.PI * 2f * phase0) * 0.62f * env;
+                float harm1 = (Mathf.Sin(Mathf.PI * 2f * phase1) + Mathf.Sin(Mathf.PI * 2f * phase1b)) * 0.11f * env1;
+                float harm2 = Mathf.Sin(Mathf.PI * 2f * phase2) * 0.06f * env2;
+                float harm3 = Mathf.Sin(Mathf.PI * 2f * phase3) * 0.025f * env3;
+
+                phase0  = SynthUtilities.AdvancePhase(phase0,  f0);
+                phase1  = SynthUtilities.AdvancePhase(phase1,  f1);
+                phase1b = SynthUtilities.AdvancePhase(phase1b, f1b);
+                phase2  = SynthUtilities.AdvancePhase(phase2,  f2);
+                phase3  = SynthUtilities.AdvancePhase(phase3,  f3);
+
+                float s = fund + harm1 + harm2 + harm3;
                 float spreadL = spec.stereoSpread > 0.2f ? 1.06f : 1f;
                 float spreadR = spec.stereoSpread > 0.2f ? 0.94f : 1f;
-                left[i]  = (fund + harm) * spreadL;
-                right[i] = (fund + harm) * spreadR;
+                left[i]  = s * spreadL;
+                right[i] = s * spreadR;
             }
         }
 
         private static void RenderShaker(ResolvedVoiceSpec spec, float[] left, float[] right, int seed)
         {
-            // Shaker: gentle filtered noise with soft envelope
+            // Shaker: gentle filtered noise with per-trigger deterministic pan
+            // so multiple shaker voices feel like a hand-held shaker moving in space.
             var rng = new System.Random(seed);
             var filterLeft = new SvfState();
             var filterRight = new SvfState();
@@ -312,13 +327,20 @@ namespace RhythmForge.Audio
             float q = 0.5f + spec.resonance * 0.3f;
             float decayTime = 0.04f + spec.releaseBias * 0.1f + spec.body * 0.06f;
 
+            // Deterministic pan in ±0.35 — seeded so the same shaker event always pans the same way
+            float pan = (float)(new System.Random(seed ^ 0x3A7F1C).NextDouble() * 2.0 - 1.0) * 0.35f;
+            float gainL = 1f - Mathf.Max(0f,  pan);
+            float gainR = 1f + Mathf.Min(0f, -pan);
+
             for (int i = 0; i < left.Length; i++)
             {
                 float t = (float)i / SynthUtilities.SampleRate;
                 float env = SynthUtilities.EnvelopeDecay(t, decayTime);
                 float noise = (float)(rng.NextDouble() * 2.0 - 1.0) * env * 0.6f;
-                left[i]  = SynthUtilities.ProcessFilter(ref filterLeft,  noise, cutoff,        q, VoiceFilterMode.BandPass);
-                right[i] = SynthUtilities.ProcessFilter(ref filterRight, noise, cutoff * 1.03f, q, VoiceFilterMode.BandPass);
+                float fL = SynthUtilities.ProcessFilter(ref filterLeft,  noise, cutoff,        q, VoiceFilterMode.BandPass);
+                float fR = SynthUtilities.ProcessFilter(ref filterRight, noise, cutoff * 1.03f, q, VoiceFilterMode.BandPass);
+                left[i]  = fL * gainL;
+                right[i] = fR * gainR;
             }
         }
 

@@ -180,7 +180,7 @@ namespace RhythmForge
 
         private void HandleGenreRederived(string genreId)
         {
-            _samplePlayer?.InvalidateGenre(genreId);
+            _samplePlayer?.InvalidateAll();
             _sequencer?.ResetWarmBar();
         }
 
@@ -298,6 +298,7 @@ namespace RhythmForge
         private void HandleGenreChanged(GenreChangedEvent evt)
         {
             var genre = GenreRegistry.Get(evt.NewGenreId);
+            _audioEngine?.SetGenre(evt.NewGenreId);
             if (_toast && genre != null)
                 _toast.Show($"Genre: {genre.DisplayName}");
             // Rebuild visuals — colors have changed

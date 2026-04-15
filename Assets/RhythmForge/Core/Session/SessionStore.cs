@@ -7,6 +7,7 @@ using RhythmForge.Core.Analysis;
 using RhythmForge.Core.Data;
 using RhythmForge.Core.Events;
 using RhythmForge.Core.PatternBehavior;
+using RhythmForge.Core.Sequencing;
 
 namespace RhythmForge.Core.Session
 {
@@ -215,9 +216,11 @@ namespace RhythmForge.Core.Session
             var snapshot = BuildRederivationSnapshot(genreId);
             var queue    = _mainThreadQueue;
 
+            var harmonicContext = PatternContextScope.CloneHarmonicContext(State.harmonicContext);
+
             Task.Run(() =>
             {
-                var results = RederivePatternsBackground(snapshot);
+                var results = RederivePatternsBackground(snapshot, genreId, harmonicContext);
                 queue.Enqueue(() => ApplyRederivationResults(results, genreId));
             });
         }
@@ -266,19 +269,56 @@ namespace RhythmForge.Core.Session
             return snapshots;
         }
 
-        private static List<PatternRederivation> RederivePatternsBackground(List<PatternSnapshot> snapshots)
+        private static List<PatternRederivation> RederivePatternsBackground(
+            List<PatternSnapshot> snapshots,
+            string genreId,
+            HarmonicContext harmonicContext)
         {
-            var genre   = GenreRegistry.GetActive();
+            var genre   = GenreRegistry.Get(genreId);
             var results = new List<PatternRederivation>(snapshots.Count);
+            var roleCounter = new Dictionary<PatternType, int>();
+            var roleTotals = new Dictionary<PatternType, int>();
 
             foreach (var snap in snapshots)
             {
-                var behavior     = PatternBehaviorRegistry.Get(snap.type);
+                if (!roleTotals.ContainsKey(snap.type))
+                    roleTotals[snap.type] = 0;
+                roleTotals[snap.type]++;
+            }
+
+            foreach (var snap in snapshots)
+            {
                 var metrics      = StrokeAnalyzer.Analyze(snap.points);
-                var soundProfile = behavior.DeriveSoundProfile(snap.shapeProfile);
-                var derivation   = behavior.Derive(
-                    snap.points, metrics, snap.key,
-                    genre.Id, snap.shapeProfile, soundProfile);
+                var soundProfile = genre.GetSoundMapping(snap.type).Evaluate(snap.type, snap.shapeProfile);
+
+                if (!roleCounter.TryGetValue(snap.type, out int roleIdx))
+                    roleIdx = 0;
+                roleCounter[snap.type] = roleIdx + 1;
+
+                PatternDerivationResult derivation;
+                using (PatternContextScope.Push(
+                    new ShapeRole { index = roleIdx, count = roleTotals[snap.type] },
+                    harmonicContext))
+                {
+                    derivation = DerivePatternForGenre(
+                        genre,
+                        snap.type,
+                        snap.points,
+                        metrics,
+                        snap.key,
+                        snap.shapeProfile,
+                        soundProfile);
+                }
+
+                if (snap.type == PatternType.HarmonyPad && derivation.derivedSequence?.chord != null)
+                {
+                    harmonicContext = new HarmonicContext
+                    {
+                        rootMidi = derivation.derivedSequence.rootMidi,
+                        chordTones = new List<int>(derivation.derivedSequence.chord),
+                        flavor = derivation.derivedSequence.flavor ?? "minor"
+                    };
+                }
 
                 results.Add(new PatternRederivation
                 {
@@ -295,6 +335,53 @@ namespace RhythmForge.Core.Session
                 });
             }
             return results;
+        }
+
+        private static PatternDerivationResult DerivePatternForGenre(
+            GenreProfile genre,
+            PatternType type,
+            List<Vector2> points,
+            StrokeMetrics metrics,
+            string keyName,
+            ShapeProfile shapeProfile,
+            SoundProfile soundProfile)
+        {
+            switch (type)
+            {
+                case PatternType.RhythmLoop:
+                    var rhythm = genre.RhythmDeriver.Derive(points, metrics, shapeProfile, soundProfile, genre);
+                    return new PatternDerivationResult
+                    {
+                        bars = rhythm.bars,
+                        presetId = rhythm.presetId,
+                        tags = rhythm.tags,
+                        derivedSequence = rhythm.derivedSequence,
+                        summary = rhythm.summary,
+                        details = rhythm.details
+                    };
+                case PatternType.MelodyLine:
+                    var melody = genre.MelodyDeriver.Derive(points, metrics, keyName, shapeProfile, soundProfile, genre);
+                    return new PatternDerivationResult
+                    {
+                        bars = melody.bars,
+                        presetId = melody.presetId,
+                        tags = melody.tags,
+                        derivedSequence = melody.derivedSequence,
+                        summary = melody.summary,
+                        details = melody.details
+                    };
+                default:
+                    var harmony = genre.HarmonyDeriver.Derive(points, metrics, keyName, shapeProfile, soundProfile, genre);
+                    return new PatternDerivationResult
+                    {
+                        bars = harmony.bars,
+                        presetId = harmony.presetId,
+                        tags = harmony.tags,
+                        derivedSequence = harmony.derivedSequence,
+                        summary = harmony.summary,
+                        details = harmony.details
+                    };
+            }
         }
 
         private void ApplyRederivationResults(List<PatternRederivation> results, string genreId)

@@ -2014,6 +2014,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::RhythmForge.Bootstrap.RhythmForgeBootstrapper
   _cameraRigOverride: {fileID: 0}
   _stylusOverride: {fileID: 0}
+  _instrumentRegistryOverride: {fileID: 0}
+  _soundMappingProfileOverride: {fileID: 0}
+  _visualGrammarProfileOverride: {fileID: 0}
+  _rhythmForgeMixer: {fileID: 24100000, guid: ef07a30b9290e45888da8c05b39cb0a8, type: 2}
   _loadDemoOnStart: 1
   _manager: {fileID: 0}
   _inputMapper: {fileID: 0}

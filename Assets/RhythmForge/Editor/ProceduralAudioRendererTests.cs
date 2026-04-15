@@ -156,6 +156,65 @@ namespace RhythmForge.Editor
         }
 
         [Test]
+        public void NewAgeVoices_RenderHealthyClips_AndUseDrierClipTailThanElectronic()
+        {
+            string previousGenre = GenreRegistry.GetActive().Id;
+            try
+            {
+                var profile = CreateProfile(body: 0.66f, brightness: 0.44f, drive: 0.14f, releaseBias: 0.72f,
+                    transientSharpness: 0.24f, resonance: 0.26f, attackBias: 0.18f,
+                    detune: 0.28f, modDepth: 0.32f, stereoSpread: 0.56f, waveMorph: 0.34f,
+                    filterMotion: 0.28f, delayBias: 0.34f, reverbBias: 0.82f);
+
+                GenreRegistry.SetActive("newage");
+                var bowlSpec = VoiceSpecResolver.ResolveDrum(
+                    "kick",
+                    InstrumentPresets.Get("newage-bowl"),
+                    profile,
+                    0.52f,
+                    0.42f);
+                var kalimbaSpec = VoiceSpecResolver.ResolveMelody(
+                    InstrumentPresets.Get("newage-kalimba"),
+                    profile,
+                    74,
+                    0.84f,
+                    0.56f,
+                    0.42f);
+                var droneSpec = VoiceSpecResolver.ResolveHarmony(
+                    InstrumentPresets.Get("newage-drone"),
+                    profile,
+                    60,
+                    2.4f,
+                    0.48f,
+                    0.72f);
+
+                var bowlClip = ProceduralSynthesizer.RenderDrum(bowlSpec);
+                var kalimbaClip = ProceduralSynthesizer.RenderTone(kalimbaSpec);
+                var droneClip = ProceduralSynthesizer.RenderTone(droneSpec);
+
+                AssertHealthyClip(bowlClip, ExpectedDrumSamples(bowlSpec));
+                AssertHealthyClip(kalimbaClip, ExpectedToneSamples(kalimbaSpec));
+                AssertHealthyClip(droneClip, ExpectedToneSamples(droneSpec));
+
+                GenreRegistry.SetActive("electronic");
+                var electronicClip = ProceduralSynthesizer.RenderTone(
+                    VoiceSpecResolver.ResolveHarmony(
+                        InstrumentPresets.Get("dream-pad"),
+                        profile,
+                        60,
+                        2.4f,
+                        0.48f,
+                        0.72f));
+
+                Assert.That(TailRms(droneClip, 0.18f), Is.LessThan(TailRms(electronicClip, 0.18f) * 0.7f));
+            }
+            finally
+            {
+                GenreRegistry.SetActive(previousGenre);
+            }
+        }
+
+        [Test]
         public void SamplePlayer_ReusesCachedClip_ForIdenticalQuantizedSpec()
         {
             var player = CreatePlayer();
@@ -415,6 +474,12 @@ namespace RhythmForge.Editor
 
         private static float GetAmbienceTail(ResolvedVoiceSpec spec)
         {
+            if (spec.isNewAge)
+            {
+                return spec.fxSend * (0.04f + spec.delayBias * 0.16f)
+                    + (spec.patternType == PatternType.HarmonyPad ? 0.03f : 0.01f);
+            }
+
             return spec.fxSend * (0.08f + spec.reverbBias * 0.18f + spec.delayBias * 0.16f)
                 + (spec.patternType == PatternType.HarmonyPad ? 0.12f : 0.04f);
         }

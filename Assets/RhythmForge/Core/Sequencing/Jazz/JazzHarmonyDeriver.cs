@@ -3,6 +3,7 @@ using UnityEngine;
 using RhythmForge.Core;
 using RhythmForge.Core.Data;
 using RhythmForge.Core.Analysis;
+using RhythmForge.Core.Sequencing;
 
 namespace RhythmForge.Core.Sequencing.Jazz
 {
@@ -30,53 +31,70 @@ namespace RhythmForge.Core.Sequencing.Jazz
             int rootMidi = PitchUtils.PitchFromRelative(1f - sp.centroidHeight, keyName) - 12;
             rootMidi = MusicalKeys.QuantizeToKey(rootMidi, keyName);
 
-            // Jazz chord flavors — diatonic scale-degree steps (guaranteed in-key)
+            var role = ShapeRoleProvider.Current;
+            List<int> chord;
             string flavor;
-            int[] scaleDegreeSteps;
 
-            if (sp.tiltSigned > 0.35f)
+            if (role.index >= 2)
             {
-                // Bright: root-3rd-5th-7th (major feel)
-                flavor = "maj7";
-                scaleDegreeSteps = new[] { 0, 2, 4, 6 };
+                // Role 2+: bass pedal only
+                flavor = "bass-pedal";
+                int pedalMidi = RegisterPolicy.ClampBass(rootMidi - 12, "jazz");
+                chord = new List<int> { pedalMidi };
             }
-            else if (sp.tiltSigned > 0.1f)
+            else if (role.index == 1)
             {
-                // Dominant feel: root-3rd-5th-7th (slightly flat 7th via scale degree)
-                flavor = "dom7";
-                scaleDegreeSteps = new[] { 0, 2, 4, 6 };
-            }
-            else if (sp.tiltSigned < -0.3f)
-            {
-                // Dark: root-3rd-5th with added 2nd for tension cluster
-                flavor = "dim7";
-                scaleDegreeSteps = new[] { 0, 2, 4, 5 };
-            }
-            else if (sp.circularity > 0.65f)
-            {
-                // Smooth minor: root-3rd-5th-7th
-                flavor = "min7";
-                scaleDegreeSteps = new[] { 0, 2, 4, 6 };
+                // Role 1: root+5th one octave below — no upper voice duplication
+                flavor = "root5";
+                int bassRoot = RegisterPolicy.ClampBass(rootMidi - 12, "jazz");
+                int fifth    = RegisterPolicy.ClampBass(MusicalKeys.QuantizeToKey(bassRoot + 7, keyName), "jazz");
+                chord = new List<int> { bassRoot, fifth };
             }
             else
             {
-                // Richer: root-3rd-5th-7th-9th
-                flavor = "min9";
-                scaleDegreeSteps = new[] { 0, 2, 4, 6, 1 }; // 1 wraps to 9th
+                // Role 0: full jazz chord voicing (existing)
+                int[] scaleDegreeSteps;
+
+                if (sp.tiltSigned > 0.35f)
+                {
+                    flavor = "maj7";
+                    scaleDegreeSteps = new[] { 0, 2, 4, 6 };
+                }
+                else if (sp.tiltSigned > 0.1f)
+                {
+                    flavor = "dom7";
+                    scaleDegreeSteps = new[] { 0, 2, 4, 6 };
+                }
+                else if (sp.tiltSigned < -0.3f)
+                {
+                    flavor = "dim7";
+                    scaleDegreeSteps = new[] { 0, 2, 4, 5 };
+                }
+                else if (sp.circularity > 0.65f)
+                {
+                    flavor = "min7";
+                    scaleDegreeSteps = new[] { 0, 2, 4, 6 };
+                }
+                else
+                {
+                    flavor = "min9";
+                    scaleDegreeSteps = new[] { 0, 2, 4, 6, 1 };
+                }
+
+                chord = MusicalKeys.BuildScaleChord(rootMidi, keyName, scaleDegreeSteps);
+
+                int spread = Mathf.RoundToInt(sp.horizontalSpan * 12f + sizeFactor * 6f);
+                if (chord.Count > 2)
+                    chord[2] += Mathf.RoundToInt(spread * 0.5f) / 12 * 12;
+                if (chord.Count > 3)
+                    chord[3] += (spread > 5 ? 12 : 0);
+
+                if (sp.horizontalSpan > 0.6f || sizeFactor > 0.58f)
+                    chord.Insert(0, rootMidi - 12);
+
+                for (int n = 0; n < chord.Count; n++)
+                    chord[n] = RegisterPolicy.Clamp(chord[n], PatternType.HarmonyPad, "jazz");
             }
-
-            var chord = MusicalKeys.BuildScaleChord(rootMidi, keyName, scaleDegreeSteps);
-
-            // Spread voicing based on horizontal span
-            int spread = Mathf.RoundToInt(sp.horizontalSpan * 12f + sizeFactor * 6f);
-            if (chord.Count > 2)
-                chord[2] += Mathf.RoundToInt(spread * 0.5f) / 12 * 12;
-            if (chord.Count > 3)
-                chord[3] += (spread > 5 ? 12 : 0);
-
-            // Walking bass root for wide shapes
-            if (sp.horizontalSpan > 0.6f || sizeFactor > 0.58f)
-                chord.Insert(0, rootMidi - 12);
 
             string tensionWord = flavor == "dim7" || flavor == "dom7" ? "tension" : "stable";
             return new HarmonyDerivationResult

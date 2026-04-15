@@ -1,5 +1,6 @@
 using UnityEngine;
 using RhythmForge.Core.Data;
+using RhythmForge.Core.Sequencing;
 
 namespace RhythmForge.Audio
 {
@@ -29,6 +30,18 @@ namespace RhythmForge.Audio
             return spec;
         }
 
+        // Per-mode gain offsets (in linear amplitude): harmony sits under melody, melody under rhythm.
+        // NewAge: harmony −5 dB (0.562), melody −2 dB (0.794). Other genres: −4 dB / −1 dB.
+        private static float ModeGainLinear(PatternType type, bool isNewAge)
+        {
+            switch (type)
+            {
+                case PatternType.HarmonyPad:  return isNewAge ? 0.562f : 0.631f;
+                case PatternType.MelodyLine:  return isNewAge ? 0.794f : 0.891f;
+                default:                       return 1.0f;
+            }
+        }
+
         public static ResolvedVoiceSpec ResolveMelody(
             InstrumentPreset preset,
             SoundProfile profile,
@@ -43,6 +56,7 @@ namespace RhythmForge.Audio
             spec.durationSeconds = QuantizeDuration(duration, 0.04f, 0.08f, 1.6f);
             spec.glide = QuantizeSigned(glide, 20f);
             ResolveTonalDetails(ref spec);
+            spec.velocityScale = ModeGainLinear(PatternType.MelodyLine, spec.isNewAge);
             return spec;
         }
 
@@ -59,6 +73,10 @@ namespace RhythmForge.Audio
             spec.durationSeconds = QuantizeDuration(duration, 0.08f, 0.12f, 4.6f);
             spec.glide = 0f;
             ResolveTonalDetails(ref spec);
+            spec.velocityScale = ModeGainLinear(PatternType.HarmonyPad, spec.isNewAge);
+            // §4c: role-1+ pads are narrower in the stereo field so role-0 owns the wide image
+            int padRoleIdx = ShapeRoleProvider.Current.index;
+            spec.chorusWidthScale = padRoleIdx > 0 ? 1f / (1f + padRoleIdx) : 1f;
             return spec;
         }
 

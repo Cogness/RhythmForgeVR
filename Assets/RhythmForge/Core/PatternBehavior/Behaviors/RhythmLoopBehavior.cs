@@ -44,13 +44,16 @@ namespace RhythmForge.Core.PatternBehavior.Behaviors
         public void CollectVoiceSpecs(PatternSchedulingContext context, int totalSteps, List<ResolvedVoiceSpec> results)
         {
             if (context.pattern.derivedSequence?.events == null) return;
-            foreach (var evt in context.pattern.derivedSequence.events)
-                results.Add(VoiceSpecResolver.ResolveDrum(
-                    evt.lane,
-                    context.preset,
-                    context.sound,
-                    context.instance.brightness,
-                    context.preset.fxSend));
+            using (PatternContextScope.ForPattern(context.appState, context.pattern))
+            {
+                foreach (var evt in context.pattern.derivedSequence.events)
+                    results.Add(VoiceSpecResolver.ResolveDrum(
+                        evt.lane,
+                        context.preset,
+                        context.sound,
+                        context.instance.brightness,
+                        context.preset.fxSend));
+            }
         }
 
         public void Schedule(PatternSchedulingContext context)
@@ -63,15 +66,18 @@ namespace RhythmForge.Core.PatternBehavior.Behaviors
                 if (evt.step != context.localStep)
                     continue;
 
-                context.audioDispatcher?.PlayDrum(
-                    context.preset,
-                    evt.lane,
-                    evt.velocity,
-                    context.instance.pan,
-                    context.instance.brightness,
-                    context.instance.depth,
-                    context.preset.fxSend + context.group.busFx.reverb * 0.2f,
-                    context.sound);
+                using (PatternContextScope.ForPattern(context.appState, context.pattern))
+                {
+                    context.audioDispatcher?.PlayDrum(
+                        context.preset,
+                        evt.lane,
+                        evt.velocity,
+                        context.instance.pan,
+                        context.instance.brightness,
+                        context.instance.depth,
+                        context.preset.fxSend + context.group.busFx.reverb * 0.2f,
+                        context.sound);
+                }
 
                 context.recordTrigger?.Invoke(
                     context.instance.id,

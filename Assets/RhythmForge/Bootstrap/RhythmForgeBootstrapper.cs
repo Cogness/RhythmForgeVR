@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Audio;
 using UnityEngine.Rendering;
 using UnityEngine.EventSystems;
 using RhythmForge;
@@ -33,6 +34,10 @@ namespace RhythmForge.Bootstrap
         [SerializeField] private SoundMappingProfileAsset _soundMappingProfileOverride;
         [Tooltip("Leave null to load visual grammar data from Resources or built-in defaults")]
         [SerializeField] private VisualGrammarProfileAsset _visualGrammarProfileOverride;
+
+        [Header("Audio Mixer")]
+        [Tooltip("Assign Assets/RhythmForge/Audio/RhythmForgeMixer.mixer here")]
+        [SerializeField] private AudioMixer _rhythmForgeMixer;
 
         [Header("Demo")]
         [SerializeField] private bool _loadDemoOnStart = true;
@@ -328,7 +333,9 @@ namespace RhythmForge.Bootstrap
             _samplePlayer = playerGo.AddComponent<SamplePlayer>();
             _audioEngine  = audioGo.AddComponent<AudioEngine>();
             _samplePlayer.Configure();
-            _audioEngine.Configure(_samplePlayer);
+            _audioEngine.Configure(_samplePlayer, _rhythmForgeMixer);
+            // Route pool sources to the genre group active at startup
+            _audioEngine.SetGenre(GenreRegistry.GetActive().Id);
         }
 
         // ──────────────────────────────────────────────────────────

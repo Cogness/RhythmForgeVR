@@ -3,6 +3,7 @@ using UnityEngine;
 using RhythmForge.Core;
 using RhythmForge.Core.Data;
 using RhythmForge.Core.Analysis;
+using RhythmForge.Core.Sequencing;
 
 namespace RhythmForge.Core.Sequencing.NewAge
 {
@@ -30,36 +31,59 @@ namespace RhythmForge.Core.Sequencing.NewAge
             int rootMidi = PitchUtils.PitchFromRelative(1f - sp.centroidHeight, keyName) - 12;
             rootMidi = MusicalKeys.QuantizeToKey(rootMidi, keyName);
 
-            // Open, airy voicings — use diatonic scale steps for in-key notes.
-            // Sus-style: skip 3rd (degree 2), favour 2nd (degree 1) and 5th (degree 4).
+            var role = ShapeRoleProvider.Current;
+
+            List<int> chord;
             string flavor;
-            int[] scaleDegreeSteps;
-            if (sp.tiltSigned > 0.22f)
+
+            if (role.index >= 2)
             {
-                flavor = "sus2";
-                scaleDegreeSteps = new[] { 0, 1, 4, 7 }; // root, 2nd, 5th, octave-2nd
+                // Role 2+: pure bass pedal — root two octaves down, no voicing above it
+                flavor = "bass-pedal";
+                int pedalMidi = RegisterPolicy.ClampBass(rootMidi - 12, "newage");
+                chord = new List<int> { pedalMidi };
             }
-            else if (sp.tiltSigned < -0.18f)
+            else if (role.index == 1)
             {
-                flavor = "sus4";
-                scaleDegreeSteps = new[] { 0, 3, 4, 7 }; // root, 4th, 5th, octave-2nd
+                // Role 1: root + 5th drone one octave below the primary — never duplicates role 0's top voice
+                flavor = "root5";
+                int bassRoot = RegisterPolicy.ClampBass(rootMidi - 12, "newage");
+                int fifth    = RegisterPolicy.ClampBass(MusicalKeys.QuantizeToKey(bassRoot + 7, keyName), "newage");
+                chord = new List<int> { bassRoot, fifth };
             }
             else
             {
-                flavor = "drone5";
-                scaleDegreeSteps = new[] { 0, 4, 7, 11 }; // root, 5th, octave, 5th-above
+                // Role 0: full sus voicing (existing behaviour)
+                int[] scaleDegreeSteps;
+                if (sp.tiltSigned > 0.22f)
+                {
+                    flavor = "sus2";
+                    scaleDegreeSteps = new[] { 0, 1, 4, 7 };
+                }
+                else if (sp.tiltSigned < -0.18f)
+                {
+                    flavor = "sus4";
+                    scaleDegreeSteps = new[] { 0, 3, 4, 7 };
+                }
+                else
+                {
+                    flavor = "drone5";
+                    scaleDegreeSteps = new[] { 0, 4, 7, 11 };
+                }
+
+                chord = MusicalKeys.BuildScaleChord(rootMidi, keyName, scaleDegreeSteps);
+
+                int spread = Mathf.RoundToInt(sp.horizontalSpan * 8f + sizeFactor * 4f);
+                if (chord.Count > 0)
+                    chord[chord.Count - 1] += Mathf.RoundToInt(spread * 0.3f) / 12 * 12;
+
+                if (sizeFactor > 0.55f || sp.horizontalSpan > 0.6f)
+                    chord.Insert(0, rootMidi - 12);
+
+                // Register-clamp each note
+                for (int n = 0; n < chord.Count; n++)
+                    chord[n] = RegisterPolicy.Clamp(chord[n], PatternType.HarmonyPad, "newage");
             }
-
-            var chord = MusicalKeys.BuildScaleChord(rootMidi, keyName, scaleDegreeSteps);
-
-            // Wide spread for spacious New Age voicing
-            int spread = Mathf.RoundToInt(sp.horizontalSpan * 8f + sizeFactor * 4f);
-            if (chord.Count > 0)
-                chord[chord.Count - 1] += Mathf.RoundToInt(spread * 0.3f) / 12 * 12;
-
-            // Add bass root for depth on large shapes
-            if (sizeFactor > 0.55f || sp.horizontalSpan > 0.6f)
-                chord.Insert(0, rootMidi - 12);
 
             string depthWord = sound.reverbBias > 0.5f ? "deep bloom" : "open space";
             return new HarmonyDerivationResult

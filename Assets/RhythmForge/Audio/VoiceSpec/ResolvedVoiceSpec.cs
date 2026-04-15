@@ -49,6 +49,12 @@ namespace RhythmForge.Audio
         public float fxSend;
         public float attackSeconds;
         public float releaseSeconds;
+        public float velocityScale;
+        /// <summary>
+        /// Scales pad chorus stereo width by 1/(1+roleIndex) so role-0 is wide and later roles sit center.
+        /// 1.0 for all non-pad voices and for role 0 pads.
+        /// </summary>
+        public float chorusWidthScale;
         public VoiceWaveform waveA;
         public VoiceWaveform waveB;
         public VoiceFilterMode filterMode;
@@ -108,6 +114,8 @@ namespace RhythmForge.Audio
             sb.Append(Quantize(fxSend, 16f));               sb.Append('|');
             sb.Append(Quantize(attackSeconds, 40f));        sb.Append('|');
             sb.Append(Quantize(releaseSeconds, 20f));       sb.Append('|');
+            sb.Append(Quantize(velocityScale, 8f));         sb.Append('|');
+            sb.Append(Quantize(chorusWidthScale,   8f));     sb.Append('|');
             sb.Append((int)waveA);  sb.Append('|');
             sb.Append((int)waveB);  sb.Append('|');
             sb.Append((int)filterMode);

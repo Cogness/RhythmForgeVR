@@ -40,6 +40,16 @@ namespace RhythmForge.Core.Data
             if (targetMidi - candidate > 6)  candidate += 12;
             return candidate;
         }
+
+        public HarmonicContext Clone()
+        {
+            return new HarmonicContext
+            {
+                rootMidi = rootMidi,
+                chordTones = chordTones != null ? new List<int>(chordTones) : new List<int>(),
+                flavor = flavor
+            };
+        }
     }
 
     [Serializable]

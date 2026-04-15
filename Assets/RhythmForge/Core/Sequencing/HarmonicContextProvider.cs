@@ -10,15 +10,21 @@ namespace RhythmForge.Core.Sequencing
     /// </summary>
     public static class HarmonicContextProvider
     {
+        [System.ThreadStatic]
         private static HarmonicContext _current = new HarmonicContext();
 
         /// <summary>Set by DraftBuilder before every derivation call.</summary>
         public static void Set(HarmonicContext ctx)
         {
-            _current = ctx ?? new HarmonicContext();
+            _current = ctx?.Clone() ?? new HarmonicContext();
         }
 
         /// <summary>Returns the current shared context (never null).</summary>
-        public static HarmonicContext Current => _current;
+        public static HarmonicContext Current => _current ?? (_current = new HarmonicContext());
+
+        public static void Clear()
+        {
+            _current = new HarmonicContext();
+        }
     }
 }

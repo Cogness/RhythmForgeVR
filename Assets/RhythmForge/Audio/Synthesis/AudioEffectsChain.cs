@@ -11,9 +11,9 @@ namespace RhythmForge.Audio
             var rightState = new SvfState();
             float baseCutoff = (spec.patternType == PatternType.RhythmLoop
                     ? 500f
-                    : spec.patternType == PatternType.HarmonyPad ? 320f : 700f)
+                    : spec.patternType == PatternType.HarmonyPad ? 200f : 700f)
                 + (spec.positionBrightness * 0.4f + spec.brightness * 0.6f)
-                * (spec.patternType == PatternType.HarmonyPad ? 4200f : 6400f);
+                * (spec.patternType == PatternType.HarmonyPad ? 2800f : 6400f);
 
             if (spec.isLoFi)
                 baseCutoff *= 0.82f;
@@ -224,10 +224,10 @@ namespace RhythmForge.Audio
                 max = Mathf.Max(max, Mathf.Abs(left[i]), Mathf.Abs(right[i]));
             }
 
-            if (max <= 0.96f)
+            if (max <= 1.0f)
                 return;
 
-            float scale = 0.96f / max;
+            float scale = 0.98f / max;
             for (int i = 0; i < left.Length; i++)
             {
                 left[i] *= scale;

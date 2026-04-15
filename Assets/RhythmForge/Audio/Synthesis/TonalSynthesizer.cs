@@ -111,46 +111,62 @@ namespace RhythmForge.Audio
             float targetFreq = SynthUtilities.MidiToFrequency(spec.midi);
             float startFreq  = targetFreq * Mathf.Pow(2f, spec.glide * (0.18f + spec.filterMotion * 0.24f) / 12f);
             float glideTime  = Mathf.Max(0.015f, spec.attackSeconds * 1.4f);
-            float spread     = 0.08f + spec.stereoSpread * (spec.patternType == PatternType.HarmonyPad ? 0.42f : 0.28f);
             float releaseStart = Mathf.Max(spec.attackSeconds, spec.durationSeconds);
-            float dt         = targetFreq / SynthUtilities.SampleRate; // PolyBLEP increment
+
+            // ── Layer identity ─────────────────────────────────────────────────
+            bool isPad    = spec.patternType == PatternType.HarmonyPad;
+            bool isMelody = spec.patternType == PatternType.MelodyLine;
+            bool isKalimba  = spec.isNewAge && isMelody;  // NewAge melody → kalimba pluck
+            bool isDronepad = spec.isNewAge && isPad;      // NewAge harmony → long drone
+
+            float spread = 0.08f + spec.stereoSpread * (isPad ? 0.52f : 0.28f);
 
             // ── Modulation parameters ──────────────────────────────────────────
-            float wowRate    = spec.isLoFi ? 0.55f + spec.modDepth * 0.8f  : 0f;
-            float wowDepth   = spec.isLoFi ? 0.0018f + spec.detune * 0.0024f : 0f;
-            float flutterRate  = spec.isLoFi ? 3.8f + spec.modDepth * 3.2f  : 0f;
-            float flutterDepth = spec.isLoFi ? 0.0006f + spec.detune * 0.0011f : 0f;
-            float breathRate   = spec.isNewAge ? 0.18f + spec.modDepth * 0.4f : 0f;
-            float breathDepth  = spec.isNewAge && spec.patternType == PatternType.HarmonyPad
-                ? 0.0012f + spec.detune * 0.002f : 0f;
-            float jazzVibRate  = spec.isJazz ? 4.2f + spec.modDepth * 2.8f  : 0f;
+            // Wow/flutter only on lofi melody — pads use multi-voice chorus detuning instead
+            float wowRate      = (spec.isLoFi && isMelody) ? 0.55f + spec.modDepth * 0.8f   : 0f;
+            float wowDepth     = (spec.isLoFi && isMelody) ? 0.0018f + spec.detune * 0.0024f : 0f;
+            float flutterRate  = (spec.isLoFi && isMelody) ? 3.8f + spec.modDepth * 3.2f    : 0f;
+            float flutterDepth = (spec.isLoFi && isMelody) ? 0.0006f + spec.detune * 0.0011f : 0f;
+            // Breath: NewAge drone pad = slow swell; kalimba = faster resonance flutter
+            float breathRate  = spec.isNewAge ? (isKalimba ? 3.4f + spec.modDepth * 2.0f
+                                                            : 0.18f + spec.modDepth * 0.4f) : 0f;
+            float breathDepth = spec.isNewAge
+                ? (isDronepad ? 0.0012f + spec.detune * 0.002f : 0.0006f + spec.detune * 0.001f)
+                : 0f;
+            float jazzVibRate     = spec.isJazz ? 4.2f + spec.modDepth * 2.8f  : 0f;
             float jazzVibCentsAmp = spec.isJazz && spec.modDepth > 0.2f ? 6f + spec.modDepth * 14f : 0f;
             float vibRate  = spec.modDepth > 0.1f
-                ? (spec.patternType == PatternType.HarmonyPad ? 3.2f + spec.modDepth * 2.5f : 3.2f + spec.modDepth * 6.5f)
+                ? (isPad ? 3.2f + spec.modDepth * 2.5f : 3.2f + spec.modDepth * 6.5f)
                 : 0f;
             float vibCentsAmp = spec.modDepth > 0.1f
                 ? (spec.isBass ? 4f : 10f) + spec.modDepth * 26f
                 : 0f;
 
-            // ── Additive partial amplitudes ───────────────────────────────────
-            // Build per-partial gain tables once; each partial decays at its own rate.
-            // Real instruments: upper partials decay faster than fundamental.
-            bool isPad    = spec.patternType == PatternType.HarmonyPad;
-            bool isMelody = spec.patternType == PatternType.MelodyLine;
+            // ── Additive partial amplitudes ────────────────────────────────────
             int numPartials = isPad ? 8 : isMelody ? 6 : 4;
-
             float[] partialGain  = new float[numPartials];
-            float[] partialDecay = new float[numPartials]; // seconds
+            float[] partialDecay = new float[numPartials];
             float   noteDecay    = spec.durationSeconds + spec.releaseSeconds;
 
             if (isPad)
             {
-                // Organ/string pad: rich lower harmonics, gentle rolloff
+                // Lush pad: rich harmonics, very slow per-harmonic decay for sustained warmth
                 float[] padAmps = { 1.0f, 0.55f, 0.28f, 0.18f, 0.10f, 0.06f, 0.03f, 0.015f };
                 for (int h = 0; h < numPartials; h++)
                 {
                     partialGain[h]  = padAmps[h] * (0.7f + spec.body * 0.3f);
-                    partialDecay[h] = noteDecay * Mathf.Pow(0.72f, h); // each harmonic decays faster
+                    partialDecay[h] = noteDecay * Mathf.Pow(0.82f, h);
+                }
+            }
+            else if (isKalimba)
+            {
+                // Kalimba: fast-decaying bell spectrum — fundamentally different from piano or pad
+                float[] kalAmps = { 1.0f, 0.38f, 0.14f, 0.06f, 0.02f, 0.008f };
+                float kalBase = 0.06f + spec.releaseBias * 0.16f;
+                for (int h = 0; h < numPartials; h++)
+                {
+                    partialGain[h]  = kalAmps[h];
+                    partialDecay[h] = kalBase * Mathf.Pow(0.48f, h);
                 }
             }
             else if (isMelody)
@@ -175,14 +191,20 @@ namespace RhythmForge.Audio
                 }
             }
 
-            // Phase accumulators per partial
+            // Phase accumulators per partial — pads get dream-style offsets for width
             float[] partialPhase = new float[numPartials];
             for (int h = 0; h < numPartials; h++)
-                partialPhase[h] = spec.isDream ? 0.37f * (h + 1f) % 1f : 0.11f * (h + 1f) % 1f;
+                partialPhase[h] = (spec.isDream || isPad) ? 0.37f * (h + 1f) % 1f : 0.11f * (h + 1f) % 1f;
 
-            // Detuned oscillator B phase (chorus layer)
-            float phaseB     = spec.isDream ? 0.19f : 0.31f;
-            float oscBGain   = spec.isBell ? 0.14f + spec.brightness * 0.06f : 0.16f + spec.body * 0.14f;
+            // Osc B (chorus): pads start from a wider offset for immediate stereo image
+            float phaseB   = (spec.isDream || isPad) ? 0.19f : 0.31f;
+            float oscBGain = spec.isBell ? 0.14f + spec.brightness * 0.06f : 0.16f + spec.body * 0.14f;
+
+            // Pad extra chorus voices C + D for lush multi-voice width
+            float phaseC = 0.53f, phaseD = 0.77f;
+            float padChorusGain = isPad ? 0.11f + spec.detune * 0.09f : 0f;
+            float padCentC = isPad ? -(8f  + spec.detune * 18f) : 0f;
+            float padCentD = isPad ?  (5f  + spec.detune * 14f) : 0f;
 
             for (int i = 0; i < sampleCount; i++)
             {
@@ -196,10 +218,10 @@ namespace RhythmForge.Audio
                     glideTime <= 0f ? 1f : Mathf.Clamp01(t / glideTime));
 
                 // Modulation
-                float wow     = wowDepth   > 0f ? Mathf.Sin(Mathf.PI * 2f * wowRate    * t) * wowDepth    : 0f;
-                float flutter = flutterDepth > 0f ? Mathf.Sin(Mathf.PI * 2f * flutterRate  * t) * flutterDepth : 0f;
-                float breath  = breathDepth  > 0f ? Mathf.Sin(Mathf.PI * 2f * breathRate   * t) * breathDepth  : 0f;
-                float vibCents = vibCentsAmp > 0f ? Mathf.Sin(Mathf.PI * 2f * vibRate * t) * vibCentsAmp : 0f;
+                float wow     = wowDepth     > 0f ? Mathf.Sin(Mathf.PI * 2f * wowRate     * t) * wowDepth     : 0f;
+                float flutter = flutterDepth > 0f ? Mathf.Sin(Mathf.PI * 2f * flutterRate * t) * flutterDepth : 0f;
+                float breath  = breathDepth  > 0f ? Mathf.Sin(Mathf.PI * 2f * breathRate  * t) * breathDepth  : 0f;
+                float vibCents = vibCentsAmp    > 0f ? Mathf.Sin(Mathf.PI * 2f * vibRate     * t) * vibCentsAmp    : 0f;
                 float jvCents  = jazzVibCentsAmp > 0f ? Mathf.Sin(Mathf.PI * 2f * jazzVibRate * t) * jazzVibCentsAmp : 0f;
                 float modFreq  = frequency * (1f + wow + flutter + breath)
                                * Mathf.Pow(2f, (vibCents + jvCents) / 1200f);
@@ -209,10 +231,9 @@ namespace RhythmForge.Audio
                 for (int h = 0; h < numPartials; h++)
                 {
                     float partFreq = modFreq * (h + 1f);
-                    // Skip partials above Nyquist
                     if (partFreq >= SynthUtilities.SampleRate * 0.47f) break;
                     float partEnv = env * partialGain[h]
-                                  * Mathf.Exp(-t / Mathf.Max(0.02f, partialDecay[h]));
+                                  * Mathf.Exp(-t / Mathf.Max(0.001f, partialDecay[h]));
                     mono += Mathf.Sin(Mathf.PI * 2f * partialPhase[h]) * partEnv;
                     partialPhase[h] = SynthUtilities.AdvancePhase(partialPhase[h], partFreq);
                 }
@@ -220,19 +241,36 @@ namespace RhythmForge.Audio
                 float leftSample  = mono;
                 float rightSample = mono;
 
-                // ── Detuned chorus layer (osc B) ──────────────────────────────
-                if (spec.useOscillatorB)
+                // ── Chorus/detune layer ────────────────────────────────────────
+                // Kalimba: no chorus — pure dry pluck
+                if (spec.useOscillatorB && !isKalimba)
                 {
                     float oscBFreq = frequency * (spec.isBell ? 2f : 1.003f + spec.detune * 0.02f);
-                    float detuneCents = (spec.isDream ? 6f : 10f) + spec.detune * 24f;
+                    float detuneCents = (spec.isDream || isPad ? 6f : 10f) + spec.detune * 24f;
                     oscBFreq *= Mathf.Pow(2f, detuneCents / 1200f);
-                    float oscBdt     = oscBFreq / SynthUtilities.SampleRate;
-                    float oscBSample = SynthUtilities.SampleWaveWithDt(spec.waveB, phaseB, oscBdt)
-                                     * oscBGain * env;
+                    float oscBSample = SynthUtilities.SampleWaveWithDt(spec.waveB, phaseB,
+                                           oscBFreq / SynthUtilities.SampleRate) * oscBGain * env;
                     phaseB = SynthUtilities.AdvancePhase(phaseB, oscBFreq);
-                    SynthUtilities.MixStereo(ref leftSample, ref rightSample, oscBSample, spread * 0.35f);
+                    // Pads: spread chorus wide; melody: subtle centre fill
+                    SynthUtilities.MixStereo(ref leftSample, ref rightSample, oscBSample,
+                        isPad ? spread * 0.55f : spread * 0.22f);
+
+                    // ── Pad extra voices C + D ────────────────────────────────
+                    if (padChorusGain > 0f)
+                    {
+                        float freqC = frequency * Mathf.Pow(2f, padCentC / 1200f);
+                        float freqD = frequency * Mathf.Pow(2f, padCentD / 1200f);
+                        float sC = SynthUtilities.SampleWaveWithDt(spec.waveB, phaseC,
+                                       freqC / SynthUtilities.SampleRate) * padChorusGain * env;
+                        float sD = SynthUtilities.SampleWaveWithDt(spec.waveA, phaseD,
+                                       freqD / SynthUtilities.SampleRate) * padChorusGain * 0.85f * env;
+                        phaseC = SynthUtilities.AdvancePhase(phaseC, freqC);
+                        phaseD = SynthUtilities.AdvancePhase(phaseD, freqD);
+                        SynthUtilities.MixStereo(ref leftSample, ref rightSample, sC, -spread * 0.6f);
+                        SynthUtilities.MixStereo(ref leftSample, ref rightSample, sD,  spread * 0.7f);
+                    }
                 }
-                else if (spread > 0.18f)
+                else if (spread > 0.18f && !isKalimba)
                 {
                     SynthUtilities.MixStereo(ref leftSample, ref rightSample, mono * 0.24f, spread * 0.16f);
                 }
@@ -241,16 +279,30 @@ namespace RhythmForge.Audio
                 leftSample  *= 1f + spread * 0.12f;
                 rightSample *= 1f - spread * 0.08f;
 
-                // Lo-Fi hiss
-                if (spec.isLoFi && !spec.isNewAge)
+                // Lo-Fi hiss: melody only — pads get chorus texture instead
+                if (spec.isLoFi && isMelody)
                 {
                     float hiss = (Mathf.PerlinNoise(t * 12f, 0.5f) - 0.5f) * 0.012f * env;
                     leftSample  += hiss * 0.8f;
                     rightSample += hiss * 0.6f;
                 }
 
-                // Jazz Rhodes tine: inharmonic partial with fast decay (electric piano character)
-                if (spec.isJazz && spec.patternType != PatternType.RhythmLoop)
+                // ── Melody strike transient ────────────────────────────────────
+                // Short noise burst at note onset gives melody a pluck/hammer character
+                // that pads completely lack (pads have slow attack and no transient).
+                if (isMelody && t < 0.032f)
+                {
+                    float transGain  = 0.035f + spec.transientSharpness * 0.075f;
+                    float transEnv   = Mathf.Exp(-t / 0.005f);
+                    float genreScale = spec.isJazz ? 1.4f : spec.isNewAge ? 0.3f : 1.0f;
+                    float transNoise = (Mathf.PerlinNoise(t * 9000f, spec.midi * 0.019f) - 0.5f) * 2f;
+                    leftSample  += transNoise * transGain * transEnv * genreScale;
+                    rightSample += transNoise * transGain * transEnv * genreScale * 0.88f;
+                }
+
+                // ── Jazz Rhodes tine ───────────────────────────────────────────
+                // Inharmonic metallic partial — melody only (comp pads should be diffuse, not tine-y)
+                if (spec.isJazz && isMelody)
                 {
                     float tineEnv  = Mathf.Exp(-t / Mathf.Max(0.02f, spec.attackSeconds * 0.5f));
                     float tineFreq = targetFreq * 3.2f;

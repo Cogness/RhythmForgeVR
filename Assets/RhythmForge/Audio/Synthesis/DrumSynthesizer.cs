@@ -234,7 +234,11 @@ namespace RhythmForge.Audio
             float cutoff = 1000f + spec.body * 600f + spec.brightness * 2200f;
             float q = 0.8f + spec.resonance * 0.42f;
             float phase = 0f;
-            float toneFrequency = 180f + spec.body * 220f;
+            // percTuningMidi is baked into the spec at resolve time (VoiceSpecResolver)
+            // and included in the cache key, so changing the key root correctly busts the cache.
+            float toneFrequency = spec.percTuningMidi > 0
+                ? SynthUtilities.MidiToFrequency(spec.percTuningMidi) * (1f + spec.body * 0.5f)
+                : 180f + spec.body * 220f;
 
             for (int i = 0; i < left.Length; i++)
             {

@@ -54,6 +54,13 @@ namespace RhythmForge.Core.Sequencing
 
                 int midi = PitchUtils.PitchFromRelative(centeredY, keyName);
 
+                // Strong beats (downbeats every 4 steps) snap to nearest chord tone for guaranteed harmony.
+                // Weak beats stay on any scale degree for melodic passing-tone interest.
+                int step = Mathf.FloorToInt((float)i / sliceCount * totalSteps);
+                var harmCtx = HarmonicContextProvider.Current;
+                if (step % 4 == 0 && harmCtx.HasChord)
+                    midi = harmCtx.NearestChordTone(midi);
+
                 // World-space speed thresholds (pilot: 24px, 40px)
                 int durationBase = speed < 0.025f ? 6 : speed < 0.042f ? 4 : 2;
                 int durationSteps = Mathf.Clamp(
@@ -63,8 +70,6 @@ namespace RhythmForge.Core.Sequencing
                 float slope = Mathf.Clamp(
                     (next.y - prev.y) / Mathf.Max(metrics.height, 0.001f) * 4f,
                     -1f, 1f);
-
-                int step = Mathf.FloorToInt((float)i / sliceCount * totalSteps);
 
                 notes.Add(new MelodyNote
                 {

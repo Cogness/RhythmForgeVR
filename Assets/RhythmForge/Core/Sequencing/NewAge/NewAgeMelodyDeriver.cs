@@ -3,6 +3,7 @@ using UnityEngine;
 using RhythmForge.Core;
 using RhythmForge.Core.Data;
 using RhythmForge.Core.Analysis;
+using RhythmForge.Core.Sequencing;
 
 namespace RhythmForge.Core.Sequencing.NewAge
 {
@@ -52,6 +53,13 @@ namespace RhythmForge.Core.Sequencing.NewAge
                 // Map to pentatonic: quantize to nearest pentatonic degree
                 int midi = PentatonicPitch(centeredY, key);
 
+                // Strong beats snap to nearest chord tone (only when a harmony pad has set context).
+                // Pentatonic is already consonant; this just aligns to the specific chord in play.
+                int step = Mathf.FloorToInt((float)i / sliceCount * totalSteps);
+                var harmCtx = HarmonicContextProvider.Current;
+                if (step % 4 == 0 && harmCtx.HasChord)
+                    midi = harmCtx.NearestChordTone(midi);
+
                 // Long durations — pentatonic melodies breathe
                 int durationSteps = Mathf.Clamp(
                     Mathf.RoundToInt(6f + (1f - sp.speedVariance) * 4f + sizeFactor * 6f - sound.transientSharpness * 2f),
@@ -60,8 +68,6 @@ namespace RhythmForge.Core.Sequencing.NewAge
                 float slope = Mathf.Clamp(
                     (next.y - prev.y) / Mathf.Max(metrics.height, 0.001f) * 2f,
                     -0.5f, 0.5f); // gentle glide only
-
-                int step = Mathf.FloorToInt((float)i / sliceCount * totalSteps);
 
                 // Soft, consistent velocity
                 notes.Add(new MelodyNote

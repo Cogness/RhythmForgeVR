@@ -73,8 +73,21 @@ namespace RhythmForge.Core.Session
             var soundProfile = behavior.DeriveSoundProfile(shapeProfile);
             string shapeSummary = PresetBiasResolver.SummarizeShapeDNA(type, shapeProfile, soundProfile);
 
+            // Publish current harmonic context so melody derivers can read it without interface changes.
+            HarmonicContextProvider.Set(store.GetHarmonicContext());
+
             // Derive sequence
             var derivation = behavior.Derive(rawPoints, metrics, keyName, groupId, shapeProfile, soundProfile);
+
+            // Keep shared harmonic context up-to-date whenever a harmony pad is drawn.
+            // Melody and bass derivers read this to constrain strong-beat pitches to chord tones.
+            if (type == PatternType.HarmonyPad && derivation.derivedSequence?.chord != null)
+            {
+                store.SetHarmonicContext(
+                    derivation.derivedSequence.rootMidi,
+                    derivation.derivedSequence.chord,
+                    derivation.derivedSequence.flavor ?? "minor");
+            }
 
             return new DraftResult
             {

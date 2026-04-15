@@ -167,6 +167,16 @@ namespace RhythmForge.Core.Session
 
         public string GetActiveGenreId() => State.activeGenreId ?? "electronic";
 
+        public HarmonicContext GetHarmonicContext() => State.harmonicContext ?? (State.harmonicContext = new HarmonicContext());
+
+        public void SetHarmonicContext(int rootMidi, List<int> chordTones, string flavor)
+        {
+            var ctx = State.harmonicContext ?? (State.harmonicContext = new HarmonicContext());
+            ctx.rootMidi   = rootMidi;
+            ctx.chordTones = chordTones ?? new List<int>();
+            ctx.flavor     = flavor ?? "minor";
+        }
+
         /// <summary>
         /// Switches the active genre and re-derives all existing patterns with the new genre's algorithms.
         /// This is a destructive operation — existing sequence data is replaced.

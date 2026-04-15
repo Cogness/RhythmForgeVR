@@ -3,6 +3,7 @@ using UnityEngine;
 using RhythmForge.Core;
 using RhythmForge.Core.Data;
 using RhythmForge.Core.Analysis;
+using RhythmForge.Core.Sequencing;
 
 namespace RhythmForge.Core.Sequencing.Jazz
 {
@@ -58,6 +59,12 @@ namespace RhythmForge.Core.Sequencing.Jazz
 
                 int midi = JazzPitch(centeredY, key, intervals);
 
+                // Strong beats snap to nearest chord tone; weak beats keep jazz passing-tone freedom.
+                int step = Mathf.FloorToInt((float)i / sliceCount * totalSteps);
+                var harmCtx = HarmonicContextProvider.Current;
+                if (step % 4 == 0 && harmCtx.HasChord)
+                    midi = harmCtx.NearestChordTone(midi);
+
                 // Jazz articulation: staccato for fast notes, held for slow
                 int durationBase = speed < 0.025f ? 4 : speed < 0.042f ? 2 : 1;
                 int durationSteps = Mathf.Clamp(
@@ -67,8 +74,6 @@ namespace RhythmForge.Core.Sequencing.Jazz
                 float slope = Mathf.Clamp(
                     (next.y - prev.y) / Mathf.Max(metrics.height, 0.001f) * 4f,
                     -1f, 1f);
-
-                int step = Mathf.FloorToInt((float)i / sliceCount * totalSteps);
 
                 // Dynamic velocity for jazz expressiveness
                 notes.Add(new MelodyNote

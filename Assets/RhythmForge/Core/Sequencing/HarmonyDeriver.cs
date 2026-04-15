@@ -34,42 +34,40 @@ namespace RhythmForge.Core.Sequencing
             string presetId = group.defaultPresetByType.HarmonyPad;
 
             int rootMidi = PitchUtils.PitchFromRelative(1f - sp.centroidHeight, keyName) - 12;
+            // Ensure root is in-key
+            rootMidi = MusicalKeys.QuantizeToKey(rootMidi, keyName);
 
-            // Chord flavor from tilt
+            // Chord flavor from tilt — voiced with diatonic scale steps (not chromatic semitones)
             string flavor;
-            int[] chordIntervals;
+            int[] scaleDegreeSteps;
             if (sp.tiltSigned > 0.28f)
             {
                 flavor = "maj7";
-                chordIntervals = new[] { 0, 4, 7, 11 };
+                scaleDegreeSteps = new[] { 0, 2, 4, 6 }; // root, 3rd, 5th, 7th
             }
             else if (sp.tiltSigned < -0.22f)
             {
                 flavor = "sus";
-                chordIntervals = new[] { 0, 5, 7, 10 };
+                scaleDegreeSteps = new[] { 0, 3, 4, 6 }; // root, 4th, 5th, 7th
             }
             else
             {
                 flavor = "minor";
-                chordIntervals = new[] { 0, 3, 7, 10 };
+                scaleDegreeSteps = new[] { 0, 2, 4, 6 }; // root, 3rd, 5th, 7th (all diatonic)
             }
 
+            var chord = MusicalKeys.BuildScaleChord(rootMidi, keyName, scaleDegreeSteps);
+
+            // Open voicing: spread upper tones by octave based on horizontal span
             int spread = Mathf.RoundToInt(sp.horizontalSpan * 10f + sizeFactor * 6f);
-            var chord = new List<int>();
+            if (chord.Count > 2)
+                chord[2] += Mathf.RoundToInt(spread * 0.5f) / 12 * 12; // whole octave nudge only
+            if (chord.Count > 3)
+                chord[3] += (spread > 6 ? 12 : 0);
 
-            for (int i = 0; i < chordIntervals.Length; i++)
-            {
-                int note = rootMidi + chordIntervals[i];
-
-                if (i == 0 && (sp.horizontalSpan > 0.72f || sizeFactor > 0.66f))
-                    note -= 12;
-                else if (i == 2)
-                    note += Mathf.RoundToInt(spread * 0.45f);
-                else if (i == 3)
-                    note += spread;
-
-                chord.Add(note);
-            }
+            // Bass doubling for wide/large shapes
+            if (sp.horizontalSpan > 0.72f || sizeFactor > 0.66f)
+                chord.Insert(0, rootMidi - 12);
 
             string bloomWord = sound.reverbBias > 0.56f ? "bloom" : "dry bed";
             return new HarmonyDerivationResult

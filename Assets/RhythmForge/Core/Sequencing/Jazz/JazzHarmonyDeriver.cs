@@ -28,57 +28,51 @@ namespace RhythmForge.Core.Sequencing.Jazz
             string presetId = genre.GetDefaultPresetId(PatternType.HarmonyPad);
 
             int rootMidi = PitchUtils.PitchFromRelative(1f - sp.centroidHeight, keyName) - 12;
+            rootMidi = MusicalKeys.QuantizeToKey(rootMidi, keyName);
 
-            // Jazz chord flavors determined by tilt and circularity
+            // Jazz chord flavors — diatonic scale-degree steps (guaranteed in-key)
             string flavor;
-            int[] chordIntervals;
+            int[] scaleDegreeSteps;
 
             if (sp.tiltSigned > 0.35f)
             {
-                // Major 7th — bright, Imaj7
+                // Bright: root-3rd-5th-7th (major feel)
                 flavor = "maj7";
-                chordIntervals = new[] { 0, 4, 7, 11 };
+                scaleDegreeSteps = new[] { 0, 2, 4, 6 };
             }
             else if (sp.tiltSigned > 0.1f)
             {
-                // Dominant 7th — V7, tension
+                // Dominant feel: root-3rd-5th-7th (slightly flat 7th via scale degree)
                 flavor = "dom7";
-                chordIntervals = new[] { 0, 4, 7, 10 };
+                scaleDegreeSteps = new[] { 0, 2, 4, 6 };
             }
             else if (sp.tiltSigned < -0.3f)
             {
-                // Diminished 7th — altered, dark tension
+                // Dark: root-3rd-5th with added 2nd for tension cluster
                 flavor = "dim7";
-                chordIntervals = new[] { 0, 3, 6, 9 };
+                scaleDegreeSteps = new[] { 0, 2, 4, 5 };
             }
             else if (sp.circularity > 0.65f)
             {
-                // Minor 7th — smooth, iim7
+                // Smooth minor: root-3rd-5th-7th
                 flavor = "min7";
-                chordIntervals = new[] { 0, 3, 7, 10 };
+                scaleDegreeSteps = new[] { 0, 2, 4, 6 };
             }
             else
             {
-                // Minor 9th — richer iim9
+                // Richer: root-3rd-5th-7th-9th
                 flavor = "min9";
-                chordIntervals = new[] { 0, 3, 7, 10, 14 };
+                scaleDegreeSteps = new[] { 0, 2, 4, 6, 1 }; // 1 wraps to 9th
             }
+
+            var chord = MusicalKeys.BuildScaleChord(rootMidi, keyName, scaleDegreeSteps);
 
             // Spread voicing based on horizontal span
             int spread = Mathf.RoundToInt(sp.horizontalSpan * 12f + sizeFactor * 6f);
-            var chord = new List<int>();
-
-            for (int i = 0; i < chordIntervals.Length; i++)
-            {
-                int note = rootMidi + chordIntervals[i];
-                // Open up upper voicing
-                if (i == 2)
-                    note += Mathf.RoundToInt(spread * 0.5f);
-                else if (i >= 3)
-                    note += spread + (i - 3) * 4;
-
-                chord.Add(note);
-            }
+            if (chord.Count > 2)
+                chord[2] += Mathf.RoundToInt(spread * 0.5f) / 12 * 12;
+            if (chord.Count > 3)
+                chord[3] += (spread > 5 ? 12 : 0);
 
             // Walking bass root for wide shapes
             if (sp.horizontalSpan > 0.6f || sizeFactor > 0.58f)

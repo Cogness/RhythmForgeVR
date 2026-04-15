@@ -59,6 +59,13 @@ namespace RhythmForge.Audio
         public bool isDream;
         public string genreId;
 
+        /// <summary>
+        /// For the "perc" drum lane only: MIDI root to tune the tonal body to.
+        /// 0 = no harmonic context available, use neutral frequency.
+        /// Baked at resolve time so the cache key changes with the key root.
+        /// </summary>
+        public int percTuningMidi;
+
         public bool isNewAge => genreId == "newage";
         public bool isJazz   => genreId == "jazz";
         public bool isElectronic => string.IsNullOrEmpty(genreId) || genreId == "electronic";
@@ -71,6 +78,7 @@ namespace RhythmForge.Audio
                 lane ?? string.Empty,
                 genreId ?? string.Empty,
                 midi,
+                percTuningMidi,
                 Quantize(durationSeconds, 24f),
                 Quantize(glide + 2f, 12f),
                 Quantize(positionBrightness, 12f),

@@ -21,6 +21,11 @@ namespace RhythmForge.Audio
             spec.attackSeconds = 0.002f + spec.attackBias * 0.004f;
             spec.releaseSeconds = 0.05f + spec.releaseBias * 0.22f;
             spec.useOscillatorB = false;
+            if (spec.lane == "perc")
+            {
+                var harmCtx = RhythmForge.Core.Sequencing.HarmonicContextProvider.Current;
+                spec.percTuningMidi = harmCtx.HasChord ? harmCtx.rootMidi : 0;
+            }
             return spec;
         }
 

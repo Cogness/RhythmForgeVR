@@ -3,6 +3,45 @@ using System.Collections.Generic;
 
 namespace RhythmForge.Core.Data
 {
+    /// <summary>
+    /// Shared harmonic context updated whenever a HarmonyPad is committed.
+    /// Melody and bass derivers use it to constrain strong-beat notes to chord tones.
+    /// </summary>
+    [Serializable]
+    public class HarmonicContext
+    {
+        public int rootMidi = 57;                       // A3 — default A minor root
+        public List<int> chordTones = new List<int>();  // in-key pitches of the current chord
+        public string flavor = "minor";
+
+        public bool HasChord => chordTones != null && chordTones.Count > 0;
+
+        /// <summary>Returns the chord tone (any octave) nearest to <paramref name="targetMidi"/>.</summary>
+        public int NearestChordTone(int targetMidi)
+        {
+            if (!HasChord) return targetMidi;
+            int best = chordTones[0];
+            int bestDist = int.MaxValue;
+            foreach (int ct in chordTones)
+            {
+                // compare pitch classes across octaves
+                int pitchClass = ((ct % 12) + 12) % 12;
+                int targetClass = ((targetMidi % 12) + 12) % 12;
+                int dist = System.Math.Abs(pitchClass - targetClass);
+                if (dist > 6) dist = 12 - dist; // wrap
+                if (dist < bestDist) { bestDist = dist; best = ct; }
+            }
+            // Return the chord tone transposed to match the octave of targetMidi
+            int bestClass = ((best % 12) + 12) % 12;
+            int targetOctaveBase = targetMidi - (((targetMidi % 12) + 12) % 12);
+            int candidate = targetOctaveBase + bestClass;
+            // Pick nearest octave
+            if (candidate - targetMidi > 6)  candidate -= 12;
+            if (targetMidi - candidate > 6)  candidate += 12;
+            return candidate;
+        }
+    }
+
     [Serializable]
     public class AppState
     {
@@ -16,6 +55,7 @@ namespace RhythmForge.Core.Data
         public string selectedInstanceId;
         public string selectedPatternId;
         public string queuedSceneId;
+        public HarmonicContext harmonicContext = new HarmonicContext();
         public List<PatternDefinition> patterns = new List<PatternDefinition>();
         public List<PatternInstance> instances = new List<PatternInstance>();
         public List<SceneData> scenes = new List<SceneData>();

@@ -28,36 +28,34 @@ namespace RhythmForge.Core.Sequencing.NewAge
             string presetId = genre.GetDefaultPresetId(PatternType.HarmonyPad);
 
             int rootMidi = PitchUtils.PitchFromRelative(1f - sp.centroidHeight, keyName) - 12;
+            rootMidi = MusicalKeys.QuantizeToKey(rootMidi, keyName);
 
-            // Open, airy voicings — avoid thirds, prefer 5ths, 4ths, octaves
+            // Open, airy voicings — use diatonic scale steps for in-key notes.
+            // Sus-style: skip 3rd (degree 2), favour 2nd (degree 1) and 5th (degree 4).
             string flavor;
-            int[] chordIntervals;
+            int[] scaleDegreeSteps;
             if (sp.tiltSigned > 0.22f)
             {
                 flavor = "sus2";
-                chordIntervals = new[] { 0, 2, 7, 12 }; // root, maj2nd, 5th, octave
+                scaleDegreeSteps = new[] { 0, 1, 4, 7 }; // root, 2nd, 5th, octave-2nd
             }
             else if (sp.tiltSigned < -0.18f)
             {
                 flavor = "sus4";
-                chordIntervals = new[] { 0, 5, 7, 12 }; // root, 4th, 5th, octave
+                scaleDegreeSteps = new[] { 0, 3, 4, 7 }; // root, 4th, 5th, octave-2nd
             }
             else
             {
                 flavor = "drone5";
-                chordIntervals = new[] { 0, 7, 12, 19 }; // root, 5th, octave, 5th above
+                scaleDegreeSteps = new[] { 0, 4, 7, 11 }; // root, 5th, octave, 5th-above
             }
 
+            var chord = MusicalKeys.BuildScaleChord(rootMidi, keyName, scaleDegreeSteps);
+
+            // Wide spread for spacious New Age voicing
             int spread = Mathf.RoundToInt(sp.horizontalSpan * 8f + sizeFactor * 4f);
-            var chord = new List<int>();
-
-            for (int i = 0; i < chordIntervals.Length; i++)
-            {
-                int note = rootMidi + chordIntervals[i];
-                if (i == chordIntervals.Length - 1)
-                    note += Mathf.RoundToInt(spread * 0.3f);
-                chord.Add(note);
-            }
+            if (chord.Count > 0)
+                chord[chord.Count - 1] += Mathf.RoundToInt(spread * 0.3f) / 12 * 12;
 
             // Add bass root for depth on large shapes
             if (sizeFactor > 0.55f || sp.horizontalSpan > 0.6f)

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using RhythmForge.Audio;
 using RhythmForge.Core.Analysis;
 using RhythmForge.Core.Data;
 using RhythmForge.Core.Sequencing;
@@ -38,6 +39,20 @@ namespace RhythmForge.Core.PatternBehavior.Behaviors
         public SoundProfile DeriveSoundProfile(ShapeProfile shapeProfile)
         {
             return GenreRegistry.GetActive().GetSoundMapping(PatternType.MelodyLine).Evaluate(PatternType.MelodyLine, shapeProfile);
+        }
+
+        public void CollectVoiceSpecs(PatternSchedulingContext context, int totalSteps, List<ResolvedVoiceSpec> results)
+        {
+            if (context.pattern.derivedSequence?.notes == null) return;
+            foreach (var note in context.pattern.derivedSequence.notes)
+                results.Add(VoiceSpecResolver.ResolveMelody(
+                    context.preset,
+                    context.sound,
+                    note.midi,
+                    note.durationSteps * context.stepDuration,
+                    context.instance.brightness,
+                    context.preset.fxSend,
+                    note.glide));
         }
 
         public void Schedule(PatternSchedulingContext context)

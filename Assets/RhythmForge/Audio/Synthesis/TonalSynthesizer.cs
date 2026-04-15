@@ -82,6 +82,19 @@ namespace RhythmForge.Audio
             return Render(spec);
         }
 
+        public static RawSamples RenderRaw(ResolvedVoiceSpec spec)
+        {
+            int sampleCount = SynthUtilities.SecondsToSamples(
+                spec.durationSeconds + spec.releaseSeconds + AudioEffectsChain.GetAmbienceTail(spec));
+            var left  = new float[sampleCount];
+            var right = new float[sampleCount];
+
+            RenderIntoBuffers(spec, left, right, sampleCount);
+
+            string name = $"{spec.patternType}_{spec.voiceType}_{spec.midi}";
+            return new RawSamples { name = name, left = left, right = right };
+        }
+
         public static AudioClip Render(ResolvedVoiceSpec spec)
         {
             int sampleCount = SynthUtilities.SecondsToSamples(
@@ -89,6 +102,12 @@ namespace RhythmForge.Audio
             var left  = new float[sampleCount];
             var right = new float[sampleCount];
 
+            RenderIntoBuffers(spec, left, right, sampleCount);
+            return SynthUtilities.BuildClip($"{spec.patternType}_{spec.voiceType}_{spec.midi}", left, right);
+        }
+
+        private static void RenderIntoBuffers(ResolvedVoiceSpec spec, float[] left, float[] right, int sampleCount)
+        {
             float targetFreq = SynthUtilities.MidiToFrequency(spec.midi);
             float startFreq  = targetFreq * Mathf.Pow(2f, spec.glide * (0.18f + spec.filterMotion * 0.24f) / 12f);
             float glideTime  = Mathf.Max(0.015f, spec.attackSeconds * 1.4f);
@@ -247,7 +266,6 @@ namespace RhythmForge.Audio
             AudioEffectsChain.ApplyVoiceChain(spec, left, right);
             AudioEffectsChain.ApplyAmbience(spec, left, right);
             AudioEffectsChain.NormalizeStereo(left, right);
-            return SynthUtilities.BuildClip($"{spec.patternType}_{spec.voiceType}_{spec.midi}", left, right);
         }
     }
 }

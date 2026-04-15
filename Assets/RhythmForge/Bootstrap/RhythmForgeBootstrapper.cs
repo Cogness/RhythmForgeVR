@@ -422,6 +422,7 @@ namespace RhythmForge.Bootstrap
             // Inject audio engine via SerializeField backing using the Configure method
             // (added in our edit pass)
             SetPrivateField(refs.sequencer, "_audioEngine", _audioEngine);
+            refs.sequencer.SetSamplePlayer(_samplePlayer);
 
             refs.audioEngine  = _audioEngine;
             refs.samplePlayer = _samplePlayer;

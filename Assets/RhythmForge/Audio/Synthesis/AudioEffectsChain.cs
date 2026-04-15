@@ -62,6 +62,31 @@ namespace RhythmForge.Audio
             }
         }
 
+        // ── ThreadStatic reverb scratch buffers — allocated once per thread, reused every render ──
+        [System.ThreadStatic] private static float[] _reverbL;
+        [System.ThreadStatic] private static float[] _reverbR;
+        [System.ThreadStatic] private static float[] _combBufL0;
+        [System.ThreadStatic] private static float[] _combBufL1;
+        [System.ThreadStatic] private static float[] _combBufL2;
+        [System.ThreadStatic] private static float[] _combBufL3;
+        [System.ThreadStatic] private static float[] _combBufR0;
+        [System.ThreadStatic] private static float[] _combBufR1;
+        [System.ThreadStatic] private static float[] _combBufR2;
+        [System.ThreadStatic] private static float[] _combBufR3;
+        [System.ThreadStatic] private static float[] _apBufL0;
+        [System.ThreadStatic] private static float[] _apBufL1;
+        [System.ThreadStatic] private static float[] _apBufR0;
+        [System.ThreadStatic] private static float[] _apBufR1;
+
+        private static float[] EnsureSize(ref float[] buf, int size)
+        {
+            if (buf == null || buf.Length < size)
+                buf = new float[size];
+            else
+                System.Array.Clear(buf, 0, size);
+            return buf;
+        }
+
         public static void ApplyAmbience(ResolvedVoiceSpec spec, float[] left, float[] right)
         {
             float genreReverbScale = spec.isNewAge ? 1.8f : spec.isJazz ? 0.9f : 1.0f;
@@ -112,21 +137,32 @@ namespace RhythmForge.Audio
             };
             const float apFeedback = 0.7f;
 
-            // Allocate reverb buffers
-            float[][] combBufL = new float[4][];
-            float[][] combBufR = new float[4][];
-            for (int c = 0; c < 4; c++)
-            {
-                combBufL[c] = new float[combDelays[c]];
-                combBufR[c] = new float[combDelays[c]];
-            }
-            float[][] apBufL = { new float[apDelays[0]], new float[apDelays[1]] };
-            float[][] apBufR = { new float[apDelays[0]], new float[apDelays[1]] };
-            int[] combIdx = new int[4];
-            int[] apIdx   = { 0, 0 };
+            // Reuse thread-local scratch buffers — no heap alloc per render
+            float[] reverbL = EnsureSize(ref _reverbL, left.Length);
+            float[] reverbR = EnsureSize(ref _reverbR, right.Length);
 
-            float[] reverbL = new float[left.Length];
-            float[] reverbR = new float[right.Length];
+            float[][] combBufL = {
+                EnsureSize(ref _combBufL0, combDelays[0]),
+                EnsureSize(ref _combBufL1, combDelays[1]),
+                EnsureSize(ref _combBufL2, combDelays[2]),
+                EnsureSize(ref _combBufL3, combDelays[3])
+            };
+            float[][] combBufR = {
+                EnsureSize(ref _combBufR0, combDelays[0]),
+                EnsureSize(ref _combBufR1, combDelays[1]),
+                EnsureSize(ref _combBufR2, combDelays[2]),
+                EnsureSize(ref _combBufR3, combDelays[3])
+            };
+            float[][] apBufL = {
+                EnsureSize(ref _apBufL0, apDelays[0]),
+                EnsureSize(ref _apBufL1, apDelays[1])
+            };
+            float[][] apBufR = {
+                EnsureSize(ref _apBufR0, apDelays[0]),
+                EnsureSize(ref _apBufR1, apDelays[1])
+            };
+            int[] combIdx = { 0, 0, 0, 0 };
+            int[] apIdx   = { 0, 0 };
 
             for (int i = 0; i < left.Length; i++)
             {

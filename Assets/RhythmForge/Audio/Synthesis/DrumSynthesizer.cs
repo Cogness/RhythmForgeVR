@@ -60,14 +60,21 @@ namespace RhythmForge.Audio
             return Render(spec);
         }
 
-        public static AudioClip Render(ResolvedVoiceSpec spec)
+        public static RawSamples RenderRaw(ResolvedVoiceSpec spec)
         {
             int sampleCount = SynthUtilities.SecondsToSamples(
                 spec.durationSeconds + spec.releaseSeconds * 0.45f + AudioEffectsChain.GetAmbienceTail(spec) * 0.35f);
-            var left = new float[sampleCount];
+            var left  = new float[sampleCount];
             var right = new float[sampleCount];
-            int seed = SynthUtilities.ComputeSeed(spec.GetCacheKey());
+            int seed  = SynthUtilities.ComputeSeed(spec.GetCacheKey());
 
+            RenderIntoBuffers(spec, left, right, seed);
+
+            return new RawSamples { name = $"Drum_{spec.lane}", left = left, right = right };
+        }
+
+        private static void RenderIntoBuffers(ResolvedVoiceSpec spec, float[] left, float[] right, int seed)
+        {
             switch (spec.lane)
             {
                 case "kick":
@@ -91,6 +98,17 @@ namespace RhythmForge.Audio
             AudioEffectsChain.ApplyVoiceChain(spec, left, right);
             AudioEffectsChain.ApplyAmbience(spec, left, right);
             AudioEffectsChain.NormalizeStereo(left, right);
+        }
+
+        public static AudioClip Render(ResolvedVoiceSpec spec)
+        {
+            int sampleCount = SynthUtilities.SecondsToSamples(
+                spec.durationSeconds + spec.releaseSeconds * 0.45f + AudioEffectsChain.GetAmbienceTail(spec) * 0.35f);
+            var left = new float[sampleCount];
+            var right = new float[sampleCount];
+            int seed = SynthUtilities.ComputeSeed(spec.GetCacheKey());
+
+            RenderIntoBuffers(spec, left, right, seed);
             return SynthUtilities.BuildClip($"Drum_{spec.lane}", left, right);
         }
 

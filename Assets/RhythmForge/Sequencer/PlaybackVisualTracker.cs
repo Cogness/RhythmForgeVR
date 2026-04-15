@@ -11,6 +11,7 @@ namespace RhythmForge.Sequencer
         private readonly Dictionary<string, double> _lastTriggerAt = new Dictionary<string, double>();
         private readonly Dictionary<string, PlaybackActivity> _playbackActivity = new Dictionary<string, PlaybackActivity>();
         private readonly List<ScheduledTransportStep> _scheduledTransportSteps = new List<ScheduledTransportStep>();
+        private readonly List<string> _expiredScratch = new List<string>();
 
         private const float PulseWindowSeconds = 0.48f;
 
@@ -161,27 +162,30 @@ namespace RhythmForge.Sequencer
 
         public void Prune(double visualTime, double dspTime, float stepDuration)
         {
-            var expiredPulseIds = new List<string>();
+            _expiredScratch.Clear();
             foreach (var kvp in _lastTriggerAt)
             {
                 if (kvp.Value < visualTime - PulseWindowSeconds - 0.05d)
-                    expiredPulseIds.Add(kvp.Key);
+                    _expiredScratch.Add(kvp.Key);
             }
+            for (int i = 0; i < _expiredScratch.Count; i++)
+                _lastTriggerAt.Remove(_expiredScratch[i]);
 
-            foreach (var id in expiredPulseIds)
-                _lastTriggerAt.Remove(id);
-
-            var expiredActivityIds = new List<string>();
+            _expiredScratch.Clear();
             foreach (var kvp in _playbackActivity)
             {
                 if (kvp.Value.activeUntil < visualTime - 0.05d)
-                    expiredActivityIds.Add(kvp.Key);
+                    _expiredScratch.Add(kvp.Key);
             }
+            for (int i = 0; i < _expiredScratch.Count; i++)
+                _playbackActivity.Remove(_expiredScratch[i]);
 
-            foreach (var id in expiredActivityIds)
-                _playbackActivity.Remove(id);
-
-            _scheduledTransportSteps.RemoveAll(step => step.dspTime < dspTime - stepDuration * 2f);
+            double pruneThreshold = dspTime - stepDuration * 2f;
+            for (int i = _scheduledTransportSteps.Count - 1; i >= 0; i--)
+            {
+                if (_scheduledTransportSteps[i].dspTime < pruneThreshold)
+                    _scheduledTransportSteps.RemoveAt(i);
+            }
         }
 
         private bool TryGetCurrentScheduledStep(double dspTime, float stepDuration, out ScheduledTransportStep step, out float stepProgress)

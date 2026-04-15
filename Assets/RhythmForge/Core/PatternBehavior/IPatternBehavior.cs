@@ -28,6 +28,12 @@ namespace RhythmForge.Core.PatternBehavior
 
         void Schedule(PatternSchedulingContext context);
 
+        /// <summary>
+        /// Collect all ResolvedVoiceSpecs that would be played across all steps of this pattern.
+        /// Used by the pre-warm path to kick off background renders one bar ahead.
+        /// </summary>
+        void CollectVoiceSpecs(PatternSchedulingContext context, int totalSteps, List<ResolvedVoiceSpec> results);
+
         PlaybackVisualSpec AdjustVisualSpec(PlaybackVisualSpec baseSpec, SoundProfile soundProfile);
 
         AnimationEnergies ComputeAnimation(

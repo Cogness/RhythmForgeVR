@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using RhythmForge.Core.Data;
 using RhythmForge.Core.Events;
@@ -18,11 +19,14 @@ namespace RhythmForge.Sequencer
 
         private SessionStore _store;
         private IAudioDispatcher _audioDispatcher;
+        private SamplePlayer _samplePlayer;
         private ArrangementNavigator _arrangementNavigator;
         private TransportController _transportController;
         private PlaybackVisualTracker _playbackVisualTracker;
         private RhythmForgeEventBus _eventBus;
         private readonly Transport _fallbackTransport = new Transport();
+        private int _lastWarmBar = -1;
+        private readonly List<ResolvedVoiceSpec> _warmSpecScratch = new List<ResolvedVoiceSpec>();
 
         private const float LookaheadSeconds = 0.12f;
 
@@ -42,10 +46,16 @@ namespace RhythmForge.Sequencer
             _transportController = new TransportController(store, _arrangementNavigator, GetDspTime);
             _transportController.OnPlaybackSceneChanged += HandlePlaybackSceneChanged;
             _playbackVisualTracker = new PlaybackVisualTracker();
+            _lastWarmBar = -1;
 
             if (_audioEngine == null)
                 _audioEngine = GetComponent<AudioEngine>();
             _audioDispatcher = _audioEngine;
+        }
+
+        public void SetSamplePlayer(SamplePlayer samplePlayer)
+        {
+            _samplePlayer = samplePlayer;
         }
 
         protected virtual double GetDspTime() => AudioSettings.dspTime;
@@ -96,7 +106,55 @@ namespace RhythmForge.Sequencer
                 transport.nextNoteTime += stepDur;
             }
 
+            TryWarmNextBar(transport);
             _playbackVisualTracker?.Prune(GetVisualTimeSeconds(), currentTime, stepDur);
+        }
+
+        private void TryWarmNextBar(Transport transport)
+        {
+            if (_samplePlayer == null || _store == null)
+                return;
+
+            int currentBar = transport.absoluteBar;
+            if (currentBar == _lastWarmBar)
+                return;
+
+            _lastWarmBar = currentBar;
+            string sceneId = GetPlaybackSceneId();
+            var instances = _store.GetSceneInstances(sceneId);
+            float stepDur = SequencerClock.StepDuration(_store.State.tempo);
+
+            _warmSpecScratch.Clear();
+            foreach (var instance in instances)
+            {
+                if (instance.muted) continue;
+                var pattern = _store.GetPattern(instance.patternId);
+                if (pattern == null || pattern.derivedSequence == null) continue;
+
+                var sound  = _store.GetEffectiveSoundProfile(instance, pattern);
+                var preset = _store.GetPreset(_store.GetEffectivePresetId(instance, pattern));
+
+                int totalSteps = pattern.derivedSequence.totalSteps > 0
+                    ? pattern.derivedSequence.totalSteps
+                    : AppStateFactory.BarSteps;
+
+                PatternBehaviorRegistry.Get(pattern.type).CollectVoiceSpecs(
+                    new PatternSchedulingContext
+                    {
+                        pattern       = pattern,
+                        instance      = instance,
+                        stepDuration  = stepDur,
+                        sound         = sound,
+                        preset        = preset,
+                        appState      = _store.State,
+                        audioDispatcher = _audioDispatcher
+                    },
+                    totalSteps,
+                    _warmSpecScratch);
+            }
+
+            if (_warmSpecScratch.Count > 0)
+                _samplePlayer.WarmClips(_warmSpecScratch);
         }
 
         private void ScheduleCurrentStep(double time)

@@ -1,3 +1,4 @@
+using System.Text;
 using UnityEngine;
 using RhythmForge.Core.Data;
 
@@ -70,38 +71,48 @@ namespace RhythmForge.Audio
         public bool isJazz   => genreId == "jazz";
         public bool isElectronic => string.IsNullOrEmpty(genreId) || genreId == "electronic";
 
+        [System.ThreadStatic]
+        private static StringBuilder _keyBuilder;
+
         public string GetCacheKey()
         {
-            return string.Join("|",
-                patternType,
-                voiceType ?? string.Empty,
-                lane ?? string.Empty,
-                genreId ?? string.Empty,
-                midi,
-                percTuningMidi,
-                Quantize(durationSeconds, 24f),
-                Quantize(glide + 2f, 12f),
-                Quantize(positionBrightness, 12f),
-                Quantize(brightness, 12f),
-                Quantize(body, 12f),
-                Quantize(drive, 12f),
-                Quantize(resonance, 12f),
-                Quantize(filterMotion, 12f),
-                Quantize(modDepth, 12f),
-                Quantize(detune, 12f),
-                Quantize(stereoSpread, 12f),
-                Quantize(transientSharpness, 12f),
-                Quantize(releaseBias, 12f),
-                Quantize(attackBias, 12f),
-                Quantize(waveMorph, 12f),
-                Quantize(delayBias, 12f),
-                Quantize(reverbBias, 12f),
-                Quantize(fxSend, 16f),
-                Quantize(attackSeconds, 40f),
-                Quantize(releaseSeconds, 20f),
-                (int)waveA,
-                (int)waveB,
-                (int)filterMode);
+            if (_keyBuilder == null)
+                _keyBuilder = new StringBuilder(128);
+
+            var sb = _keyBuilder;
+            sb.Clear();
+
+            sb.Append((int)patternType);  sb.Append('|');
+            sb.Append(voiceType ?? string.Empty);  sb.Append('|');
+            sb.Append(lane ?? string.Empty);        sb.Append('|');
+            sb.Append(genreId ?? string.Empty);     sb.Append('|');
+            sb.Append(midi);                        sb.Append('|');
+            sb.Append(percTuningMidi);              sb.Append('|');
+            sb.Append(Quantize(durationSeconds, 24f));      sb.Append('|');
+            sb.Append(Quantize(glide + 2f, 12f));           sb.Append('|');
+            sb.Append(Quantize(positionBrightness, 12f));   sb.Append('|');
+            sb.Append(Quantize(brightness, 12f));           sb.Append('|');
+            sb.Append(Quantize(body, 12f));                 sb.Append('|');
+            sb.Append(Quantize(drive, 12f));                sb.Append('|');
+            sb.Append(Quantize(resonance, 12f));            sb.Append('|');
+            sb.Append(Quantize(filterMotion, 12f));         sb.Append('|');
+            sb.Append(Quantize(modDepth, 12f));             sb.Append('|');
+            sb.Append(Quantize(detune, 12f));               sb.Append('|');
+            sb.Append(Quantize(stereoSpread, 12f));         sb.Append('|');
+            sb.Append(Quantize(transientSharpness, 12f));   sb.Append('|');
+            sb.Append(Quantize(releaseBias, 12f));          sb.Append('|');
+            sb.Append(Quantize(attackBias, 12f));           sb.Append('|');
+            sb.Append(Quantize(waveMorph, 12f));            sb.Append('|');
+            sb.Append(Quantize(delayBias, 12f));            sb.Append('|');
+            sb.Append(Quantize(reverbBias, 12f));           sb.Append('|');
+            sb.Append(Quantize(fxSend, 16f));               sb.Append('|');
+            sb.Append(Quantize(attackSeconds, 40f));        sb.Append('|');
+            sb.Append(Quantize(releaseSeconds, 20f));       sb.Append('|');
+            sb.Append((int)waveA);  sb.Append('|');
+            sb.Append((int)waveB);  sb.Append('|');
+            sb.Append((int)filterMode);
+
+            return sb.ToString();
         }
 
         private static int Quantize(float value, float scale)

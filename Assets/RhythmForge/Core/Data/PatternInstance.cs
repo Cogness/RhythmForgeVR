@@ -16,6 +16,9 @@ namespace RhythmForge.Core.Data
         public float gain;
         public float pan;
         public float brightness;
+        public float reverbSend;
+        public float delaySend;
+        public float gainTrim;
 
         public PatternInstance() { }
 
@@ -33,8 +36,20 @@ namespace RhythmForge.Core.Data
 
         public void RecalculateMixFromPosition()
         {
+            // Legacy stereo mapping (still used by preview pool / SamplePlayer fallback)
             pan = Mathf.Clamp(position.x * 2f - 1f, -1f, 1f);
-            brightness = Mathf.Clamp01(1f - position.y);
+
+            // Spatial mix: brightness driven by height relative to a typical head height (~1.4m)
+            float headHeight = 1.4f;
+            brightness = Mathf.Clamp01(0.35f + (position.y - headHeight) * 0.6f);
+
+            // Depth now derives from actual world-space distance from origin, not just the depth slider
+            float distanceFromOrigin = position.magnitude;
+            reverbSend = Mathf.Clamp01(depth * 0.55f + distanceFromOrigin * 0.1f);
+            delaySend  = Mathf.Clamp01(depth * 0.35f);
+            gainTrim   = Mathf.Clamp01(1.05f - depth * 0.25f);
+
+            // Legacy gain kept for backward compat
             gain = Mathf.Clamp01(1.08f - depth * 0.58f);
         }
 
@@ -51,7 +66,10 @@ namespace RhythmForge.Core.Data
                 muted = muted,
                 gain = gain,
                 pan = pan,
-                brightness = brightness
+                brightness = brightness,
+                reverbSend = reverbSend,
+                delaySend = delaySend,
+                gainTrim = gainTrim
             };
         }
     }

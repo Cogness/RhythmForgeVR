@@ -58,7 +58,8 @@ namespace RhythmForge.Core.PatternBehavior.Behaviors
                     context.instance.brightness,
                     context.instance.depth,
                     context.preset.fxSend + context.group.busFx.reverb * 0.2f,
-                    context.sound);
+                    context.sound,
+                    context.instance.id);
 
                 context.recordTrigger?.Invoke(
                     context.instance.id,

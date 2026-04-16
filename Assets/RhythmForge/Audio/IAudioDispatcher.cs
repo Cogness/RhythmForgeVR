@@ -13,7 +13,8 @@ namespace RhythmForge.Audio
             float brightness,
             float depth,
             float fxSend,
-            SoundProfile soundProfile);
+            SoundProfile soundProfile,
+            string instanceId = null);
 
         void PlayMelody(
             InstrumentPreset preset,
@@ -25,7 +26,8 @@ namespace RhythmForge.Audio
             float depth,
             float fxSend,
             SoundProfile soundProfile,
-            float glide = 0f);
+            float glide = 0f,
+            string instanceId = null);
 
         void PlayChord(
             InstrumentPreset preset,
@@ -36,6 +38,7 @@ namespace RhythmForge.Audio
             float brightness,
             float depth,
             float fxSend,
-            SoundProfile soundProfile);
+            SoundProfile soundProfile,
+            string instanceId = null);
     }
 }

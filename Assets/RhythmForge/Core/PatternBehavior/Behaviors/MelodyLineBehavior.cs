@@ -62,7 +62,8 @@ namespace RhythmForge.Core.PatternBehavior.Behaviors
                     context.instance.depth,
                     context.preset.fxSend + context.group.busFx.delay * 0.1f,
                     context.sound,
-                    note.glide);
+                    note.glide,
+                    context.instance.id);
 
                 context.recordTrigger?.Invoke(
                     context.instance.id,

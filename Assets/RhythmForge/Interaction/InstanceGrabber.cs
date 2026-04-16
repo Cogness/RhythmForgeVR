@@ -25,6 +25,7 @@ namespace RhythmForge.Interaction
         private Vector3 _grabOffset;
         private bool _hasMoved;
         private IInputProvider _inputProvider;
+        private float _grabDistanceProgress = 0.3f;
 
         // The currently hovered visualizer (for highlighting)
         private PatternVisualizer _hoveredVisualizer;
@@ -96,6 +97,8 @@ namespace RhythmForge.Interaction
                 if (visualizer != null)
                 {
                     _grabbedInstanceId = visualizer.InstanceId;
+                    float currentDist = Vector3.Distance(_leftControllerTransform.position, hit.collider.transform.position);
+                    _grabDistanceProgress = Mathf.InverseLerp(0.4f, 6f, Mathf.Clamp(currentDist, 0.4f, 6f));
                     _grabOffset = hit.point - hit.collider.transform.position;
                     _hasMoved = false;
                     _store.SetSelectedInstance(_grabbedInstanceId);
@@ -120,6 +123,8 @@ namespace RhythmForge.Interaction
             if (closest != null)
             {
                 _grabbedInstanceId = closest.InstanceId;
+                float currentDist = Vector3.Distance(_leftControllerTransform.position, closest.transform.position);
+                _grabDistanceProgress = Mathf.InverseLerp(0.4f, 6f, Mathf.Clamp(currentDist, 0.4f, 6f));
                 _grabOffset = Vector3.zero;
                 _hasMoved = false;
                 _store.SetSelectedInstance(_grabbedInstanceId);
@@ -134,9 +139,18 @@ namespace RhythmForge.Interaction
         {
             if (_leftControllerTransform == null || _grabbedInstanceId == null) return;
 
+            var input = _inputProvider ?? (IInputProvider)_input;
+
+            // Left thumbstick Y while grabbing = push/pull depth
+            if (input != null)
+            {
+                float thumbY = input.LeftThumbstick.y;
+                _grabDistanceProgress = Mathf.Clamp01(_grabDistanceProgress + thumbY * Time.deltaTime * 0.8f);
+            }
+
+            float distance = Mathf.Lerp(0.4f, 6f, _grabDistanceProgress);
+
             Ray ray = new Ray(_leftControllerTransform.position, _leftControllerTransform.forward);
-            // Place instance at a fixed distance along the ray
-            float distance = 1.2f;
             Vector3 targetPos = ray.GetPoint(distance) - _grabOffset;
 
             _hasMoved = true;
@@ -152,7 +166,10 @@ namespace RhythmForge.Interaction
             {
                 _rayVisual.enabled = true;
                 _rayVisual.SetPosition(0, _leftControllerTransform.position);
-                _rayVisual.SetPosition(1, _leftControllerTransform.position + _leftControllerTransform.forward * _maxRayDistance);
+                float rayLength = _grabbedInstanceId != null
+                    ? Mathf.Lerp(0.4f, 6f, _grabDistanceProgress)
+                    : _maxRayDistance;
+                _rayVisual.SetPosition(1, _leftControllerTransform.position + _leftControllerTransform.forward * rayLength);
             }
             else
             {

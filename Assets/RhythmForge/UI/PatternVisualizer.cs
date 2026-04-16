@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
+using RhythmForge.Audio;
 using RhythmForge.Core.Data;
 using RhythmForge.Core.Analysis;
 using RhythmForge.Sequencer;
@@ -31,6 +32,8 @@ namespace RhythmForge.UI
         private PlaybackHaloRenderer _playbackHaloRenderer;
         private PlaybackAnimator _playbackAnimator;
 
+        private InstanceVoicePool _voicePool;
+
         private string _instanceId;
         private PatternType _type;
         private Color _baseColor;
@@ -43,10 +46,18 @@ namespace RhythmForge.UI
         private bool _hasPlaybackState;
 
         public string InstanceId => _instanceId;
+        public InstanceVoicePool VoicePool => _voicePool;
 
         public void Initialize(PatternDefinition pattern, PatternInstance instance, Material material, Transform userHead = null)
         {
             EnsureMainRenderer(material);
+
+            if (_voicePool == null)
+            {
+                _voicePool = gameObject.AddComponent<InstanceVoicePool>();
+                _voicePool.Configure();
+            }
+
             EnsureHaloRenderer();
             EnsurePlaybackMarker();
             EnsureParameterLabel(userHead);

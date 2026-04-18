@@ -15,6 +15,8 @@ namespace RhythmForge.Core.Analysis
         public float pressure;
         public Quaternion stylusRot;
         public double timestamp;
+        public bool ornamentFlag;
+        public bool accentFlag;
     }
 
     /// <summary>
@@ -36,7 +38,9 @@ namespace RhythmForge.Core.Analysis
         public static ShapeProfile3D Derive(
             IReadOnlyList<StrokeSample> samples,
             ShapeProfile planar2D,
-            Vector3 referenceUp)
+            Vector3 referenceUp,
+            bool ornamentFlag = false,
+            bool accentFlag = false)
         {
             if (samples == null || samples.Count < 2)
                 return new ShapeProfile3D();
@@ -45,8 +49,10 @@ namespace RhythmForge.Core.Analysis
 
             // --- 1. Pressure stats ---
             float pMean = 0f;
+            float pPeak = 0f;
             for (int i = 0; i < n; i++) pMean += samples[i].pressure;
             pMean /= n;
+            for (int i = 0; i < n; i++) pPeak = Mathf.Max(pPeak, samples[i].pressure);
 
             float pVarSum = 0f;
             for (int i = 0; i < n; i++)
@@ -221,10 +227,19 @@ namespace RhythmForge.Core.Analysis
             }
             float passCount = Mathf.Clamp01((float)passes / (float)MaxPassCount);
 
+            bool derivedOrnament = ornamentFlag;
+            bool derivedAccent = accentFlag;
+            for (int i = 0; i < n; i++)
+            {
+                derivedOrnament |= samples[i].ornamentFlag;
+                derivedAccent |= samples[i].accentFlag;
+            }
+
             return new ShapeProfile3D
             {
                 thicknessMean = Quantize(Mathf.Clamp01(pMean)),
                 thicknessVariance = Quantize(thicknessVariance),
+                thicknessPeak = Quantize(Mathf.Clamp01(pPeak)),
                 tiltMean = Quantize(tiltMean),
                 tiltVariance = Quantize(tiltVariance),
                 depthSpan = Quantize(depthSpan),
@@ -233,7 +248,9 @@ namespace RhythmForge.Core.Analysis
                 centroidDepth = Quantize(centroidDepth),
                 helicity = QuantizeSigned(helicity),
                 temporalEvenness = Quantize(tevenness),
-                passCount = Quantize(passCount)
+                passCount = Quantize(passCount),
+                ornamentFlag = derivedOrnament,
+                accentFlag = derivedAccent
             };
         }
 

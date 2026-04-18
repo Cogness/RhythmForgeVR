@@ -103,6 +103,7 @@ namespace RhythmForge.Core.PatternBehavior.Behaviors
 
             var preset = ResolveFacetPreset(ctx, shape.rhythmPresetId) ?? ctx.preset;
             var sound  = shape.rhythmSoundProfile ?? ctx.sound;
+            var flags = ResolveExpressionFlags(shape, ctx.pattern);
 
             // Phase E: bondStrength.x (rhythm weight) tapers event velocity so a
             // rhythm-heavy shape is audibly louder on rhythm than a harmony-heavy
@@ -130,6 +131,8 @@ namespace RhythmForge.Core.PatternBehavior.Behaviors
                     ctx.scheduledTime,
                     GetRhythmVisualDuration(evt.lane, sound));
             }
+
+            ScheduleRhythmExpressionLayers(ctx, rhythm, preset, sound, rhythmScale, flags);
         }
 
         private static void ScheduleMelodyFacet(PatternSchedulingContext ctx, MusicalShape shape)
@@ -140,6 +143,7 @@ namespace RhythmForge.Core.PatternBehavior.Behaviors
 
             var preset = ResolveFacetPreset(ctx, shape.melodyPresetId) ?? ctx.preset;
             var sound  = shape.melodySoundProfile ?? ctx.sound;
+            var flags = ResolveExpressionFlags(shape, ctx.pattern);
 
             // Phase E: see ScheduleRhythmFacet comment. bondStrength.y is the
             // melody weight; weight==1 (legacy one-hot Solo) passes velocity
@@ -171,6 +175,8 @@ namespace RhythmForge.Core.PatternBehavior.Behaviors
                     ctx.scheduledTime,
                     GetMelodyVisualDuration(duration, sound));
             }
+
+            ScheduleMelodyExpressionLayers(ctx, melody, preset, sound, flags);
         }
 
         private static void ScheduleHarmonyFacet(PatternSchedulingContext ctx, MusicalShape shape)
@@ -181,6 +187,9 @@ namespace RhythmForge.Core.PatternBehavior.Behaviors
 
             var preset = ResolveFacetPreset(ctx, shape.harmonyPresetId) ?? ctx.preset;
             var sound  = shape.harmonySoundProfile ?? ctx.sound;
+            var shimmerPreset = ResolveFacetPreset(ctx, shape.melodyPresetId) ?? preset;
+            var shimmerSound = shape.melodySoundProfile ?? sound;
+            var flags = ResolveExpressionFlags(shape, ctx.pattern);
 
             // Phase E: harmony has no per-event velocity field — the chord
             // plays at a single fixed base of <c>HarmonyBaseVelocity</c>. We
@@ -215,6 +224,38 @@ namespace RhythmForge.Core.PatternBehavior.Behaviors
                     ctx.instance.id,
                     ctx.scheduledTime,
                     GetHarmonyVisualDuration(duration, sound));
+
+                if (flags.accent)
+                {
+                    ctx.audioDispatcher?.PlayChord(
+                        preset,
+                        evt.chord,
+                        harmonyVelocity * 1.2f,
+                        Mathf.Max(ctx.stepDuration, duration * 0.24f),
+                        ctx.instance.gainTrim,
+                        ctx.instance.brightness,
+                        Mathf.Clamp01(ctx.instance.reverbSend + ctx.group.busFx.reverb * 0.22f),
+                        ctx.instance.delaySend,
+                        sound,
+                        ctx.instance.id);
+                }
+
+                if (flags.ornament)
+                {
+                    int topNote = evt.chord[evt.chord.Count - 1];
+                    ctx.audioDispatcher?.PlayMelody(
+                        shimmerPreset,
+                        topNote,
+                        0.16f,
+                        Mathf.Max(ctx.stepDuration * 2f, duration * 0.5f),
+                        ctx.instance.gainTrim * 0.85f,
+                        ctx.instance.brightness,
+                        Mathf.Clamp01(ctx.instance.reverbSend + 0.06f),
+                        Mathf.Clamp01(ctx.instance.delaySend + 0.14f),
+                        shimmerSound,
+                        0.18f,
+                        ctx.instance.id);
+                }
             }
         }
 
@@ -228,6 +269,7 @@ namespace RhythmForge.Core.PatternBehavior.Behaviors
 
             var preset = ResolveFacetPreset(ctx, shape.rhythmPresetId) ?? ctx.preset;
             var sound  = shape.rhythmSoundProfile ?? ctx.sound;
+            var flags = ResolveExpressionFlags(shape, ctx.pattern);
 
             foreach (var evt in rhythm.events)
                 results.Add(VoiceSpecResolver.ResolveDrum(
@@ -237,6 +279,35 @@ namespace RhythmForge.Core.PatternBehavior.Behaviors
                     ctx.instance.brightness,
                     ctx.instance.reverbSend,
                     ctx.instance.delaySend));
+
+            if (flags.accent)
+            {
+                foreach (var evt in rhythm.events)
+                {
+                    results.Add(VoiceSpecResolver.ResolveDrum(
+                        evt.lane,
+                        preset,
+                        sound,
+                        ctx.instance.brightness,
+                        ctx.instance.reverbSend,
+                        ctx.instance.delaySend));
+                }
+            }
+
+            if (flags.ornament)
+            {
+                for (int i = 2; i < rhythm.events.Count; i += 3)
+                {
+                    var evt = rhythm.events[i];
+                    results.Add(VoiceSpecResolver.ResolveDrum(
+                        evt.lane,
+                        preset,
+                        sound,
+                        ctx.instance.brightness,
+                        ctx.instance.reverbSend,
+                        ctx.instance.delaySend));
+                }
+            }
         }
 
         private static void CollectMelodySpecs(PatternSchedulingContext ctx, MusicalShape shape, List<ResolvedVoiceSpec> results)
@@ -247,6 +318,7 @@ namespace RhythmForge.Core.PatternBehavior.Behaviors
 
             var preset = ResolveFacetPreset(ctx, shape.melodyPresetId) ?? ctx.preset;
             var sound  = shape.melodySoundProfile ?? ctx.sound;
+            var flags = ResolveExpressionFlags(shape, ctx.pattern);
 
             foreach (var note in melody.notes)
                 results.Add(VoiceSpecResolver.ResolveMelody(
@@ -256,6 +328,36 @@ namespace RhythmForge.Core.PatternBehavior.Behaviors
                     ctx.instance.reverbSend,
                     ctx.instance.delaySend,
                     note.glide));
+
+            if (flags.accent && melody.notes.Count > 0)
+            {
+                var highest = GetHighestMelodyNote(melody.notes);
+                results.Add(VoiceSpecResolver.ResolveMelody(
+                    preset,
+                    sound,
+                    highest.midi + 4,
+                    ctx.stepDuration,
+                    ctx.instance.brightness,
+                    ctx.instance.reverbSend,
+                    ctx.instance.delaySend,
+                    0f));
+            }
+
+            if (flags.ornament)
+            {
+                foreach (var extra in EnumeratePassingToneSources(melody))
+                {
+                    results.Add(VoiceSpecResolver.ResolveMelody(
+                        preset,
+                        sound,
+                        ComputePassingToneMidi(extra.current.midi, extra.next.midi),
+                        ctx.stepDuration,
+                        ctx.instance.brightness,
+                        ctx.instance.reverbSend,
+                        ctx.instance.delaySend,
+                        0.04f));
+                }
+            }
         }
 
         private static void CollectHarmonySpecs(PatternSchedulingContext ctx, MusicalShape shape, List<ResolvedVoiceSpec> results)
@@ -266,10 +368,13 @@ namespace RhythmForge.Core.PatternBehavior.Behaviors
 
             var preset = ResolveFacetPreset(ctx, shape.harmonyPresetId) ?? ctx.preset;
             var sound  = shape.harmonySoundProfile ?? ctx.sound;
+            var shimmerPreset = ResolveFacetPreset(ctx, shape.melodyPresetId) ?? preset;
+            var shimmerSound = shape.melodySoundProfile ?? sound;
+            var flags = ResolveExpressionFlags(shape, ctx.pattern);
 
             foreach (var evt in harmony.events)
             {
-                if (evt?.chord == null)
+                if (evt?.chord == null || evt.chord.Count == 0)
                     continue;
 
                 float duration = Mathf.Max(1, evt.durationSteps) * ctx.stepDuration * 0.96f;
@@ -282,6 +387,32 @@ namespace RhythmForge.Core.PatternBehavior.Behaviors
                         ctx.instance.brightness,
                         ctx.instance.reverbSend,
                         ctx.instance.delaySend));
+
+                if (flags.accent)
+                {
+                    foreach (var midi in evt.chord)
+                        results.Add(VoiceSpecResolver.ResolveHarmony(
+                            preset,
+                            sound,
+                            midi,
+                            Mathf.Max(ctx.stepDuration, duration * 0.24f),
+                            ctx.instance.brightness,
+                            ctx.instance.reverbSend,
+                            ctx.instance.delaySend));
+                }
+
+                if (flags.ornament)
+                {
+                    results.Add(VoiceSpecResolver.ResolveMelody(
+                        shimmerPreset,
+                        shimmerSound,
+                        evt.chord[evt.chord.Count - 1],
+                        Mathf.Max(ctx.stepDuration * 2f, duration * 0.5f),
+                        ctx.instance.brightness,
+                        Mathf.Clamp01(ctx.instance.reverbSend + 0.06f),
+                        Mathf.Clamp01(ctx.instance.delaySend + 0.14f),
+                        0.18f));
+                }
             }
         }
 
@@ -319,6 +450,183 @@ namespace RhythmForge.Core.PatternBehavior.Behaviors
         {
             sound = sound ?? new SoundProfile();
             return chordDuration + 0.14f + sound.releaseBias * 0.78f + sound.reverbBias * 0.22f;
+        }
+
+        private static void ScheduleRhythmExpressionLayers(
+            PatternSchedulingContext ctx,
+            RhythmSequence rhythm,
+            InstrumentPreset preset,
+            SoundProfile sound,
+            float rhythmScale,
+            ExpressionFlags flags)
+        {
+            int totalSteps = rhythm.totalSteps > 0 ? rhythm.totalSteps : AppStateFactory.BarSteps;
+            bool hasBaseOnCurrentStep = HasRhythmEventAtStep(rhythm.events, ctx.localStep);
+
+            if (flags.accent && !hasBaseOnCurrentStep)
+            {
+                foreach (var evt in rhythm.events)
+                {
+                    if ((evt.step + 1) % totalSteps != ctx.localStep)
+                        continue;
+
+                    ctx.audioDispatcher?.PlayDrum(
+                        preset,
+                        evt.lane,
+                        BondStrengthVelocity.ScaleRhythm(evt.velocity * 0.24f, rhythmScale),
+                        ctx.instance.gainTrim,
+                        ctx.instance.brightness,
+                        Mathf.Clamp01(ctx.instance.reverbSend + ctx.group.busFx.reverb * 0.2f),
+                        ctx.instance.delaySend,
+                        sound,
+                        ctx.instance.id);
+                }
+            }
+
+            if (flags.ornament && !hasBaseOnCurrentStep)
+            {
+                for (int i = 2; i < rhythm.events.Count; i += 3)
+                {
+                    var evt = rhythm.events[i];
+                    if (((evt.step - 1 + totalSteps) % totalSteps) != ctx.localStep)
+                        continue;
+
+                    ctx.audioDispatcher?.PlayDrum(
+                        preset,
+                        evt.lane,
+                        BondStrengthVelocity.ScaleRhythm(evt.velocity * 0.42f, rhythmScale),
+                        ctx.instance.gainTrim,
+                        ctx.instance.brightness,
+                        Mathf.Clamp01(ctx.instance.reverbSend + ctx.group.busFx.reverb * 0.2f),
+                        ctx.instance.delaySend,
+                        sound,
+                        ctx.instance.id);
+                }
+            }
+        }
+
+        private static void ScheduleMelodyExpressionLayers(
+            PatternSchedulingContext ctx,
+            MelodySequence melody,
+            InstrumentPreset preset,
+            SoundProfile sound,
+            ExpressionFlags flags)
+        {
+            int totalSteps = melody.totalSteps > 0 ? melody.totalSteps : AppStateFactory.BarSteps;
+
+            if (flags.accent && melody.notes.Count > 0)
+            {
+                var highest = GetHighestMelodyNote(melody.notes);
+                if ((highest.step + 1) % totalSteps == ctx.localStep)
+                {
+                    ctx.audioDispatcher?.PlayMelody(
+                        preset,
+                        highest.midi + 4,
+                        highest.velocity * 0.82f,
+                        ctx.stepDuration,
+                        ctx.instance.gainTrim,
+                        ctx.instance.brightness,
+                        ctx.instance.reverbSend,
+                        Mathf.Clamp01(ctx.instance.delaySend + ctx.group.busFx.delay * 0.12f),
+                        sound,
+                        0f,
+                        ctx.instance.id);
+                }
+            }
+
+            if (flags.ornament)
+            {
+                foreach (var pair in EnumeratePassingToneSources(melody))
+                {
+                    if ((pair.current.step + 1) % totalSteps != ctx.localStep)
+                        continue;
+
+                    ctx.audioDispatcher?.PlayMelody(
+                        preset,
+                        ComputePassingToneMidi(pair.current.midi, pair.next.midi),
+                        Mathf.Max(pair.current.velocity, pair.next.velocity) * 0.62f,
+                        ctx.stepDuration,
+                        ctx.instance.gainTrim,
+                        ctx.instance.brightness,
+                        ctx.instance.reverbSend,
+                        Mathf.Clamp01(ctx.instance.delaySend + ctx.group.busFx.delay * 0.08f),
+                        sound,
+                        0.04f,
+                        ctx.instance.id);
+                }
+            }
+        }
+
+        private static bool HasRhythmEventAtStep(List<RhythmEvent> events, int step)
+        {
+            if (events == null)
+                return false;
+
+            foreach (var evt in events)
+            {
+                if (evt.step == step)
+                    return true;
+            }
+
+            return false;
+        }
+
+        private static MelodyNote GetHighestMelodyNote(List<MelodyNote> notes)
+        {
+            var highest = notes[0];
+            foreach (var note in notes)
+            {
+                if (note.midi > highest.midi)
+                    highest = note;
+            }
+
+            return highest;
+        }
+
+        private static IEnumerable<(MelodyNote current, MelodyNote next)> EnumeratePassingToneSources(MelodySequence melody)
+        {
+            if (melody?.notes == null)
+                yield break;
+
+            int lastBar = -1;
+            for (int i = 0; i < melody.notes.Count - 1; i++)
+            {
+                var current = melody.notes[i];
+                var next = melody.notes[i + 1];
+                int bar = current.step / AppStateFactory.BarSteps;
+                if (bar == lastBar)
+                    continue;
+
+                lastBar = bar;
+                yield return (current, next);
+            }
+        }
+
+        private static int ComputePassingToneMidi(int currentMidi, int nextMidi)
+        {
+            int delta = nextMidi - currentMidi;
+            if (delta == 0)
+                return currentMidi + 1;
+
+            int direction = delta > 0 ? 1 : -1;
+            int magnitude = Mathf.Clamp(Mathf.Abs(delta) / 2, 1, 2);
+            return currentMidi + direction * magnitude;
+        }
+
+        private static ExpressionFlags ResolveExpressionFlags(MusicalShape shape, PatternDefinition pattern)
+        {
+            var profile3D = shape?.profile3D ?? pattern?.shapeProfile3D;
+            return new ExpressionFlags
+            {
+                ornament = profile3D != null && profile3D.ornamentFlag,
+                accent = profile3D != null && profile3D.accentFlag
+            };
+        }
+
+        private struct ExpressionFlags
+        {
+            public bool ornament;
+            public bool accent;
         }
     }
 }

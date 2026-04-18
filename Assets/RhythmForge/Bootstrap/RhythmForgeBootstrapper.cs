@@ -54,6 +54,8 @@ namespace RhythmForge.Bootstrap
         [SerializeField] private AudioEngine _audioEngine;
         [SerializeField] private SamplePlayer _samplePlayer;
         [SerializeField] private Sequencer.Sequencer _sequencer;
+        [SerializeField] private SpatialZoneController _spatialZoneController;
+        [SerializeField] private SpatialZoneLayout _spatialZoneLayout;
 
         private VRRigLocator _rig;
         private bool _built;
@@ -161,6 +163,25 @@ namespace RhythmForge.Bootstrap
                             RepositionPanels();
                         }
                     }
+                }
+            }
+
+            var input = _inputMapperRef != null ? (IInputProvider)_inputMapperRef : _inputMapper;
+            if (input != null && input.ButtonTwoLongPress)
+            {
+                RepositionPanels();
+
+                Transform head = _rig?.CenterEye;
+                if (head != null && _spatialZoneController != null)
+                {
+                    Vector3 forward = head.forward;
+                    forward.y = 0f;
+                    if (forward.sqrMagnitude < 0.0001f)
+                        forward = Vector3.forward;
+
+                    _spatialZoneController.Recentre(new Pose(
+                        head.position,
+                        Quaternion.LookRotation(forward.normalized, Vector3.up)));
                 }
             }
         }
@@ -281,6 +302,16 @@ namespace RhythmForge.Bootstrap
             // ── 3. Core subsystems ──
             var subsystems = BuildSubsystems(defaultStrokeMat);
 
+            // ── 3b. Spatial zones ──
+            var zoneRoot = new GameObject("SpatialZones");
+            zoneRoot.transform.SetParent(_rig != null && _rig.TrackingSpace != null ? _rig.TrackingSpace : transform, false);
+            _spatialZoneController = zoneRoot.AddComponent<SpatialZoneController>();
+            _spatialZoneController.Initialize(
+                null,
+                _spatialZoneLayout != null ? _spatialZoneLayout : SpatialZoneLayout.CreateDefault(),
+                _rig != null ? _rig.CenterEye : null,
+                _audioEngine);
+
             // ── 4. UI panels ──
             var panels = BuildUIPanels(subsystems.strokeCapture, subsystems.drawMode);
 
@@ -302,7 +333,8 @@ namespace RhythmForge.Bootstrap
                     strokeCapture   = subsystems.strokeCapture,
                     drawMode        = subsystems.drawMode,
                     inputMapper     = subsystems.inputMapper,
-                    instanceGrabber = subsystems.instanceGrabber
+                    instanceGrabber = subsystems.instanceGrabber,
+                    spatialZoneController = _spatialZoneController
                 },
                 new ManagerPanels
                 {
@@ -320,6 +352,7 @@ namespace RhythmForge.Bootstrap
             );
 
             // Cache for inspector readout
+            _inputMapperRef  = subsystems.inputMapper;
             _inputMapper     = subsystems.inputMapper;
             _drawMode        = subsystems.drawMode;
             _strokeCapture   = subsystems.strokeCapture;
@@ -640,9 +673,15 @@ namespace RhythmForge.Bootstrap
                 new Rect(12, 98, 456, 80));
 
             // Details
+            var pressureText = UIFactory.CreateRectText(canvas.transform, "PressureText",
+                "", 12, new Color(0.68f, 0.80f, 0.92f), TextAnchor.MiddleLeft,
+                new Rect(12, 82, 456, 16));
+            var badgeText = UIFactory.CreateRectText(canvas.transform, "BadgeText",
+                "", 12, new Color(1f, 0.84f, 0.42f), TextAnchor.MiddleLeft,
+                new Rect(12, 64, 456, 16));
             var detailsText = UIFactory.CreateRectText(canvas.transform, "DetailsText",
                 "", 13, new Color(0.6f, 0.65f, 0.7f), TextAnchor.UpperLeft,
-                new Rect(12, 56, 456, 40));
+                new Rect(12, 36, 456, 28));
 
             // Buttons
             var saveBtn = UIFactory.CreateButton(canvas.transform, "SaveButton", "Save",
@@ -655,7 +694,7 @@ namespace RhythmForge.Bootstrap
             canvas.gameObject.SetActive(false);
 
             var panel = canvas.gameObject.AddComponent<CommitCardPanel>();
-            panel.SetUIRefs(nameText, summaryText, detailsText,
+            panel.SetUIRefs(nameText, summaryText, detailsText, pressureText, badgeText,
                 typeLabel, colorBar, saveBtn, saveDupBtn, discardBtn, head);
             return panel;
         }
@@ -687,6 +726,8 @@ namespace RhythmForge.Bootstrap
                 "", 13, new Color(0.75f, 0.85f, 0.95f), TextAnchor.UpperLeft, new Rect(10, 295, 320, 52));
             var traitChips = UIFactory.CreateRectText(canvas.transform, "TraitChips",
                 "", 12, new Color(0.55f, 0.65f, 0.8f), TextAnchor.UpperLeft, new Rect(10, 270, 320, 24));
+            var badgeText = UIFactory.CreateRectText(canvas.transform, "ExpressionBadges",
+                "", 12, new Color(1f, 0.82f, 0.4f), TextAnchor.UpperLeft, new Rect(10, 252, 320, 18));
 
             // 6 metric bars (simplified — just sliders with labels)
             var metricBars   = new List<Slider>();
@@ -735,7 +776,7 @@ namespace RhythmForge.Bootstrap
             canvas.gameObject.SetActive(false);
 
             var panel = canvas.gameObject.AddComponent<InspectorPanel>();
-            panel.SetUIRefs(pName, pType, pBars, typeColorBar, shapeSummary, traitChips,
+            panel.SetUIRefs(pName, pType, pBars, typeColorBar, shapeSummary, traitChips, badgeText,
                 metricBars, metricLabels, depthSlider, muteBtn, muteLabel,
                 removeBtn, dupBtn, presetDrop, panText, gainText, brightText, head);
             return panel;

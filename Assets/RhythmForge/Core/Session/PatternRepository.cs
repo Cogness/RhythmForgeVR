@@ -11,17 +11,25 @@ namespace RhythmForge.Core.Session
         private readonly Func<string, SceneData> _getScene;
         private readonly Action _notifyStateChanged;
         private readonly Func<PatternType, string> _reserveName;
+        private Func<PatternType, Vector3?> _resolveSpawnPosition;
 
         public PatternRepository(
             Func<AppState> getState,
             Func<string, SceneData> getScene,
             Action notifyStateChanged,
-            Func<PatternType, string> reserveName)
+            Func<PatternType, string> reserveName,
+            Func<PatternType, Vector3?> resolveSpawnPosition = null)
         {
             _getState = getState;
             _getScene = getScene;
             _notifyStateChanged = notifyStateChanged;
             _reserveName = reserveName;
+            _resolveSpawnPosition = resolveSpawnPosition;
+        }
+
+        public void SetSpawnPlacementResolver(Func<PatternType, Vector3?> resolver)
+        {
+            _resolveSpawnPosition = resolver;
         }
 
         public PatternDefinition GetPattern(string patternId)
@@ -100,7 +108,8 @@ namespace RhythmForge.Core.Session
 
             state.patterns.Insert(0, pattern);
 
-            var instance = SpawnPattern(pattern.id, state.activeSceneId, draft.spawnPosition, false);
+            Vector3 spawnPosition = ResolveSpawnPosition(pattern.type) ?? draft.spawnPosition;
+            var instance = SpawnPattern(pattern.id, state.activeSceneId, spawnPosition, false);
             if (duplicate)
             {
                 Vector3 dupPos = draft.spawnPosition + new Vector3(0.15f, 0.1f, 0f);
@@ -122,7 +131,7 @@ namespace RhythmForge.Core.Session
             if (pattern == null || scene == null)
                 return null;
 
-            Vector3 position = coords ?? GetNextSpawnPosition(sceneId);
+            Vector3 position = coords ?? ResolveSpawnPosition(pattern.type) ?? GetNextSpawnPosition(sceneId);
             float depth = position.z;
 
             var instance = new PatternInstance(patternId, sceneId, position, depth);
@@ -225,6 +234,11 @@ namespace RhythmForge.Core.Session
                 new Vector3(0.74f, 0.68f, 0.34f)
             };
             return positions[existing.Count % positions.Length];
+        }
+
+        private Vector3? ResolveSpawnPosition(PatternType type)
+        {
+            return _resolveSpawnPosition?.Invoke(type);
         }
     }
 }

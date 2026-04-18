@@ -1,5 +1,8 @@
 using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
 using RhythmForge.Core.Session;
+using RhythmForge.Audio;
 using RhythmForge.UI;
 
 namespace RhythmForge.Interaction
@@ -26,10 +29,17 @@ namespace RhythmForge.Interaction
         private bool _hasMoved;
         private IInputProvider _inputProvider;
         private float _grabDistance = 1.2f;
+        private AudioEngine _audioEngine;
+        private readonly Dictionary<string, float> _lastReleaseTimeById = new Dictionary<string, float>();
+        private Coroutine _hapticCoroutine;
 
         private const float MinGrabDistance = 0.4f;
         private const float MaxGrabDistance = 6.0f;
         private const float GrabPushSpeed = 1.8f;
+        private const float HapticGraceSeconds = 1f;
+        private const float HapticAmplitude = 0.12f;
+        private const float HapticFrequency = 0.2f;
+        private const float HapticDurationSeconds = 0.006f;
 
         // The currently hovered visualizer (for highlighting)
         private PatternVisualizer _hoveredVisualizer;
@@ -45,9 +55,10 @@ namespace RhythmForge.Interaction
             _instanceLayer = instanceLayer;
         }
 
-        public void Initialize(SessionStore store)
+        public void Initialize(SessionStore store, AudioEngine audioEngine = null)
         {
             _store = store;
+            BindAudioEngine(audioEngine);
         }
 
         private void Update()
@@ -77,6 +88,7 @@ namespace RhythmForge.Interaction
                         // Click without drag → select
                         _store.SetSelectedInstance(_grabbedInstanceId);
                     }
+                    _lastReleaseTimeById[_grabbedInstanceId] = Time.unscaledTime;
                     _grabbedInstanceId = null;
                 }
                 else
@@ -173,6 +185,65 @@ namespace RhythmForge.Interaction
             {
                 _rayVisual.enabled = false;
             }
+        }
+
+        private void OnDestroy()
+        {
+            BindAudioEngine(null);
+            StopHaptics();
+        }
+
+        private void BindAudioEngine(AudioEngine audioEngine)
+        {
+            if (_audioEngine != null)
+                _audioEngine.OnEventScheduled -= HandleEventScheduled;
+
+            _audioEngine = audioEngine;
+
+            if (_audioEngine != null)
+                _audioEngine.OnEventScheduled += HandleEventScheduled;
+        }
+
+        private void HandleEventScheduled(string instanceId)
+        {
+            if (string.IsNullOrEmpty(instanceId))
+                return;
+
+            if (instanceId == _grabbedInstanceId)
+            {
+                TriggerHaptics();
+                return;
+            }
+
+            if (_lastReleaseTimeById.TryGetValue(instanceId, out var releaseTime) &&
+                Time.unscaledTime - releaseTime <= HapticGraceSeconds)
+            {
+                TriggerHaptics();
+            }
+        }
+
+        private void TriggerHaptics()
+        {
+            if (!isActiveAndEnabled)
+                return;
+
+            if (_hapticCoroutine != null)
+                StopCoroutine(_hapticCoroutine);
+
+            _hapticCoroutine = StartCoroutine(HapticPulseCoroutine());
+        }
+
+        private IEnumerator HapticPulseCoroutine()
+        {
+            OVRInput.SetControllerVibration(HapticFrequency, HapticAmplitude, OVRInput.Controller.LTouch);
+            yield return new WaitForSecondsRealtime(HapticDurationSeconds);
+            StopHaptics();
+        }
+
+        private void StopHaptics()
+        {
+            OVRInput.SetControllerVibration(0f, 0f, OVRInput.Controller.LTouch);
+            _hapticCoroutine = null;
         }
     }
 }

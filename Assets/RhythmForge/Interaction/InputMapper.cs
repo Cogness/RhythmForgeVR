@@ -36,11 +36,17 @@ namespace RhythmForge.Interaction
         public bool LeftGrip => OVRInput.Get(OVRInput.Button.PrimaryHandTrigger, OVRInput.Controller.LTouch);
         public Vector2 LeftThumbstick => OVRInput.Get(OVRInput.Axis2D.PrimaryThumbstick, OVRInput.Controller.LTouch);
         public bool ButtonOne => OVRInput.GetDown(OVRInput.Button.One, OVRInput.Controller.LTouch); // X button
-        public bool ButtonTwo => OVRInput.GetDown(OVRInput.Button.Two, OVRInput.Controller.LTouch); // Y button
+        public bool ButtonTwo { get; private set; }
+        public bool ButtonTwoLongPress { get; private set; }
 
         // Front button edge detection
         private bool _prevFrontButton;
         private bool _prevBackButton;
+        private bool _buttonTwoHeld;
+        private bool _buttonTwoLongPressFired;
+        private float _buttonTwoPressStartTime;
+
+        private const float ButtonTwoLongPressSeconds = 0.8f;
 
         public bool FrontButtonDown { get; private set; }
         public bool BackButtonDown  { get; private set; }
@@ -55,11 +61,37 @@ namespace RhythmForge.Interaction
         {
             // Reset consumed flags first — other systems running later this frame may set them.
             FrontButtonConsumed = false;
+            ButtonTwo = false;
+            ButtonTwoLongPress = false;
 
             FrontButtonDown     = FrontButton && !_prevFrontButton;
             BackButtonDown      = BackButton  && !_prevBackButton;
             _prevFrontButton    = FrontButton;
             _prevBackButton     = BackButton;
+
+            bool buttonTwoHeldNow = OVRInput.Get(OVRInput.Button.Two, OVRInput.Controller.LTouch);
+            if (buttonTwoHeldNow && !_buttonTwoHeld)
+            {
+                _buttonTwoHeld = true;
+                _buttonTwoLongPressFired = false;
+                _buttonTwoPressStartTime = Time.unscaledTime;
+            }
+            else if (buttonTwoHeldNow && _buttonTwoHeld && !_buttonTwoLongPressFired)
+            {
+                if (Time.unscaledTime - _buttonTwoPressStartTime >= ButtonTwoLongPressSeconds)
+                {
+                    _buttonTwoLongPressFired = true;
+                    ButtonTwoLongPress = true;
+                }
+            }
+            else if (!buttonTwoHeldNow && _buttonTwoHeld)
+            {
+                if (!_buttonTwoLongPressFired)
+                    ButtonTwo = true;
+
+                _buttonTwoHeld = false;
+                _buttonTwoLongPressFired = false;
+            }
         }
     }
 }

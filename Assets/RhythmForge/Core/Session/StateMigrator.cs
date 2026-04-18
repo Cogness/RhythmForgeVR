@@ -61,6 +61,7 @@ namespace RhythmForge.Core.Session
             NormalizeInstanceMixes(state, loadedVersion);
             CleanupSceneMembership(state);
             NormalizeMusicalShapes(state);
+            NormalizeProfile3DAdditions(state);
             ReindexSceneEnsembles(state);
         }
 
@@ -225,6 +226,24 @@ namespace RhythmForge.Core.Session
                     pattern.color = TypeColors.Blend(pattern.musicalShape.bondStrength);
                 }
             }
+        }
+
+        private static void NormalizeProfile3DAdditions(AppState state)
+        {
+            foreach (var pattern in state.patterns)
+            {
+                NormalizeProfile3D(pattern?.shapeProfile3D);
+                NormalizeProfile3D(pattern?.musicalShape?.profile3D);
+            }
+        }
+
+        private static void NormalizeProfile3D(ShapeProfile3D profile3D)
+        {
+            if (profile3D == null)
+                return;
+
+            if (profile3D.thicknessPeak <= 0f && profile3D.thicknessMean > 0f)
+                profile3D.thicknessPeak = Mathf.Clamp01(Mathf.Round(profile3D.thicknessMean * 1.4f * 100f) / 100f);
         }
 
         private static MusicalShape NormalizeMusicalShape(PatternDefinition pattern)

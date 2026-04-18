@@ -17,6 +17,8 @@ namespace RhythmForge.UI.Panels
         [SerializeField] private Text _nameText;
         [SerializeField] private Text _summaryText;
         [SerializeField] private Text _detailsText;
+        [SerializeField] private Text _pressureText;
+        [SerializeField] private Text _badgeText;
         [SerializeField] private Text _typeLabel;
         [SerializeField] private Image _typeColorBar;
         [SerializeField] private Button _saveButton;
@@ -31,13 +33,15 @@ namespace RhythmForge.UI.Panels
         private DraftResult _currentDraft;
 
         /// <summary>Called by RhythmForgeBootstrapper to inject all UI element references.</summary>
-        public void SetUIRefs(Text nameText, Text summaryText, Text detailsText,
+        public void SetUIRefs(Text nameText, Text summaryText, Text detailsText, Text pressureText, Text badgeText,
             Text typeLabel, Image typeColorBar, Button saveBtn, Button saveDupBtn,
             Button discardBtn, Transform lookAt)
         {
             _nameText    = nameText;
             _summaryText = summaryText;
             _detailsText = detailsText;
+            _pressureText = pressureText;
+            _badgeText = badgeText;
             _typeLabel   = typeLabel;
             _typeColorBar = typeColorBar;
             _saveButton   = saveBtn;
@@ -117,6 +121,8 @@ namespace RhythmForge.UI.Panels
             if (_nameText) _nameText.text = draft.name;
             if (_summaryText) _summaryText.text = draft.summary;
             if (_detailsText) _detailsText.text = draft.details;
+            if (_pressureText) _pressureText.text = BuildPressureSummary(draft.shapeProfile3D);
+            if (_badgeText) _badgeText.text = BuildExpressionBadges(draft.shapeProfile3D);
             if (_typeLabel) _typeLabel.text = draft.type.ToString();
             if (_typeColorBar) _typeColorBar.color = draft.color;
         }
@@ -142,6 +148,29 @@ namespace RhythmForge.UI.Panels
         private void Hide()
         {
             gameObject.SetActive(false);
+        }
+
+        private static string BuildPressureSummary(ShapeProfile3D profile3D)
+        {
+            if (profile3D == null)
+                return string.Empty;
+
+            return $"Pressure: {profile3D.thicknessMean:F2} avg · {profile3D.thicknessPeak:F2} peak";
+        }
+
+        private static string BuildExpressionBadges(ShapeProfile3D profile3D)
+        {
+            if (profile3D == null)
+                return string.Empty;
+
+            if (profile3D.ornamentFlag && profile3D.accentFlag)
+                return "Ornamented · Accented";
+            if (profile3D.ornamentFlag)
+                return "Ornamented";
+            if (profile3D.accentFlag)
+                return "Accented";
+
+            return string.Empty;
         }
     }
 }

@@ -19,6 +19,7 @@ namespace RhythmForge.Core.Data
         public float gainTrim;
         public int ensembleRoleIndex;
         public int progressionBarIndex;
+        [NonSerialized] public string currentZoneId;
 
         [Obsolete("Spatial direction is now driven by the instance transform. Retained for one migration window.")]
         public float pan;
@@ -71,6 +72,7 @@ namespace RhythmForge.Core.Data
                 gainTrim = gainTrim,
                 ensembleRoleIndex = ensembleRoleIndex,
                 progressionBarIndex = progressionBarIndex,
+                currentZoneId = currentZoneId,
                 pan = pan,
                 gain = gain
             };

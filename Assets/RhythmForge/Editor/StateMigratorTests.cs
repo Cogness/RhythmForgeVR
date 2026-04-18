@@ -118,6 +118,38 @@ namespace RhythmForge.Editor
             Assert.That(instance.delaySend, Is.EqualTo(Mathf.Clamp01(instance.depth * 0.35f)).Within(0.0001f));
             Assert.That(instance.gainTrim, Is.EqualTo(Mathf.Clamp01(1.05f - instance.depth * 0.15f)).Within(0.0001f));
         }
+
+        [Test]
+        public void NormalizeState_BackfillsShapeProfile3DPeakPressure()
+        {
+            var migrator = new StateMigrator();
+            var state = AppStateFactory.CreateEmpty();
+
+            var pattern = new PatternDefinition
+            {
+                id = "pattern-3d",
+                type = PatternType.MelodyLine,
+                shapeProfile3D = new ShapeProfile3D
+                {
+                    thicknessMean = 0.5f,
+                    thicknessPeak = 0f
+                },
+                musicalShape = new MusicalShape
+                {
+                    profile3D = new ShapeProfile3D
+                    {
+                        thicknessMean = 0.4f,
+                        thicknessPeak = 0f
+                    }
+                }
+            };
+            state.patterns.Add(pattern);
+
+            migrator.NormalizeState(state);
+
+            Assert.That(pattern.shapeProfile3D.thicknessPeak, Is.EqualTo(0.7f).Within(0.0001f));
+            Assert.That(pattern.musicalShape.profile3D.thicknessPeak, Is.EqualTo(0.56f).Within(0.0001f));
+        }
     }
 }
 #endif

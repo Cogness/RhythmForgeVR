@@ -40,6 +40,17 @@ namespace RhythmForge.Interaction
         private GameObject _sidetoneObject;
         private AudioSource _sidetoneSource;
         private AudioClip _sidetoneClip;
+        private float _middlePressureHoldSeconds;
+        private bool _currentOrnamentFlag;
+        private bool _backButtonHeldDuringStroke;
+
+        private static readonly Color UprightStrokeColor = new Color(0.28f, 0.95f, 1f, 1f);
+        private static readonly Color TiltedStrokeColor = new Color(1f, 0.72f, 0.24f, 1f);
+        private const float OrnamentPressureThreshold = 0.3f;
+        private const float OrnamentReleaseThreshold = 0.15f;
+        private const float OrnamentHoldSeconds = 0.12f;
+        private const float AccentMaxDurationSeconds = 0.45f;
+        private const float AccentMaxLengthMeters = 0.3f;
 
         // Pending draft
         public DraftResult PendingDraft { get; private set; }
@@ -98,8 +109,7 @@ namespace RhythmForge.Interaction
 
             float pressure = input.DrawPressure;
 
-            // Suppress drawing while back button held (panel dragging) or hovering UI
-            if (input.BackButton) pressure = 0f;
+            // Suppress drawing when interacting with UI.
             if (_uiPointer != null && _uiPointer.IsHoveringUI) pressure = 0f;
 
             if (pressure > 0.05f)
@@ -109,6 +119,8 @@ namespace RhythmForge.Interaction
                     StartStroke();
                     _isDrawing = true;
                 }
+
+                UpdateExpressionFlags(input);
                 AddPoint(input.StylusPose.position, pressure, input.StylusPose.rotation);
                 UpdateSidetone(input.StylusPose.position, pressure);
             }
@@ -130,6 +142,9 @@ namespace RhythmForge.Interaction
             _stylusRotations.Clear();
             _timestamps.Clear();
             _strokeStartTime = Time.unscaledTimeAsDouble;
+            _middlePressureHoldSeconds = 0f;
+            _currentOrnamentFlag = false;
+            _backButtonHeldDuringStroke = false;
 
             _currentLineObj = new GameObject("RhythmForge_Stroke");
             _currentLine = _currentLineObj.AddComponent<LineRenderer>();
@@ -165,16 +180,23 @@ namespace RhythmForge.Interaction
             _currentLine.positionCount = _worldPoints.Count;
             _currentLine.SetPosition(_worldPoints.Count - 1, worldPos);
 
-            // Update width curve
-            float width = Mathf.Max(pressure * _maxLineWidth, _minLineWidth);
             var curve = new AnimationCurve();
+            var colorKeys = new GradientColorKey[_worldPoints.Count];
+            var alphaKeys = new GradientAlphaKey[_worldPoints.Count];
             for (int i = 0; i < _worldPoints.Count; i++)
             {
-                float w = Mathf.Max(_pressures[i] * _maxLineWidth, _minLineWidth);
+                float tilt01 = GetTilt01(_stylusRotations[i]);
+                float widthScale = Mathf.Lerp(0.85f, 1.15f, tilt01);
+                float w = Mathf.Max(_pressures[i] * _maxLineWidth * widthScale, _minLineWidth);
                 float t = _worldPoints.Count > 1 ? i / (float)(_worldPoints.Count - 1) : 0f;
                 curve.AddKey(t, w);
+                colorKeys[i] = new GradientColorKey(Color.Lerp(UprightStrokeColor, TiltedStrokeColor, tilt01), t);
+                alphaKeys[i] = new GradientAlphaKey(1f, t);
             }
             _currentLine.widthCurve = curve;
+            var gradient = new Gradient();
+            gradient.SetKeys(colorKeys, alphaKeys);
+            _currentLine.colorGradient = gradient;
         }
 
         private void FinishStroke()
@@ -205,7 +227,11 @@ namespace RhythmForge.Interaction
             // constructs a <see cref="StrokeCurve"/> (samples + projected 2D +
             // basis) inside BuildFromStroke. Melody derivers stay bit-identical
             // because the projection math is unchanged — it just relocated.
-            var richSamples = BuildStrokeSamples();
+            bool accentFlag = _backButtonHeldDuringStroke &&
+                GetStrokeDurationSeconds() <= AccentMaxDurationSeconds &&
+                GetStrokeLengthMeters() <= AccentMaxLengthMeters;
+
+            var richSamples = BuildStrokeSamples(accentFlag);
             Vector3 referenceUp = _userHead != null ? _userHead.up : Vector3.up;
 
             var draft = DraftBuilder.BuildFromStroke(
@@ -341,7 +367,7 @@ namespace RhythmForge.Interaction
             public Quaternion rotation;
         }
 
-        private List<StrokeSample> BuildStrokeSamples()
+        private List<StrokeSample> BuildStrokeSamples(bool accentFlag)
         {
             int n = _worldPoints.Count;
             var samples = new List<StrokeSample>(n);
@@ -352,7 +378,9 @@ namespace RhythmForge.Interaction
                     worldPos = _worldPoints[i],
                     pressure = i < _pressures.Count ? _pressures[i] : 0f,
                     stylusRot = i < _stylusRotations.Count ? _stylusRotations[i] : Quaternion.identity,
-                    timestamp = i < _timestamps.Count ? _timestamps[i] : 0.0
+                    timestamp = i < _timestamps.Count ? _timestamps[i] : 0.0,
+                    ornamentFlag = _currentOrnamentFlag,
+                    accentFlag = accentFlag
                 });
             }
             return samples;
@@ -391,6 +419,9 @@ namespace RhythmForge.Interaction
             _pressures.Clear();
             _stylusRotations.Clear();
             _timestamps.Clear();
+            _middlePressureHoldSeconds = 0f;
+            _currentOrnamentFlag = false;
+            _backButtonHeldDuringStroke = false;
         }
 
         private void StartSidetone()
@@ -465,6 +496,50 @@ namespace RhythmForge.Interaction
             var clip = AudioClip.Create("PenSidetone", sampleCount, 1, sampleRate, false);
             clip.SetData(data, 0);
             return clip;
+        }
+
+        private void UpdateExpressionFlags(IInputProvider input)
+        {
+            if (input == null)
+                return;
+
+            _backButtonHeldDuringStroke |= input.BackButton;
+
+            float middlePressure = input.MiddlePressure;
+            if (middlePressure >= OrnamentPressureThreshold)
+            {
+                _middlePressureHoldSeconds += Time.unscaledDeltaTime;
+                if (_middlePressureHoldSeconds >= OrnamentHoldSeconds)
+                    _currentOrnamentFlag = true;
+            }
+            else if (middlePressure < OrnamentReleaseThreshold)
+            {
+                _middlePressureHoldSeconds = 0f;
+            }
+        }
+
+        private float GetStrokeDurationSeconds()
+        {
+            return _timestamps.Count > 0 ? (float)_timestamps[_timestamps.Count - 1] : 0f;
+        }
+
+        private float GetStrokeLengthMeters()
+        {
+            float length = 0f;
+            for (int i = 1; i < _worldPoints.Count; i++)
+                length += Vector3.Distance(_worldPoints[i - 1], _worldPoints[i]);
+            return length;
+        }
+
+        private float GetTilt01(Quaternion rotation)
+        {
+            Vector3 referenceUp = _userHead != null ? _userHead.up : Vector3.up;
+            Vector3 stylusUp = rotation * Vector3.up;
+            if (stylusUp.sqrMagnitude <= 0.000001f)
+                stylusUp = Vector3.up;
+
+            float angle = Vector3.Angle(stylusUp, referenceUp.normalized);
+            return Mathf.Clamp01(angle / 60f);
         }
     }
 }

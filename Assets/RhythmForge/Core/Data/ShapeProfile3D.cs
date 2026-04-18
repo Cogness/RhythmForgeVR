@@ -18,6 +18,7 @@ namespace RhythmForge.Core.Data
         // --- Pressure (thickness) ---
         public float thicknessMean;       // 0..1 average pen pressure along the stroke
         public float thicknessVariance;   // 0..1 normalised std-dev of pressure
+        public float thicknessPeak;       // 0..1 peak pen pressure along the stroke
 
         // --- Stylus tilt ---
         public float tiltMean;            // 0..1 average angle between stylus-up and referenceUp
@@ -33,6 +34,8 @@ namespace RhythmForge.Core.Data
         public float helicity;            // -1..1 net signed rotation around PCA major axis / 2π
         public float temporalEvenness;    // 0..1 (1 = uniform inter-sample dt, 0 = very uneven)
         public float passCount;           // 0..1 normalised count of 3D self-intersections
+        public bool ornamentFlag;
+        public bool accentFlag;
 
         public ShapeProfile3D Clone()
         {
@@ -40,6 +43,7 @@ namespace RhythmForge.Core.Data
             {
                 thicknessMean = thicknessMean,
                 thicknessVariance = thicknessVariance,
+                thicknessPeak = thicknessPeak,
                 tiltMean = tiltMean,
                 tiltVariance = tiltVariance,
                 depthSpan = depthSpan,
@@ -48,7 +52,9 @@ namespace RhythmForge.Core.Data
                 centroidDepth = centroidDepth,
                 helicity = helicity,
                 temporalEvenness = temporalEvenness,
-                passCount = passCount
+                passCount = passCount,
+                ornamentFlag = ornamentFlag,
+                accentFlag = accentFlag
             };
         }
     }

@@ -1,7 +1,9 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
 using RhythmForge.Core.Data;
+using RhythmForge.Core.Session;
 
 namespace RhythmForge.Audio
 {
@@ -17,6 +19,8 @@ namespace RhythmForge.Audio
         [SerializeField] [Range(0f, 1f)] private float _masterVolume = 0.82f;
 
         private InstanceVoiceRegistry _instanceVoiceRegistry;
+
+        public event Action<string> OnEventScheduled;
 
         public bool IsReady => _samplePlayer != null;
 
@@ -67,12 +71,14 @@ namespace RhythmForge.Audio
         {
             if (!IsReady) return;
             soundProfile = soundProfile ?? new SoundProfile();
+            ApplyZoneBias(instanceId, ref gainTrim, ref reverbSend, ref delaySend);
 
             float gainAmount = Mathf.Clamp01(
                 gainTrim * velocity * velocity * (0.72f + soundProfile.body * 0.42f));
 
             var spec = VoiceSpecResolver.ResolveDrum(lane, preset, soundProfile, brightness, reverbSend, delaySend);
             PlayResolved(spec, gainAmount, instanceId);
+            RaiseEventScheduled(instanceId);
         }
 
         // Convenience overload — uses default lofi-piano preset.
@@ -90,6 +96,7 @@ namespace RhythmForge.Audio
         {
             if (!IsReady) return;
             soundProfile = soundProfile ?? new SoundProfile();
+            ApplyZoneBias(instanceId, ref gainTrim, ref reverbSend, ref delaySend);
 
             float gainAmount = Mathf.Clamp01(
                 gainTrim * velocity * velocity * (0.72f + soundProfile.body * 0.32f));
@@ -104,6 +111,7 @@ namespace RhythmForge.Audio
                 delaySend,
                 glide);
             PlayResolved(spec, gainAmount * 0.72f, instanceId);
+            RaiseEventScheduled(instanceId);
         }
 
         // Convenience overload — uses default lofi-pad preset.
@@ -122,6 +130,7 @@ namespace RhythmForge.Audio
             if (!IsReady) return;
             if (chord == null) return;
             soundProfile = soundProfile ?? new SoundProfile();
+            ApplyZoneBias(instanceId, ref gainTrim, ref reverbSend, ref delaySend);
 
             for (int i = 0; i < chord.Count; i++)
             {
@@ -138,6 +147,8 @@ namespace RhythmForge.Audio
                     delaySend);
                 PlayResolved(spec, noteGain, instanceId, i * 0.01f);
             }
+
+            RaiseEventScheduled(instanceId);
         }
 
         private void PlayResolved(ResolvedVoiceSpec spec, float gainAmount, string instanceId, float startDelay = 0f)
@@ -162,6 +173,26 @@ namespace RhythmForge.Audio
 
             if (_instanceVoiceRegistry.TryGetPool(instanceId, out var pool))
                 pool.Play(clip, volume, startDelay);
+        }
+
+        private static void ApplyZoneBias(string instanceId, ref float gainTrim, ref float reverbSend, ref float delaySend)
+        {
+            if (string.IsNullOrEmpty(instanceId))
+                return;
+
+            var zone = SpatialZoneController.Shared?.GetZoneFor(instanceId);
+            if (zone == null)
+                return;
+
+            reverbSend = Mathf.Clamp01(reverbSend + zone.reverbBias);
+            delaySend = Mathf.Clamp01(delaySend + zone.delayBias);
+            gainTrim = Mathf.Clamp(gainTrim * Mathf.Max(0.01f, zone.gainBias), 0.5f, 1.25f);
+        }
+
+        private void RaiseEventScheduled(string instanceId)
+        {
+            if (!string.IsNullOrEmpty(instanceId))
+                OnEventScheduled?.Invoke(instanceId);
         }
     }
 }

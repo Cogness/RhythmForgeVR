@@ -23,6 +23,7 @@ namespace RhythmForge.UI.Panels
         [Header("Shape DNA")]
         [SerializeField] private Text _shapeSummary;
         [SerializeField] private Text _traitChipsText;
+        [SerializeField] private Text _badgeText;
         [SerializeField] private List<Slider> _metricBars;
         [SerializeField] private List<Text> _metricLabels;
 
@@ -49,7 +50,7 @@ namespace RhythmForge.UI.Panels
         /// <summary>Called by RhythmForgeBootstrapper to inject all UI element references.</summary>
         public void SetUIRefs(
             Text patternName, Text patternType, Text patternBars, Image typeColorBar,
-            Text shapeSummary, Text traitChips,
+            Text shapeSummary, Text traitChips, Text badgeText,
             List<Slider> metricBars, List<Text> metricLabels,
             Slider depthSlider, Button muteButton, Text muteLabel,
             Button removeButton, Button duplicateButton, Dropdown presetDropdown,
@@ -61,6 +62,7 @@ namespace RhythmForge.UI.Panels
             _typeColorBar    = typeColorBar;
             _shapeSummary    = shapeSummary;
             _traitChipsText  = traitChips;
+            _badgeText       = badgeText;
             _metricBars      = metricBars;
             _metricLabels    = metricLabels;
             _depthSlider     = depthSlider;
@@ -148,6 +150,7 @@ namespace RhythmForge.UI.Panels
             // Trait chips
             if (_traitChipsText && pattern.soundProfile != null)
                 _traitChipsText.text = BuildTraitChips(pattern.soundProfile);
+            if (_badgeText) _badgeText.text = BuildExpressionBadges(pattern);
 
             // Metric bars
             UpdateMetricBars(pattern);
@@ -244,6 +247,22 @@ namespace RhythmForge.UI.Panels
                 return relative.x >= 0f ? "Right" : "Left";
 
             return relative.z >= 0f ? "Front" : "Behind";
+        }
+
+        private static string BuildExpressionBadges(PatternDefinition pattern)
+        {
+            var profile3D = pattern?.musicalShape?.profile3D ?? pattern?.shapeProfile3D;
+            if (profile3D == null)
+                return string.Empty;
+
+            if (profile3D.ornamentFlag && profile3D.accentFlag)
+                return "Ornamented | Accented";
+            if (profile3D.ornamentFlag)
+                return "Ornamented";
+            if (profile3D.accentFlag)
+                return "Accented";
+
+            return string.Empty;
         }
 
         // --- Callbacks ---

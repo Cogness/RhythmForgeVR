@@ -24,6 +24,7 @@ namespace RhythmForge
         public DrawModeController drawMode;
         public InputMapper inputMapper;
         public InstanceGrabber instanceGrabber;
+        public SpatialZoneController spatialZoneController;
     }
 
     /// <summary>
@@ -53,6 +54,7 @@ namespace RhythmForge
         [SerializeField] private DrawModeController _drawModeController;
         [SerializeField] private InputMapper _inputMapper;
         [SerializeField] private InstanceGrabber _instanceGrabber;
+        [SerializeField] private SpatialZoneController _spatialZoneController;
 
         [Header("UI Panels")]
         [SerializeField] private CommitCardPanel  _commitCard;
@@ -94,6 +96,7 @@ namespace RhythmForge
             _inputMapper        = subsystems.inputMapper;
             _inputProvider      = subsystems.inputMapper;
             _instanceGrabber    = subsystems.instanceGrabber;
+            _spatialZoneController = subsystems.spatialZoneController;
             _commitCard         = panels.commitCard;
             _inspectorPanel     = panels.inspector;
             _dockPanel          = panels.dock;
@@ -138,10 +141,14 @@ namespace RhythmForge
                 _sequencer.Initialize(_store);
             if (_store != null)
                 _store.OnGenreRederived += HandleGenreRederived;
+            if (_store != null)
+                _store.SetSpawnPlacementResolver(ResolveSpatialZonePlacement);
             if (_strokeCapture)
                 _strokeCapture.Initialize(_store);
             if (_instanceGrabber)
-                _instanceGrabber.Initialize(_store);
+                _instanceGrabber.Initialize(_store, _audioEngine);
+            if (_spatialZoneController != null)
+                _spatialZoneController.Initialize(_store, null, _userHead, _audioEngine);
 
             if (_commitCard)
                 _commitCard.Initialize(_strokeCapture);
@@ -363,6 +370,14 @@ namespace RhythmForge
 
             if (_toast)
                 _toast.Show($"Scene: {_store.GetScene(ids[next])?.name ?? ids[next]}");
+        }
+
+        private Vector3? ResolveSpatialZonePlacement(PatternType type)
+        {
+            return _spatialZoneController != null &&
+                _spatialZoneController.TryGetDefaultPlacementFor(type, out var position)
+                ? position
+                : (Vector3?)null;
         }
 
         public void LoadDemoSession()

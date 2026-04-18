@@ -21,9 +21,9 @@ namespace RhythmForge.Core.Session
     ///     to the three-pattern demo.
     ///   - Single pattern + single instance routed through <see cref="MusicalShapeBehavior"/>
     ///     (selected by <see cref="PatternBehaviorRegistry"/> when <c>musicalShape != null</c>).
-    ///   - All three facets share one <c>PatternInstance.pan/brightness/depth</c>, so spatial
+    ///   - All three facets share one <c>PatternInstance</c> position/mix profile, so spatial
     ///     positioning is averaged across the legacy spawn points (trade-off: audio mix is
-    ///     mono-centered rather than spread across three positions in the scene).
+    ///     anchored to one emitter rather than spread across three positions in the scene).
     /// </summary>
     public static class UnifiedDemoSession
     {

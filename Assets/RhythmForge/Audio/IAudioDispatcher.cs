@@ -9,33 +9,36 @@ namespace RhythmForge.Audio
             InstrumentPreset preset,
             string lane,
             float velocity,
-            float pan,
+            float gainTrim,
             float brightness,
-            float depth,
-            float fxSend,
-            SoundProfile soundProfile);
+            float reverbSend,
+            float delaySend,
+            SoundProfile soundProfile,
+            string instanceId = null);
 
         void PlayMelody(
             InstrumentPreset preset,
             int midi,
             float velocity,
             float duration,
-            float pan,
+            float gainTrim,
             float brightness,
-            float depth,
-            float fxSend,
+            float reverbSend,
+            float delaySend,
             SoundProfile soundProfile,
-            float glide = 0f);
+            float glide = 0f,
+            string instanceId = null);
 
         void PlayChord(
             InstrumentPreset preset,
             List<int> chord,
             float velocity,
             float duration,
-            float pan,
+            float gainTrim,
             float brightness,
-            float depth,
-            float fxSend,
-            SoundProfile soundProfile);
+            float reverbSend,
+            float delaySend,
+            SoundProfile soundProfile,
+            string instanceId = null);
     }
 }

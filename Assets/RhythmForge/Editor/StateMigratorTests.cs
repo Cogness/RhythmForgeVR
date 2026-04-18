@@ -50,7 +50,7 @@ namespace RhythmForge.Editor
 
             migrator.NormalizeState(state);
 
-            Assert.That(state.version, Is.EqualTo(9));
+            Assert.That(state.version, Is.EqualTo(10));
             Assert.That(state.drawMode, Is.EqualTo(PatternType.RhythmLoop.ToString()));
             Assert.That(state.drawShapeMode, Is.EqualTo(ShapeFacetMode.Free.ToString()));
             Assert.That(state.scenes[0].instanceIds, Does.Not.Contain("missing-instance"));
@@ -60,6 +60,9 @@ namespace RhythmForge.Editor
             Assert.That(pattern.musicalShape, Is.Not.Null);
             Assert.That(pattern.musicalShape.totalSteps, Is.EqualTo(AppStateFactory.BarSteps));
             Assert.That(pattern.musicalShape.facets.harmony.events.Count, Is.EqualTo(1));
+            Assert.That(instance.reverbSend, Is.EqualTo(Mathf.Clamp01(instance.depth * 0.55f)).Within(0.0001f));
+            Assert.That(instance.delaySend, Is.EqualTo(Mathf.Clamp01(instance.depth * 0.35f)).Within(0.0001f));
+            Assert.That(instance.gainTrim, Is.EqualTo(Mathf.Clamp01(1.05f - instance.depth * 0.15f)).Within(0.0001f));
             Assert.That(instance.ensembleRoleIndex, Is.EqualTo(0));
             Assert.That(instance.progressionBarIndex, Is.EqualTo(0));
         }
@@ -89,6 +92,31 @@ namespace RhythmForge.Editor
             Assert.That(instanceB.progressionBarIndex, Is.EqualTo(0));
             Assert.That(instanceA.ensembleRoleIndex, Is.EqualTo(1));
             Assert.That(instanceA.progressionBarIndex, Is.EqualTo(1));
+        }
+
+        [Test]
+        public void NormalizeState_MigratesLegacyInstanceMix_ToSpatialFields()
+        {
+            var migrator = new StateMigrator();
+            var state = AppStateFactory.CreateEmpty();
+            state.version = 9;
+
+            var instance = new PatternInstance("pattern-a", "scene-a", new Vector3(0.3f, 0.25f, 0.9f), 0.9f);
+#pragma warning disable CS0618
+            instance.pan = -0.8f;
+            instance.gain = 0.42f;
+#pragma warning restore CS0618
+            state.instances.Add(instance);
+            state.scenes[0].instanceIds.Clear();
+            state.scenes[0].instanceIds.Add(instance.id);
+
+            migrator.NormalizeState(state);
+
+            Assert.That(state.version, Is.EqualTo(10));
+            Assert.That(instance.brightness, Is.EqualTo(Mathf.Clamp01(1f - instance.position.y)).Within(0.0001f));
+            Assert.That(instance.reverbSend, Is.EqualTo(Mathf.Clamp01(instance.depth * 0.55f)).Within(0.0001f));
+            Assert.That(instance.delaySend, Is.EqualTo(Mathf.Clamp01(instance.depth * 0.35f)).Within(0.0001f));
+            Assert.That(instance.gainTrim, Is.EqualTo(Mathf.Clamp01(1.05f - instance.depth * 0.15f)).Within(0.0001f));
         }
     }
 }

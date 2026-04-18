@@ -12,7 +12,7 @@ namespace RhythmForge.Core.Session
         {
             var fallback = AppStateFactory.CreateEmpty();
             int loadedVersion = state.version;
-            state.version = 9;
+            state.version = 10;
             // v5→v6: PatternDefinition gains an optional shapeProfile3D field.
             // v6→v7: PatternDefinition gains an optional musicalShape field.
             // v7→v8: PatternDefinition gains an optional 3D worldPoints list
@@ -21,6 +21,8 @@ namespace RhythmForge.Core.Session
             //        bit-identical because derivers only read curve.projected.
             // v8→v9: every pattern is normalized into a MusicalShape and every
             // instance gets scene-scoped ensemble/progression ownership.
+            // v9→v10: instance mix is spatial-native; pan/gain collapse into
+            // brightness + reverbSend + delaySend + gainTrim.
 
             if (state.scenes == null || state.scenes.Count != 4)
                 state.scenes = fallback.scenes;
@@ -56,6 +58,7 @@ namespace RhythmForge.Core.Session
 
             NormalizePatternShapeData(state, loadedVersion);
             NormalizePatternOrientations(state, loadedVersion);
+            NormalizeInstanceMixes(state, loadedVersion);
             CleanupSceneMembership(state);
             NormalizeMusicalShapes(state);
             ReindexSceneEnsembles(state);
@@ -106,6 +109,28 @@ namespace RhythmForge.Core.Session
                 }
 
                 pattern.renderRotation = NormalizeQuaternion(pattern.renderRotation);
+            }
+        }
+
+        private void NormalizeInstanceMixes(AppState state, int loadedVersion)
+        {
+            foreach (var instance in state.instances)
+            {
+                if (instance == null)
+                    continue;
+
+                if (string.IsNullOrEmpty(instance.sceneId))
+                    instance.sceneId = state.activeSceneId;
+
+                if (loadedVersion < 10)
+                {
+#pragma warning disable CS0618
+                    instance.pan = Mathf.Clamp(instance.position.x * 2f - 1f, -1f, 1f);
+                    instance.gain = Mathf.Clamp01(1.05f - instance.depth * 0.15f);
+#pragma warning restore CS0618
+                }
+
+                instance.RecalculateMixFromPosition();
             }
         }
 

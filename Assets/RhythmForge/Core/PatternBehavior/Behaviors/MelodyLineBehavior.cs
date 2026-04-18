@@ -39,7 +39,8 @@ namespace RhythmForge.Core.PatternBehavior.Behaviors
                         note.midi,
                         note.durationSteps * context.stepDuration,
                         context.instance.brightness,
-                        context.preset.fxSend,
+                        context.instance.reverbSend,
+                        context.instance.delaySend,
                         note.glide));
             }
         }
@@ -63,12 +64,13 @@ namespace RhythmForge.Core.PatternBehavior.Behaviors
                         note.midi,
                         note.velocity,
                         duration,
-                        context.instance.pan,
+                        context.instance.gainTrim,
                         context.instance.brightness,
-                        context.instance.depth,
-                        context.preset.fxSend + context.group.busFx.delay * 0.1f,
+                        context.instance.reverbSend,
+                        Mathf.Clamp01(context.instance.delaySend + context.group.busFx.delay * 0.1f),
                         context.sound,
-                        note.glide);
+                        note.glide,
+                        context.instance.id);
                 }
 
                 context.recordTrigger?.Invoke(

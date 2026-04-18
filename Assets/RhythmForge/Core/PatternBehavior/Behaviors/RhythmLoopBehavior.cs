@@ -38,7 +38,8 @@ namespace RhythmForge.Core.PatternBehavior.Behaviors
                         context.preset,
                         context.sound,
                         context.instance.brightness,
-                        context.preset.fxSend));
+                        context.instance.reverbSend,
+                        context.instance.delaySend));
             }
         }
 
@@ -58,11 +59,12 @@ namespace RhythmForge.Core.PatternBehavior.Behaviors
                         context.preset,
                         evt.lane,
                         evt.velocity,
-                        context.instance.pan,
+                        context.instance.gainTrim,
                         context.instance.brightness,
-                        context.instance.depth,
-                        context.preset.fxSend + context.group.busFx.reverb * 0.2f,
-                        context.sound);
+                        Mathf.Clamp01(context.instance.reverbSend + context.group.busFx.reverb * 0.2f),
+                        context.instance.delaySend,
+                        context.sound,
+                        context.instance.id);
                 }
 
                 context.recordTrigger?.Invoke(

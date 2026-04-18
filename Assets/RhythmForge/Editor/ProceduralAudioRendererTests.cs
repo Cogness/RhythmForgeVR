@@ -478,11 +478,12 @@ namespace RhythmForge.Editor
         {
             if (spec.isNewAge)
             {
-                return spec.fxSend * (0.04f + spec.delayBias * 0.16f)
+                return spec.delaySend * (0.04f + spec.delayBias * 0.16f)
                     + (spec.patternType == PatternType.HarmonyPad ? 0.03f : 0.01f);
             }
 
-            return spec.fxSend * (0.08f + spec.reverbBias * 0.18f + spec.delayBias * 0.16f)
+            return spec.reverbSend * (0.08f + spec.reverbBias * 0.18f)
+                + spec.delaySend * (0.05f + spec.delayBias * 0.16f)
                 + (spec.patternType == PatternType.HarmonyPad ? 0.12f : 0.04f);
         }
 

@@ -32,6 +32,7 @@ namespace RhythmForge.Audio
 
         // ── Pending-play queue: specs that arrived while their clip was not yet cached ──
         private readonly List<PendingPlay> _pendingPlays = new List<PendingPlay>();
+        private readonly List<PendingClipRequest> _pendingClipRequests = new List<PendingClipRequest>();
 
         // ── Background render pipeline ───────────────────────────────────────────
         // Background tasks write raw float arrays; main thread finalises AudioClips.
@@ -64,6 +65,12 @@ namespace RhythmForge.Audio
             public float volume;
             public float pan;
             public float startDelay;
+        }
+
+        private struct PendingClipRequest
+        {
+            public string cacheKey;
+            public System.Action<AudioClip> onReady;
         }
 
         private struct QueuedRender
@@ -101,6 +108,8 @@ namespace RhythmForge.Audio
             _mixer = mixer;
             EnsurePool();
         }
+
+        public AudioMixerGroup ActiveMixerGroup => _activeGroup;
 
         public void Configure(AudioClip kick, AudioClip snare, AudioClip hat, AudioClip perc, AudioClip tone)
         {
@@ -194,6 +203,17 @@ namespace RhythmForge.Audio
                     _pendingPlays.RemoveAt(i);
                 }
             }
+
+            for (int i = _pendingClipRequests.Count - 1; i >= 0; i--)
+            {
+                var request = _pendingClipRequests[i];
+                if (_voiceCache.TryGetValue(request.cacheKey, out var cached))
+                {
+                    cached.lastUsed = ++_cacheAge;
+                    request.onReady?.Invoke(cached.clip);
+                    _pendingClipRequests.RemoveAt(i);
+                }
+            }
         }
 
         private void OnDestroy()
@@ -211,7 +231,13 @@ namespace RhythmForge.Audio
         public void PlayDrum(InstrumentPreset preset, string lane, float velocity, float pan,
             float brightness, float gain, float fxSend, SoundProfile profile)
         {
-            var spec = VoiceSpecResolver.ResolveDrum(lane, preset, profile, brightness, fxSend);
+            PlayDrum(preset, lane, velocity, pan, brightness, gain, fxSend, fxSend, profile);
+        }
+
+        public void PlayDrum(InstrumentPreset preset, string lane, float velocity, float pan,
+            float brightness, float gain, float reverbSend, float delaySend, SoundProfile profile)
+        {
+            var spec = VoiceSpecResolver.ResolveDrum(lane, preset, profile, brightness, reverbSend, delaySend);
             PlayClip(spec, Mathf.Clamp01(velocity * gain), pan, 0f);
         }
 
@@ -219,9 +245,16 @@ namespace RhythmForge.Audio
             float pan, float brightness, float gain, float fxSend, SoundProfile profile,
             PatternType type, float glide = 0f, float startDelay = 0f)
         {
+            PlayNote(preset, midi, velocity, duration, pan, brightness, gain, fxSend, fxSend, profile, type, glide, startDelay);
+        }
+
+        public void PlayNote(InstrumentPreset preset, int midi, float velocity, float duration,
+            float pan, float brightness, float gain, float reverbSend, float delaySend, SoundProfile profile,
+            PatternType type, float glide = 0f, float startDelay = 0f)
+        {
             ResolvedVoiceSpec spec = type == PatternType.HarmonyPad
-                ? VoiceSpecResolver.ResolveHarmony(preset, profile, midi, duration, brightness, fxSend)
-                : VoiceSpecResolver.ResolveMelody(preset, profile, midi, duration, brightness, fxSend, glide);
+                ? VoiceSpecResolver.ResolveHarmony(preset, profile, midi, duration, brightness, reverbSend, delaySend)
+                : VoiceSpecResolver.ResolveMelody(preset, profile, midi, duration, brightness, reverbSend, delaySend, glide);
 
             float voiceGain = type == PatternType.HarmonyPad ? 0.66f : 0.72f;
             PlayClip(spec, Mathf.Clamp01(velocity * gain * voiceGain), pan, startDelay);
@@ -229,6 +262,12 @@ namespace RhythmForge.Audio
 
         public void PlayChord(InstrumentPreset preset, List<int> chord, float velocity, float duration,
             float pan, float brightness, float gain, float fxSend, SoundProfile profile)
+        {
+            PlayChord(preset, chord, velocity, duration, pan, brightness, gain, fxSend, fxSend, profile);
+        }
+
+        public void PlayChord(InstrumentPreset preset, List<int> chord, float velocity, float duration,
+            float pan, float brightness, float gain, float reverbSend, float delaySend, SoundProfile profile)
         {
             if (chord == null) return;
 
@@ -238,8 +277,36 @@ namespace RhythmForge.Audio
                 float chordVelocity = velocity * (i == 0 ? 0.9f : 0.72f);
                 float delay = i * 0.01f;
                 PlayNote(preset, chord[i], chordVelocity, duration, chordPan, brightness, gain,
-                    fxSend, profile, PatternType.HarmonyPad, 0f, delay);
+                    reverbSend, delaySend, profile, PatternType.HarmonyPad, 0f, delay);
             }
+        }
+
+        public void PlayResolved(ResolvedVoiceSpec spec, float volume, float pan = 0f, float startDelay = 0f)
+        {
+            PlayClip(spec, volume, pan, startDelay);
+        }
+
+        public void RequestClip(ResolvedVoiceSpec spec, System.Action<AudioClip> onReady)
+        {
+            if (onReady == null)
+                return;
+
+            string key = spec.GetCacheKey();
+            if (_voiceCache.TryGetValue(key, out var cached))
+            {
+                cached.lastUsed = ++_cacheAge;
+                onReady(cached.clip);
+                return;
+            }
+
+            _pendingClipRequests.Add(new PendingClipRequest
+            {
+                cacheKey = key,
+                onReady = onReady
+            });
+
+            if (!IsInFlight(key, _renderGeneration))
+                DispatchBackgroundRender(spec, 0f, 0f, 0f, warmOnly: true);
         }
 
         /// <summary>
@@ -269,6 +336,7 @@ namespace RhythmForge.Audio
 
             _voiceCache.Clear();
             _pendingPlays.Clear();
+            _pendingClipRequests.Clear();
             _inFlightKeys.Clear();
             _renderQueue.Clear();
             _cacheAge = 0;
@@ -436,6 +504,7 @@ namespace RhythmForge.Audio
                 if (_pool[i] != null && _pool[i].isPlaying && _pool[i].clip != null)
                     _inUseScratch.Add(_pool[i].clip);
             }
+            InstanceVoiceRegistry.Shared?.CollectActiveClips(_inUseScratch);
 
             // Collect eviction candidates — O(cache)
             _evictCandidates.Clear();

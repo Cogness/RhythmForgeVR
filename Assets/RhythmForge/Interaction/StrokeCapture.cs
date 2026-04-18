@@ -37,6 +37,9 @@ namespace RhythmForge.Interaction
         private GameObject _currentLineObj;
         private bool _isDrawing;
         private Vector3 _previousPoint;
+        private GameObject _sidetoneObject;
+        private AudioSource _sidetoneSource;
+        private AudioClip _sidetoneClip;
 
         // Pending draft
         public DraftResult PendingDraft { get; private set; }
@@ -107,6 +110,7 @@ namespace RhythmForge.Interaction
                     _isDrawing = true;
                 }
                 AddPoint(input.StylusPose.position, pressure, input.StylusPose.rotation);
+                UpdateSidetone(input.StylusPose.position, pressure);
             }
             else if (_isDrawing)
             {
@@ -141,6 +145,7 @@ namespace RhythmForge.Interaction
             _currentLine.shadowCastingMode = ShadowCastingMode.Off;
             _currentLine.receiveShadows = false;
             _previousPoint = Vector3.positiveInfinity;
+            StartSidetone();
 
             OnStrokeStarted?.Invoke();
             _eventBus?.Publish(new StrokeStartedEvent());
@@ -375,6 +380,7 @@ namespace RhythmForge.Interaction
 
         private void ClearCurrentStroke()
         {
+            StopSidetone();
             if (_currentLineObj != null)
             {
                 Destroy(_currentLineObj);
@@ -385,6 +391,80 @@ namespace RhythmForge.Interaction
             _pressures.Clear();
             _stylusRotations.Clear();
             _timestamps.Clear();
+        }
+
+        private void StartSidetone()
+        {
+            StopSidetone();
+
+            _sidetoneObject = new GameObject("PenSidetone");
+            _sidetoneObject.transform.SetParent(transform, false);
+            _sidetoneSource = _sidetoneObject.AddComponent<AudioSource>();
+            _sidetoneSource.playOnAwake = false;
+            _sidetoneSource.loop = true;
+            _sidetoneSource.spatialBlend = 0f;
+            _sidetoneSource.volume = 0f;
+
+            if (_sidetoneClip == null)
+                _sidetoneClip = BuildSidetoneClip();
+
+            _sidetoneSource.clip = _sidetoneClip;
+            _sidetoneSource.Play();
+        }
+
+        private void UpdateSidetone(Vector3 stylusPosition, float pressure)
+        {
+            if (_sidetoneSource == null)
+                return;
+
+            if (pressure <= 0.05f)
+            {
+                _sidetoneSource.volume = 0f;
+                return;
+            }
+
+            _sidetoneSource.volume = Mathf.Clamp01((pressure - 0.05f) / 0.95f) * 0.18f;
+
+            float referenceHeight = _userHead != null ? _userHead.position.y : 1.4f;
+            float heightDelta = stylusPosition.y - referenceHeight;
+            _sidetoneSource.pitch = Mathf.Clamp(1f + heightDelta * 0.4f, 0.65f, 1.5f);
+        }
+
+        private void StopSidetone()
+        {
+            if (_sidetoneSource != null)
+            {
+                _sidetoneSource.Stop();
+                _sidetoneSource = null;
+            }
+
+            if (_sidetoneObject != null)
+            {
+                Destroy(_sidetoneObject);
+                _sidetoneObject = null;
+            }
+        }
+
+        private static AudioClip BuildSidetoneClip()
+        {
+            const int sampleRate = 44100;
+            const float duration = 0.2f;
+            int sampleCount = Mathf.RoundToInt(sampleRate * duration);
+            var data = new float[sampleCount];
+            const float frequency = 220f;
+
+            for (int i = 0; i < sampleCount; i++)
+            {
+                float phase = (i / (float)sampleRate) * frequency;
+                float frac = phase - Mathf.Floor(phase);
+                data[i] = frac < 0.5f
+                    ? Mathf.Lerp(-0.6f, 0.6f, frac / 0.5f)
+                    : Mathf.Lerp(0.6f, -0.6f, (frac - 0.5f) / 0.5f);
+            }
+
+            var clip = AudioClip.Create("PenSidetone", sampleCount, 1, sampleRate, false);
+            clip.SetData(data, 0);
+            return clip;
         }
     }
 }

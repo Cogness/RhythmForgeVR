@@ -170,8 +170,8 @@ namespace RhythmForge.UI.Panels
             }
 
             // Mix readout
-            if (_panText) _panText.text = $"Pan: {instance.pan:F2}";
-            if (_gainText) _gainText.text = $"Gain: {instance.gain:F2}";
+            if (_panText) _panText.text = $"Dir: {DescribeDirection(instance.position)}";
+            if (_gainText) _gainText.text = $"Gain: {instance.gainTrim:F2}";
             if (_brightnessText) _brightnessText.text = $"Bright: {instance.brightness:F2}";
 
             _updating = false;
@@ -229,6 +229,21 @@ namespace RhythmForge.UI.Panels
 
             int max = Mathf.Min(chips.Count, 5);
             return string.Join("  |  ", chips.GetRange(0, max));
+        }
+
+        private string DescribeDirection(Vector3 worldPos)
+        {
+            if (_lookAtTarget == null)
+                return "N/A";
+
+            Vector3 relative = _lookAtTarget.InverseTransformPoint(worldPos);
+            if (relative.sqrMagnitude < 0.0001f)
+                return "Center";
+
+            if (Mathf.Abs(relative.x) >= Mathf.Abs(relative.z))
+                return relative.x >= 0f ? "Right" : "Left";
+
+            return relative.z >= 0f ? "Front" : "Behind";
         }
 
         // --- Callbacks ---

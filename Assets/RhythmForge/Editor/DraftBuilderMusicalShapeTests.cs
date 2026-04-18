@@ -167,7 +167,7 @@ namespace RhythmForge.Editor
             var store = new SessionStore();
             store.LoadState(state);
 
-            Assert.That(store.State.version, Is.EqualTo(9), "migrator bumps to v9");
+            Assert.That(store.State.version, Is.EqualTo(10), "migrator bumps to v10");
             var loaded = store.GetPattern("legacy-pattern");
             Assert.That(loaded, Is.Not.Null);
             Assert.That(loaded.musicalShape, Is.Not.Null, "legacy pattern is materialized during migration");

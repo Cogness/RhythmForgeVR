@@ -11,15 +11,25 @@ namespace RhythmForge.Audio
     public class AudioEngine : MonoBehaviour, IAudioDispatcher
     {
         [SerializeField] private SamplePlayer _samplePlayer;
+        [SerializeField] private bool _enableSpatialRouting = true;
 
         [Header("Master Settings")]
         [SerializeField] [Range(0f, 1f)] private float _masterVolume = 0.82f;
 
+        private InstanceVoiceRegistry _instanceVoiceRegistry;
+
         public bool IsReady => _samplePlayer != null;
+
+        private void Awake()
+        {
+            _instanceVoiceRegistry = InstanceVoiceRegistry.GetShared();
+        }
 
         public void Configure(SamplePlayer samplePlayer)
         {
             _samplePlayer = samplePlayer;
+            _instanceVoiceRegistry = InstanceVoiceRegistry.GetShared();
+            _instanceVoiceRegistry.SetMixerGroup(_samplePlayer != null ? _samplePlayer.ActiveMixerGroup : null);
         }
 
         /// <summary>
@@ -31,6 +41,8 @@ namespace RhythmForge.Audio
             _samplePlayer = samplePlayer;
             if (mixer != null)
                 _samplePlayer.Configure(mixer);
+            _instanceVoiceRegistry = InstanceVoiceRegistry.GetShared();
+            _instanceVoiceRegistry.SetMixerGroup(_samplePlayer != null ? _samplePlayer.ActiveMixerGroup : null);
         }
 
         /// <summary>
@@ -40,97 +52,116 @@ namespace RhythmForge.Audio
         public void SetGenre(string genreId)
         {
             _samplePlayer?.SetMixerGroup(genreId);
+            _instanceVoiceRegistry?.SetMixerGroup(_samplePlayer != null ? _samplePlayer.ActiveMixerGroup : null);
         }
 
         // Convenience overload — uses default lofi-drums preset.
-        public void PlayDrum(string lane, float velocity, float pan, float brightness,
-            float depth, float fxSend, SoundProfile soundProfile)
+        public void PlayDrum(string lane, float velocity, float gainTrim, float brightness,
+            float reverbSend, float delaySend, SoundProfile soundProfile, string instanceId = null)
         {
-            PlayDrum(InstrumentPresets.Get("lofi-drums"), lane, velocity, pan, brightness, depth, fxSend, soundProfile);
+            PlayDrum(InstrumentPresets.Get("lofi-drums"), lane, velocity, gainTrim, brightness, reverbSend, delaySend, soundProfile, instanceId);
         }
 
-        public void PlayDrum(InstrumentPreset preset, string lane, float velocity, float pan, float brightness,
-            float depth, float fxSend, SoundProfile soundProfile)
+        public void PlayDrum(InstrumentPreset preset, string lane, float velocity, float gainTrim, float brightness,
+            float reverbSend, float delaySend, SoundProfile soundProfile, string instanceId = null)
         {
             if (!IsReady) return;
             soundProfile = soundProfile ?? new SoundProfile();
 
             float gainAmount = Mathf.Clamp01(
-                (1.02f - depth * 0.45f) * velocity * (0.72f + soundProfile.body * 0.42f));
+                gainTrim * velocity * velocity * (0.72f + soundProfile.body * 0.42f));
 
-            _samplePlayer.PlayDrum(
-                preset,
-                lane,
-                velocity,
-                pan,
-                brightness,
-                gainAmount * _masterVolume,
-                fxSend,
-                soundProfile);
+            var spec = VoiceSpecResolver.ResolveDrum(lane, preset, soundProfile, brightness, reverbSend, delaySend);
+            PlayResolved(spec, gainAmount, instanceId);
         }
 
         // Convenience overload — uses default lofi-piano preset.
         public void PlayMelody(int midi, float velocity, float duration,
-            float pan, float brightness, float depth, float fxSend,
-            SoundProfile soundProfile, float glide = 0f)
+            float gainTrim, float brightness, float reverbSend, float delaySend,
+            SoundProfile soundProfile, float glide = 0f, string instanceId = null)
         {
             PlayMelody(InstrumentPresets.Get("lofi-piano"), midi, velocity, duration,
-                pan, brightness, depth, fxSend, soundProfile, glide);
+                gainTrim, brightness, reverbSend, delaySend, soundProfile, glide, instanceId);
         }
 
         public void PlayMelody(InstrumentPreset preset, int midi, float velocity, float duration,
-            float pan, float brightness, float depth, float fxSend,
-            SoundProfile soundProfile, float glide = 0f)
+            float gainTrim, float brightness, float reverbSend, float delaySend,
+            SoundProfile soundProfile, float glide = 0f, string instanceId = null)
         {
             if (!IsReady) return;
             soundProfile = soundProfile ?? new SoundProfile();
 
             float gainAmount = Mathf.Clamp01(
-                (1.02f - depth * 0.4f) * velocity * (0.72f + soundProfile.body * 0.32f));
+                gainTrim * velocity * velocity * (0.72f + soundProfile.body * 0.32f));
 
-            _samplePlayer.PlayNote(
+            var spec = VoiceSpecResolver.ResolveMelody(
                 preset,
-                midi,
-                velocity,
-                duration,
-                pan,
-                brightness,
-                gainAmount * _masterVolume,
-                fxSend,
                 soundProfile,
-                PatternType.MelodyLine,
+                midi,
+                duration,
+                brightness,
+                reverbSend,
+                delaySend,
                 glide);
+            PlayResolved(spec, gainAmount * 0.72f, instanceId);
         }
 
         // Convenience overload — uses default lofi-pad preset.
         public void PlayChord(List<int> chord, float velocity,
-            float duration, float pan, float brightness, float depth,
-            float fxSend, SoundProfile soundProfile)
+            float duration, float gainTrim, float brightness, float reverbSend,
+            float delaySend, SoundProfile soundProfile, string instanceId = null)
         {
             PlayChord(InstrumentPresets.Get("lofi-pad"), chord, velocity, duration,
-                pan, brightness, depth, fxSend, soundProfile);
+                gainTrim, brightness, reverbSend, delaySend, soundProfile, instanceId);
         }
 
         public void PlayChord(InstrumentPreset preset, List<int> chord, float velocity,
-            float duration, float pan, float brightness, float depth,
-            float fxSend, SoundProfile soundProfile)
+            float duration, float gainTrim, float brightness, float reverbSend,
+            float delaySend, SoundProfile soundProfile, string instanceId = null)
         {
             if (!IsReady) return;
+            if (chord == null) return;
             soundProfile = soundProfile ?? new SoundProfile();
 
-            float gainAmount = Mathf.Clamp01(
-                (1.02f - depth * 0.4f) * velocity * (0.72f + soundProfile.body * 0.32f));
+            for (int i = 0; i < chord.Count; i++)
+            {
+                float noteVelocity = velocity * (i == 0 ? 0.9f : 0.72f);
+                float noteGain = Mathf.Clamp01(
+                    gainTrim * noteVelocity * noteVelocity * (0.72f + soundProfile.body * 0.32f) * 0.66f);
+                var spec = VoiceSpecResolver.ResolveHarmony(
+                    preset,
+                    soundProfile,
+                    chord[i],
+                    duration,
+                    brightness,
+                    reverbSend,
+                    delaySend);
+                PlayResolved(spec, noteGain, instanceId, i * 0.01f);
+            }
+        }
 
-            _samplePlayer.PlayChord(
-                preset,
-                chord,
-                velocity,
-                duration,
-                pan,
-                brightness,
-                gainAmount * _masterVolume,
-                fxSend,
-                soundProfile);
+        private void PlayResolved(ResolvedVoiceSpec spec, float gainAmount, string instanceId, float startDelay = 0f)
+        {
+            float volume = Mathf.Clamp01(gainAmount * _masterVolume);
+            if (_enableSpatialRouting &&
+                !string.IsNullOrEmpty(instanceId) &&
+                _instanceVoiceRegistry != null &&
+                _instanceVoiceRegistry.TryGetPool(instanceId, out _))
+            {
+                _samplePlayer.RequestClip(spec, clip => PlaySpatialClip(instanceId, clip, volume, startDelay));
+                return;
+            }
+
+            _samplePlayer.PlayResolved(spec, volume, 0f, startDelay);
+        }
+
+        private void PlaySpatialClip(string instanceId, AudioClip clip, float volume, float startDelay)
+        {
+            if (!_enableSpatialRouting || _instanceVoiceRegistry == null)
+                return;
+
+            if (_instanceVoiceRegistry.TryGetPool(instanceId, out var pool))
+                pool.Play(clip, volume, startDelay);
         }
     }
 }

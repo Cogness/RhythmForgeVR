@@ -6,7 +6,7 @@ namespace RhythmForge.Interaction
 {
     /// <summary>
     /// Uses the left Quest controller to raycast, select, and drag pattern instances in 3D.
-    /// Moving an instance updates its spatial mix parameters (pan, brightness, depth).
+    /// Moving an instance updates its spatial mix parameters (brightness, depth-driven sends, gain trim).
     /// </summary>
     public class InstanceGrabber : MonoBehaviour
     {
@@ -25,6 +25,11 @@ namespace RhythmForge.Interaction
         private Vector3 _grabOffset;
         private bool _hasMoved;
         private IInputProvider _inputProvider;
+        private float _grabDistance = 1.2f;
+
+        private const float MinGrabDistance = 0.4f;
+        private const float MaxGrabDistance = 6.0f;
+        private const float GrabPushSpeed = 1.8f;
 
         // The currently hovered visualizer (for highlighting)
         private PatternVisualizer _hoveredVisualizer;
@@ -96,6 +101,7 @@ namespace RhythmForge.Interaction
                 if (visualizer != null)
                 {
                     _grabbedInstanceId = visualizer.InstanceId;
+                    _grabDistance = 1.2f;
                     _grabOffset = hit.point - hit.collider.transform.position;
                     _hasMoved = false;
                     _store.SetSelectedInstance(_grabbedInstanceId);
@@ -120,6 +126,7 @@ namespace RhythmForge.Interaction
             if (closest != null)
             {
                 _grabbedInstanceId = closest.InstanceId;
+                _grabDistance = 1.2f;
                 _grabOffset = Vector3.zero;
                 _hasMoved = false;
                 _store.SetSelectedInstance(_grabbedInstanceId);
@@ -134,10 +141,18 @@ namespace RhythmForge.Interaction
         {
             if (_leftControllerTransform == null || _grabbedInstanceId == null) return;
 
+            var input = _inputProvider ?? (IInputProvider)_input;
+            float stickY = input != null ? input.LeftThumbstick.y : 0f;
+            if (Mathf.Abs(stickY) > 0.15f)
+            {
+                _grabDistance = Mathf.Clamp(
+                    _grabDistance + stickY * GrabPushSpeed * Time.deltaTime,
+                    MinGrabDistance,
+                    MaxGrabDistance);
+            }
+
             Ray ray = new Ray(_leftControllerTransform.position, _leftControllerTransform.forward);
-            // Place instance at a fixed distance along the ray
-            float distance = 1.2f;
-            Vector3 targetPos = ray.GetPoint(distance) - _grabOffset;
+            Vector3 targetPos = ray.GetPoint(_grabDistance) - _grabOffset;
 
             _hasMoved = true;
             _store.UpdateInstance(_grabbedInstanceId, position: targetPos);

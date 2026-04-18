@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
+using RhythmForge.Audio;
 using RhythmForge.Core.Data;
 using RhythmForge.Core.Analysis;
 using RhythmForge.Sequencer;
@@ -30,6 +31,8 @@ namespace RhythmForge.UI
         private ShapeLineRenderer _shapeLineRenderer;
         private PlaybackHaloRenderer _playbackHaloRenderer;
         private PlaybackAnimator _playbackAnimator;
+        private InstanceVoicePool _voicePool;
+        private bool _voicePoolRegistered;
 
         private string _instanceId;
         private PatternType _type;
@@ -61,6 +64,7 @@ namespace RhythmForge.UI
             _instanceId = instance.id;
             _type = pattern.type;
             _baseColor = pattern.color;
+            EnsureVoicePool(pattern, instance);
 
             EnsureMainRenderer(material);
             EnsureHaloRenderer();
@@ -140,6 +144,19 @@ namespace RhythmForge.UI
         public void UpdatePosition(Vector3 worldPos)
         {
             transform.position = worldPos;
+        }
+
+        private void OnDestroy()
+        {
+            if (_voicePoolRegistered)
+            {
+                InstanceVoiceRegistry.Shared?.Unregister(_instanceId);
+                _voicePoolRegistered = false;
+            }
+            else
+            {
+                _voicePool?.Release();
+            }
         }
 
         public void SetParameterLabelVisible(bool visible)
@@ -240,6 +257,16 @@ namespace RhythmForge.UI
                     _selectedLineWidth);
         }
 
+        private void EnsureVoicePool(PatternDefinition pattern, PatternInstance instance)
+        {
+            if (_voicePoolRegistered || pattern == null || instance == null || string.IsNullOrEmpty(instance.id))
+                return;
+
+            _voicePool = new InstanceVoicePool(transform, $"SpatialVoice_{instance.id}");
+            InstanceVoiceRegistry.GetShared().Register(instance.id, _voicePool, ResolveVoiceCount(pattern.type));
+            _voicePoolRegistered = true;
+        }
+
         private void UpdateAppearance()
         {
             _playbackAnimator?.UpdateAppearance(
@@ -250,6 +277,11 @@ namespace RhythmForge.UI
                 _hasPlaybackState,
                 _playbackState,
                 _renderedHeight);
+        }
+
+        private static int ResolveVoiceCount(PatternType type)
+        {
+            return type == PatternType.MelodyLine ? 2 : 3;
         }
 
         private Quaternion ResolveRenderRotation(PatternDefinition pattern, PatternInstance instance, Transform userHead)

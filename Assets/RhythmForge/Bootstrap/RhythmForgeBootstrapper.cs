@@ -71,6 +71,7 @@ namespace RhythmForge.Bootstrap
             DisableLogitechSampleDrawing();
             ApplyConfigurationOverrides();
             _rig = VRRigLocator.Find();
+            EnsureCenterEyeAudioListener();
             BuildAll();
             Debug.Log("[RhythmForge] Bootstrapper complete. System ready.");
         }
@@ -119,6 +120,7 @@ namespace RhythmForge.Bootstrap
         {
             // Re-locate the VR rig now that the simulator has initialized.
             _rig = VRRigLocator.Find();
+            EnsureCenterEyeAudioListener();
             // NOTE: RepositionPanels deferred — OVR tracking needs ~0.5s to report
             // valid head position/rotation after tracking initializes.
 
@@ -345,6 +347,29 @@ namespace RhythmForge.Bootstrap
             _audioEngine.Configure(_samplePlayer, _rhythmForgeMixer);
             // Route pool sources to the genre group active at startup
             _audioEngine.SetGenre(GenreRegistry.GetActive().Id);
+        }
+
+        private void EnsureCenterEyeAudioListener()
+        {
+            Transform centerEye = _rig?.CenterEye;
+            if (centerEye == null)
+                return;
+
+            var primary = centerEye.GetComponent<AudioListener>();
+            if (primary == null)
+                primary = centerEye.gameObject.AddComponent<AudioListener>();
+            primary.enabled = true;
+
+            var listeners = Object.FindObjectsByType<AudioListener>(FindObjectsSortMode.None);
+            for (int i = 0; i < listeners.Length; i++)
+            {
+                var listener = listeners[i];
+                if (listener == null || listener == primary)
+                    continue;
+
+                listener.enabled = false;
+                Destroy(listener);
+            }
         }
 
         // ──────────────────────────────────────────────────────────

@@ -118,11 +118,12 @@ namespace RhythmForge.Core.PatternBehavior.Behaviors
                     preset,
                     evt.lane,
                     BondStrengthVelocity.ScaleRhythm(evt.velocity, rhythmScale),
-                    ctx.instance.pan,
+                    ctx.instance.gainTrim,
                     ctx.instance.brightness,
-                    ctx.instance.depth,
-                    preset.fxSend + ctx.group.busFx.reverb * 0.2f,
-                    sound);
+                    Mathf.Clamp01(ctx.instance.reverbSend + ctx.group.busFx.reverb * 0.2f),
+                    ctx.instance.delaySend,
+                    sound,
+                    ctx.instance.id);
 
                 ctx.recordTrigger?.Invoke(
                     ctx.instance.id,
@@ -157,12 +158,13 @@ namespace RhythmForge.Core.PatternBehavior.Behaviors
                     note.midi,
                     BondStrengthVelocity.ScaleMelody(note.velocity, melodyScale),
                     duration,
-                    ctx.instance.pan,
+                    ctx.instance.gainTrim,
                     ctx.instance.brightness,
-                    ctx.instance.depth,
-                    preset.fxSend + ctx.group.busFx.delay * 0.1f,
+                    ctx.instance.reverbSend,
+                    Mathf.Clamp01(ctx.instance.delaySend + ctx.group.busFx.delay * 0.1f),
                     sound,
-                    note.glide);
+                    note.glide,
+                    ctx.instance.id);
 
                 ctx.recordTrigger?.Invoke(
                     ctx.instance.id,
@@ -202,11 +204,12 @@ namespace RhythmForge.Core.PatternBehavior.Behaviors
                     evt.chord,
                     harmonyVelocity,
                     duration,
-                    ctx.instance.pan,
+                    ctx.instance.gainTrim,
                     ctx.instance.brightness,
-                    ctx.instance.depth,
-                    preset.fxSend + ctx.group.busFx.reverb * 0.18f,
-                    sound);
+                    Mathf.Clamp01(ctx.instance.reverbSend + ctx.group.busFx.reverb * 0.18f),
+                    ctx.instance.delaySend,
+                    sound,
+                    ctx.instance.id);
 
                 ctx.recordTrigger?.Invoke(
                     ctx.instance.id,
@@ -228,7 +231,12 @@ namespace RhythmForge.Core.PatternBehavior.Behaviors
 
             foreach (var evt in rhythm.events)
                 results.Add(VoiceSpecResolver.ResolveDrum(
-                    evt.lane, preset, sound, ctx.instance.brightness, preset.fxSend));
+                    evt.lane,
+                    preset,
+                    sound,
+                    ctx.instance.brightness,
+                    ctx.instance.reverbSend,
+                    ctx.instance.delaySend));
         }
 
         private static void CollectMelodySpecs(PatternSchedulingContext ctx, MusicalShape shape, List<ResolvedVoiceSpec> results)
@@ -244,7 +252,10 @@ namespace RhythmForge.Core.PatternBehavior.Behaviors
                 results.Add(VoiceSpecResolver.ResolveMelody(
                     preset, sound, note.midi,
                     note.durationSteps * ctx.stepDuration,
-                    ctx.instance.brightness, preset.fxSend, note.glide));
+                    ctx.instance.brightness,
+                    ctx.instance.reverbSend,
+                    ctx.instance.delaySend,
+                    note.glide));
         }
 
         private static void CollectHarmonySpecs(PatternSchedulingContext ctx, MusicalShape shape, List<ResolvedVoiceSpec> results)
@@ -264,7 +275,13 @@ namespace RhythmForge.Core.PatternBehavior.Behaviors
                 float duration = Mathf.Max(1, evt.durationSteps) * ctx.stepDuration * 0.96f;
                 foreach (var midi in evt.chord)
                     results.Add(VoiceSpecResolver.ResolveHarmony(
-                        preset, sound, midi, duration, ctx.instance.brightness, preset.fxSend));
+                        preset,
+                        sound,
+                        midi,
+                        duration,
+                        ctx.instance.brightness,
+                        ctx.instance.reverbSend,
+                        ctx.instance.delaySend));
             }
         }
 

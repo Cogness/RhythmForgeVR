@@ -46,7 +46,8 @@ namespace RhythmForge.Audio
         public float waveMorph;
         public float delayBias;
         public float reverbBias;
-        public float fxSend;
+        public float reverbSend;
+        public float delaySend;
         public float attackSeconds;
         public float releaseSeconds;
         public float velocityScale;
@@ -111,7 +112,8 @@ namespace RhythmForge.Audio
             sb.Append(Quantize(waveMorph, 12f));            sb.Append('|');
             sb.Append(Quantize(delayBias, 12f));            sb.Append('|');
             sb.Append(Quantize(reverbBias, 12f));           sb.Append('|');
-            sb.Append(Quantize(fxSend, 16f));               sb.Append('|');
+            sb.Append(Quantize(reverbSend, 8f));           sb.Append('|');
+            sb.Append(Quantize(delaySend, 8f));            sb.Append('|');
             sb.Append(Quantize(attackSeconds, 40f));        sb.Append('|');
             sb.Append(Quantize(releaseSeconds, 20f));       sb.Append('|');
             sb.Append(Quantize(velocityScale, 8f));         sb.Append('|');

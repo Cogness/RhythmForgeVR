@@ -88,7 +88,7 @@ namespace RhythmForge.Editor
             var duplicate = state.instances[1];
             Assert.That(duplicate.id, Is.Not.EqualTo(instance.id));
             Assert.That(duplicate.position, Is.EqualTo(instance.position + new Vector3(0.1f, 0.1f, 0f)));
-            Assert.That(duplicate.pan, Is.Not.EqualTo(instance.pan));
+            Assert.That(duplicate.brightness, Is.Not.EqualTo(instance.brightness));
             Assert.That(state.scenes[0].instanceIds, Does.Contain(duplicate.id));
             Assert.That(state.selectedInstanceId, Is.EqualTo(duplicate.id));
             Assert.That(notifyCount, Is.EqualTo(1));

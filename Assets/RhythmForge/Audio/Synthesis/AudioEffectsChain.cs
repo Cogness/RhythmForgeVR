@@ -93,10 +93,10 @@ namespace RhythmForge.Audio
             float genreReverbScale = spec.isNewAge ? 0f : spec.isJazz ? 0.9f : 1.0f;
             float genreDelayScale  = spec.isNewAge ? 1.4f : spec.isJazz ? 0.7f : 1.0f;
 
-            float reverbMix = spec.fxSend * genreReverbScale * (spec.patternType == PatternType.HarmonyPad
+            float reverbMix = spec.reverbSend * genreReverbScale * (spec.patternType == PatternType.HarmonyPad
                 ? 0.18f + spec.reverbBias * 0.22f
                 : 0.06f + spec.reverbBias * 0.14f);
-            float delayMix = spec.fxSend * genreDelayScale * (spec.patternType == PatternType.RhythmLoop
+            float delayMix = spec.delaySend * genreDelayScale * (spec.patternType == PatternType.RhythmLoop
                 ? 0.04f + spec.delayBias * 0.07f
                 : 0.06f + spec.delayBias * 0.12f);
 
@@ -215,11 +215,12 @@ namespace RhythmForge.Audio
         {
             if (spec.isNewAge)
             {
-                return spec.fxSend * (0.04f + spec.delayBias * 0.16f)
+                return spec.delaySend * (0.04f + spec.delayBias * 0.16f)
                     + (spec.patternType == PatternType.HarmonyPad ? 0.03f : 0.01f);
             }
 
-            return spec.fxSend * (0.08f + spec.reverbBias * 0.18f + spec.delayBias * 0.16f)
+            return spec.reverbSend * (0.08f + spec.reverbBias * 0.18f)
+                + spec.delaySend * (0.05f + spec.delayBias * 0.16f)
                 + (spec.patternType == PatternType.HarmonyPad ? 0.12f : 0.04f);
         }
 

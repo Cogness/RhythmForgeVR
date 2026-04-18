@@ -13,7 +13,18 @@ namespace RhythmForge.Audio
             float positionBrightness,
             float fxSend)
         {
-            var spec = CreateBaseSpec(PatternType.RhythmLoop, preset, profile, positionBrightness, fxSend);
+            return ResolveDrum(lane, preset, profile, positionBrightness, fxSend, fxSend);
+        }
+
+        public static ResolvedVoiceSpec ResolveDrum(
+            string lane,
+            InstrumentPreset preset,
+            SoundProfile profile,
+            float positionBrightness,
+            float reverbSend,
+            float delaySend)
+        {
+            var spec = CreateBaseSpec(PatternType.RhythmLoop, preset, profile, positionBrightness, reverbSend, delaySend);
             spec.lane = lane ?? "perc";
             spec.durationSeconds = spec.lane == "kick"
                 ? 0.34f
@@ -51,7 +62,20 @@ namespace RhythmForge.Audio
             float fxSend,
             float glide = 0f)
         {
-            var spec = CreateBaseSpec(PatternType.MelodyLine, preset, profile, positionBrightness, fxSend);
+            return ResolveMelody(preset, profile, midi, duration, positionBrightness, fxSend, fxSend, glide);
+        }
+
+        public static ResolvedVoiceSpec ResolveMelody(
+            InstrumentPreset preset,
+            SoundProfile profile,
+            int midi,
+            float duration,
+            float positionBrightness,
+            float reverbSend,
+            float delaySend,
+            float glide = 0f)
+        {
+            var spec = CreateBaseSpec(PatternType.MelodyLine, preset, profile, positionBrightness, reverbSend, delaySend);
             spec.midi = midi;
             spec.durationSeconds = QuantizeDuration(duration, 0.04f, 0.08f, 1.6f);
             spec.glide = QuantizeSigned(glide, 20f);
@@ -68,7 +92,19 @@ namespace RhythmForge.Audio
             float positionBrightness,
             float fxSend)
         {
-            var spec = CreateBaseSpec(PatternType.HarmonyPad, preset, profile, positionBrightness, fxSend);
+            return ResolveHarmony(preset, profile, midi, duration, positionBrightness, fxSend, fxSend);
+        }
+
+        public static ResolvedVoiceSpec ResolveHarmony(
+            InstrumentPreset preset,
+            SoundProfile profile,
+            int midi,
+            float duration,
+            float positionBrightness,
+            float reverbSend,
+            float delaySend)
+        {
+            var spec = CreateBaseSpec(PatternType.HarmonyPad, preset, profile, positionBrightness, reverbSend, delaySend);
             spec.midi = midi;
             spec.durationSeconds = QuantizeDuration(duration, 0.08f, 0.12f, 4.6f);
             spec.glide = 0f;
@@ -85,7 +121,8 @@ namespace RhythmForge.Audio
             InstrumentPreset preset,
             SoundProfile profile,
             float positionBrightness,
-            float fxSend)
+            float reverbSend,
+            float delaySend)
         {
             preset = preset ?? InstrumentPresets.All[0];
             profile = profile ?? new SoundProfile();
@@ -113,7 +150,8 @@ namespace RhythmForge.Audio
                 waveMorph = Quantize01(profile.waveMorph),
                 delayBias = Quantize01(profile.delayBias),
                 reverbBias = Quantize01(profile.reverbBias),
-                fxSend = QuantizeFxSend(fxSend),
+                reverbSend = QuantizeReverbSend(preset.fxSend + reverbSend),
+                delaySend = QuantizeDelaySend(preset.fxSend + delaySend),
                 isBass = voiceDescriptor.Contains("bass"),
                 isBell = voiceDescriptor.Contains("bell"),
                 isLoFi = familyIdentity.Contains("lofi"),
@@ -215,9 +253,19 @@ namespace RhythmForge.Audio
             return Mathf.Round(Mathf.Clamp01(value) * 12f) / 12f;
         }
 
-        private static float QuantizeFxSend(float value)
+        private static float QuantizeReverbSend(float value)
         {
-            return Mathf.Round(Mathf.Clamp01(value) * 16f) / 16f;
+            value = Mathf.Clamp01(value);
+            if (value < 0.17f)
+                return 0f;
+            if (value < 0.67f)
+                return 0.5f;
+            return 1f;
+        }
+
+        private static float QuantizeDelaySend(float value)
+        {
+            return Mathf.Round(Mathf.Clamp01(value) * 4f) / 4f;
         }
 
         private static float QuantizeDuration(float value, float bucket, float min, float max)

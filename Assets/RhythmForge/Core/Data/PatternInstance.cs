@@ -13,11 +13,18 @@ namespace RhythmForge.Core.Data
         public float depth;
         public string presetOverrideId;
         public bool muted;
-        public float gain;
-        public float pan;
         public float brightness;
+        public float reverbSend;
+        public float delaySend;
+        public float gainTrim;
         public int ensembleRoleIndex;
         public int progressionBarIndex;
+
+        [Obsolete("Spatial direction is now driven by the instance transform. Retained for one migration window.")]
+        public float pan;
+
+        [Obsolete("Use gainTrim instead. Retained for one migration window.")]
+        public float gain;
 
         public PatternInstance() { }
 
@@ -37,9 +44,14 @@ namespace RhythmForge.Core.Data
 
         public void RecalculateMixFromPosition()
         {
-            pan = Mathf.Clamp(position.x * 2f - 1f, -1f, 1f);
             brightness = Mathf.Clamp01(1f - position.y);
-            gain = Mathf.Clamp01(1.08f - depth * 0.58f);
+            reverbSend = Mathf.Clamp01(depth * 0.55f);
+            delaySend = Mathf.Clamp01(depth * 0.35f);
+            gainTrim = Mathf.Clamp01(1.05f - depth * 0.15f);
+
+            // Keep legacy serialized fields populated for one version while callers migrate.
+            pan = Mathf.Clamp(position.x * 2f - 1f, -1f, 1f);
+            gain = gainTrim;
         }
 
         public PatternInstance Clone()
@@ -53,11 +65,14 @@ namespace RhythmForge.Core.Data
                 depth = depth,
                 presetOverrideId = presetOverrideId,
                 muted = muted,
-                gain = gain,
-                pan = pan,
                 brightness = brightness,
+                reverbSend = reverbSend,
+                delaySend = delaySend,
+                gainTrim = gainTrim,
                 ensembleRoleIndex = ensembleRoleIndex,
-                progressionBarIndex = progressionBarIndex
+                progressionBarIndex = progressionBarIndex,
+                pan = pan,
+                gain = gain
             };
         }
     }

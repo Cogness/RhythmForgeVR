@@ -106,8 +106,7 @@ namespace RhythmForge.Sequencer
             while (transport.nextNoteTime < currentTime + LookaheadSeconds)
             {
                 ScheduleCurrentStep(transport.nextNoteTime);
-                if (_transportController.AdvanceTransport())
-                    NotifyTransportChanged();
+                AdvanceTransport();
                 transport.nextNoteTime += stepDur;
             }
 
@@ -134,16 +133,14 @@ namespace RhythmForge.Sequencer
             {
                 if (instance.muted) continue;
                 var pattern = _store.GetPattern(instance.patternId);
-                if (pattern == null || pattern.derivedSequence == null) continue;
+                if (pattern == null || (pattern.musicalShape == null && pattern.derivedSequence == null)) continue;
 
                 var sound  = _store.GetEffectiveSoundProfile(instance, pattern);
                 var preset = _store.GetPreset(_store.GetEffectivePresetId(instance, pattern));
 
-                int totalSteps = pattern.derivedSequence.totalSteps > 0
-                    ? pattern.derivedSequence.totalSteps
-                    : AppStateFactory.BarSteps;
+                int totalSteps = GetPatternLoopSteps(pattern);
 
-                PatternBehaviorRegistry.Get(pattern.type).CollectVoiceSpecs(
+                PatternBehaviorRegistry.GetForPattern(pattern).CollectVoiceSpecs(
                     new PatternSchedulingContext
                     {
                         pattern       = pattern,
@@ -152,7 +149,8 @@ namespace RhythmForge.Sequencer
                         sound         = sound,
                         preset        = preset,
                         appState      = _store.State,
-                        audioDispatcher = _audioDispatcher
+                        audioDispatcher = _audioDispatcher,
+                        presetLookup  = _store.GetPreset
                     },
                     totalSteps,
                     _warmSpecScratch);
@@ -179,19 +177,17 @@ namespace RhythmForge.Sequencer
                     continue;
 
                 var pattern = _store.GetPattern(instance.patternId);
-                if (pattern == null || pattern.derivedSequence == null)
+                if (pattern == null || (pattern.musicalShape == null && pattern.derivedSequence == null))
                     continue;
 
                 var effectiveSound = _store.GetEffectiveSoundProfile(instance, pattern);
                 var preset = _store.GetPreset(_store.GetEffectivePresetId(instance, pattern));
                 var group = _store.GetGroup(pattern.groupId);
 
-                int totalSteps = pattern.derivedSequence.totalSteps > 0
-                    ? pattern.derivedSequence.totalSteps
-                    : AppStateFactory.BarSteps;
+                int totalSteps = GetPatternLoopSteps(pattern);
                 int localStep = currentStep % totalSteps;
 
-                PatternBehaviorRegistry.Get(pattern.type).Schedule(new PatternSchedulingContext
+                PatternBehaviorRegistry.GetForPattern(pattern).Schedule(new PatternSchedulingContext
                 {
                     pattern = pattern,
                     instance = instance,
@@ -204,7 +200,8 @@ namespace RhythmForge.Sequencer
                     transport = CurrentTransport,
                     appState = _store.State,
                     audioDispatcher = _audioDispatcher,
-                    recordTrigger = RecordTrigger
+                    recordTrigger = RecordTrigger,
+                    presetLookup = _store.GetPreset
                 });
             }
         }
@@ -245,6 +242,16 @@ namespace RhythmForge.Sequencer
                 out state);
         }
 
+        private static int GetPatternLoopSteps(PatternDefinition pattern)
+        {
+            if (pattern?.musicalShape?.totalSteps > 0)
+                return pattern.musicalShape.totalSteps;
+            if (pattern?.derivedSequence?.totalSteps > 0)
+                return pattern.derivedSequence.totalSteps;
+
+            return AppStateFactory.BarSteps;
+        }
+
         public bool HasArrangement()
         {
             return _arrangementNavigator != null && _arrangementNavigator.HasArrangement();
@@ -273,6 +280,12 @@ namespace RhythmForge.Sequencer
                 activeDuration,
                 GetDspTime(),
                 GetVisualTimeSeconds());
+        }
+
+        private void AdvanceTransport()
+        {
+            if (_transportController != null && _transportController.AdvanceTransport())
+                NotifyTransportChanged();
         }
 
         private void NotifyTransportChanged()

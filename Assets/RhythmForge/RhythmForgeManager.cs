@@ -231,6 +231,12 @@ namespace RhythmForge
                 _store.SetDrawMode(mode);
         }
 
+        private void OnDrawShapeModeChanged(ShapeFacetMode mode)
+        {
+            if (_store != null)
+                _store.SetDrawShapeMode(mode);
+        }
+
         private void OnParamsVisibilityChanged(bool visible)
         {
             _showParamLabels = visible;
@@ -247,6 +253,7 @@ namespace RhythmForge
             _eventBus.Subscribe<DraftDiscardedEvent>(HandleDraftDiscarded);
             _eventBus.Subscribe<TransportChangedEvent>(HandleTransportChanged);
             _eventBus.Subscribe<DrawModeChangedEvent>(HandleDrawModeChanged);
+            _eventBus.Subscribe<DrawShapeModeChangedEvent>(HandleDrawShapeModeChanged);
             _eventBus.Subscribe<ParameterLabelsVisibilityChangedEvent>(HandleParameterLabelsVisibilityChanged);
             _eventBus.Subscribe<GenreChangedEvent>(HandleGenreChanged);
         }
@@ -261,6 +268,7 @@ namespace RhythmForge
             _eventBus.Unsubscribe<DraftDiscardedEvent>(HandleDraftDiscarded);
             _eventBus.Unsubscribe<TransportChangedEvent>(HandleTransportChanged);
             _eventBus.Unsubscribe<DrawModeChangedEvent>(HandleDrawModeChanged);
+            _eventBus.Unsubscribe<DrawShapeModeChangedEvent>(HandleDrawShapeModeChanged);
             _eventBus.Unsubscribe<ParameterLabelsVisibilityChangedEvent>(HandleParameterLabelsVisibilityChanged);
             _eventBus.Unsubscribe<GenreChangedEvent>(HandleGenreChanged);
         }
@@ -288,6 +296,11 @@ namespace RhythmForge
         private void HandleDrawModeChanged(DrawModeChangedEvent evt)
         {
             OnDrawModeChanged(evt.Mode);
+        }
+
+        private void HandleDrawShapeModeChanged(DrawShapeModeChangedEvent evt)
+        {
+            OnDrawShapeModeChanged(evt.Mode);
         }
 
         private void HandleParameterLabelsVisibilityChanged(ParameterLabelsVisibilityChangedEvent evt)
@@ -361,6 +374,20 @@ namespace RhythmForge
                 _toast.Show("Demo session loaded.");
         }
 
+        /// <summary>
+        /// Loads a demo session containing ONE unified 3D MusicalShape that reproduces the exact
+        /// combined audio of the three legacy demo shapes (Beat + Melody + Pad).
+        /// Validates the Phase G single-shape-three-facets architecture audibly.
+        /// </summary>
+        public void LoadUnifiedDemoSession()
+        {
+            var demo = UnifiedDemoSession.CreateUnifiedDemoState(_store);
+            _store.LoadState(demo);
+            SyncDrawModeFromStore();
+            if (_toast)
+                _toast.Show("Unified demo session loaded.");
+        }
+
         public void ResetSession()
         {
             _store.Reset();
@@ -381,7 +408,10 @@ namespace RhythmForge
         private void SyncDrawModeFromStore()
         {
             if (_store != null && _drawModeController != null)
+            {
                 _drawModeController.SetMode(_store.GetDrawMode());
+                _drawModeController.SetShapeMode(_store.GetDrawShapeMode());
+            }
         }
     }
 }

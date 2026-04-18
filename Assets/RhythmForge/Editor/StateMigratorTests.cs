@@ -9,12 +9,13 @@ namespace RhythmForge.Editor
     public class StateMigratorTests
     {
         [Test]
-        public void NormalizeState_CleansMembership_NormalizesDrawMode_AndResetsInvalidRotation()
+        public void NormalizeState_CleansMembership_NormalizesModes_MaterializesShapes_AndResetsInvalidRotation()
         {
             var migrator = new StateMigrator();
             var state = AppStateFactory.CreateEmpty();
             state.version = 2;
             state.drawMode = "NotARealMode";
+            state.drawShapeMode = "NotARealShapeMode";
             state.activeSceneId = "scene-a";
             state.scenes[0].instanceIds.Add("missing-instance");
 
@@ -49,12 +50,45 @@ namespace RhythmForge.Editor
 
             migrator.NormalizeState(state);
 
-            Assert.That(state.version, Is.EqualTo(4));
+            Assert.That(state.version, Is.EqualTo(9));
             Assert.That(state.drawMode, Is.EqualTo(PatternType.RhythmLoop.ToString()));
+            Assert.That(state.drawShapeMode, Is.EqualTo(ShapeFacetMode.Free.ToString()));
             Assert.That(state.scenes[0].instanceIds, Does.Not.Contain("missing-instance"));
             Assert.That(state.scenes[1].instanceIds, Does.Contain(instance.id));
             Assert.That(pattern.hasRenderRotation, Is.False);
             Assert.That(pattern.renderRotation, Is.EqualTo(Quaternion.identity));
+            Assert.That(pattern.musicalShape, Is.Not.Null);
+            Assert.That(pattern.musicalShape.totalSteps, Is.EqualTo(AppStateFactory.BarSteps));
+            Assert.That(pattern.musicalShape.facets.harmony.events.Count, Is.EqualTo(1));
+            Assert.That(instance.ensembleRoleIndex, Is.EqualTo(0));
+            Assert.That(instance.progressionBarIndex, Is.EqualTo(0));
+        }
+
+        [Test]
+        public void NormalizeState_AssignsSceneScopedEnsembleAndProgressionIndexes_FromSceneOrder()
+        {
+            var migrator = new StateMigrator();
+            var state = AppStateFactory.CreateEmpty();
+
+            var patternA = new PatternDefinition { id = "pattern-a", type = PatternType.RhythmLoop, bars = 2 };
+            var patternB = new PatternDefinition { id = "pattern-b", type = PatternType.MelodyLine, bars = 2 };
+            state.patterns.Add(patternA);
+            state.patterns.Add(patternB);
+
+            var instanceA = new PatternInstance("pattern-a", "scene-a", Vector3.zero, 0.2f);
+            var instanceB = new PatternInstance("pattern-b", "scene-a", Vector3.one, 0.3f);
+            state.instances.Add(instanceA);
+            state.instances.Add(instanceB);
+            state.scenes[0].instanceIds.Clear();
+            state.scenes[0].instanceIds.Add(instanceB.id);
+            state.scenes[0].instanceIds.Add(instanceA.id);
+
+            migrator.NormalizeState(state);
+
+            Assert.That(instanceB.ensembleRoleIndex, Is.EqualTo(0));
+            Assert.That(instanceB.progressionBarIndex, Is.EqualTo(0));
+            Assert.That(instanceA.ensembleRoleIndex, Is.EqualTo(1));
+            Assert.That(instanceA.progressionBarIndex, Is.EqualTo(1));
         }
     }
 }

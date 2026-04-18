@@ -26,6 +26,7 @@ namespace RhythmForge.Core.Data
         public IRhythmDeriver RhythmDeriver { get; }
         public IMelodyDeriver MelodyDeriver { get; }
         public IHarmonyDeriver HarmonyDeriver { get; }
+        public IUnifiedShapeDeriver UnifiedDeriver { get; }
 
         public GenreProfile(
             MusicalGenre genre,
@@ -41,7 +42,8 @@ namespace RhythmForge.Core.Data
             Dictionary<PatternType, PatternSoundMappingProfile> soundMappings,
             IRhythmDeriver rhythmDeriver,
             IMelodyDeriver melodyDeriver,
-            IHarmonyDeriver harmonyDeriver)
+            IHarmonyDeriver harmonyDeriver,
+            IUnifiedShapeDeriver unifiedDeriver = null)
         {
             Genre = genre;
             Id = id;
@@ -57,6 +59,18 @@ namespace RhythmForge.Core.Data
             RhythmDeriver = rhythmDeriver;
             MelodyDeriver = melodyDeriver;
             HarmonyDeriver = harmonyDeriver;
+            // Phase B: callers pass an explicit unified deriver. When omitted
+            // (e.g. from tests or legacy wiring) we fall back to a default that
+            // composes the three per-mode derivers — preserves bit-identity.
+            UnifiedDeriver = unifiedDeriver ?? new DefaultUnifiedShapeDeriver(
+                rhythmDeriver, melodyDeriver, harmonyDeriver);
+        }
+
+        private sealed class DefaultUnifiedShapeDeriver : UnifiedShapeDeriverBase
+        {
+            public DefaultUnifiedShapeDeriver(
+                IRhythmDeriver rhythm, IMelodyDeriver melody, IHarmonyDeriver harmony)
+                : base(rhythm, melody, harmony) { }
         }
 
         public List<InstrumentPreset> GetPresets() => _presets;

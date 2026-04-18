@@ -16,6 +16,8 @@ namespace RhythmForge.Core.Data
         public float gain;
         public float pan;
         public float brightness;
+        public int ensembleRoleIndex;
+        public int progressionBarIndex;
 
         public PatternInstance() { }
 
@@ -28,6 +30,8 @@ namespace RhythmForge.Core.Data
             this.depth = depth;
             presetOverrideId = null;
             muted = false;
+            ensembleRoleIndex = 0;
+            progressionBarIndex = 0;
             RecalculateMixFromPosition();
         }
 
@@ -51,7 +55,9 @@ namespace RhythmForge.Core.Data
                 muted = muted,
                 gain = gain,
                 pan = pan,
-                brightness = brightness
+                brightness = brightness,
+                ensembleRoleIndex = ensembleRoleIndex,
+                progressionBarIndex = progressionBarIndex
             };
         }
     }

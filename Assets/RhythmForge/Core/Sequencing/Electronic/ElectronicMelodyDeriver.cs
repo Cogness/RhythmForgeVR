@@ -8,14 +8,14 @@ namespace RhythmForge.Core.Sequencing.Electronic
     public sealed class ElectronicMelodyDeriver : IMelodyDeriver
     {
         public MelodyDerivationResult Derive(
-            List<Vector2> points,
+            StrokeCurve curve,
             StrokeMetrics metrics,
             string keyName,
             ShapeProfile shapeProfile,
             SoundProfile soundProfile,
             GenreProfile genre)
         {
-            return MelodyDeriver.Derive(points, metrics, keyName, genre.Id, shapeProfile, soundProfile);
+            return MelodyDeriver.Derive(curve, metrics, keyName, genre.Id, shapeProfile, soundProfile);
         }
     }
 }

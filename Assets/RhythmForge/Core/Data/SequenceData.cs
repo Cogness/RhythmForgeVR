@@ -40,10 +40,23 @@ namespace RhythmForge.Core.Data
     }
 
     [Serializable]
+    public class HarmonyEvent
+    {
+        public int step;
+        public int durationSteps;
+        public int rootMidi;
+        public List<int> chord = new List<int>();
+        public string flavor = "minor";
+    }
+
+    [Serializable]
     public class HarmonySequence
     {
         public string kind = "harmony";
         public int totalSteps;
+        public List<HarmonyEvent> events = new List<HarmonyEvent>();
+
+        // Compatibility/debug aliases kept in sync with the first event.
         public string flavor; // "maj7", "sus", "minor"
         public int rootMidi;
         public List<int> chord = new List<int>();

@@ -17,7 +17,7 @@ namespace RhythmForge.Core.Sequencing.Jazz
         private const float SwingBase = 0.28f;
 
         public RhythmDerivationResult Derive(
-            List<Vector2> points,
+            StrokeCurve curve,
             StrokeMetrics metrics,
             ShapeProfile sp,
             SoundProfile sound,

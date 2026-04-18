@@ -34,6 +34,10 @@ namespace RhythmForge.Sequencer
         public float pulse;
         public bool isActive;
         public float sustainAmount;
+        public float rhythmPulse;
+        public float melodyMotion;
+        public float harmonySustain;
+        public bool isShapeNative;
         public string playbackSceneId;
         public PlaybackVisualSpec visualSpec;
 
@@ -45,6 +49,10 @@ namespace RhythmForge.Sequencer
                 pulse = 0f,
                 isActive = false,
                 sustainAmount = 0f,
+                rhythmPulse = 0f,
+                melodyMotion = 0f,
+                harmonySustain = 0f,
+                isShapeNative = false,
                 playbackSceneId = playbackSceneId,
                 visualSpec = PlaybackVisualSpec.FromSoundProfile(type, sound)
             };

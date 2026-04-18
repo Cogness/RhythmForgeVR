@@ -16,14 +16,6 @@ namespace RhythmForge.Core.PatternBehavior
         /// <summary>Prefix used when auto-naming drafts of this type (e.g. "Beat", "Melody", "Pad").</summary>
         string DraftNamePrefix { get; }
 
-        PatternDerivationResult Derive(
-            List<Vector2> points,
-            StrokeMetrics metrics,
-            string keyName,
-            string groupId,
-            ShapeProfile shapeProfile,
-            SoundProfile soundProfile);
-
         SoundProfile DeriveSoundProfile(ShapeProfile shapeProfile);
 
         void Schedule(PatternSchedulingContext context);
@@ -44,16 +36,6 @@ namespace RhythmForge.Core.PatternBehavior
             float timeSeconds);
     }
 
-    public struct PatternDerivationResult
-    {
-        public int bars;
-        public string presetId;
-        public List<string> tags;
-        public DerivedSequence derivedSequence;
-        public string summary;
-        public string details;
-    }
-
     public struct PatternSchedulingContext
     {
         public PatternDefinition pattern;
@@ -68,6 +50,10 @@ namespace RhythmForge.Core.PatternBehavior
         public AppState appState;
         public IAudioDispatcher audioDispatcher;
         public Action<string, double, float> recordTrigger;
+        // Phase C: MusicalShapeBehavior uses this to resolve per-facet
+        // InstrumentPresets (facet presetIds live on MusicalShape). Legacy
+        // per-type behaviors ignore it.
+        public Func<string, InstrumentPreset> presetLookup;
     }
 
     public struct AnimationEnergies

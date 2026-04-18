@@ -13,7 +13,7 @@ namespace RhythmForge.Core.Sequencing.NewAge
     public sealed class NewAgeRhythmDeriver : IRhythmDeriver
     {
         public RhythmDerivationResult Derive(
-            List<Vector2> points,
+            StrokeCurve curve,
             StrokeMetrics metrics,
             ShapeProfile sp,
             SoundProfile sound,

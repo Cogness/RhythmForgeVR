@@ -15,7 +15,7 @@ namespace RhythmForge.Core.Sequencing.Jazz
     public sealed class JazzHarmonyDeriver : IHarmonyDeriver
     {
         public HarmonyDerivationResult Derive(
-            List<Vector2> points,
+            StrokeCurve curve,
             StrokeMetrics metrics,
             string keyName,
             ShapeProfile sp,

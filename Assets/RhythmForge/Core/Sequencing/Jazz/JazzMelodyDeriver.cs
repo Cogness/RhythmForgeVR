@@ -19,13 +19,14 @@ namespace RhythmForge.Core.Sequencing.Jazz
         private static readonly int[] JazzMajorIntervals = { 0, 2, 4, 5, 7, 9, 11 };
 
         public MelodyDerivationResult Derive(
-            List<Vector2> points,
+            StrokeCurve curve,
             StrokeMetrics metrics,
             string keyName,
             ShapeProfile sp,
             SoundProfile sound,
             GenreProfile genre)
         {
+            var points = curve.projected;
             float sizeFactor = ShapeProfileSizing.GetSizeFactor(PatternType.MelodyLine, sp);
             string sizeWord = ShapeProfileSizing.DescribeSize(PatternType.MelodyLine, sp);
             int bars = metrics.length > 0.80f ? 4 : 2;

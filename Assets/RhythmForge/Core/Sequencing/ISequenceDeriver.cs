@@ -8,7 +8,7 @@ namespace RhythmForge.Core.Sequencing
     public interface IRhythmDeriver
     {
         RhythmDerivationResult Derive(
-            List<Vector2> points,
+            StrokeCurve curve,
             StrokeMetrics metrics,
             ShapeProfile shapeProfile,
             SoundProfile soundProfile,
@@ -18,7 +18,7 @@ namespace RhythmForge.Core.Sequencing
     public interface IMelodyDeriver
     {
         MelodyDerivationResult Derive(
-            List<Vector2> points,
+            StrokeCurve curve,
             StrokeMetrics metrics,
             string keyName,
             ShapeProfile shapeProfile,
@@ -29,7 +29,7 @@ namespace RhythmForge.Core.Sequencing
     public interface IHarmonyDeriver
     {
         HarmonyDerivationResult Derive(
-            List<Vector2> points,
+            StrokeCurve curve,
             StrokeMetrics metrics,
             string keyName,
             ShapeProfile shapeProfile,

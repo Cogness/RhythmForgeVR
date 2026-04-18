@@ -23,7 +23,7 @@ namespace RhythmForge.Core.Sequencing
         private const float FourBarThreshold = 0.70f;
 
         public static HarmonyDerivationResult Derive(
-            List<Vector2> points, StrokeMetrics metrics,
+            StrokeCurve curve, StrokeMetrics metrics,
             string keyName, string groupId,
             ShapeProfile sp, SoundProfile sound)
         {

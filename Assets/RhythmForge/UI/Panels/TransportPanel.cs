@@ -18,6 +18,8 @@ namespace RhythmForge.UI.Panels
         [SerializeField] private Text _playStopLabel;
         [SerializeField] private Button _modeButton;
         [SerializeField] private Text _modeButtonLabel;
+        [SerializeField] private Button _shapeModeButton;
+        [SerializeField] private Text _shapeModeButtonLabel;
         [SerializeField] private Text _bpmText;
         [SerializeField] private Text _keyText;
         [SerializeField] private Text _transportStatus;
@@ -36,6 +38,7 @@ namespace RhythmForge.UI.Panels
         /// <summary>Called by RhythmForgeBootstrapper to inject UI element references.</summary>
         public void SetUIRefs(Button playStopButton, Text playStopLabel,
             Button modeButton, Text modeButtonLabel,
+            Button shapeModeButton, Text shapeModeButtonLabel,
             Text bpmText, Text keyText, Text transportStatus,
             Button toggleParamsButton = null, Text toggleParamsLabel = null)
         {
@@ -43,6 +46,8 @@ namespace RhythmForge.UI.Panels
             _playStopLabel       = playStopLabel;
             _modeButton          = modeButton;
             _modeButtonLabel     = modeButtonLabel;
+            _shapeModeButton     = shapeModeButton;
+            _shapeModeButtonLabel = shapeModeButtonLabel;
             _bpmText             = bpmText;
             _keyText             = keyText;
             _transportStatus     = transportStatus;
@@ -61,6 +66,8 @@ namespace RhythmForge.UI.Panels
                 _playStopButton.onClick.AddListener(() => _sequencer.TogglePlayback());
             if (_modeButton && _drawMode != null)
                 _modeButton.onClick.AddListener(() => _drawMode.CycleMode());
+            if (_shapeModeButton && _drawMode != null)
+                _shapeModeButton.onClick.AddListener(() => _drawMode.CycleShapeMode());
             if (_toggleParamsButton)
                 _toggleParamsButton.onClick.AddListener(ToggleParams);
 
@@ -71,6 +78,7 @@ namespace RhythmForge.UI.Panels
                 _eventBus.Subscribe<SessionStateChangedEvent>(HandleSessionStateChanged);
                 _eventBus.Subscribe<TransportChangedEvent>(HandleTransportChanged);
                 _eventBus.Subscribe<DrawModeChangedEvent>(HandleDrawModeChanged);
+                _eventBus.Subscribe<DrawShapeModeChangedEvent>(HandleDrawShapeModeChanged);
             }
             Refresh();
         }
@@ -83,6 +91,7 @@ namespace RhythmForge.UI.Panels
             _eventBus.Unsubscribe<SessionStateChangedEvent>(HandleSessionStateChanged);
             _eventBus.Unsubscribe<TransportChangedEvent>(HandleTransportChanged);
             _eventBus.Unsubscribe<DrawModeChangedEvent>(HandleDrawModeChanged);
+            _eventBus.Unsubscribe<DrawShapeModeChangedEvent>(HandleDrawShapeModeChanged);
         }
 
         private void OnModeChanged(PatternType mode)
@@ -94,6 +103,7 @@ namespace RhythmForge.UI.Panels
         {
             RefreshTransportStatus();
             RefreshModeButton(_drawMode != null ? _drawMode.CurrentMode : PatternType.RhythmLoop);
+            RefreshShapeModeButton(_drawMode != null ? _drawMode.ShapeMode : ShapeFacetMode.Free);
         }
 
         private void RefreshTransportStatus()
@@ -151,6 +161,11 @@ namespace RhythmForge.UI.Panels
             OnModeChanged(evt.Mode);
         }
 
+        private void HandleDrawShapeModeChanged(DrawShapeModeChangedEvent evt)
+        {
+            RefreshShapeModeButton(evt.Mode);
+        }
+
         private void RefreshModeButton(PatternType mode)
         {
             if (_modeButtonLabel != null)
@@ -166,6 +181,26 @@ namespace RhythmForge.UI.Panels
             _modeButton.colors = colors;
 
             var image = _modeButton.GetComponent<Image>();
+            if (image != null)
+                image.color = color;
+        }
+
+        private void RefreshShapeModeButton(ShapeFacetMode mode)
+        {
+            if (_shapeModeButtonLabel != null && _drawMode != null)
+                _shapeModeButtonLabel.text = $"Shape\n{_drawMode.GetShapeModeLabel()}";
+
+            if (_shapeModeButton == null || _drawMode == null)
+                return;
+
+            Color color = TypeColors.Blend(_drawMode.GetBondStrength());
+            var colors = _shapeModeButton.colors;
+            colors.normalColor = color;
+            colors.highlightedColor = Color.Lerp(color, Color.white, 0.25f);
+            colors.pressedColor = Color.Lerp(color, Color.black, 0.25f);
+            _shapeModeButton.colors = colors;
+
+            var image = _shapeModeButton.GetComponent<Image>();
             if (image != null)
                 image.color = color;
         }

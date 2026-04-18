@@ -59,7 +59,7 @@ namespace RhythmForge.Editor
             AssertRange(sound.body, 0f, 1f, "body in [0,1]");
             AssertRange(sound.brightness, 0f, 1f, "brightness in [0,1]");
 
-            var result = RhythmDeriver.Derive(pts, metrics, "lofi", sp, sound);
+            var result = RhythmDeriver.Derive(StrokeCurve.FromLegacy2D(pts), metrics, "lofi", sp, sound);
             Debug.Log($"  RhythmSeq: bars={result.bars}, events={result.derivedSequence.events.Count}" +
                       $", swing={result.derivedSequence.swing:F3}");
             Debug.Log($"  Summary: {result.summary}");
@@ -80,7 +80,7 @@ namespace RhythmForge.Editor
             var sp   = ShapeProfileCalculator.Derive(norm, metrics, PatternType.MelodyLine);
             var sound = SoundProfileMapper.Derive(PatternType.MelodyLine, sp);
 
-            var result = MelodyDeriver.Derive(pts, metrics, "A minor", "lofi", sp, sound);
+            var result = MelodyDeriver.Derive(StrokeCurve.FromLegacy2D(pts), metrics, "A minor", "lofi", sp, sound);
             Debug.Log($"  MelodySeq: bars={result.bars}, notes={result.derivedSequence.notes.Count}");
             Debug.Log($"  Summary: {result.summary}");
 
@@ -105,7 +105,7 @@ namespace RhythmForge.Editor
             var sp   = ShapeProfileCalculator.Derive(norm, metrics, PatternType.HarmonyPad);
             var sound = SoundProfileMapper.Derive(PatternType.HarmonyPad, sp);
 
-            var result = HarmonyDeriver.Derive(pts, metrics, "A minor", "lofi", sp, sound);
+            var result = HarmonyDeriver.Derive(StrokeCurve.FromLegacy2D(pts), metrics, "A minor", "lofi", sp, sound);
             Debug.Log($"  HarmonySeq: bars={result.bars}, flavor={result.derivedSequence.flavor}" +
                       $", chord={string.Join(",", result.derivedSequence.chord)}");
             Debug.Log($"  Summary: {result.summary}");

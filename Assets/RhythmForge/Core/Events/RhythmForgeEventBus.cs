@@ -106,6 +106,16 @@ namespace RhythmForge.Core.Events
         public PatternType Mode { get; }
     }
 
+    public readonly struct DrawShapeModeChangedEvent
+    {
+        public DrawShapeModeChangedEvent(ShapeFacetMode mode)
+        {
+            Mode = mode;
+        }
+
+        public ShapeFacetMode Mode { get; }
+    }
+
     public readonly struct TransportChangedEvent
     {
         public TransportChangedEvent(Transport transport, string playbackSceneId, bool isPlaying)

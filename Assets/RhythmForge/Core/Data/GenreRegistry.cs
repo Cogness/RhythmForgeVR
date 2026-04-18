@@ -114,7 +114,8 @@ namespace RhythmForge.Core.Data
                 soundMappings: soundMappings,
                 rhythmDeriver:  new ElectronicRhythmDeriver(),
                 melodyDeriver:  new ElectronicMelodyDeriver(),
-                harmonyDeriver: new ElectronicHarmonyDeriver());
+                harmonyDeriver: new ElectronicHarmonyDeriver(),
+                unifiedDeriver: new ElectronicUnifiedShapeDeriver());
         }
 
         // ──────────────────────────────────────────────────────────────
@@ -163,7 +164,8 @@ namespace RhythmForge.Core.Data
                 soundMappings: soundMappings,
                 rhythmDeriver:  new NewAgeRhythmDeriver(),
                 melodyDeriver:  new NewAgeMelodyDeriver(),
-                harmonyDeriver: new NewAgeHarmonyDeriver());
+                harmonyDeriver: new NewAgeHarmonyDeriver(),
+                unifiedDeriver: new NewAgeUnifiedShapeDeriver());
         }
 
         private static PatternSoundMappingProfile CreateNewAgeRhythmMapping()
@@ -278,7 +280,8 @@ namespace RhythmForge.Core.Data
                 soundMappings: soundMappings,
                 rhythmDeriver:  new JazzRhythmDeriver(),
                 melodyDeriver:  new JazzMelodyDeriver(),
-                harmonyDeriver: new JazzHarmonyDeriver());
+                harmonyDeriver: new JazzHarmonyDeriver(),
+                unifiedDeriver: new JazzUnifiedShapeDeriver());
         }
 
         private static PatternSoundMappingProfile CreateJazzRhythmMapping()

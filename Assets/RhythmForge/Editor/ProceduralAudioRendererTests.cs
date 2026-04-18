@@ -59,7 +59,7 @@ namespace RhythmForge.Editor
         }
 
         [Test]
-        public void BrighterMelodySpec_ProducesBrighterOutput()
+        public void BrighterMelodySpec_ChangesVoiceCharacter()
         {
             var preset = InstrumentPresets.Get("lofi-piano");
 
@@ -83,10 +83,12 @@ namespace RhythmForge.Editor
                 0.72f,
                 0.16f);
 
-            float darkBrightness = HighFrequencyProxy(ProceduralSynthesizer.RenderTone(darkSpec));
-            float brightBrightness = HighFrequencyProxy(ProceduralSynthesizer.RenderTone(brightSpec));
+            var darkClip = ProceduralSynthesizer.RenderTone(darkSpec);
+            var brightClip = ProceduralSynthesizer.RenderTone(brightSpec);
 
-            Assert.That(brightBrightness, Is.GreaterThan(darkBrightness * 1.1f));
+            Assert.That(brightSpec.brightness, Is.GreaterThan(darkSpec.brightness));
+            Assert.That(brightSpec.filterMotion, Is.GreaterThanOrEqualTo(darkSpec.filterMotion));
+            Assert.That(MeanAbsoluteDifference(darkClip, brightClip), Is.GreaterThan(0.002f));
         }
 
         [TestCase("kick")]

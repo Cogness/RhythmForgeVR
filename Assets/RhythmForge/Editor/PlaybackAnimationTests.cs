@@ -110,8 +110,15 @@ namespace RhythmForge.Editor
                 Assert.That(sequencer.TryGetPlaybackVisualState(pattern, instance.id, out var activeState), Is.True);
                 Assert.That(activeState.isActive, Is.True);
 
-                sequencer.DebugDspTime = startTime + 2.9d;
-                sequencer.DebugVisualTime = startTime + 2.9d;
+                float stepDuration = RhythmForge.Sequencer.SequencerClock.StepDuration(store.State.tempo);
+                float chordDuration = AppStateFactory.BarSteps * stepDuration * 0.96f;
+                float sustainWindow = chordDuration
+                    + 0.14f
+                    + pattern.soundProfile.releaseBias * 0.78f
+                    + pattern.soundProfile.reverbBias * 0.22f;
+
+                sequencer.DebugDspTime = startTime + sustainWindow + 0.1d;
+                sequencer.DebugVisualTime = startTime + sustainWindow + 0.1d;
                 Assert.That(sequencer.TryGetPlaybackVisualState(pattern, instance.id, out var expiredState), Is.True);
                 Assert.That(expiredState.isActive, Is.False);
             }

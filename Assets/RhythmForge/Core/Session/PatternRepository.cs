@@ -49,9 +49,20 @@ namespace RhythmForge.Core.Session
         public List<PatternInstance> GetSceneInstances(string sceneId)
         {
             var result = new List<PatternInstance>();
+            var scene = _getScene(sceneId);
+            if (scene?.instanceIds != null)
+            {
+                foreach (var instanceId in scene.instanceIds)
+                {
+                    var instance = GetInstance(instanceId);
+                    if (instance != null && instance.sceneId == sceneId)
+                        result.Add(instance);
+                }
+            }
+
             foreach (var instance in _getState().instances)
             {
-                if (instance.sceneId == sceneId)
+                if (instance.sceneId == sceneId && !result.Contains(instance))
                     result.Add(instance);
             }
 
@@ -72,12 +83,15 @@ namespace RhythmForge.Core.Session
                 groupId = draft.groupId,
                 presetId = draft.presetId,
                 points = draft.points,
+                worldPoints = draft.worldPoints,
                 renderRotation = draft.renderRotation,
                 hasRenderRotation = draft.hasRenderRotation,
                 derivedSequence = draft.derivedSequence,
                 tags = draft.tags,
                 color = draft.color,
                 shapeProfile = draft.shapeProfile,
+                shapeProfile3D = draft.shapeProfile3D,
+                musicalShape = draft.musicalShape,
                 soundProfile = draft.soundProfile,
                 shapeSummary = draft.shapeSummary,
                 summary = draft.summary,

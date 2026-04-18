@@ -25,7 +25,7 @@ namespace RhythmForge.Core.Analysis
         // make precise loop closure difficult.
         private const float CloseDistanceThreshold = 0.18f;
 
-        public static StrokeMetrics Analyze(List<Vector2> points)
+        public static StrokeMetrics Analyze(IReadOnlyList<Vector2> points)
         {
             if (points == null || points.Count < 2)
             {
@@ -94,7 +94,7 @@ namespace RhythmForge.Core.Analysis
             };
         }
 
-        public static List<Vector2> NormalizePoints(List<Vector2> points, StrokeMetrics metrics)
+        public static List<Vector2> NormalizePoints(IReadOnlyList<Vector2> points, StrokeMetrics metrics)
         {
             float size = Mathf.Max(metrics.width, metrics.height);
             float originX = metrics.centerX - size / 2f;
@@ -111,10 +111,14 @@ namespace RhythmForge.Core.Analysis
             return normalized;
         }
 
-        public static List<Vector2> ResampleStroke(List<Vector2> points, int sampleCount)
+        public static List<Vector2> ResampleStroke(IReadOnlyList<Vector2> points, int sampleCount)
         {
             if (points.Count <= 1)
-                return new List<Vector2>(points);
+            {
+                var copy = new List<Vector2>(points.Count);
+                for (int i = 0; i < points.Count; i++) copy.Add(points[i]);
+                return copy;
+            }
 
             var segments = new List<float>(points.Count) { 0f };
             float totalLength = 0f;

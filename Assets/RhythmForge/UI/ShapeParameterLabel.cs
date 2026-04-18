@@ -46,7 +46,7 @@ namespace RhythmForge.UI
             if (_textMesh.font != null && _textMesh.font.material != null)
             {
                 var mat = new Material(_textMesh.font.material);
-                _renderer.material = mat;
+                _renderer.sharedMaterial = mat;
             }
         }
 

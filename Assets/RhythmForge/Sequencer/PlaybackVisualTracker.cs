@@ -56,7 +56,7 @@ namespace RhythmForge.Sequencer
         {
             state = PatternPlaybackVisualState.CreateInactive(pattern?.type ?? PatternType.RhythmLoop, null, playbackSceneId);
 
-            if (transport == null || !transport.playing || store == null || pattern == null || pattern.derivedSequence == null)
+            if (transport == null || !transport.playing || store == null || pattern == null)
                 return false;
 
             var instance = store.GetInstance(instanceId);
@@ -70,20 +70,37 @@ namespace RhythmForge.Sequencer
             state.pulse = GetPulse(instanceId, visualTime);
             state.sustainAmount = sustainAmount;
             state.isActive = sustainAmount > 0.001f || state.pulse > 0.001f;
+            state.isShapeNative = pattern.musicalShape != null;
 
             if (TryGetCurrentScheduledStep(dspTime, stepDuration, out var scheduledStep, out float stepProgress) &&
                 scheduledStep.sceneId == playbackSceneId)
             {
-                int totalSteps = pattern.derivedSequence.totalSteps > 0
-                    ? pattern.derivedSequence.totalSteps
-                    : AppStateFactory.BarSteps;
+                int totalSteps = GetPatternLoopSteps(pattern);
                 int localStep = scheduledStep.mode == "arrangement"
                     ? scheduledStep.slotStep
                     : scheduledStep.sceneStep;
+                localStep = totalSteps > 0 ? localStep % totalSteps : 0;
 
                 state.phase = Mathf.Repeat(
                     (localStep + stepProgress) / Mathf.Max(1f, totalSteps),
                     1f);
+
+                if (pattern.musicalShape != null)
+                {
+                    state.rhythmPulse = ComputeRhythmPulse(pattern.musicalShape, localStep, stepProgress);
+                    state.melodyMotion = ComputeMelodyMotion(pattern.musicalShape, localStep, stepProgress);
+                    state.harmonySustain = ComputeHarmonySustain(pattern.musicalShape, localStep, stepProgress);
+                    state.isActive = state.isActive ||
+                        state.rhythmPulse > 0.001f ||
+                        state.melodyMotion > 0.001f ||
+                        state.harmonySustain > 0.001f;
+                }
+            }
+            else if (pattern.musicalShape != null)
+            {
+                state.rhythmPulse = state.pulse;
+                state.melodyMotion = state.pulse;
+                state.harmonySustain = state.sustainAmount;
             }
 
             return true;
@@ -230,6 +247,80 @@ namespace RhythmForge.Sequencer
                 return 0f;
 
             return Mathf.Clamp01((float)((activity.activeUntil - visualTime) / (activity.activeUntil - activity.triggerAt)));
+        }
+
+        private static int GetPatternLoopSteps(PatternDefinition pattern)
+        {
+            if (pattern?.musicalShape?.totalSteps > 0)
+                return pattern.musicalShape.totalSteps;
+            if (pattern?.derivedSequence?.totalSteps > 0)
+                return pattern.derivedSequence.totalSteps;
+            return AppStateFactory.BarSteps;
+        }
+
+        private static float ComputeRhythmPulse(MusicalShape shape, int localStep, float stepProgress)
+        {
+            var rhythm = shape?.facets?.rhythm;
+            if (rhythm?.events == null)
+                return 0f;
+
+            for (int i = 0; i < rhythm.events.Count; i++)
+            {
+                var evt = rhythm.events[i];
+                if (evt == null)
+                    continue;
+
+                if (evt.step == localStep)
+                    return Mathf.Clamp01(1f - stepProgress * 0.8f);
+            }
+
+            return 0f;
+        }
+
+        private static float ComputeMelodyMotion(MusicalShape shape, int localStep, float stepProgress)
+        {
+            var melody = shape?.facets?.melody;
+            if (melody?.notes == null)
+                return 0f;
+
+            for (int i = 0; i < melody.notes.Count; i++)
+            {
+                var note = melody.notes[i];
+                if (note == null)
+                    continue;
+
+                int duration = Mathf.Max(1, note.durationSteps);
+                if (localStep >= note.step && localStep < note.step + duration)
+                {
+                    float noteProgress = (localStep - note.step + stepProgress) / duration;
+                    return Mathf.Clamp01(1f - noteProgress * 0.4f);
+                }
+            }
+
+            return 0f;
+        }
+
+        private static float ComputeHarmonySustain(MusicalShape shape, int localStep, float stepProgress)
+        {
+            var harmony = shape?.facets?.harmony;
+            if (harmony?.events == null)
+                return 0f;
+
+            for (int i = 0; i < harmony.events.Count; i++)
+            {
+                var evt = harmony.events[i];
+                if (evt == null)
+                    continue;
+
+                int duration = Mathf.Max(1, evt.durationSteps);
+                if (localStep >= evt.step && localStep < evt.step + duration)
+                {
+                    float chordProgress = (localStep - evt.step + stepProgress) / duration;
+                    return Mathf.Clamp01(1f - chordProgress * 0.35f);
+                }
+            }
+
+            return 0f;
         }
     }
 }

@@ -55,12 +55,13 @@ namespace RhythmForge.Core.Data
     [Serializable]
     public class AppState
     {
-        public int version = 5;
+        public int version = 9;
         public float tempo = 85f;
         public string key = "A minor";
         public string activeGroupId = "lofi"; // kept for migration; use activeGenreId at runtime
         public string activeGenreId = "electronic";
         public string drawMode = "RhythmLoop";
+        public string drawShapeMode = nameof(ShapeFacetMode.Free);
         public string activeSceneId = "scene-a";
         public string selectedInstanceId;
         public string selectedPatternId;

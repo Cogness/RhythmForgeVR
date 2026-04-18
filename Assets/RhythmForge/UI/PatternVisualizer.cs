@@ -68,7 +68,13 @@ namespace RhythmForge.UI
             EnsureRenderingHelpers();
 
             _lineRenderer.loop = pattern.type == PatternType.RhythmLoop;
-            var shape = _shapeLineRenderer.Render(pattern.points, GetRenderScale(pattern.shapeProfile));
+            // Phase G: prefer the 3D point list (v8+ saves / fresh drafts).
+            // Legacy v7 patterns left worldPoints null, so fall back to the
+            // flat 2D list — visually identical to pre-Phase-G for those
+            // patterns.
+            var shape = (pattern.worldPoints != null && pattern.worldPoints.Count > 0)
+                ? _shapeLineRenderer.Render(pattern.worldPoints, GetRenderScale(pattern.shapeProfile))
+                : _shapeLineRenderer.Render(pattern.points, GetRenderScale(pattern.shapeProfile));
             _renderedPoints = shape.points;
             _renderedWidth = shape.width;
             _renderedHeight = shape.height;
@@ -161,12 +167,13 @@ namespace RhythmForge.UI
 
             if (material != null)
             {
-                if (_lineRenderer.material == null || _lineRenderer.material.shader != material.shader)
-                    _lineRenderer.material = new Material(material);
+                var shared = _lineRenderer.sharedMaterial;
+                if (shared == null || shared.shader != material.shader)
+                    _lineRenderer.sharedMaterial = new Material(material);
             }
-            else if (_lineRenderer.material == null)
+            else if (_lineRenderer.sharedMaterial == null)
             {
-                _lineRenderer.material = new Material(Shader.Find("Sprites/Default"));
+                _lineRenderer.sharedMaterial = new Material(Shader.Find("Sprites/Default"));
             }
         }
 
@@ -182,7 +189,7 @@ namespace RhythmForge.UI
             _haloRenderer.alignment = LineAlignment.View;
             _haloRenderer.shadowCastingMode = ShadowCastingMode.Off;
             _haloRenderer.receiveShadows = false;
-            _haloRenderer.material = new Material(Shader.Find("Sprites/Default"));
+            _haloRenderer.sharedMaterial = new Material(Shader.Find("Sprites/Default"));
             _haloRenderer.enabled = false;
         }
 

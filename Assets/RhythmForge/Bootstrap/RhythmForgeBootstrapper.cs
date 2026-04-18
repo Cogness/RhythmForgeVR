@@ -41,6 +41,8 @@ namespace RhythmForge.Bootstrap
 
         [Header("Demo")]
         [SerializeField] private bool _loadDemoOnStart = true;
+        [Tooltip("If true, load the unified single-3D-shape demo (one MusicalShape with all three facets) instead of the legacy three-pattern demo. Audio content is bit-identical.")]
+        [SerializeField] private bool _loadUnifiedDemo = true;
 
         // ──────────── built references (inspectable after play) ────────────
         [Header("── Built at Runtime (read-only) ──")]
@@ -125,7 +127,14 @@ namespace RhythmForge.Bootstrap
             {
                 _manager.InitializeSubsystems();
                 if (_loadDemoOnStart)
-                    _manager.LoadDemoSession();
+                {
+                    // Clear any persisted session so the selected demo actually wins on reload.
+                    SessionPersistence.Delete();
+                    if (_loadUnifiedDemo)
+                        _manager.LoadUnifiedDemoSession();
+                    else
+                        _manager.LoadDemoSession();
+                }
             }
         }
 
@@ -511,6 +520,11 @@ namespace RhythmForge.Bootstrap
                 new Rect(420, 8, 100, 84), new Color(0.28f, 0.32f, 0.42f), Color.white, 16, null);
             var paramsLabel = paramsBtn.GetComponentInChildren<Text>();
 
+            // Shape mode button
+            var shapeModeBtn = UIFactory.CreateButton(canvas.transform, "ShapeModeButton", "Shape\nFree",
+                new Rect(308, 8, 100, 84), TypeColors.Blend(new Vector3(1f, 1f, 1f)), Color.white, 18, null);
+            var shapeModeLabel = shapeModeBtn.GetComponentInChildren<Text>();
+
             // Mode button
             var modeBtn = UIFactory.CreateButton(canvas.transform, "ModeButton", "Mode\nRhythm",
                 new Rect(532, 8, 100, 84), TypeColors.RhythmLoop, Color.white, 18, null);
@@ -519,16 +533,21 @@ namespace RhythmForge.Bootstrap
             // Info labels
             var bpmText    = UIFactory.CreateRectText(canvas.transform, "BpmText",
                 "85 BPM", 18, Color.white, TextAnchor.MiddleLeft,
-                new Rect(120, 58, 280, 34));
+                new Rect(120, 58, 170, 34));
             var keyText    = UIFactory.CreateRectText(canvas.transform, "KeyText",
                 "A minor", 16, new Color(0.7f, 0.9f, 1f), TextAnchor.MiddleLeft,
-                new Rect(120, 28, 280, 28));
+                new Rect(120, 28, 170, 28));
             var statusText = UIFactory.CreateRectText(canvas.transform, "StatusText",
                 "Idle", 14, new Color(0.55f, 0.55f, 0.65f), TextAnchor.MiddleLeft,
-                new Rect(120, 6, 400, 22));
+                new Rect(120, 6, 170, 22));
 
             var panel = canvas.gameObject.AddComponent<TransportPanel>();
-            panel.SetUIRefs(playBtn, playLabel, modeBtn, modeLabel, bpmText, keyText, statusText, paramsBtn, paramsLabel);
+            panel.SetUIRefs(
+                playBtn, playLabel,
+                modeBtn, modeLabel,
+                shapeModeBtn, shapeModeLabel,
+                bpmText, keyText, statusText,
+                paramsBtn, paramsLabel);
             return panel;
         }
 

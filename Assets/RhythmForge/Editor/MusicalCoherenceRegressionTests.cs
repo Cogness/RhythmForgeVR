@@ -46,6 +46,7 @@ namespace RhythmForge.Editor
         {
             var genre = GenreRegistry.Get(genreId);
             var points = CreatePoints();
+            var curve = StrokeCurve.FromLegacy2D(points);
             var metrics = new StrokeMetrics { length = 1.0f, averageSize = 0.42f, height = 1f, width = 1f };
             var shape = CreateHarmonyShape();
             var sound = new SoundProfile { reverbBias = 0.4f, filterMotion = 0.3f };
@@ -55,11 +56,11 @@ namespace RhythmForge.Editor
             List<int> role2;
 
             using (PatternContextScope.Push(new ShapeRole { index = 0, count = 3 }, new HarmonicContext()))
-                role0 = genre.HarmonyDeriver.Derive(points, metrics, "C major", shape, sound, genre).derivedSequence.chord;
+                role0 = genre.HarmonyDeriver.Derive(curve, metrics, "C major", shape, sound, genre).derivedSequence.chord;
             using (PatternContextScope.Push(new ShapeRole { index = 1, count = 3 }, new HarmonicContext()))
-                role1 = genre.HarmonyDeriver.Derive(points, metrics, "C major", shape, sound, genre).derivedSequence.chord;
+                role1 = genre.HarmonyDeriver.Derive(curve, metrics, "C major", shape, sound, genre).derivedSequence.chord;
             using (PatternContextScope.Push(new ShapeRole { index = 2, count = 3 }, new HarmonicContext()))
-                role2 = genre.HarmonyDeriver.Derive(points, metrics, "C major", shape, sound, genre).derivedSequence.chord;
+                role2 = genre.HarmonyDeriver.Derive(curve, metrics, "C major", shape, sound, genre).derivedSequence.chord;
 
             var harmonyRange = RegisterPolicy.GetRange(PatternType.HarmonyPad, genreId);
             var bassRange = RegisterPolicy.GetBassRange(genreId);
@@ -146,11 +147,13 @@ namespace RhythmForge.Editor
             var melody1 = store.GetPattern("m2");
             var melody2 = store.GetPattern("m3");
 
-            CollectionAssert.Contains(melody0.tags, "primary");
-            CollectionAssert.Contains(melody1.tags, "counter");
+            CollectionAssert.Contains(melody0.tags, "counter");
+            CollectionAssert.Contains(melody1.tags, "fill");
             CollectionAssert.Contains(melody2.tags, "fill");
 
             int expectedFillMidi = RegisterPolicy.Clamp(harmony.derivedSequence.rootMidi, PatternType.MelodyLine, "newage");
+            foreach (var note in melody1.derivedSequence.notes)
+                Assert.That(note.midi, Is.EqualTo(expectedFillMidi));
             foreach (var note in melody2.derivedSequence.notes)
                 Assert.That(note.midi, Is.EqualTo(expectedFillMidi));
         }

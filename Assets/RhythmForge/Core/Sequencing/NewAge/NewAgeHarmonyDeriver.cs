@@ -14,7 +14,7 @@ namespace RhythmForge.Core.Sequencing.NewAge
     public sealed class NewAgeHarmonyDeriver : IHarmonyDeriver
     {
         public HarmonyDerivationResult Derive(
-            List<Vector2> points,
+            StrokeCurve curve,
             StrokeMetrics metrics,
             string keyName,
             ShapeProfile sp,

@@ -22,7 +22,7 @@ namespace RhythmForge.Core.Sequencing
         private const float FourBarThreshold = 0.30f;
 
         public static RhythmDerivationResult Derive(
-            List<Vector2> points, StrokeMetrics metrics,
+            StrokeCurve curve, StrokeMetrics metrics,
             string groupId, ShapeProfile sp, SoundProfile sound)
         {
             float sizeFactor = ShapeProfileSizing.GetSizeFactor(PatternType.RhythmLoop, sp);

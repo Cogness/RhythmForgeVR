@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
+using RhythmForge.Core.Analysis;
 using RhythmForge.Core.Data;
 using RhythmForge.Core.Events;
 using RhythmForge.Core.Session;
@@ -29,6 +30,9 @@ namespace RhythmForge.Interaction
         // 3D world-space points
         private List<Vector3> _worldPoints = new List<Vector3>();
         private List<float> _pressures = new List<float>();
+        private List<Quaternion> _stylusRotations = new List<Quaternion>();
+        private List<double> _timestamps = new List<double>();
+        private double _strokeStartTime;
         private LineRenderer _currentLine;
         private GameObject _currentLineObj;
         private bool _isDrawing;
@@ -102,7 +106,7 @@ namespace RhythmForge.Interaction
                     StartStroke();
                     _isDrawing = true;
                 }
-                AddPoint(input.StylusPose.position, pressure);
+                AddPoint(input.StylusPose.position, pressure, input.StylusPose.rotation);
             }
             else if (_isDrawing)
             {
@@ -119,6 +123,9 @@ namespace RhythmForge.Interaction
         {
             _worldPoints.Clear();
             _pressures.Clear();
+            _stylusRotations.Clear();
+            _timestamps.Clear();
+            _strokeStartTime = Time.unscaledTimeAsDouble;
 
             _currentLineObj = new GameObject("RhythmForge_Stroke");
             _currentLine = _currentLineObj.AddComponent<LineRenderer>();
@@ -139,7 +146,7 @@ namespace RhythmForge.Interaction
             _eventBus?.Publish(new StrokeStartedEvent());
         }
 
-        private void AddPoint(Vector3 worldPos, float pressure)
+        private void AddPoint(Vector3 worldPos, float pressure, Quaternion stylusRot)
         {
             if (Vector3.Distance(worldPos, _previousPoint) < _minPointDistance)
                 return;
@@ -147,6 +154,8 @@ namespace RhythmForge.Interaction
             _previousPoint = worldPos;
             _worldPoints.Add(worldPos);
             _pressures.Add(pressure);
+            _stylusRotations.Add(stylusRot);
+            _timestamps.Add(Time.unscaledTimeAsDouble - _strokeStartTime);
 
             _currentLine.positionCount = _worldPoints.Count;
             _currentLine.SetPosition(_worldPoints.Count - 1, worldPos);
@@ -178,12 +187,26 @@ namespace RhythmForge.Interaction
 
             // Preserve the stroke's own plane instead of flattening onto a head-facing plane.
             var strokeFrame = BuildStrokeFrame(_worldPoints, center);
-            List<Vector2> projected = ProjectTo2D(_worldPoints, center, strokeFrame.right, strokeFrame.up);
 
             // Build draft
-            PatternType type = _drawMode != null ? _drawMode.CurrentMode : PatternType.RhythmLoop;
+            PatternType type = _drawMode != null ? _drawMode.GetDominantType() : PatternType.RhythmLoop;
+            Vector3 bondStrength = _drawMode != null
+                ? _drawMode.GetBondStrength()
+                : new Vector3(1f, 0f, 0f);
+            bool freeMode = _drawMode != null && _drawMode.IsFreeMode();
+
+            // Phase G: StrokeCapture no longer projects to 2D itself. The raw
+            // 3D sample stream + plane basis is handed to DraftBuilder, which
+            // constructs a <see cref="StrokeCurve"/> (samples + projected 2D +
+            // basis) inside BuildFromStroke. Melody derivers stay bit-identical
+            // because the projection math is unchanged — it just relocated.
+            var richSamples = BuildStrokeSamples();
+            Vector3 referenceUp = _userHead != null ? _userHead.up : Vector3.up;
+
             var draft = DraftBuilder.BuildFromStroke(
-                type, projected, center, strokeFrame.rotation, _store.State, _store);
+                type, rawPoints: null, center, strokeFrame.rotation, _store.State, _store,
+                richSamples, referenceUp, bondStrength, freeMode,
+                strokeRight: strokeFrame.right, strokeUp: strokeFrame.up);
 
             if (!draft.success)
             {
@@ -301,24 +324,33 @@ namespace RhythmForge.Interaction
             };
         }
 
-        private List<Vector2> ProjectTo2D(List<Vector3> worldPoints, Vector3 center, Vector3 right, Vector3 up)
-        {
-            var result = new List<Vector2>(worldPoints.Count);
-            foreach (var p in worldPoints)
-            {
-                Vector3 relative = p - center;
-                float x = Vector3.Dot(relative, right);
-                float y = Vector3.Dot(relative, up);
-                result.Add(new Vector2(x, y));
-            }
-            return result;
-        }
+        // Phase G: ProjectTo2D removed. The 2D projection is now computed by
+        // StrokeCurve.FromSamples inside DraftBuilder.BuildFromStroke, using
+        // the same dot-product math against the stroke-plane basis that lived
+        // here before.
 
         private struct StrokeFrame
         {
             public Vector3 right;
             public Vector3 up;
             public Quaternion rotation;
+        }
+
+        private List<StrokeSample> BuildStrokeSamples()
+        {
+            int n = _worldPoints.Count;
+            var samples = new List<StrokeSample>(n);
+            for (int i = 0; i < n; i++)
+            {
+                samples.Add(new StrokeSample
+                {
+                    worldPos = _worldPoints[i],
+                    pressure = i < _pressures.Count ? _pressures[i] : 0f,
+                    stylusRot = i < _stylusRotations.Count ? _stylusRotations[i] : Quaternion.identity,
+                    timestamp = i < _timestamps.Count ? _timestamps[i] : 0.0
+                });
+            }
+            return samples;
         }
 
         public void ConfirmDraft(bool duplicate)
@@ -351,6 +383,8 @@ namespace RhythmForge.Interaction
             }
             _worldPoints.Clear();
             _pressures.Clear();
+            _stylusRotations.Clear();
+            _timestamps.Clear();
         }
     }
 }

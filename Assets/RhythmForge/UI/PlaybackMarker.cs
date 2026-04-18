@@ -28,8 +28,8 @@ namespace RhythmForge.UI
             if (collider) Destroy(collider);
 
             _renderer = sphere.GetComponent<MeshRenderer>();
-            _renderer.material = new Material(Shader.Find("Sprites/Default"));
-            _renderer.material.color = Color.white;
+            _renderer.sharedMaterial = new Material(Shader.Find("Sprites/Default"));
+            _renderer.sharedMaterial.color = Color.white;
             gameObject.SetActive(false);
         }
 
@@ -151,7 +151,7 @@ namespace RhythmForge.UI
                 return;
 
             float glow = Mathf.Clamp01(intensity);
-            _renderer.material.color = new Color(
+            _renderer.sharedMaterial.color = new Color(
                 Mathf.Clamp01(color.r + glow * 0.32f),
                 Mathf.Clamp01(color.g + glow * 0.32f),
                 Mathf.Clamp01(color.b + glow * 0.32f),

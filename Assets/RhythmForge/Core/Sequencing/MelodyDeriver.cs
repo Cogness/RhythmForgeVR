@@ -23,10 +23,11 @@ namespace RhythmForge.Core.Sequencing
         private const float SixteenSliceThreshold = 0.75f;
 
         public static MelodyDerivationResult Derive(
-            List<Vector2> points, StrokeMetrics metrics,
+            StrokeCurve curve, StrokeMetrics metrics,
             string keyName, string groupId,
             ShapeProfile sp, SoundProfile sound)
         {
+            var points = curve.projected;
             float sizeFactor = ShapeProfileSizing.GetSizeFactor(PatternType.MelodyLine, sp);
             string sizeWord = ShapeProfileSizing.DescribeSize(PatternType.MelodyLine, sp);
             int bars = metrics.length > FourBarThreshold ? 4 : 2;

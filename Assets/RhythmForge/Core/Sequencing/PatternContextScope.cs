@@ -24,6 +24,16 @@ namespace RhythmForge.Core.Sequencing
             return Push(ResolveRole(state, pattern), CloneHarmonicContext(state?.harmonicContext));
         }
 
+        /// <summary>
+        /// Phase C alias for <see cref="ForPattern"/>. Semantically identical —
+        /// both resolve the scene-wide per-shape role — but the name documents
+        /// that roles are no longer per-type.
+        /// </summary>
+        public static PatternContextScope ForShape(AppState state, PatternDefinition pattern)
+        {
+            return ForPattern(state, pattern);
+        }
+
         public void Dispose()
         {
             if (!_active)
@@ -33,6 +43,15 @@ namespace RhythmForge.Core.Sequencing
             HarmonicContextProvider.Clear();
         }
 
+        /// <summary>
+        /// Phase C: role is now scene-wide (counts ALL patterns, not just
+        /// same-type). A mixed scene with 2 rhythm + 2 melody patterns produces
+        /// indices 0..3 across the four shapes — stacking lead / counter /
+        /// pedal roles regardless of facet. Pre-Phase-C this filtered by type,
+        /// which caused the "two role-0 primaries" collision the musical-coherence
+        /// refactor already solved for same-type; widening closes that gap for
+        /// cross-type scenes too.
+        /// </summary>
         public static ShapeRole ResolveRole(AppState state, PatternDefinition pattern)
         {
             if (state?.patterns == null || pattern == null)
@@ -44,7 +63,7 @@ namespace RhythmForge.Core.Sequencing
 
             foreach (var candidate in state.patterns)
             {
-                if (candidate?.type != pattern.type)
+                if (candidate == null)
                     continue;
 
                 if (!found && candidate.id == pattern.id)

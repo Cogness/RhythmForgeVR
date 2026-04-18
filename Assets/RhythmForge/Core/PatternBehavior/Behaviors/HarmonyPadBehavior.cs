@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using RhythmForge.Audio;
@@ -8,33 +9,18 @@ using RhythmForge.Sequencer;
 
 namespace RhythmForge.Core.PatternBehavior.Behaviors
 {
+    /// <summary>
+    /// Legacy single-facet behavior. Phase C onwards new strokes route through
+    /// <see cref="MusicalShapeBehavior"/>; this class survives only to play back
+    /// pre-v7 saves whose <c>PatternDefinition.musicalShape == null</c>.
+    /// </summary>
+    [Obsolete("Pre-v7 saves only; new shapes route through MusicalShapeBehavior.", false)]
     public sealed class HarmonyPadBehavior : IPatternBehavior
     {
         public PatternType Type => PatternType.HarmonyPad;
         public string DisplayName => "Harmony";
         public bool PrefersClosedStroke => false;
         public string DraftNamePrefix => "Pad";
-
-        public PatternDerivationResult Derive(
-            List<Vector2> points,
-            StrokeMetrics metrics,
-            string keyName,
-            string groupId,
-            ShapeProfile shapeProfile,
-            SoundProfile soundProfile)
-        {
-            var genre = GenreRegistry.GetActive();
-            var result = genre.HarmonyDeriver.Derive(points, metrics, keyName, shapeProfile, soundProfile, genre);
-            return new PatternDerivationResult
-            {
-                bars = result.bars,
-                presetId = result.presetId,
-                tags = result.tags,
-                derivedSequence = result.derivedSequence,
-                summary = result.summary,
-                details = result.details
-            };
-        }
 
         public SoundProfile DeriveSoundProfile(ShapeProfile shapeProfile)
         {

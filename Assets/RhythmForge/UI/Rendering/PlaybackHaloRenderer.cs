@@ -31,7 +31,7 @@ namespace RhythmForge.UI.Rendering
 
         public void Update(PlaybackVisualSpec spec, bool isMuted, float haloEnergy, float baseWidth, Color lineColor, float breath)
         {
-            if (_haloRenderer == null || _haloRenderer.material == null || _haloRenderer.positionCount == 0 || isMuted || haloEnergy <= 0.01f)
+            if (_haloRenderer == null || _haloRenderer.sharedMaterial == null || _haloRenderer.positionCount == 0 || isMuted || haloEnergy <= 0.01f)
             {
                 if (_haloRenderer != null)
                     _haloRenderer.enabled = false;
@@ -49,7 +49,7 @@ namespace RhythmForge.UI.Rendering
             _haloRenderer.endWidth = haloWidth;
 
             float haloBrightness = haloEnergy * (0.16f + spec.brightness * 0.2f);
-            _haloRenderer.material.color = new Color(
+            _haloRenderer.sharedMaterial.color = new Color(
                 Mathf.Clamp01(lineColor.r + haloBrightness),
                 Mathf.Clamp01(lineColor.g + haloBrightness),
                 Mathf.Clamp01(lineColor.b + haloBrightness),

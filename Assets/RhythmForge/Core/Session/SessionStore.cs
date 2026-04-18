@@ -138,7 +138,22 @@ namespace RhythmForge.Core.Session
             NotifyStateChanged();
         }
 
-        public PatternInstance CommitDraft(DraftResult draft, bool duplicate) => Patterns.CommitDraft(draft, duplicate);
+        public IEnumerable<PatternInstance> GetAllInstances() => State.instances;
+
+        private SpatialZoneController _zoneController;
+
+        public void SetZoneController(SpatialZoneController controller) => _zoneController = controller;
+
+        public PatternInstance CommitDraft(DraftResult draft, bool duplicate)
+        {
+            var instance = Patterns.CommitDraft(draft, duplicate);
+            if (_zoneController != null && instance != null)
+            {
+                instance.position = _zoneController.GetDefaultSpawnPosition(draft.type, draft.spawnPosition);
+                instance.RecalculateMixFromPosition();
+            }
+            return instance;
+        }
 
         public PatternInstance SpawnPattern(string patternId, string sceneId = null, Vector3? coords = null, bool notify = true)
             => Patterns.SpawnPattern(patternId, sceneId, coords, notify);

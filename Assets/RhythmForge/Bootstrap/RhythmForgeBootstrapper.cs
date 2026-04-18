@@ -11,6 +11,7 @@ using RhythmForge.Interaction;
 using RhythmForge.Sequencer;
 using RhythmForge.UI;
 using RhythmForge.UI.Panels;
+using RhythmForge.Core.Events;
 
 namespace RhythmForge.Bootstrap
 {
@@ -50,6 +51,8 @@ namespace RhythmForge.Bootstrap
 
         private VRRigLocator _rig;
         private bool _built;
+        private SpatialZoneController _zoneController;
+        private OrchestratorStage _orchestratorStage;
 
         private void Awake() => Bootstrap();
         private void OnEnable() => Bootstrap();  // catches the case where component starts disabled then gets enabled
@@ -146,6 +149,14 @@ namespace RhythmForge.Bootstrap
                         }
                     }
                 }
+            }
+
+            // Update spatial zone membership for all current instances
+            if (_zoneController != null && _manager != null)
+            {
+                var instances = _manager.GetAllInstances();
+                if (instances != null)
+                    _zoneController.EvaluateAll(instances);
             }
         }
 
@@ -249,6 +260,24 @@ namespace RhythmForge.Bootstrap
                 if (!canvas.gameObject.activeSelf)
                     canvas.enabled = false;
             }
+
+            EnsureAudioListenerOnHead();
+        }
+
+        private void EnsureAudioListenerOnHead()
+        {
+            if (_rig?.CenterEye == null) return;
+
+            // Remove AudioListeners from everywhere else
+            foreach (var existing in Object.FindObjectsByType<AudioListener>(FindObjectsSortMode.None))
+                if (existing.gameObject != _rig.CenterEye.gameObject)
+                    Object.Destroy(existing);
+
+            // Add to CenterEye if not already there
+            if (_rig.CenterEye.GetComponent<AudioListener>() == null)
+                _rig.CenterEye.gameObject.AddComponent<AudioListener>();
+
+            Debug.Log("[RhythmForge] AudioListener placed on CenterEye for 3D spatial audio.");
         }
 
         private void BuildAll()
@@ -310,6 +339,14 @@ namespace RhythmForge.Bootstrap
             _audioEngine     = subsystems.audioEngine;
             _samplePlayer    = subsystems.samplePlayer;
             _sequencer       = subsystems.sequencer;
+
+            // Wire zone controller into session store (must happen after manager is created)
+            if (_zoneController != null)
+                _manager.SetZoneController(_zoneController);
+
+            // Wire orchestrator stage into manager (Phase 4)
+            if (_orchestratorStage != null)
+                _manager.SetOrchestratorStage(_orchestratorStage);
         }
 
         // ──────────────────────────────────────────────────────────
@@ -328,6 +365,23 @@ namespace RhythmForge.Bootstrap
             _audioEngine  = audioGo.AddComponent<AudioEngine>();
             _samplePlayer.Configure();
             _audioEngine.Configure(_samplePlayer);
+
+            // Spatial zones
+            var stageOrigin = _rig?.CenterEye != null ? _rig.CenterEye.position : Vector3.zero;
+            stageOrigin.y = 0f; // anchor to floor
+            _zoneController = new SpatialZoneController(
+                SpatialZoneFactory.CreateDefaults(stageOrigin));
+            _audioEngine.SetZoneController(_zoneController);
+
+            // Orchestrator stage (Phase 4 — conductor gestures)
+            _orchestratorStage = new OrchestratorStage(_zoneController);
+            _audioEngine.SetOrchestratorStage(_orchestratorStage);
+
+            // Zone visuals
+            var zoneVisGo = new GameObject("SpatialZoneVisualizer");
+            zoneVisGo.transform.SetParent(transform);
+            var zoneVis = zoneVisGo.AddComponent<SpatialZoneVisualizer>();
+            zoneVis.Initialize(_zoneController.Zones);
         }
 
         // ──────────────────────────────────────────────────────────
@@ -485,12 +539,12 @@ namespace RhythmForge.Bootstrap
         private TransportPanel BuildTransportPanel(Transform head)
         {
             var canvas = UIFactory.CreateWorldCanvas("TransportPanel",
-                transform, new Vector2(640, 100),
+                transform, new Vector2(740, 100),
                 PositionInFront(0f, -0.22f, 1.1f), 0.001f);
             RegisterPanel(canvas, 0f, -0.22f, 1.1f, PanelDragCoordinator.DragMembership.MainGroup);
 
             UIFactory.CreateBackground(canvas.transform,
-                new Vector2(640, 100), MaterialFactory.PanelBg);
+                new Vector2(740, 100), MaterialFactory.PanelBg);
 
             // Play/Stop button
             var playBtn = UIFactory.CreateButton(canvas.transform, "PlayStopButton", "Play",
@@ -507,6 +561,11 @@ namespace RhythmForge.Bootstrap
                 new Rect(532, 8, 100, 84), TypeColors.RhythmLoop, Color.white, 18, null);
             var modeLabel = modeBtn.GetComponentInChildren<Text>();
 
+            // Conduct toggle button
+            var conductBtn = UIFactory.CreateButton(canvas.transform, "ConductButton", "Conduct\nOFF",
+                new Rect(644, 8, 88, 84), new Color(0.22f, 0.25f, 0.32f, 1f), Color.white, 14, null);
+            var conductLabel = conductBtn.GetComponentInChildren<Text>();
+
             // Info labels
             var bpmText    = UIFactory.CreateRectText(canvas.transform, "BpmText",
                 "85 BPM", 18, Color.white, TextAnchor.MiddleLeft,
@@ -519,7 +578,8 @@ namespace RhythmForge.Bootstrap
                 new Rect(120, 6, 400, 22));
 
             var panel = canvas.gameObject.AddComponent<TransportPanel>();
-            panel.SetUIRefs(playBtn, playLabel, modeBtn, modeLabel, bpmText, keyText, statusText, paramsBtn, paramsLabel);
+            panel.SetUIRefs(playBtn, playLabel, modeBtn, modeLabel, bpmText, keyText, statusText,
+                paramsBtn, paramsLabel, conductBtn, conductLabel);
             return panel;
         }
 

@@ -9,6 +9,7 @@ using RhythmForge.Audio;
 using RhythmForge.Interaction;
 using RhythmForge.UI;
 using RhythmForge.UI.Panels;
+using ConductorGesture = RhythmForge.Interaction.ConductorGesture;
 
 namespace RhythmForge
 {
@@ -76,6 +77,11 @@ namespace RhythmForge
         private bool _initialized;
         private float _sceneSwapCooldown;
         private readonly Dictionary<PatternType, Material> _materialCache = new Dictionary<PatternType, Material>();
+
+        // ── Phase 4: conductor gestures ──────────────────────────────────────────
+        private OrchestratorStage _orchestratorStage;
+        private ConductorGestureRecognizer _gestureRecognizer;
+        private bool _conductingMode;
 
         /// <summary>Called by RhythmForgeBootstrapper to inject all subsystem and UI references.</summary>
         public void Configure(
@@ -147,7 +153,9 @@ namespace RhythmForge
             if (_transportPanel)
             {
                 _transportPanel.Initialize(_store, _sequencer, _drawModeController);
-                _showParamLabels = _transportPanel.ShowParams;
+                _showParamLabels  = _transportPanel.ShowParams;
+                _conductingMode   = _transportPanel.IsConductingMode;
+                _transportPanel.OnConductingModeChanged += OnConductingModeChanged;
             }
             if (_sceneStripPanel)
                 _sceneStripPanel.Initialize(_store, _sequencer);
@@ -179,6 +187,7 @@ namespace RhythmForge
         {
             _visualizerManager?.UpdatePlaybackVisuals();
             HandleSceneAndTransportInput();
+            HandleConductorUpdate();
             _autosaveController?.Tick(Time.deltaTime, _store?.State);
         }
 
@@ -311,6 +320,86 @@ namespace RhythmForge
             return mat;
         }
 
+        // ── Phase 4: Conductor gestures ──────────────────────────────────────────
+
+        private void OnConductingModeChanged(bool active)
+        {
+            _conductingMode = active;
+            _gestureRecognizer?.Clear();
+
+            if (_toast)
+                _toast.Show(active ? "Conducting mode ON" : "Conducting mode OFF");
+        }
+
+        private void HandleConductorUpdate()
+        {
+            var input = _inputProvider ?? (IInputProvider)_inputMapper;
+            if (input == null || _orchestratorStage == null) return;
+
+            // Always tick the orchestrator stage so gain mods lerp smoothly
+            Vector3 headPos    = _userHead != null ? _userHead.position : Vector3.zero;
+            Vector3 stylusTip  = input.StylusPose.position;
+            _orchestratorStage.UpdateFrame(headPos, stylusTip, Time.deltaTime);
+
+            // Only record gesture samples when conducting mode is on and not drawing
+            if (!_conductingMode || _gestureRecognizer == null) return;
+            if (input.IsDrawing) return;
+
+            _gestureRecognizer.AddSample(stylusTip, input.DrawPressure, Time.time);
+
+            var gesture = _gestureRecognizer.ConsumePendingGesture();
+            if (!gesture.HasValue) return;
+
+            bool allZones = input.LeftGrip;
+            DispatchConductorGesture(gesture.Value, allZones);
+        }
+
+        private void DispatchConductorGesture(ConductorGesture gesture, bool allZones)
+        {
+            string focusedZone = _orchestratorStage?.FocusedZoneId;
+
+            // Publish to event bus so external subscribers can react
+            _eventBus?.Publish(new ConductorGestureEvent(
+                gesture,
+                focusedZone,
+                allZones,
+                _gestureRecognizer?.SwayPeriodSeconds ?? 0f));
+
+            switch (gesture)
+            {
+                case ConductorGesture.Sway:
+                    float period   = _gestureRecognizer?.SwayPeriodSeconds ?? 0f;
+                    if (period > 0.1f && _store != null)
+                    {
+                        // BPM from sway: half-period = time per beat → BPM = 60 / halfPeriod
+                        float swayBpm  = Mathf.Clamp(60f / (period * 0.5f), 40f, 200f);
+                        float newTempo = Mathf.MoveTowards(_store.State.tempo, swayBpm, 2f);
+                        _store.SetTempo(newTempo);
+                        if (_toast)
+                            _toast.Show($"Tempo → {newTempo:F0} BPM");
+                    }
+                    break;
+
+                case ConductorGesture.Lift:
+                    _orchestratorStage?.ApplyCrescendo(focusedZone, allZones);
+                    if (_toast)
+                        _toast.Show(allZones ? "Crescendo all zones" : $"Crescendo: {focusedZone ?? "none"}");
+                    break;
+
+                case ConductorGesture.Fade:
+                    _orchestratorStage?.ApplyFade(focusedZone, allZones);
+                    if (_toast)
+                        _toast.Show(allZones ? "Fade all zones" : $"Fade: {focusedZone ?? "none"}");
+                    break;
+
+                case ConductorGesture.Cutoff:
+                    _orchestratorStage?.ApplyCutoff(focusedZone, allZones);
+                    if (_toast)
+                        _toast.Show(allZones ? "Cut all zones" : $"Cut: {focusedZone ?? "none"}");
+                    break;
+            }
+        }
+
         private void SwitchSceneRelative(int direction)
         {
             _sceneSwapCooldown -= Time.deltaTime;
@@ -330,6 +419,17 @@ namespace RhythmForge
 
             if (_toast)
                 _toast.Show($"Scene: {_store.GetScene(ids[next])?.name ?? ids[next]}");
+        }
+
+        public IEnumerable<PatternInstance> GetAllInstances() => _store?.GetAllInstances();
+
+        public void SetZoneController(SpatialZoneController controller) => _store?.SetZoneController(controller);
+
+        /// <summary>Wired by Bootstrapper — enables conductor gesture processing.</summary>
+        public void SetOrchestratorStage(OrchestratorStage stage)
+        {
+            _orchestratorStage = stage;
+            _gestureRecognizer = new ConductorGestureRecognizer();
         }
 
         public void LoadDemoSession()

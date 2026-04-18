@@ -18,5 +18,6 @@ namespace RhythmForge.Interaction
         bool LeftTrigger { get; }
         bool LeftTriggerDown { get; }
         bool LeftTriggerUp { get; }
+        bool LeftGrip { get; }
     }
 }

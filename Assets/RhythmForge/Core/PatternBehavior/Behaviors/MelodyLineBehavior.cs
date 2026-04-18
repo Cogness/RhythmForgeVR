@@ -24,6 +24,9 @@ namespace RhythmForge.Core.PatternBehavior.Behaviors
         {
             var genre = GenreRegistry.GetActive();
             var result = genre.MelodyDeriver.Derive(points, metrics, keyName, shapeProfile, soundProfile, genre);
+
+            result = Apply3DMelodyModifications(result, shapeProfile);
+
             return new PatternDerivationResult
             {
                 bars = result.bars,
@@ -91,6 +94,34 @@ namespace RhythmForge.Core.PatternBehavior.Behaviors
         {
             sound = sound ?? new SoundProfile();
             return noteDuration + 0.06f + sound.releaseBias * 0.42f + sound.body * 0.08f;
+        }
+
+        private static MelodyDerivationResult Apply3DMelodyModifications(
+            MelodyDerivationResult result, ShapeProfile sp)
+        {
+            if (sp == null || result.derivedSequence?.notes == null || result.derivedSequence.notes.Count == 0)
+                return result;
+
+            var notes = result.derivedSequence.notes;
+
+            if (sp.verticalityWorld > 0.6f)
+            {
+                // Vertical stroke → octave leaps on every other note
+                for (int i = 1; i < notes.Count; i += 2)
+                    notes[i].midi += 12;
+            }
+            else if (sp.verticalityWorld < 0.25f && notes.Count > 1)
+            {
+                // Horizontal stroke → constrain to stepwise motion (max ±2 semitones between notes)
+                for (int i = 1; i < notes.Count; i++)
+                {
+                    int delta = notes[i].midi - notes[i - 1].midi;
+                    if (delta > 2)  notes[i].midi = notes[i - 1].midi + 2;
+                    if (delta < -2) notes[i].midi = notes[i - 1].midi - 2;
+                }
+            }
+
+            return result;
         }
     }
 }

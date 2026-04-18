@@ -24,6 +24,10 @@ namespace RhythmForge.Core.PatternBehavior.Behaviors
         {
             var genre = GenreRegistry.GetActive();
             var result = genre.RhythmDeriver.Derive(points, metrics, shapeProfile, soundProfile, genre);
+
+            // Phase 3 — 3D stroke behaviour modifications
+            result = Apply3DRhythmModifications(result, shapeProfile);
+
             return new PatternDerivationResult
             {
                 bars = result.bars,
@@ -92,6 +96,72 @@ namespace RhythmForge.Core.PatternBehavior.Behaviors
 
             sound = sound ?? new SoundProfile();
             return baseDuration + sound.body * 0.14f + sound.releaseBias * 0.24f;
+        }
+
+        private static RhythmDerivationResult Apply3DRhythmModifications(
+            RhythmDerivationResult result, ShapeProfile sp)
+        {
+            if (sp == null || result.derivedSequence == null) return result;
+
+            // ── Single-shot accent (Grand Jeté Strike) ─────────────────────────
+            // A short, forward-jabbing stroke with high angularity → one hit, not a loop.
+            bool isThrust     = sp.thrustAxis > 0.6f;
+            bool isShort      = sp.strokeSeconds > 0f && sp.strokeSeconds < 0.35f;
+            bool isAngular    = sp.angularity > 0.55f;
+
+            if (isThrust && isShort && isAngular && result.derivedSequence.events != null)
+            {
+                // Keep only the first hit at step 0 (highest velocity), clear the rest.
+                var singleShot = new List<RhythmEvent>();
+                RhythmEvent best = null;
+                foreach (var evt in result.derivedSequence.events)
+                {
+                    if (evt.step == 0 || best == null)
+                    {
+                        if (best == null || evt.velocity > best.velocity)
+                            best = evt;
+                    }
+                }
+                if (best != null)
+                {
+                    best.step = 0;
+                    best.velocity = Mathf.Min(1f, best.velocity + 0.15f); // accent the hit
+                    singleShot.Add(best);
+                }
+                result.derivedSequence.events = singleShot;
+                // Keep totalSteps at the original bar length — it still loops, just has one accent hit per bar
+            }
+
+            // ── Shaker / ride bed (non-planar stroke = textural) ──────────────
+            // Low planarity → the stroke was 3D. Add a rhythmic texture layer.
+            if (sp.planarity < 0.5f && result.derivedSequence.events != null && result.derivedSequence.totalSteps > 0)
+            {
+                int totalSteps = result.derivedSequence.totalSteps;
+                float textureDensity = Mathf.Lerp(4, 8, 1f - sp.planarity * 2f); // 4–8 evenly-spaced hits
+                int spacing = Mathf.Max(1, Mathf.RoundToInt(totalSteps / textureDensity));
+                float textureVelocity = Mathf.Lerp(0.18f, 0.32f, 1f - sp.planarity * 2f);
+
+                for (int step = 0; step < totalSteps; step += spacing)
+                {
+                    // Avoid doubling up on existing events at the same step
+                    bool alreadyHit = false;
+                    foreach (var existing in result.derivedSequence.events)
+                        if (existing.step == step) { alreadyHit = true; break; }
+
+                    if (!alreadyHit)
+                    {
+                        result.derivedSequence.events.Add(new RhythmEvent
+                        {
+                            step = step,
+                            lane = "hat",          // hi-hat shaker feel
+                            velocity = textureVelocity,
+                            microShift = 0f
+                        });
+                    }
+                }
+            }
+
+            return result;
         }
     }
 }

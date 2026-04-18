@@ -61,8 +61,8 @@ namespace RhythmForge.Core.Data
             {
                 brightness = new SoundMetricWeights { constant = 0.16f, angularity = 0.4f, instability = 0.14f, compactness = 0.24f },
                 resonance = new SoundMetricWeights { constant = 0.14f, angularity = 0.26f, curvatureVariance = 0.18f, sizeFactor = 0.12f },
-                drive = new SoundMetricWeights { constant = 0.1f, angularity = 0.52f, symmetryInverse = 0.18f, sizeFactor = 0.12f },
-                attackBias = new SoundMetricWeights { constant = 0.26f, angularity = 0.54f, compactness = 0.24f, circularityInverse = 0.08f },
+                drive = new SoundMetricWeights { constant = 0.1f, angularity = 0.52f, symmetryInverse = 0.18f, sizeFactor = 0.12f, pressureMean = 0.18f },
+                attackBias = new SoundMetricWeights { constant = 0.26f, angularity = 0.54f, compactness = 0.24f, circularityInverse = 0.08f, speedMean = 0.20f },
                 releaseBias = new SoundMetricWeights { constant = 0.1f, circularity = 0.34f, symmetry = 0.08f, sizeFactor = 0.54f },
                 detune = new SoundMetricWeights { constant = 0.04f, instability = 0.22f, sizeFactor = 0.08f },
                 modDepth = new SoundMetricWeights { constant = 0.06f, instability = 0.34f, sizeFactor = 0.18f },
@@ -72,7 +72,7 @@ namespace RhythmForge.Core.Data
                 reverbBias = new SoundMetricWeights { constant = 0.04f, circularity = 0.12f, symmetryInverse = 0.08f, sizeFactor = 0.48f },
                 waveMorph = new SoundMetricWeights { constant = 0.18f, angularity = 0.58f, compactness = 0.08f },
                 filterMotion = new SoundMetricWeights { constant = 0.08f, instability = 0.26f, sizeFactor = 0.18f },
-                transientSharpness = new SoundMetricWeights { constant = 0.26f, angularity = 0.58f, compactness = 0.22f },
+                transientSharpness = new SoundMetricWeights { constant = 0.26f, angularity = 0.58f, compactness = 0.22f, pressurePeak = 0.14f },
                 body = new SoundMetricWeights { constant = 0.12f, circularity = 0.28f, symmetry = 0.08f, sizeFactor = 0.62f }
             };
         }
@@ -83,17 +83,17 @@ namespace RhythmForge.Core.Data
             {
                 brightness = new SoundMetricWeights { constant = 0.18f, angularity = 0.28f, centroidHeight = 0.12f, verticalSpan = 0.08f, compactness = 0.32f },
                 resonance = new SoundMetricWeights { constant = 0.14f, curvatureMean = 0.3f, curvatureVariance = 0.14f, compactness = 0.08f },
-                drive = new SoundMetricWeights { constant = 0.06f, angularity = 0.28f, speedVariance = 0.12f, compactness = 0.12f },
-                attackBias = new SoundMetricWeights { constant = 0.14f, speedVariance = 0.34f, angularity = 0.14f, compactness = 0.24f },
-                releaseBias = new SoundMetricWeights { constant = 0.1f, smoothness = 0.24f, horizontalSpan = 0.06f, sizeFactor = 0.56f },
+                drive = new SoundMetricWeights { constant = 0.06f, angularity = 0.28f, speedVariance = 0.12f, compactness = 0.12f, pressureMean = 0.14f },
+                attackBias = new SoundMetricWeights { constant = 0.14f, speedVariance = 0.34f, angularity = 0.14f, compactness = 0.24f, speedMean = 0.16f },
+                releaseBias = new SoundMetricWeights { constant = 0.1f, smoothness = 0.24f, horizontalSpan = 0.06f, sizeFactor = 0.56f, speedTailOff = 0.18f },
                 detune = new SoundMetricWeights { constant = 0.06f, curvatureVariance = 0.28f, symmetryInverse = 0.14f, sizeFactor = 0.14f },
-                modDepth = new SoundMetricWeights { constant = 0.08f, curvatureMean = 0.2f, contourPull = 0.18f, sizeFactor = 0.36f },
+                modDepth = new SoundMetricWeights { constant = 0.08f, curvatureMean = 0.2f, contourPull = 0.18f, sizeFactor = 0.36f, tiltVariance = 0.24f },
                 stereoSpread = new SoundMetricWeights { constant = 0.08f, horizontalSpan = 0.18f, contourPull = 0.08f, sizeFactor = 0.46f },
                 grooveInstability = new SoundMetricWeights { constant = 0.06f, speedVariance = 0.22f, compactness = 0.06f },
                 delayBias = new SoundMetricWeights { constant = 0.06f, contourPull = 0.18f, sizeFactor = 0.24f },
                 reverbBias = new SoundMetricWeights { constant = 0.08f, smoothness = 0.16f, verticalSpan = 0.08f, sizeFactor = 0.4f },
                 waveMorph = new SoundMetricWeights { constant = 0.14f, angularity = 0.5f, compactness = 0.08f },
-                filterMotion = new SoundMetricWeights { constant = 0.1f, contourPull = 0.26f, curvatureVariance = 0.12f, sizeFactor = 0.34f },
+                filterMotion = new SoundMetricWeights { constant = 0.1f, contourPull = 0.26f, curvatureVariance = 0.12f, sizeFactor = 0.34f, tiltMean = 0.22f },
                 transientSharpness = new SoundMetricWeights { constant = 0.16f, angularity = 0.38f, speedVariance = 0.12f, compactness = 0.28f },
                 body = new SoundMetricWeights { constant = 0.1f, smoothness = 0.2f, verticalSpan = 0.08f, sizeFactor = 0.58f }
             };
@@ -104,18 +104,18 @@ namespace RhythmForge.Core.Data
             return new PatternSoundMappingProfile
             {
                 brightness = new SoundMetricWeights { constant = 0.12f, centroidHeight = 0.18f, angularity = 0.12f, tiltSignedAbs = 0.12f, compactness = 0.26f },
-                resonance = new SoundMetricWeights { constant = 0.08f, tiltSignedAbs = 0.3f, symmetryInverse = 0.14f, compactness = 0.08f },
+                resonance = new SoundMetricWeights { constant = 0.08f, tiltSignedAbs = 0.3f, symmetryInverse = 0.14f, compactness = 0.08f, pressureMean = 0.10f },
                 drive = new SoundMetricWeights { constant = 0.04f, angularity = 0.16f, symmetryInverse = 0.08f, compactness = 0.06f },
                 attackBias = new SoundMetricWeights { constant = 0.1f, angularity = 0.24f, symmetryInverse = 0.08f, compactness = 0.22f },
-                releaseBias = new SoundMetricWeights { constant = 0.16f, pathLength = 0.08f, smoothness = 0.16f, sizeFactor = 0.58f },
+                releaseBias = new SoundMetricWeights { constant = 0.16f, pathLength = 0.08f, smoothness = 0.16f, sizeFactor = 0.58f, speedTailOff = 0.22f },
                 detune = new SoundMetricWeights { constant = 0.08f, symmetryInverse = 0.26f, horizontalSpan = 0.08f, sizeFactor = 0.42f },
-                modDepth = new SoundMetricWeights { constant = 0.12f, tiltSignedAbs = 0.22f, symmetryInverse = 0.16f, sizeFactor = 0.36f },
+                modDepth = new SoundMetricWeights { constant = 0.12f, tiltSignedAbs = 0.22f, symmetryInverse = 0.16f, sizeFactor = 0.36f, tiltVariance = 0.20f },
                 stereoSpread = new SoundMetricWeights { constant = 0.14f, horizontalSpan = 0.16f, sizeFactor = 0.56f },
                 grooveInstability = new SoundMetricWeights { constant = 0.02f, curvatureVariance = 0.12f },
                 delayBias = new SoundMetricWeights { constant = 0.06f, tiltSignedAbs = 0.1f, sizeFactor = 0.16f },
                 reverbBias = new SoundMetricWeights { constant = 0.12f, pathLength = 0.08f, smoothness = 0.12f, sizeFactor = 0.58f },
                 waveMorph = new SoundMetricWeights { constant = 0.18f, angularity = 0.22f, tiltSignedAbs = 0.1f, sizeFactor = 0.08f },
-                filterMotion = new SoundMetricWeights { constant = 0.16f, tiltSignedAbs = 0.3f, symmetryInverse = 0.12f, sizeFactor = 0.4f },
+                filterMotion = new SoundMetricWeights { constant = 0.16f, tiltSignedAbs = 0.3f, symmetryInverse = 0.12f, sizeFactor = 0.4f, tiltMean = 0.28f },
                 transientSharpness = new SoundMetricWeights { constant = 0.06f, angularity = 0.22f, compactness = 0.12f },
                 body = new SoundMetricWeights { constant = 0.14f, smoothness = 0.18f, verticalSpan = 0.06f, sizeFactor = 0.66f }
             };
@@ -152,6 +152,14 @@ namespace RhythmForge.Core.Data
         public float smoothness;
         public float contourPull;
 
+        // Kinematic weights (Phase 1 — Pen-as-Instrument)
+        public float pressureMean;
+        public float pressurePeak;
+        public float tiltMean;
+        public float tiltVariance;
+        public float speedMean;
+        public float speedTailOff;
+
         public float Evaluate(ShapeProfile shapeProfile, SoundMappingInputs inputs)
         {
             shapeProfile = shapeProfile ?? new ShapeProfile();
@@ -181,7 +189,14 @@ namespace RhythmForge.Core.Data
                 + compactness * inputs.compactness
                 + instability * inputs.instability
                 + smoothness * inputs.smoothness
-                + contourPull * inputs.contourPull;
+                + contourPull * inputs.contourPull
+                // Kinematic contributions (Phase 1 — Pen-as-Instrument)
+                + pressureMean * shapeProfile.pressureMean
+                + pressurePeak * shapeProfile.pressurePeak
+                + tiltMean * shapeProfile.tiltMean
+                + tiltVariance * shapeProfile.tiltVariance
+                + speedMean * shapeProfile.speedMean
+                + speedTailOff * shapeProfile.speedTailOff;
         }
     }
 

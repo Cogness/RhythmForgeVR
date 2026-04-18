@@ -30,6 +30,8 @@ namespace RhythmForge.Core.Session
         public string shapeSummary;
         public string summary;
         public string details;
+        // Kinematic data captured during the stroke (Phase 1 — Pen-as-Instrument)
+        public StrokeKinematics kinematics;
     }
 
     public static class DraftBuilder
@@ -51,7 +53,8 @@ namespace RhythmForge.Core.Session
         }
 
         public static DraftResult BuildFromStroke(PatternType type, List<Vector2> rawPoints,
-            Vector3 strokeCenter, Quaternion renderRotation, AppState state, SessionStore store)
+            Vector3 strokeCenter, Quaternion renderRotation, AppState state, SessionStore store,
+            StrokeKinematics kinematics = null)
         {
             var behavior = PatternBehaviorRegistry.Get(type);
             var metrics = StrokeAnalyzer.Analyze(rawPoints);
@@ -70,13 +73,18 @@ namespace RhythmForge.Core.Session
 
             // Build shape DNA
             var shapeProfile = ShapeProfileCalculator.Derive(normalizedPoints, metrics, type);
+
+            // Populate kinematic fields if capture data is available (Phase 1 — Pen-as-Instrument)
+            if (kinematics != null)
+                ShapeProfileCalculator.PopulateKinematics(shapeProfile, kinematics);
+
             var soundProfile = behavior.DeriveSoundProfile(shapeProfile);
             string shapeSummary = PresetBiasResolver.SummarizeShapeDNA(type, shapeProfile, soundProfile);
 
             // Derive sequence
             var derivation = behavior.Derive(rawPoints, metrics, keyName, groupId, shapeProfile, soundProfile);
 
-            return new DraftResult
+            var result = new DraftResult
             {
                 success = true,
                 type = type,
@@ -97,8 +105,33 @@ namespace RhythmForge.Core.Session
                 soundProfile = soundProfile,
                 shapeSummary = shapeSummary,
                 summary = derivation.summary,
-                details = ComposeDetails(derivation.details, shapeSummary)
+                details = ComposeDetails(derivation.details, shapeSummary),
+                kinematics = kinematics
             };
+
+            // Phase 3 §5.3 — spawn position corrections
+            result.spawnPosition = CorrectSpawnPosition(result.spawnPosition, shapeProfile, kinematics);
+
+            return result;
+        }
+
+        private static Vector3 CorrectSpawnPosition(Vector3 pos, ShapeProfile sp, StrokeKinematics kinematics)
+        {
+            if (sp == null) return pos;
+
+            // Lift horizontal strokes slightly so they're visible above the floor
+            if (sp.verticalityWorld < 0.25f && pos.y < 1.2f)
+                pos.y += 0.1f;
+
+            // Clamp distance from origin to avoid spawning inside the user's face or far behind them.
+            // (In VR the stroke center is typically 0.3–2 m from origin)
+            float dist = pos.magnitude;
+            if (dist < 0.5f && dist > 0.001f)
+                pos = pos.normalized * 0.5f;
+            else if (dist > 3.5f)
+                pos = pos.normalized * 3.5f;
+
+            return pos;
         }
     }
 }

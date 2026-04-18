@@ -23,10 +23,16 @@ namespace RhythmForge.UI.Panels
         [SerializeField] private Text _transportStatus;
         [SerializeField] private Button _toggleParamsButton;
         [SerializeField] private Text _toggleParamsLabel;
+        [SerializeField] private Button _conductButton;
+        [SerializeField] private Text _conductLabel;
 
         private bool _showParams = true;
+        private bool _conductingMode = false;
 
         public event Action<bool> OnParamsVisibilityChanged;
+        public event Action<bool> OnConductingModeChanged;
+
+        public bool IsConductingMode => _conductingMode;
 
         private SessionStore _store;
         private Sequencer.Sequencer _sequencer;
@@ -37,7 +43,8 @@ namespace RhythmForge.UI.Panels
         public void SetUIRefs(Button playStopButton, Text playStopLabel,
             Button modeButton, Text modeButtonLabel,
             Text bpmText, Text keyText, Text transportStatus,
-            Button toggleParamsButton = null, Text toggleParamsLabel = null)
+            Button toggleParamsButton = null, Text toggleParamsLabel = null,
+            Button conductButton = null, Text conductLabel = null)
         {
             _playStopButton      = playStopButton;
             _playStopLabel       = playStopLabel;
@@ -48,6 +55,8 @@ namespace RhythmForge.UI.Panels
             _transportStatus     = transportStatus;
             _toggleParamsButton  = toggleParamsButton;
             _toggleParamsLabel   = toggleParamsLabel;
+            _conductButton       = conductButton;
+            _conductLabel        = conductLabel;
         }
 
         public void Initialize(SessionStore store, Sequencer.Sequencer sequencer, DrawModeController drawMode)
@@ -63,8 +72,11 @@ namespace RhythmForge.UI.Panels
                 _modeButton.onClick.AddListener(() => _drawMode.CycleMode());
             if (_toggleParamsButton)
                 _toggleParamsButton.onClick.AddListener(ToggleParams);
+            if (_conductButton)
+                _conductButton.onClick.AddListener(ToggleConducting);
 
             RefreshParamsButton();
+            RefreshConductButton();
 
             if (_eventBus != null)
             {
@@ -132,6 +144,28 @@ namespace RhythmForge.UI.Panels
         {
             if (_toggleParamsLabel != null)
                 _toggleParamsLabel.text = _showParams ? "Params\nON" : "Params\nOFF";
+        }
+
+        private void ToggleConducting()
+        {
+            _conductingMode = !_conductingMode;
+            RefreshConductButton();
+            OnConductingModeChanged?.Invoke(_conductingMode);
+        }
+
+        private void RefreshConductButton()
+        {
+            if (_conductLabel != null)
+                _conductLabel.text = _conductingMode ? "Conduct\nON" : "Conduct\nOFF";
+
+            if (_conductButton == null) return;
+            var colors = _conductButton.colors;
+            colors.normalColor = _conductingMode
+                ? new Color(0.2f, 0.7f, 0.5f, 1f)   // teal when active
+                : new Color(0.22f, 0.25f, 0.32f, 1f); // dark when inactive
+            _conductButton.colors = colors;
+            var img = _conductButton.GetComponent<UnityEngine.UI.Image>();
+            if (img != null) img.color = colors.normalColor;
         }
 
         public bool ShowParams => _showParams;

@@ -29,6 +29,8 @@ namespace RhythmForge.Interaction
         // 3D world-space points
         private List<Vector3> _worldPoints = new List<Vector3>();
         private List<float> _pressures = new List<float>();
+        private RhythmForge.Core.Analysis.StrokeKinematics _kinematics = new RhythmForge.Core.Analysis.StrokeKinematics();
+        private float _startTime;
         private LineRenderer _currentLine;
         private GameObject _currentLineObj;
         private bool _isDrawing;
@@ -50,6 +52,9 @@ namespace RhythmForge.Interaction
         private IInputProvider _inputProvider;
         public RhythmForgeEventBus EventBus => _eventBus;
 
+        // SW-1: Pen sidetone
+        private PenSidetoneSource _sidetone;
+
         /// <summary>Called by RhythmForgeBootstrapper to inject component references.</summary>
         public void Configure(IInputProvider input, DrawModeController drawMode,
             Transform userHead, Material strokeMaterial = null,
@@ -61,6 +66,7 @@ namespace RhythmForge.Interaction
             _userHead = userHead;
             _uiPointer = uiPointer;
             if (strokeMaterial != null) _strokeMaterial = strokeMaterial;
+            _sidetone = gameObject.AddComponent<PenSidetoneSource>(); _sidetone.Initialize();
         }
 
         public void Initialize(SessionStore store)
@@ -102,7 +108,7 @@ namespace RhythmForge.Interaction
                     StartStroke();
                     _isDrawing = true;
                 }
-                AddPoint(input.StylusPose.position, pressure);
+                AddPoint(input.StylusPose.position, pressure, input.StylusPose.rotation);
             }
             else if (_isDrawing)
             {
@@ -119,6 +125,8 @@ namespace RhythmForge.Interaction
         {
             _worldPoints.Clear();
             _pressures.Clear();
+            _kinematics = new RhythmForge.Core.Analysis.StrokeKinematics();
+            _startTime = Time.time;
 
             _currentLineObj = new GameObject("RhythmForge_Stroke");
             _currentLine = _currentLineObj.AddComponent<LineRenderer>();
@@ -137,9 +145,10 @@ namespace RhythmForge.Interaction
 
             OnStrokeStarted?.Invoke();
             _eventBus?.Publish(new StrokeStartedEvent());
+            _sidetone?.StartDraw(_drawMode != null ? _drawMode.CurrentMode : PatternType.RhythmLoop);
         }
 
-        private void AddPoint(Vector3 worldPos, float pressure)
+        private void AddPoint(Vector3 worldPos, float pressure, Quaternion rotation)
         {
             if (Vector3.Distance(worldPos, _previousPoint) < _minPointDistance)
                 return;
@@ -147,6 +156,7 @@ namespace RhythmForge.Interaction
             _previousPoint = worldPos;
             _worldPoints.Add(worldPos);
             _pressures.Add(pressure);
+            _kinematics.AddPoint(worldPos, pressure, 0f, rotation, Time.time - _startTime);
 
             _currentLine.positionCount = _worldPoints.Count;
             _currentLine.SetPosition(_worldPoints.Count - 1, worldPos);
@@ -161,10 +171,29 @@ namespace RhythmForge.Interaction
                 curve.AddKey(t, w);
             }
             _currentLine.widthCurve = curve;
+
+            // SW-1: Update sidetone volume from pressure
+            _sidetone?.UpdatePressure(pressure);
+
+            // SW-2: Tilt feedback: blend base color toward amber as the pen tilts from vertical
+            Color baseColor = _drawMode != null ? _drawMode.GetCurrentColor() : Color.cyan;
+            Color tiltColor = new Color(1f, 0.55f, 0.1f); // amber
+
+            // Compute angle between stylus forward and world up — 0 = pointing up, 90 = horizontal
+            Vector3 stylusForward = rotation * Vector3.forward;
+            float tiltAngle = Vector3.Angle(stylusForward, Vector3.up);  // 0–180 degrees
+            // Normalize: 0 at 0°/180° (aligned with up), 1 at 90° (horizontal / most expressive)
+            float tiltT = Mathf.Sin(tiltAngle * Mathf.Deg2Rad);  // peaks at 90°, stays in 0–1
+
+            Color blendedColor = Color.Lerp(baseColor, tiltColor, tiltT * 0.6f);
+            _currentLine.material.color = blendedColor;
+            _currentLine.startColor = blendedColor;
+            _currentLine.endColor = blendedColor;
         }
 
         private void FinishStroke()
         {
+            _sidetone?.StopDraw();
             if (_worldPoints.Count < 3)
             {
                 ClearCurrentStroke();
@@ -180,10 +209,17 @@ namespace RhythmForge.Interaction
             var strokeFrame = BuildStrokeFrame(_worldPoints, center);
             List<Vector2> projected = ProjectTo2D(_worldPoints, center, strokeFrame.right, strokeFrame.up);
 
+            // Inform kinematics of the stroke plane normal for tilt projection (Phase 1)
+            Vector3 planeNormal = strokeFrame.rotation * Vector3.forward;
+            _kinematics.SetPlaneNormal(planeNormal);
+
+            // Phase 3 — 3D stroke feature extraction
+            Compute3DStrokeFeatures(center, planeNormal);
+
             // Build draft
             PatternType type = _drawMode != null ? _drawMode.CurrentMode : PatternType.RhythmLoop;
             var draft = DraftBuilder.BuildFromStroke(
-                type, projected, center, strokeFrame.rotation, _store.State, _store);
+                type, projected, center, strokeFrame.rotation, _store.State, _store, _kinematics);
 
             if (!draft.success)
             {
@@ -301,6 +337,48 @@ namespace RhythmForge.Interaction
             };
         }
 
+        private void Compute3DStrokeFeatures(Vector3 center, Vector3 planeNormal)
+        {
+            if (_worldPoints.Count < 2) return;
+
+            // ── Planarity ─────────────────────────────────────────────────────────
+            // Measure how much the stroke escapes its best-fit plane.
+            // planarity = 1 means perfectly flat, 0 means highly volumetric.
+            float sumSqOut = 0f;
+            float maxSqOut = 0f;
+            foreach (var pt in _worldPoints)
+            {
+                float d = Vector3.Dot(pt - center, planeNormal);
+                float sq = d * d;
+                sumSqOut += sq;
+                if (sq > maxSqOut) maxSqOut = sq;
+            }
+            float meanSqOut = sumSqOut / _worldPoints.Count;
+            _kinematics.planarity = maxSqOut > 0.000001f
+                ? Mathf.Clamp01(1f - Mathf.Sqrt(meanSqOut / maxSqOut))
+                : 1f;
+
+            // ── ThrustAxis ────────────────────────────────────────────────────────
+            // How much of the stroke's overall displacement is toward/away from the user.
+            Vector3 strokeSpan = _worldPoints[_worldPoints.Count - 1] - _worldPoints[0];
+            float spanMag = strokeSpan.magnitude;
+            if (spanMag > 0.001f && _userHead != null)
+            {
+                Vector3 headFwd = _userHead.forward;
+                _kinematics.thrustAxis = Mathf.Abs(Vector3.Dot(strokeSpan / spanMag, headFwd));
+            }
+            else
+            {
+                _kinematics.thrustAxis = 0f;
+            }
+
+            // ── VerticalityWorld ─────────────────────────────────────────────────
+            // How aligned the stroke's principal axis is with world up.
+            _kinematics.verticalityWorld = spanMag > 0.001f
+                ? Mathf.Abs(Vector3.Dot(strokeSpan / spanMag, Vector3.up))
+                : 0f;
+        }
+
         private List<Vector2> ProjectTo2D(List<Vector3> worldPoints, Vector3 center, Vector3 right, Vector3 up)
         {
             var result = new List<Vector2>(worldPoints.Count);
@@ -343,6 +421,7 @@ namespace RhythmForge.Interaction
 
         private void ClearCurrentStroke()
         {
+            _sidetone?.StopDraw();
             if (_currentLineObj != null)
             {
                 Destroy(_currentLineObj);

@@ -24,6 +24,9 @@ namespace RhythmForge.Core.PatternBehavior.Behaviors
         {
             var genre = GenreRegistry.GetActive();
             var result = genre.HarmonyDeriver.Derive(points, metrics, keyName, shapeProfile, soundProfile, genre);
+
+            result = Apply3DHarmonyModifications(result, shapeProfile);
+
             return new PatternDerivationResult
             {
                 bars = result.bars,
@@ -96,6 +99,37 @@ namespace RhythmForge.Core.PatternBehavior.Behaviors
         {
             sound = sound ?? new SoundProfile();
             return chordDuration + 0.14f + sound.releaseBias * 0.78f + sound.reverbBias * 0.22f;
+        }
+
+        private static HarmonyDerivationResult Apply3DHarmonyModifications(
+            HarmonyDerivationResult result, ShapeProfile sp)
+        {
+            if (sp == null || result.derivedSequence?.chord == null || result.derivedSequence.chord.Count < 2)
+                return result;
+
+            var chord = result.derivedSequence.chord;
+            int root = chord[0];
+
+            if (sp.verticalityWorld > 0.6f)
+            {
+                // Wide voicing: push the top note up an octave if it isn't already spread
+                int topIndex = chord.Count - 1;
+                if (chord[topIndex] - root < 13)
+                    chord[topIndex] += 12;
+            }
+            else if (sp.verticalityWorld < 0.25f)
+            {
+                // Close voicing: pull all notes within one octave of the root
+                for (int i = 1; i < chord.Count; i++)
+                {
+                    while (chord[i] - root > 12)
+                        chord[i] -= 12;
+                    while (chord[i] - root < 0)
+                        chord[i] += 12;
+                }
+            }
+
+            return result;
         }
     }
 }

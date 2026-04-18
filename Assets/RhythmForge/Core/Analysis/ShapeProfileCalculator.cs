@@ -134,6 +134,46 @@ namespace RhythmForge.Core.Analysis
             };
         }
 
+        /// <summary>
+        /// Populates kinematic fields on an existing ShapeProfile from captured StrokeKinematics.
+        /// planeRight and planeUp are derived from the stored planeNormal; Vector3.right/up used as fallback.
+        /// Call this after Derive() returns the profile (Phase 1 — Pen-as-Instrument).
+        /// </summary>
+        public static void PopulateKinematics(ShapeProfile profile, StrokeKinematics kinematics)
+        {
+            if (profile == null || kinematics == null || kinematics.points.Count == 0)
+                return;
+
+            // Derive stroke-plane axes from stored normal (or use world axes as fallback)
+            Vector3 normal = kinematics.planeNormal.sqrMagnitude > 0.0001f
+                ? kinematics.planeNormal.normalized
+                : Vector3.forward;
+
+            Vector3 planeRight = Vector3.Cross(Vector3.up, normal);
+            if (planeRight.sqrMagnitude < 0.0001f)
+                planeRight = Vector3.right;
+            else
+                planeRight.Normalize();
+
+            Vector3 planeUp = Vector3.Cross(normal, planeRight).normalized;
+
+            var features = StrokeKinematicsAnalyzer.Analyze(kinematics, planeRight, planeUp);
+            profile.pressureMean      = features.pressureMean;
+            profile.pressureVariance  = features.pressureVariance;
+            profile.pressurePeak      = features.pressurePeak;
+            profile.pressureSlopeEnd  = features.pressureSlopeEnd;
+            profile.tiltMean          = features.tiltMean;
+            profile.tiltVariance      = features.tiltVariance;
+            profile.speedMean         = features.speedMean;
+            profile.speedPeak         = features.speedPeak;
+            profile.speedTailOff      = features.speedTailOff;
+            profile.strokeSeconds     = features.strokeSeconds;
+            // 3D stroke features (Phase 3)
+            profile.planarity        = kinematics.planarity;
+            profile.thrustAxis       = kinematics.thrustAxis;
+            profile.verticalityWorld = kinematics.verticalityWorld;
+        }
+
         private static float DeriveSymmetryScore(List<Vector2> points, Vector2 centroid)
         {
             var samples = StrokeAnalyzer.ResampleStroke(points, 20);

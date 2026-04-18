@@ -12,7 +12,11 @@ namespace RhythmForge.Core.Session
         {
             var fallback = AppStateFactory.CreateEmpty();
             int loadedVersion = state.version;
-            state.version = 5;
+            // v6: Phase 1 kinematic fields added to ShapeProfile (pressureMean/Variance/Peak/SlopeEnd,
+            //     tiltMean/Variance, speedMean/Peak/TailOff, strokeSeconds). All default to 0 on
+            //     deserialization — zero kinematic weights leave old sessions unchanged.
+            // v6→v7: planarity, thrustAxis, verticalityWorld added to ShapeProfile (default 0 = no 3D influence)
+            state.version = 7;
 
             if (state.scenes == null || state.scenes.Count != 4)
                 state.scenes = fallback.scenes;

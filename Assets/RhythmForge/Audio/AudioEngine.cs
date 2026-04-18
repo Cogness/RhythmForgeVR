@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using RhythmForge.Core.Data;
+using RhythmForge.Core.Session;
+using RhythmForge.Core.Events;
 
 namespace RhythmForge.Audio
 {
@@ -15,8 +17,20 @@ namespace RhythmForge.Audio
         [SerializeField] [Range(0f, 1f)] private float _masterVolume = 0.82f;
 
         private Dictionary<string, InstanceVoicePool> _instancePools = new Dictionary<string, InstanceVoicePool>();
+        private SpatialZoneController _zoneController;
+        private OrchestratorStage _orchestratorStage;
 
         public bool IsReady => _samplePlayer != null;
+
+        public void SetZoneController(SpatialZoneController controller)
+        {
+            _zoneController = controller;
+        }
+
+        public void SetOrchestratorStage(OrchestratorStage stage)
+        {
+            _orchestratorStage = stage;
+        }
 
         public void Configure(SamplePlayer samplePlayer)
         {
@@ -43,11 +57,23 @@ namespace RhythmForge.Audio
         public void PlayDrum(InstrumentPreset preset, string lane, float velocity, float pan, float brightness,
             float depth, float fxSend, SoundProfile soundProfile, string instanceId = null)
         {
+            // Zone bus FX contribution
+            if (instanceId != null && _zoneController != null)
+            {
+                var zoneFx = _zoneController.GetZoneFx(instanceId);
+                fxSend = Mathf.Clamp01(fxSend + zoneFx.reverbAdd);
+                brightness = Mathf.Clamp01(brightness + zoneFx.filterCutoffOffset);
+            }
+
+            // Conductor gain modifier (crescendo / fade / cutoff)
+            float gainMod = _orchestratorStage?.GetGainMod(instanceId) ?? 1f;
+            if (gainMod <= 0.001f) return;
+
             if (!IsReady) return;
             soundProfile = soundProfile ?? new SoundProfile();
 
             float gainAmount = Mathf.Clamp01(
-                (1.02f - depth * 0.45f) * velocity * (0.72f + soundProfile.body * 0.42f));
+                (1.02f - depth * 0.45f) * velocity * (0.72f + soundProfile.body * 0.42f) * gainMod);
 
             if (instanceId != null && _instancePools.TryGetValue(instanceId, out var drumPool))
             {
@@ -79,11 +105,23 @@ namespace RhythmForge.Audio
             float pan, float brightness, float depth, float fxSend,
             SoundProfile soundProfile, float glide = 0f, string instanceId = null)
         {
+            // Zone bus FX contribution
+            if (instanceId != null && _zoneController != null)
+            {
+                var zoneFx = _zoneController.GetZoneFx(instanceId);
+                fxSend = Mathf.Clamp01(fxSend + zoneFx.reverbAdd);
+                brightness = Mathf.Clamp01(brightness + zoneFx.filterCutoffOffset);
+            }
+
+            // Conductor gain modifier
+            float gainMod = _orchestratorStage?.GetGainMod(instanceId) ?? 1f;
+            if (gainMod <= 0.001f) return;
+
             if (!IsReady) return;
             soundProfile = soundProfile ?? new SoundProfile();
 
             float gainAmount = Mathf.Clamp01(
-                (1.02f - depth * 0.4f) * velocity * (0.72f + soundProfile.body * 0.32f));
+                (1.02f - depth * 0.4f) * velocity * (0.72f + soundProfile.body * 0.32f) * gainMod);
 
             if (instanceId != null && _instancePools.TryGetValue(instanceId, out var melodyPool))
             {
@@ -118,11 +156,23 @@ namespace RhythmForge.Audio
             float duration, float pan, float brightness, float depth,
             float fxSend, SoundProfile soundProfile, string instanceId = null)
         {
+            // Zone bus FX contribution
+            if (instanceId != null && _zoneController != null)
+            {
+                var zoneFx = _zoneController.GetZoneFx(instanceId);
+                fxSend = Mathf.Clamp01(fxSend + zoneFx.reverbAdd);
+                brightness = Mathf.Clamp01(brightness + zoneFx.filterCutoffOffset);
+            }
+
+            // Conductor gain modifier
+            float gainMod = _orchestratorStage?.GetGainMod(instanceId) ?? 1f;
+            if (gainMod <= 0.001f) return;
+
             if (!IsReady) return;
             soundProfile = soundProfile ?? new SoundProfile();
 
             float gainAmount = Mathf.Clamp01(
-                (1.02f - depth * 0.4f) * velocity * (0.72f + soundProfile.body * 0.32f));
+                (1.02f - depth * 0.4f) * velocity * (0.72f + soundProfile.body * 0.32f) * gainMod);
 
             if (instanceId != null && _instancePools.TryGetValue(instanceId, out var chordPool))
             {

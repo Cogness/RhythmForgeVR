@@ -119,6 +119,14 @@ namespace RhythmForge.UI.Panels
             if (_detailsText) _detailsText.text = draft.details;
             if (_typeLabel) _typeLabel.text = draft.type.ToString();
             if (_typeColorBar) _typeColorBar.color = draft.color;
+
+            // SW-3: Show kinematic pressure data if available
+            if (_detailsText != null && draft.shapeProfile != null && draft.shapeProfile.pressureMean > 0.01f)
+            {
+                string pressureLine = $"\nPressure: {draft.shapeProfile.pressureMean:F2} avg  " +
+                                      $"{draft.shapeProfile.pressurePeak:F2} peak";
+                _detailsText.text = draft.details + pressureLine;
+            }
         }
 
         private void Confirm(bool duplicate)

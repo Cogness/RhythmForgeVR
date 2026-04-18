@@ -153,4 +153,41 @@ namespace RhythmForge.Core.Events
         public string PreviousGenreId { get; }
         public string NewGenreId { get; }
     }
+
+    public readonly struct SpatialZoneChangedEvent
+    {
+        public SpatialZoneChangedEvent(string instanceId, string previousZoneId, string newZoneId)
+        {
+            InstanceId     = instanceId;
+            PreviousZoneId = previousZoneId;
+            NewZoneId      = newZoneId;
+        }
+
+        public string InstanceId     { get; }
+        public string PreviousZoneId { get; }
+        public string NewZoneId      { get; }
+    }
+
+    public readonly struct ConductorGestureEvent
+    {
+        public ConductorGestureEvent(
+            RhythmForge.Interaction.ConductorGesture gesture,
+            string focusedZoneId,
+            bool   allZones,
+            float  swayPeriodSeconds)
+        {
+            Gesture            = gesture;
+            FocusedZoneId      = focusedZoneId;
+            AllZones           = allZones;
+            SwayPeriodSeconds  = swayPeriodSeconds;
+        }
+
+        public RhythmForge.Interaction.ConductorGesture Gesture { get; }
+        /// <summary>Zone that was in focus when the gesture fired, or null.</summary>
+        public string FocusedZoneId { get; }
+        /// <summary>True when left grip was held — gesture applies to all zones.</summary>
+        public bool AllZones { get; }
+        /// <summary>Estimated sway period in seconds (only meaningful for Sway gesture).</summary>
+        public float SwayPeriodSeconds { get; }
+    }
 }

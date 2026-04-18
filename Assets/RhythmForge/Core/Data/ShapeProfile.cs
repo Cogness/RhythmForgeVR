@@ -27,6 +27,23 @@ namespace RhythmForge.Core.Data
         public float worldAverageSize;
         public float worldMaxDimension;
 
+        // Kinematic features (Phase 1 — Pen-as-Instrument)
+        public float pressureMean;
+        public float pressureVariance;
+        public float pressurePeak;
+        public float pressureSlopeEnd;
+        public float tiltMean;
+        public float tiltVariance;
+        public float speedMean;
+        public float speedPeak;
+        public float speedTailOff;
+        public float strokeSeconds;
+
+        // 3D stroke features (Phase 3 — Use the third dimension)
+        public float planarity;
+        public float thrustAxis;
+        public float verticalityWorld;
+
         public ShapeProfile Clone()
         {
             return new ShapeProfile
@@ -51,7 +68,22 @@ namespace RhythmForge.Core.Data
                 worldHeight = worldHeight,
                 worldLength = worldLength,
                 worldAverageSize = worldAverageSize,
-                worldMaxDimension = worldMaxDimension
+                worldMaxDimension = worldMaxDimension,
+                // Kinematic features (Phase 1 — Pen-as-Instrument)
+                pressureMean = pressureMean,
+                pressureVariance = pressureVariance,
+                pressurePeak = pressurePeak,
+                pressureSlopeEnd = pressureSlopeEnd,
+                tiltMean = tiltMean,
+                tiltVariance = tiltVariance,
+                speedMean = speedMean,
+                speedPeak = speedPeak,
+                speedTailOff = speedTailOff,
+                strokeSeconds = strokeSeconds,
+                // 3D stroke features (Phase 3 — Use the third dimension)
+                planarity = planarity,
+                thrustAxis = thrustAxis,
+                verticalityWorld = verticalityWorld
             };
         }
     }

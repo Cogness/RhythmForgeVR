@@ -18,11 +18,11 @@ namespace RhythmForge.Editor
                 controller.Initialize(new SessionStore(), SpatialZoneLayout.CreateDefault(), null, null);
 
                 controller.ApplyConductorGesture("MelodyFront", ConductorGestureKind.LiftTendu, 1f);
-                controller.GetLiveBiases("MelodyFront", out var liftedGain, out _, out _);
+                controller.GetLiveBiases("MelodyFront", out var liftedGain, out _, out _, out _);
                 controller.OnBarStart(3, 0d);
-                controller.GetLiveBiases("MelodyFront", out var decayedGain, out _, out _);
+                controller.GetLiveBiases("MelodyFront", out var decayedGain, out _, out _, out _);
                 controller.OnBarStart(5, 0d);
-                controller.GetLiveBiases("MelodyFront", out var resetGain, out _, out _);
+                controller.GetLiveBiases("MelodyFront", out var resetGain, out _, out _, out _);
 
                 Assert.That(liftedGain, Is.GreaterThan(1f));
                 Assert.That(decayedGain, Is.LessThan(liftedGain));
@@ -44,9 +44,9 @@ namespace RhythmForge.Editor
                 controller.Initialize(new SessionStore(), SpatialZoneLayout.CreateDefault(), null, null);
 
                 controller.ApplyConductorGesture("HarmonyBehind", ConductorGestureKind.FadePlie, 1f);
-                controller.GetLiveBiases("HarmonyBehind", out var fadedGain, out _, out _);
+                controller.GetLiveBiases("HarmonyBehind", out var fadedGain, out _, out _, out _);
                 controller.OnBarStart(5, 0d);
-                controller.GetLiveBiases("HarmonyBehind", out var resetGain, out _, out _);
+                controller.GetLiveBiases("HarmonyBehind", out var resetGain, out _, out _, out _);
 
                 Assert.That(fadedGain, Is.LessThan(1f));
                 Assert.That(resetGain, Is.EqualTo(1f).Within(0.0001f));
@@ -67,11 +67,11 @@ namespace RhythmForge.Editor
                 controller.Initialize(new SessionStore(), SpatialZoneLayout.CreateDefault(), null, null);
 
                 controller.ApplyConductorGesture("DrumsFloor", ConductorGestureKind.CutOff, 1f);
-                controller.GetLiveBiases("DrumsFloor", out _, out _, out var beforeBarStart);
+                controller.GetLiveBiases("DrumsFloor", out _, out _, out _, out var beforeBarStart);
                 controller.OnBarStart(2, 0d);
-                controller.GetLiveBiases("DrumsFloor", out _, out _, out var activeCut);
+                controller.GetLiveBiases("DrumsFloor", out _, out _, out _, out var activeCut);
                 controller.OnBarStart(3, 0d);
-                controller.GetLiveBiases("DrumsFloor", out _, out _, out var clearedCut);
+                controller.GetLiveBiases("DrumsFloor", out _, out _, out _, out var clearedCut);
 
                 Assert.That(beforeBarStart, Is.False);
                 Assert.That(activeCut, Is.True);
@@ -93,9 +93,9 @@ namespace RhythmForge.Editor
                 controller.Initialize(new SessionStore(), SpatialZoneLayout.CreateDefault(), null, null);
 
                 controller.ApplyConductorGesture("*", ConductorGestureKind.FadePlie, 1f);
-                controller.GetLiveBiases("DrumsFloor", out var drumsGain, out _, out _);
-                controller.GetLiveBiases("MelodyFront", out var melodyGain, out _, out _);
-                controller.GetLiveBiases("HarmonyBehind", out var harmonyGain, out _, out _);
+                controller.GetLiveBiases("DrumsFloor", out var drumsGain, out _, out _, out _);
+                controller.GetLiveBiases("MelodyFront", out var melodyGain, out _, out _, out _);
+                controller.GetLiveBiases("HarmonyBehind", out var harmonyGain, out _, out _, out _);
 
                 Assert.That(drumsGain, Is.LessThan(1f));
                 Assert.That(melodyGain, Is.LessThan(1f));
@@ -120,7 +120,7 @@ namespace RhythmForge.Editor
                 float staticGainBias = zone.gainBias;
 
                 controller.ApplyConductorGesture("MelodyFront", ConductorGestureKind.LiftTendu, 1f);
-                controller.GetLiveBiases("MelodyFront", out var liveGain, out _, out _);
+                controller.GetLiveBiases("MelodyFront", out var liveGain, out _, out _, out _);
 
                 Assert.That(zone.gainBias, Is.EqualTo(staticGainBias));
                 Assert.That(liveGain * zone.gainBias, Is.GreaterThan(staticGainBias));

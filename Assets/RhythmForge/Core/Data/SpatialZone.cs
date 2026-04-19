@@ -18,10 +18,15 @@ namespace RhythmForge.Core.Data
         public float gainBias = 1f;
         public float depthZThreshold;
 
-        public bool MatchesTarget(PatternType type, Vector3? localPosition = null)
+        public bool MatchesTarget(PatternType type, Vector3? localPosition = null, ShapeFacetMode? facetMode = null)
         {
             if (localPosition.HasValue && depthZThreshold > 0f && localPosition.Value.z < depthZThreshold)
                 return false;
+
+            // Free mode: a single MusicalShape drives all three facets, so
+            // the instance is relevant to every zone regardless of targetRole.
+            if (facetMode == ShapeFacetMode.Free)
+                return true;
 
             switch (type)
             {

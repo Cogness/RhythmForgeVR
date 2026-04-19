@@ -15,8 +15,10 @@ namespace RhythmForge.Core.Session
         {
             public float liveGainMult;
             public float liveReverbBoost;
+            public float liveDelayBoost;
             public float decayStartGainMult;
             public float decayStartReverbBoost;
+            public float decayStartDelayBoost;
             public int decayStartBar;
             public int decayBars;
             public bool liveCutArmed;
@@ -88,7 +90,7 @@ namespace RhythmForge.Core.Session
             return zone;
         }
 
-        public bool TryGetDefaultPlacementFor(PatternType type, Vector3? sourceWorldPosition, out Vector3 worldPosition)
+        public bool TryGetDefaultPlacementFor(PatternType type, Vector3? sourceWorldPosition, out Vector3 worldPosition, ShapeFacetMode? facetMode = null)
         {
             worldPosition = Vector3.zero;
             if (_layout?.Zones == null)
@@ -102,7 +104,7 @@ namespace RhythmForge.Core.Session
             float bestDistance = float.MaxValue;
             foreach (var zone in _layout.Zones)
             {
-                if (zone == null || !zone.MatchesTarget(type, localPosition))
+                if (zone == null || !zone.MatchesTarget(type, localPosition, facetMode))
                     continue;
 
                 if (!localPosition.HasValue)
@@ -128,7 +130,7 @@ namespace RhythmForge.Core.Session
 
         public bool TryGetDefaultPlacementFor(PatternType type, out Vector3 worldPosition)
         {
-            return TryGetDefaultPlacementFor(type, null, out worldPosition);
+            return TryGetDefaultPlacementFor(type, null, out worldPosition, null);
         }
 
         public SpatialZone ResolveZoneForPosition(string instanceId, Vector3 worldPosition)
@@ -244,10 +246,11 @@ namespace RhythmForge.Core.Session
                 visualizer.Pulse();
         }
 
-        public void GetLiveBiases(string zoneId, out float gainMult, out float reverbBoost, out bool cutActive)
+        public void GetLiveBiases(string zoneId, out float gainMult, out float reverbBoost, out float delayBoost, out bool cutActive)
         {
             gainMult = 1f;
             reverbBoost = 0f;
+            delayBoost = 0f;
             cutActive = false;
 
             if (string.IsNullOrEmpty(zoneId))
@@ -256,6 +259,7 @@ namespace RhythmForge.Core.Session
             var state = GetOrCreateConductorState(zoneId);
             gainMult = Mathf.Max(0.01f, state.liveGainMult);
             reverbBoost = Mathf.Max(0f, state.liveReverbBoost);
+            delayBoost = Mathf.Max(0f, state.liveDelayBoost);
             cutActive = state.cutActiveBar == _currentAbsoluteBar;
         }
 
@@ -277,10 +281,12 @@ namespace RhythmForge.Core.Session
                     float progress = Mathf.Clamp01((_currentAbsoluteBar - state.decayStartBar) / (float)state.decayBars);
                     state.liveGainMult = Mathf.Lerp(state.decayStartGainMult, 1f, progress);
                     state.liveReverbBoost = Mathf.Lerp(state.decayStartReverbBoost, 0f, progress);
+                    state.liveDelayBoost = Mathf.Lerp(state.decayStartDelayBoost, 0f, progress);
                     if (progress >= 1f)
                     {
                         state.liveGainMult = 1f;
                         state.liveReverbBoost = 0f;
+                        state.liveDelayBoost = 0f;
                         state.decayBars = 0;
                     }
                 }
@@ -410,16 +416,22 @@ namespace RhythmForge.Core.Session
             switch (kind)
             {
                 case ConductorGestureKind.LiftTendu:
-                    state.liveGainMult = Mathf.Clamp(state.liveGainMult * Mathf.Lerp(1.10f, 1.35f, magnitude), 0.5f, 1.35f);
+                    state.liveGainMult = Mathf.Clamp(Mathf.Max(state.liveGainMult, Mathf.Lerp(1.55f, 2.25f, magnitude)), 0.08f, 2.25f);
+                    state.liveReverbBoost = Mathf.Max(state.liveReverbBoost, Mathf.Lerp(0.08f, 0.22f, magnitude));
+                    state.liveDelayBoost = Mathf.Max(state.liveDelayBoost, Mathf.Lerp(0.04f, 0.12f, magnitude));
                     state.decayStartGainMult = state.liveGainMult;
                     state.decayStartReverbBoost = state.liveReverbBoost;
+                    state.decayStartDelayBoost = state.liveDelayBoost;
                     state.decayStartBar = _currentAbsoluteBar;
                     state.decayBars = 4;
                     break;
                 case ConductorGestureKind.FadePlie:
-                    state.liveGainMult = Mathf.Clamp(state.liveGainMult * Mathf.Lerp(0.90f, 0.50f, magnitude), 0.5f, 1.35f);
+                    state.liveGainMult = Mathf.Clamp(Mathf.Min(state.liveGainMult, Mathf.Lerp(0.28f, 0.06f, magnitude)), 0.06f, 2.25f);
+                    state.liveReverbBoost = Mathf.Max(state.liveReverbBoost, Mathf.Lerp(0.18f, 0.48f, magnitude));
+                    state.liveDelayBoost = Mathf.Max(state.liveDelayBoost, Mathf.Lerp(0.08f, 0.24f, magnitude));
                     state.decayStartGainMult = state.liveGainMult;
                     state.decayStartReverbBoost = state.liveReverbBoost;
+                    state.decayStartDelayBoost = state.liveDelayBoost;
                     state.decayStartBar = _currentAbsoluteBar;
                     state.decayBars = 4;
                     break;
@@ -439,8 +451,10 @@ namespace RhythmForge.Core.Session
                 {
                     liveGainMult = 1f,
                     liveReverbBoost = 0f,
+                    liveDelayBoost = 0f,
                     decayStartGainMult = 1f,
                     decayStartReverbBoost = 0f,
+                    decayStartDelayBoost = 0f,
                     decayStartBar = _currentAbsoluteBar,
                     decayBars = 0,
                     liveCutArmed = false,

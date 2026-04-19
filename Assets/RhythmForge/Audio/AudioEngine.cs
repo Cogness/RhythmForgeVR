@@ -71,11 +71,13 @@ namespace RhythmForge.Audio
         {
             if (!IsReady) return;
             soundProfile = soundProfile ?? new SoundProfile();
-            if (!ApplyZoneBias(instanceId, ref gainTrim, ref reverbSend, ref delaySend))
+            if (!ApplyZoneBias(instanceId, ref gainTrim, ref reverbSend, ref delaySend, out var conductorGainMult))
                 return;
 
-            float gainAmount = Mathf.Clamp01(
-                gainTrim * velocity * velocity * (0.72f + soundProfile.body * 0.42f));
+            float gainAmount = Mathf.Clamp(
+                gainTrim * velocity * velocity * (0.72f + soundProfile.body * 0.42f) * conductorGainMult,
+                0.03f,
+                2.25f);
 
             var spec = VoiceSpecResolver.ResolveDrum(lane, preset, soundProfile, brightness, reverbSend, delaySend);
             PlayResolved(spec, gainAmount, instanceId);
@@ -97,11 +99,13 @@ namespace RhythmForge.Audio
         {
             if (!IsReady) return;
             soundProfile = soundProfile ?? new SoundProfile();
-            if (!ApplyZoneBias(instanceId, ref gainTrim, ref reverbSend, ref delaySend))
+            if (!ApplyZoneBias(instanceId, ref gainTrim, ref reverbSend, ref delaySend, out var conductorGainMult))
                 return;
 
-            float gainAmount = Mathf.Clamp01(
-                gainTrim * velocity * velocity * (0.72f + soundProfile.body * 0.32f));
+            float gainAmount = Mathf.Clamp(
+                gainTrim * velocity * velocity * (0.72f + soundProfile.body * 0.32f) * conductorGainMult,
+                0.03f,
+                2.25f);
 
             var spec = VoiceSpecResolver.ResolveMelody(
                 preset,
@@ -132,14 +136,16 @@ namespace RhythmForge.Audio
             if (!IsReady) return;
             if (chord == null) return;
             soundProfile = soundProfile ?? new SoundProfile();
-            if (!ApplyZoneBias(instanceId, ref gainTrim, ref reverbSend, ref delaySend))
+            if (!ApplyZoneBias(instanceId, ref gainTrim, ref reverbSend, ref delaySend, out var conductorGainMult))
                 return;
 
             for (int i = 0; i < chord.Count; i++)
             {
                 float noteVelocity = velocity * (i == 0 ? 0.9f : 0.72f);
-                float noteGain = Mathf.Clamp01(
-                    gainTrim * noteVelocity * noteVelocity * (0.72f + soundProfile.body * 0.32f) * 0.66f);
+                float noteGain = Mathf.Clamp(
+                    gainTrim * noteVelocity * noteVelocity * (0.72f + soundProfile.body * 0.32f) * 0.66f * conductorGainMult,
+                    0.03f,
+                    2.25f);
                 var spec = VoiceSpecResolver.ResolveHarmony(
                     preset,
                     soundProfile,
@@ -178,8 +184,9 @@ namespace RhythmForge.Audio
                 pool.Play(clip, volume, startDelay);
         }
 
-        private static bool ApplyZoneBias(string instanceId, ref float gainTrim, ref float reverbSend, ref float delaySend)
+        private static bool ApplyZoneBias(string instanceId, ref float gainTrim, ref float reverbSend, ref float delaySend, out float conductorGainMult)
         {
+            conductorGainMult = 1f;
             if (string.IsNullOrEmpty(instanceId))
                 return true;
 
@@ -187,7 +194,7 @@ namespace RhythmForge.Audio
             if (zone == null)
                 return true;
 
-            SpatialZoneController.Shared.GetLiveBiases(zone.id, out var liveGainMult, out var liveReverbBoost, out var cutActive);
+            SpatialZoneController.Shared.GetLiveBiases(zone.id, out var liveGainMult, out var liveReverbBoost, out var liveDelayBoost, out var cutActive);
             if (cutActive)
                 return false;
 
@@ -195,7 +202,8 @@ namespace RhythmForge.Audio
             delaySend = Mathf.Clamp01(delaySend + zone.delayBias);
             gainTrim = Mathf.Clamp(gainTrim * Mathf.Max(0.01f, zone.gainBias), 0.5f, 1.25f);
             reverbSend = Mathf.Clamp01(reverbSend + liveReverbBoost);
-            gainTrim = Mathf.Clamp(gainTrim * liveGainMult, 0.5f, 1.25f);
+            delaySend = Mathf.Clamp01(delaySend + liveDelayBoost);
+            conductorGainMult = liveGainMult;
             return true;
         }
 

@@ -9,7 +9,6 @@ using RhythmForge.Audio;
 using RhythmForge.Interaction;
 using RhythmForge.UI;
 using RhythmForge.UI.Panels;
-using ConductorGesture = RhythmForge.Interaction.ConductorGesture;
 
 namespace RhythmForge
 {

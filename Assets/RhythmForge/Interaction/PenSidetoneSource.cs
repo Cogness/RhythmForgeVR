@@ -1,4 +1,5 @@
 using UnityEngine;
+using PatternType = RhythmForge.Core.Data.PatternType;
 
 namespace RhythmForge.Interaction
 {

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using RhythmForge.Core.Data;
 using RhythmForge.Core.Session;
+using RhythmForge.Interaction;
 using RhythmForge.Sequencer;
 
 namespace RhythmForge.Core.Events
@@ -171,18 +172,18 @@ namespace RhythmForge.Core.Events
     public readonly struct ConductorGestureEvent
     {
         public ConductorGestureEvent(
-            RhythmForge.Interaction.ConductorGesture gesture,
+            ConductorGesture gesture,
             string focusedZoneId,
             bool   allZones,
             float  swayPeriodSeconds)
         {
-            Gesture            = gesture;
-            FocusedZoneId      = focusedZoneId;
-            AllZones           = allZones;
-            SwayPeriodSeconds  = swayPeriodSeconds;
+            Gesture           = gesture;
+            FocusedZoneId     = focusedZoneId;
+            AllZones          = allZones;
+            SwayPeriodSeconds = swayPeriodSeconds;
         }
 
-        public RhythmForge.Interaction.ConductorGesture Gesture { get; }
+        public ConductorGesture Gesture { get; }
         /// <summary>Zone that was in focus when the gesture fired, or null.</summary>
         public string FocusedZoneId { get; }
         /// <summary>True when left grip was held — gesture applies to all zones.</summary>

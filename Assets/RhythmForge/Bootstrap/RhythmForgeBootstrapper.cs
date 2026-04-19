@@ -162,6 +162,10 @@ namespace RhythmForge.Bootstrap
                         {
                             _panelsPositioned = true;
                             RepositionPanels();
+
+                            // Re-resolve left controller now that tracking is live.
+                            if (_instanceGrabber != null && _rig != null && _rig.LeftController != null)
+                                _instanceGrabber.SetLeftController(_rig.LeftController);
                         }
                     }
                 }
@@ -366,6 +370,11 @@ namespace RhythmForge.Bootstrap
 
             if (_sequencer != null && _spatialZoneController != null)
                 _sequencer.OnBarStart += _spatialZoneController.OnBarStart;
+
+            // Try to push left controller to InstanceGrabber again — it may
+            // have been null during Awake if OVRCameraRig hadn't initialized.
+            if (_instanceGrabber != null && _rig != null && _rig.LeftController != null)
+                _instanceGrabber.SetLeftController(_rig.LeftController);
         }
 
         // ──────────────────────────────────────────────────────────
@@ -485,17 +494,17 @@ namespace RhythmForge.Bootstrap
 
             var rayLine = igGo.AddComponent<LineRenderer>();
             rayLine.positionCount = 2;
-            rayLine.startWidth = 0.002f;
-            rayLine.endWidth   = 0.0005f;
+            rayLine.startWidth = 0.004f;
+            rayLine.endWidth   = 0.001f;
             rayLine.useWorldSpace = true;
             rayLine.shadowCastingMode = ShadowCastingMode.Off;
             var rayMat = new Material(Shader.Find("Sprites/Default"));
-            rayMat.color = new Color(0.4f, 0.8f, 1f, 0.4f);
+            rayMat.color = new Color(0.3f, 0.75f, 1f, 0.7f);
             rayLine.material = rayMat;
             rayLine.enabled  = false;
 
-            // Layer 6 is empty by default in this project (see TagManager.asset)
-            LayerMask instanceLayer = 1 << 6;
+            // Layer "PatternInstance" (layer 6) — see TagManager.asset.
+            LayerMask instanceLayer = 1 << LayerMask.NameToLayer("PatternInstance");
             refs.instanceGrabber.Configure(
                 refs.inputMapper,
                 _rig.LeftController,

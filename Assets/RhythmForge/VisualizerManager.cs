@@ -58,11 +58,14 @@ namespace RhythmForge
                 }
 
                 var visualObject = new GameObject($"Instance_{instance.id}");
+                visualObject.layer = LayerMask.NameToLayer("PatternInstance");
                 if (_instanceContainer)
                     visualObject.transform.SetParent(_instanceContainer);
 
                 var visualizer = visualObject.AddComponent<PatternVisualizer>();
                 visualizer.Initialize(pattern, instance, _getMaterialForType(pattern.type), _userHead);
+                // Propagate layer to all children created during Initialize.
+                SetLayerRecursive(visualObject, visualObject.layer);
                 visualizer.SetMuted(instance.muted);
                 visualizer.SetSelected(instance.id == _store.State.selectedInstanceId);
                 visualizer.SetParameterLabelVisible(showParamLabels);
@@ -137,6 +140,13 @@ namespace RhythmForge
             }
 
             _visualizers.Clear();
+        }
+
+        private static void SetLayerRecursive(GameObject go, int layer)
+        {
+            go.layer = layer;
+            foreach (Transform child in go.transform)
+                SetLayerRecursive(child.gameObject, layer);
         }
     }
 }

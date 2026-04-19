@@ -44,6 +44,13 @@ namespace RhythmForge.Interaction
         // The currently hovered visualizer (for highlighting)
         private PatternVisualizer _hoveredVisualizer;
 
+        // Lazy-resolved left controller — OVRCameraRig anchors may not be
+        // available during Awake when the bootstrapper runs.
+        private Transform _cachedLeftController;
+        private bool _leftControllerResolved;
+        private int _resolveAttempts;
+        private const int MaxResolveAttempts = 120; // ~2 seconds at 60 fps
+
         /// <summary>Called by RhythmForgeBootstrapper to inject component references.</summary>
         public void Configure(IInputProvider input, Transform leftController,
             LineRenderer rayLine, LayerMask instanceLayer)
@@ -53,6 +60,58 @@ namespace RhythmForge.Interaction
             _leftControllerTransform = leftController;
             _rayVisual = rayLine;
             _instanceLayer = instanceLayer;
+
+            if (leftController != null)
+            {
+                _cachedLeftController = leftController;
+                _leftControllerResolved = true;
+            }
+        }
+
+        /// <summary>
+        /// Re-inject the left controller transform. Called by the bootstrapper
+        /// after tracking has initialized (Start / first valid head pose).
+        /// </summary>
+        public void SetLeftController(Transform leftController)
+        {
+            if (leftController == null) return;
+            _leftControllerTransform = leftController;
+            _cachedLeftController = leftController;
+            _leftControllerResolved = true;
+        }
+
+        private Transform ResolveLeftController()
+        {
+            if (_leftControllerResolved)
+                return _cachedLeftController;
+
+            // Throttle re-resolution attempts to avoid spamming Find.
+            if (_resolveAttempts >= MaxResolveAttempts)
+                return null;
+
+            _resolveAttempts++;
+
+            var rig = Object.FindFirstObjectByType<OVRCameraRig>();
+            if (rig != null && rig.leftControllerAnchor != null)
+            {
+                _cachedLeftController = rig.leftControllerAnchor;
+                _leftControllerTransform = _cachedLeftController;
+                _leftControllerResolved = true;
+                Debug.Log("[RhythmForge] InstanceGrabber: left controller resolved lazily.");
+                return _cachedLeftController;
+            }
+
+            var go = GameObject.Find("LeftControllerAnchor");
+            if (go != null)
+            {
+                _cachedLeftController = go.transform;
+                _leftControllerTransform = _cachedLeftController;
+                _leftControllerResolved = true;
+                Debug.Log("[RhythmForge] InstanceGrabber: left controller resolved by name.");
+                return _cachedLeftController;
+            }
+
+            return null;
         }
 
         public void Initialize(SessionStore store, AudioEngine audioEngine = null)
@@ -65,6 +124,10 @@ namespace RhythmForge.Interaction
         {
             var input = _inputProvider ?? (IInputProvider)_input;
             if (_store == null || input == null) return;
+
+            // Lazy-resolve left controller if it wasn't available at boot.
+            if (_leftControllerTransform == null)
+                ResolveLeftController();
 
             // Grab start
             if (input.LeftTriggerDown)
@@ -172,10 +235,11 @@ namespace RhythmForge.Interaction
 
         private void UpdateRayVisual()
         {
-            if (_rayVisual == null || _leftControllerTransform == null) return;
+            if (_rayVisual == null) return;
+            if (_leftControllerTransform == null) { _rayVisual.enabled = false; return; }
 
-            var input = _inputProvider ?? (IInputProvider)_input;
-            if (input != null && (input.LeftTrigger || _grabbedInstanceId != null))
+            // Show the ray while the left trigger is held or while dragging.
+            if (InputHasLeftTrigger() || _grabbedInstanceId != null)
             {
                 _rayVisual.enabled = true;
                 _rayVisual.SetPosition(0, _leftControllerTransform.position);
@@ -185,6 +249,12 @@ namespace RhythmForge.Interaction
             {
                 _rayVisual.enabled = false;
             }
+        }
+
+        private bool InputHasLeftTrigger()
+        {
+            var input = _inputProvider ?? (IInputProvider)_input;
+            return input != null && input.LeftTrigger;
         }
 
         private void OnDestroy()

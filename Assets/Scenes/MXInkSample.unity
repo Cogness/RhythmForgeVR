@@ -2027,6 +2027,8 @@ MonoBehaviour:
   _audioEngine: {fileID: 0}
   _samplePlayer: {fileID: 0}
   _sequencer: {fileID: 0}
+  _spatialZoneController: {fileID: 0}
+  _spatialZoneLayout: {fileID: 11400000, guid: 9d5f5e4b6b8f4bd2a85f8c51179e1007, type: 2}
 --- !u!1 &415962262
 GameObject:
   m_ObjectHideFlags: 0

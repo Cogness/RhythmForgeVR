@@ -11,14 +11,14 @@ namespace RhythmForge.Core.Session
         private readonly Func<string, SceneData> _getScene;
         private readonly Action _notifyStateChanged;
         private readonly Func<PatternType, string> _reserveName;
-        private Func<PatternType, Vector3?> _resolveSpawnPosition;
+        private Func<PatternType, Vector3, Vector3?> _resolveSpawnPosition;
 
         public PatternRepository(
             Func<AppState> getState,
             Func<string, SceneData> getScene,
             Action notifyStateChanged,
             Func<PatternType, string> reserveName,
-            Func<PatternType, Vector3?> resolveSpawnPosition = null)
+            Func<PatternType, Vector3, Vector3?> resolveSpawnPosition = null)
         {
             _getState = getState;
             _getScene = getScene;
@@ -27,7 +27,7 @@ namespace RhythmForge.Core.Session
             _resolveSpawnPosition = resolveSpawnPosition;
         }
 
-        public void SetSpawnPlacementResolver(Func<PatternType, Vector3?> resolver)
+        public void SetSpawnPlacementResolver(Func<PatternType, Vector3, Vector3?> resolver)
         {
             _resolveSpawnPosition = resolver;
         }
@@ -108,7 +108,7 @@ namespace RhythmForge.Core.Session
 
             state.patterns.Insert(0, pattern);
 
-            Vector3 spawnPosition = ResolveSpawnPosition(pattern.type) ?? draft.spawnPosition;
+            Vector3 spawnPosition = ResolveSpawnPosition(pattern.type, draft.spawnPosition) ?? draft.spawnPosition;
             var instance = SpawnPattern(pattern.id, state.activeSceneId, spawnPosition, false);
             if (duplicate)
             {
@@ -131,7 +131,8 @@ namespace RhythmForge.Core.Session
             if (pattern == null || scene == null)
                 return null;
 
-            Vector3 position = coords ?? ResolveSpawnPosition(pattern.type) ?? GetNextSpawnPosition(sceneId);
+            Vector3 fallbackPosition = coords ?? GetNextSpawnPosition(sceneId);
+            Vector3 position = coords ?? ResolveSpawnPosition(pattern.type, fallbackPosition) ?? fallbackPosition;
             float depth = position.z;
 
             var instance = new PatternInstance(patternId, sceneId, position, depth);
@@ -236,9 +237,9 @@ namespace RhythmForge.Core.Session
             return positions[existing.Count % positions.Length];
         }
 
-        private Vector3? ResolveSpawnPosition(PatternType type)
+        private Vector3? ResolveSpawnPosition(PatternType type, Vector3 fallbackPosition)
         {
-            return _resolveSpawnPosition?.Invoke(type);
+            return _resolveSpawnPosition?.Invoke(type, fallbackPosition);
         }
     }
 }

@@ -34,6 +34,7 @@ namespace RhythmForge.Sequencer
         public Transport CurrentTransport => _transportController?.CurrentTransport ?? _fallbackTransport;
 
         public event Action OnTransportChanged;
+        public event Action<int, double> OnBarStart;
 
         public void Initialize(SessionStore store)
         {
@@ -105,9 +106,13 @@ namespace RhythmForge.Sequencer
 
             while (transport.nextNoteTime < currentTime + LookaheadSeconds)
             {
+                int barBeforeAdvance = transport.absoluteBar;
                 ScheduleCurrentStep(transport.nextNoteTime);
                 AdvanceTransport();
                 transport.nextNoteTime += stepDur;
+
+                if (transport.absoluteBar != barBeforeAdvance)
+                    OnBarStart?.Invoke(transport.absoluteBar, transport.nextNoteTime);
             }
 
             TryWarmNextBar(transport);

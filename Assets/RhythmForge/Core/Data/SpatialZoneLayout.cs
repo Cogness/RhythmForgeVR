@@ -53,7 +53,8 @@ namespace RhythmForge.Core.Data
                     radius = 1.2f,
                     reverbBias = 0.35f,
                     delayBias = 0.15f,
-                    gainBias = 0.84f
+                    gainBias = 0.84f,
+                    depthZThreshold = 1.6f
                 },
                 new SpatialZone
                 {

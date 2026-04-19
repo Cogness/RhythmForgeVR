@@ -9,15 +9,31 @@ namespace RhythmForge.Core.Session
     public class SpatialZoneController : MonoBehaviour
     {
         private const float BoundaryDeadband = 0.10f;
+        private const string AllZonesSentinel = "*";
+
+        private struct ConductorState
+        {
+            public float liveGainMult;
+            public float liveReverbBoost;
+            public float decayStartGainMult;
+            public float decayStartReverbBoost;
+            public int decayStartBar;
+            public int decayBars;
+            public bool liveCutArmed;
+            public int cutActiveBar;
+        }
 
         private readonly Dictionary<string, string> _instanceZoneIds = new Dictionary<string, string>();
         private readonly Dictionary<string, SpatialZoneVisualizer> _visualizers = new Dictionary<string, SpatialZoneVisualizer>();
+        private readonly Dictionary<string, ConductorState> _conductorStates = new Dictionary<string, ConductorState>();
 
         private SessionStore _store;
         private SpatialZoneLayout _layout;
         private AudioEngine _audioEngine;
+        private int _currentAbsoluteBar = 1;
 
         public static SpatialZoneController Shared { get; private set; }
+        public SessionStore Store => _store;
 
         public void Initialize(SessionStore store, SpatialZoneLayout layout, Transform headTransform, AudioEngine audioEngine = null)
         {
@@ -72,22 +88,47 @@ namespace RhythmForge.Core.Session
             return zone;
         }
 
-        public bool TryGetDefaultPlacementFor(PatternType type, out Vector3 worldPosition)
+        public bool TryGetDefaultPlacementFor(PatternType type, Vector3? sourceWorldPosition, out Vector3 worldPosition)
         {
             worldPosition = Vector3.zero;
             if (_layout?.Zones == null)
                 return false;
 
+            Vector3? localPosition = null;
+            if (sourceWorldPosition.HasValue)
+                localPosition = transform.InverseTransformPoint(sourceWorldPosition.Value);
+
+            SpatialZone best = null;
+            float bestDistance = float.MaxValue;
             foreach (var zone in _layout.Zones)
             {
-                if (zone != null && zone.MatchesTarget(type))
+                if (zone == null || !zone.MatchesTarget(type, localPosition))
+                    continue;
+
+                if (!localPosition.HasValue)
                 {
-                    worldPosition = transform.TransformPoint(zone.center);
-                    return true;
+                    best = zone;
+                    break;
                 }
+
+                float distance = Vector3.Distance(zone.center, localPosition.Value);
+                if (distance >= bestDistance)
+                    continue;
+
+                best = zone;
+                bestDistance = distance;
             }
 
-            return false;
+            if (best == null)
+                return false;
+
+            worldPosition = transform.TransformPoint(best.center);
+            return true;
+        }
+
+        public bool TryGetDefaultPlacementFor(PatternType type, out Vector3 worldPosition)
+        {
+            return TryGetDefaultPlacementFor(type, null, out worldPosition);
         }
 
         public SpatialZone ResolveZoneForPosition(string instanceId, Vector3 worldPosition)
@@ -179,6 +220,108 @@ namespace RhythmForge.Core.Session
             RefreshAllAssignments();
         }
 
+        public void ApplyConductorGesture(string zoneIdOrAll, ConductorGestureKind kind, float magnitude)
+        {
+            if (_layout?.Zones == null)
+                return;
+
+            if (string.Equals(zoneIdOrAll, AllZonesSentinel, System.StringComparison.Ordinal))
+            {
+                foreach (var zone in _layout.Zones)
+                {
+                    if (zone != null && !string.IsNullOrEmpty(zone.id))
+                    {
+                        ApplyConductorGestureToZone(zone.id, kind, magnitude);
+                        if (_visualizers.TryGetValue(zone.id, out var allVisualizer))
+                            allVisualizer.Pulse();
+                    }
+                }
+                return;
+            }
+
+            ApplyConductorGestureToZone(zoneIdOrAll, kind, magnitude);
+            if (_visualizers.TryGetValue(zoneIdOrAll, out var visualizer))
+                visualizer.Pulse();
+        }
+
+        public void GetLiveBiases(string zoneId, out float gainMult, out float reverbBoost, out bool cutActive)
+        {
+            gainMult = 1f;
+            reverbBoost = 0f;
+            cutActive = false;
+
+            if (string.IsNullOrEmpty(zoneId))
+                return;
+
+            var state = GetOrCreateConductorState(zoneId);
+            gainMult = Mathf.Max(0.01f, state.liveGainMult);
+            reverbBoost = Mathf.Max(0f, state.liveReverbBoost);
+            cutActive = state.cutActiveBar == _currentAbsoluteBar;
+        }
+
+        public void OnBarStart(int absoluteBar, double dspTime)
+        {
+            _currentAbsoluteBar = Mathf.Max(1, absoluteBar);
+            if (_layout?.Zones == null)
+                return;
+
+            foreach (var zone in _layout.Zones)
+            {
+                if (zone == null || string.IsNullOrEmpty(zone.id))
+                    continue;
+
+                var state = GetOrCreateConductorState(zone.id);
+
+                if (state.decayBars > 0)
+                {
+                    float progress = Mathf.Clamp01((_currentAbsoluteBar - state.decayStartBar) / (float)state.decayBars);
+                    state.liveGainMult = Mathf.Lerp(state.decayStartGainMult, 1f, progress);
+                    state.liveReverbBoost = Mathf.Lerp(state.decayStartReverbBoost, 0f, progress);
+                    if (progress >= 1f)
+                    {
+                        state.liveGainMult = 1f;
+                        state.liveReverbBoost = 0f;
+                        state.decayBars = 0;
+                    }
+                }
+
+                if (state.liveCutArmed)
+                {
+                    state.cutActiveBar = _currentAbsoluteBar;
+                    state.liveCutArmed = false;
+                }
+                else if (state.cutActiveBar > 0 && _currentAbsoluteBar > state.cutActiveBar)
+                {
+                    state.cutActiveBar = -1;
+                }
+
+                _conductorStates[zone.id] = state;
+            }
+        }
+
+        public string GetClosestZoneId(Vector3 worldPosition, float maxDistanceMeters)
+        {
+            if (_layout?.Zones == null || _layout.Zones.Count == 0)
+                return null;
+
+            string bestZoneId = null;
+            float bestDistanceSq = maxDistanceMeters * maxDistanceMeters;
+            foreach (var zone in _layout.Zones)
+            {
+                if (zone == null || string.IsNullOrEmpty(zone.id))
+                    continue;
+
+                float distanceSq = (worldPosition - transform.TransformPoint(zone.center)).sqrMagnitude;
+                if (distanceSq > bestDistanceSq)
+                    continue;
+
+                bestDistanceSq = distanceSq;
+                bestZoneId = zone.id;
+            }
+
+            return bestZoneId;
+        }
+
         private void Awake()
         {
             Shared = this;
@@ -217,7 +360,12 @@ namespace RhythmForge.Core.Session
             foreach (var existing in _visualizers.Values)
             {
                 if (existing != null)
-                    Destroy(existing.gameObject);
+                {
+                    if (Application.isPlaying)
+                        Destroy(existing.gameObject);
+                    else
+                        DestroyImmediate(existing.gameObject);
+                }
             }
             _visualizers.Clear();
 
@@ -234,6 +382,7 @@ namespace RhythmForge.Core.Session
                 var visualizer = go.AddComponent<SpatialZoneVisualizer>();
                 visualizer.Initialize(zone);
                 _visualizers[zone.id] = visualizer;
+                GetOrCreateConductorState(zone.id);
             }
         }
 
@@ -250,6 +399,57 @@ namespace RhythmForge.Core.Session
 
             if (_visualizers.TryGetValue(zone.id, out var visualizer))
                 visualizer.Pulse();
+        }
+
+        private void ApplyConductorGestureToZone(string zoneId, ConductorGestureKind kind, float magnitude)
+        {
+            if (string.IsNullOrEmpty(zoneId))
+                return;
+
+            var state = GetOrCreateConductorState(zoneId);
+            switch (kind)
+            {
+                case ConductorGestureKind.LiftTendu:
+                    state.liveGainMult = Mathf.Clamp(state.liveGainMult * Mathf.Lerp(1.10f, 1.35f, magnitude), 0.5f, 1.35f);
+                    state.decayStartGainMult = state.liveGainMult;
+                    state.decayStartReverbBoost = state.liveReverbBoost;
+                    state.decayStartBar = _currentAbsoluteBar;
+                    state.decayBars = 4;
+                    break;
+                case ConductorGestureKind.FadePlie:
+                    state.liveGainMult = Mathf.Clamp(state.liveGainMult * Mathf.Lerp(0.90f, 0.50f, magnitude), 0.5f, 1.35f);
+                    state.decayStartGainMult = state.liveGainMult;
+                    state.decayStartReverbBoost = state.liveReverbBoost;
+                    state.decayStartBar = _currentAbsoluteBar;
+                    state.decayBars = 4;
+                    break;
+                case ConductorGestureKind.CutOff:
+                    state.liveCutArmed = true;
+                    break;
+            }
+
+            _conductorStates[zoneId] = state;
+        }
+
+        private ConductorState GetOrCreateConductorState(string zoneId)
+        {
+            if (!_conductorStates.TryGetValue(zoneId, out var state))
+            {
+                state = new ConductorState
+                {
+                    liveGainMult = 1f,
+                    liveReverbBoost = 0f,
+                    decayStartGainMult = 1f,
+                    decayStartReverbBoost = 0f,
+                    decayStartBar = _currentAbsoluteBar,
+                    decayBars = 0,
+                    liveCutArmed = false,
+                    cutActiveBar = -1
+                };
+                _conductorStates[zoneId] = state;
+            }
+
+            return state;
         }
     }
 }

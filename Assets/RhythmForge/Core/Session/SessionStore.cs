@@ -44,7 +44,7 @@ namespace RhythmForge.Core.Session
             InitializeHarmonicFabrics();
         }
 
-        public void SetSpawnPlacementResolver(Func<PatternType, Vector3?> resolver)
+        public void SetSpawnPlacementResolver(Func<PatternType, Vector3, Vector3?> resolver)
         {
             Patterns.SetSpawnPlacementResolver(resolver);
         }

@@ -51,6 +51,7 @@ namespace RhythmForge.Bootstrap
         [SerializeField] private DrawModeController _drawMode;
         [SerializeField] private StrokeCapture _strokeCapture;
         [SerializeField] private InstanceGrabber _instanceGrabber;
+        [SerializeField] private ConductorGestureRecognizer _conductorGestureRecognizer;
         [SerializeField] private AudioEngine _audioEngine;
         [SerializeField] private SamplePlayer _samplePlayer;
         [SerializeField] private Sequencer.Sequencer _sequencer;
@@ -334,6 +335,7 @@ namespace RhythmForge.Bootstrap
                     drawMode        = subsystems.drawMode,
                     inputMapper     = subsystems.inputMapper,
                     instanceGrabber = subsystems.instanceGrabber,
+                    conductorGestureRecognizer = subsystems.conductorGestureRecognizer,
                     spatialZoneController = _spatialZoneController
                 },
                 new ManagerPanels
@@ -357,9 +359,13 @@ namespace RhythmForge.Bootstrap
             _drawMode        = subsystems.drawMode;
             _strokeCapture   = subsystems.strokeCapture;
             _instanceGrabber = subsystems.instanceGrabber;
+            _conductorGestureRecognizer = subsystems.conductorGestureRecognizer;
             _audioEngine     = subsystems.audioEngine;
             _samplePlayer    = subsystems.samplePlayer;
             _sequencer       = subsystems.sequencer;
+
+            if (_sequencer != null && _spatialZoneController != null)
+                _sequencer.OnBarStart += _spatialZoneController.OnBarStart;
         }
 
         // ──────────────────────────────────────────────────────────
@@ -415,6 +421,7 @@ namespace RhythmForge.Bootstrap
             public DrawModeController drawMode;
             public StrokeCapture strokeCapture;
             public InstanceGrabber instanceGrabber;
+            public ConductorGestureRecognizer conductorGestureRecognizer;
             public AudioEngine audioEngine;
             public SamplePlayer samplePlayer;
             public Sequencer.Sequencer sequencer;
@@ -465,6 +472,11 @@ namespace RhythmForge.Bootstrap
                 _rig.CenterEye,
                 defaultStrokeMat,
                 uiPointer);
+
+            var recognizerGo = new GameObject("ConductorGestureRecognizer");
+            recognizerGo.transform.SetParent(transform);
+            refs.conductorGestureRecognizer = recognizerGo.AddComponent<ConductorGestureRecognizer>();
+            refs.conductorGestureRecognizer.Configure(refs.inputMapper);
 
             // InstanceGrabber + ray line renderer
             var igGo = new GameObject("InstanceGrabber");
@@ -561,12 +573,12 @@ namespace RhythmForge.Bootstrap
         private TransportPanel BuildTransportPanel(Transform head)
         {
             var canvas = UIFactory.CreateWorldCanvas("TransportPanel",
-                transform, new Vector2(640, 100),
+                transform, new Vector2(680, 100),
                 PositionInFront(0f, -0.22f, 1.1f), 0.001f);
             RegisterPanel(canvas, 0f, -0.22f, 1.1f, PanelDragCoordinator.DragMembership.MainGroup);
 
             UIFactory.CreateBackground(canvas.transform,
-                new Vector2(640, 100), MaterialFactory.PanelBg);
+                new Vector2(680, 100), MaterialFactory.PanelBg);
 
             // Play/Stop button
             var playBtn = UIFactory.CreateButton(canvas.transform, "PlayStopButton", "Play",
@@ -575,29 +587,33 @@ namespace RhythmForge.Bootstrap
 
             // Params toggle button (near Mode)
             var paramsBtn = UIFactory.CreateButton(canvas.transform, "ToggleParamsButton", "Params\nON",
-                new Rect(420, 8, 100, 84), new Color(0.28f, 0.32f, 0.42f), Color.white, 16, null);
+                new Rect(456, 8, 100, 84), new Color(0.28f, 0.32f, 0.42f), Color.white, 16, null);
             var paramsLabel = paramsBtn.GetComponentInChildren<Text>();
 
             // Shape mode button
             var shapeModeBtn = UIFactory.CreateButton(canvas.transform, "ShapeModeButton", "Shape\nFree",
-                new Rect(308, 8, 100, 84), TypeColors.Blend(new Vector3(1f, 1f, 1f)), Color.white, 18, null);
+                new Rect(232, 8, 100, 84), TypeColors.Blend(new Vector3(1f, 1f, 1f)), Color.white, 18, null);
             var shapeModeLabel = shapeModeBtn.GetComponentInChildren<Text>();
 
             // Mode button
             var modeBtn = UIFactory.CreateButton(canvas.transform, "ModeButton", "Mode\nRhythm",
-                new Rect(532, 8, 100, 84), TypeColors.RhythmLoop, Color.white, 18, null);
+                new Rect(120, 8, 100, 84), TypeColors.RhythmLoop, Color.white, 18, null);
             var modeLabel = modeBtn.GetComponentInChildren<Text>();
+
+            var conductingBtn = UIFactory.CreateButton(canvas.transform, "ConductingButton", "Conduct\nOFF",
+                new Rect(344, 8, 100, 84), new Color(0.32f, 0.34f, 0.40f), Color.white, 16, null);
+            var conductingLabel = conductingBtn.GetComponentInChildren<Text>();
 
             // Info labels
             var bpmText    = UIFactory.CreateRectText(canvas.transform, "BpmText",
                 "85 BPM", 18, Color.white, TextAnchor.MiddleLeft,
-                new Rect(120, 58, 170, 34));
+                new Rect(568, 58, 104, 34));
             var keyText    = UIFactory.CreateRectText(canvas.transform, "KeyText",
                 "A minor", 16, new Color(0.7f, 0.9f, 1f), TextAnchor.MiddleLeft,
-                new Rect(120, 28, 170, 28));
+                new Rect(568, 28, 104, 28));
             var statusText = UIFactory.CreateRectText(canvas.transform, "StatusText",
                 "Idle", 14, new Color(0.55f, 0.55f, 0.65f), TextAnchor.MiddleLeft,
-                new Rect(120, 6, 170, 22));
+                new Rect(568, 6, 104, 22));
 
             var panel = canvas.gameObject.AddComponent<TransportPanel>();
             panel.SetUIRefs(
@@ -605,7 +621,8 @@ namespace RhythmForge.Bootstrap
                 modeBtn, modeLabel,
                 shapeModeBtn, shapeModeLabel,
                 bpmText, keyText, statusText,
-                paramsBtn, paramsLabel);
+                paramsBtn, paramsLabel,
+                conductingBtn, conductingLabel);
             return panel;
         }
 

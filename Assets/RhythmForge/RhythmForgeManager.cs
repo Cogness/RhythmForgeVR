@@ -24,6 +24,7 @@ namespace RhythmForge
         public DrawModeController drawMode;
         public InputMapper inputMapper;
         public InstanceGrabber instanceGrabber;
+        public ConductorGestureRecognizer conductorGestureRecognizer;
         public SpatialZoneController spatialZoneController;
     }
 
@@ -54,6 +55,7 @@ namespace RhythmForge
         [SerializeField] private DrawModeController _drawModeController;
         [SerializeField] private InputMapper _inputMapper;
         [SerializeField] private InstanceGrabber _instanceGrabber;
+        [SerializeField] private ConductorGestureRecognizer _conductorGestureRecognizer;
         [SerializeField] private SpatialZoneController _spatialZoneController;
 
         [Header("UI Panels")]
@@ -78,6 +80,7 @@ namespace RhythmForge
         private bool _showParamLabels = true;
         private bool _initialized;
         private float _sceneSwapCooldown;
+        private ConductorGestureKind? _lastToastGestureKind;
         private readonly Dictionary<PatternType, Material> _materialCache = new Dictionary<PatternType, Material>();
         private SamplePlayer _samplePlayer;
 
@@ -96,6 +99,7 @@ namespace RhythmForge
             _inputMapper        = subsystems.inputMapper;
             _inputProvider      = subsystems.inputMapper;
             _instanceGrabber    = subsystems.instanceGrabber;
+            _conductorGestureRecognizer = subsystems.conductorGestureRecognizer;
             _spatialZoneController = subsystems.spatialZoneController;
             _commitCard         = panels.commitCard;
             _inspectorPanel     = panels.inspector;
@@ -149,6 +153,8 @@ namespace RhythmForge
                 _instanceGrabber.Initialize(_store, _audioEngine);
             if (_spatialZoneController != null)
                 _spatialZoneController.Initialize(_store, null, _userHead, _audioEngine);
+            if (_conductorGestureRecognizer != null)
+                _conductorGestureRecognizer.Initialize(_store, _eventBus, _sequencer, _strokeCapture, _spatialZoneController);
 
             if (_commitCard)
                 _commitCard.Initialize(_strokeCapture);
@@ -262,6 +268,7 @@ namespace RhythmForge
             _eventBus.Subscribe<DrawModeChangedEvent>(HandleDrawModeChanged);
             _eventBus.Subscribe<DrawShapeModeChangedEvent>(HandleDrawShapeModeChanged);
             _eventBus.Subscribe<ParameterLabelsVisibilityChangedEvent>(HandleParameterLabelsVisibilityChanged);
+            _eventBus.Subscribe<ConductorGestureFiredEvent>(HandleConductorGestureFired);
             _eventBus.Subscribe<GenreChangedEvent>(HandleGenreChanged);
         }
 
@@ -277,6 +284,7 @@ namespace RhythmForge
             _eventBus.Unsubscribe<DrawModeChangedEvent>(HandleDrawModeChanged);
             _eventBus.Unsubscribe<DrawShapeModeChangedEvent>(HandleDrawShapeModeChanged);
             _eventBus.Unsubscribe<ParameterLabelsVisibilityChangedEvent>(HandleParameterLabelsVisibilityChanged);
+            _eventBus.Unsubscribe<ConductorGestureFiredEvent>(HandleConductorGestureFired);
             _eventBus.Unsubscribe<GenreChangedEvent>(HandleGenreChanged);
         }
 
@@ -323,6 +331,36 @@ namespace RhythmForge
                 _toast.Show($"Genre: {genre.DisplayName}");
             // Rebuild visuals — colors have changed
             _visualizerManager?.RebuildInstanceVisuals(_showParamLabels);
+        }
+
+        private void HandleConductorGestureFired(ConductorGestureFiredEvent evt)
+        {
+            if (_toast == null)
+                return;
+
+            if (_lastToastGestureKind.HasValue && _lastToastGestureKind.Value == evt.Gesture.kind)
+                return;
+
+            _lastToastGestureKind = evt.Gesture.kind;
+            string target = evt.Gesture.targetZoneId == "*"
+                ? "all zones"
+                : evt.Gesture.targetZoneId;
+            _toast.Show($"Conducting: {FormatGestureKind(evt.Gesture.kind)} -> {target}");
+        }
+
+        private static string FormatGestureKind(ConductorGestureKind kind)
+        {
+            switch (kind)
+            {
+                case ConductorGestureKind.LiftTendu:
+                    return "lift";
+                case ConductorGestureKind.FadePlie:
+                    return "fade";
+                case ConductorGestureKind.CutOff:
+                    return "cutoff";
+                default:
+                    return "sway";
+            }
         }
 
         private void HandleSceneAndTransportInput()
@@ -372,10 +410,10 @@ namespace RhythmForge
                 _toast.Show($"Scene: {_store.GetScene(ids[next])?.name ?? ids[next]}");
         }
 
-        private Vector3? ResolveSpatialZonePlacement(PatternType type)
+        private Vector3? ResolveSpatialZonePlacement(PatternType type, Vector3 sourceWorldPosition)
         {
             return _spatialZoneController != null &&
-                _spatialZoneController.TryGetDefaultPlacementFor(type, out var position)
+                _spatialZoneController.TryGetDefaultPlacementFor(type, sourceWorldPosition, out var position)
                 ? position
                 : (Vector3?)null;
         }

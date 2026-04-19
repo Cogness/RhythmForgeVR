@@ -25,8 +25,12 @@ namespace RhythmForge.UI.Panels
         [SerializeField] private Text _transportStatus;
         [SerializeField] private Button _toggleParamsButton;
         [SerializeField] private Text _toggleParamsLabel;
+        [SerializeField] private Button _conductingButton;
+        [SerializeField] private Text _conductingLabel;
 
         private bool _showParams = true;
+        private bool _conductingModeOn;
+        private float _gesturePulse;
 
         public event Action<bool> OnParamsVisibilityChanged;
 
@@ -40,7 +44,8 @@ namespace RhythmForge.UI.Panels
             Button modeButton, Text modeButtonLabel,
             Button shapeModeButton, Text shapeModeButtonLabel,
             Text bpmText, Text keyText, Text transportStatus,
-            Button toggleParamsButton = null, Text toggleParamsLabel = null)
+            Button toggleParamsButton = null, Text toggleParamsLabel = null,
+            Button conductingButton = null, Text conductingLabel = null)
         {
             _playStopButton      = playStopButton;
             _playStopLabel       = playStopLabel;
@@ -53,6 +58,8 @@ namespace RhythmForge.UI.Panels
             _transportStatus     = transportStatus;
             _toggleParamsButton  = toggleParamsButton;
             _toggleParamsLabel   = toggleParamsLabel;
+            _conductingButton    = conductingButton;
+            _conductingLabel     = conductingLabel;
         }
 
         public void Initialize(SessionStore store, Sequencer.Sequencer sequencer, DrawModeController drawMode)
@@ -70,6 +77,8 @@ namespace RhythmForge.UI.Panels
                 _shapeModeButton.onClick.AddListener(() => _drawMode.CycleShapeMode());
             if (_toggleParamsButton)
                 _toggleParamsButton.onClick.AddListener(ToggleParams);
+            if (_conductingButton)
+                _conductingButton.onClick.AddListener(ToggleConducting);
 
             RefreshParamsButton();
 
@@ -79,6 +88,8 @@ namespace RhythmForge.UI.Panels
                 _eventBus.Subscribe<TransportChangedEvent>(HandleTransportChanged);
                 _eventBus.Subscribe<DrawModeChangedEvent>(HandleDrawModeChanged);
                 _eventBus.Subscribe<DrawShapeModeChangedEvent>(HandleDrawShapeModeChanged);
+                _eventBus.Subscribe<ConductingModeChangedEvent>(HandleConductingModeChanged);
+                _eventBus.Subscribe<ConductorGestureFiredEvent>(HandleConductorGestureFired);
             }
             Refresh();
         }
@@ -92,6 +103,8 @@ namespace RhythmForge.UI.Panels
             _eventBus.Unsubscribe<TransportChangedEvent>(HandleTransportChanged);
             _eventBus.Unsubscribe<DrawModeChangedEvent>(HandleDrawModeChanged);
             _eventBus.Unsubscribe<DrawShapeModeChangedEvent>(HandleDrawShapeModeChanged);
+            _eventBus.Unsubscribe<ConductingModeChangedEvent>(HandleConductingModeChanged);
+            _eventBus.Unsubscribe<ConductorGestureFiredEvent>(HandleConductorGestureFired);
         }
 
         private void OnModeChanged(PatternType mode)
@@ -104,6 +117,7 @@ namespace RhythmForge.UI.Panels
             RefreshTransportStatus();
             RefreshModeButton(_drawMode != null ? _drawMode.CurrentMode : PatternType.RhythmLoop);
             RefreshShapeModeButton(_drawMode != null ? _drawMode.ShapeMode : ShapeFacetMode.Free);
+            RefreshConductingButton();
         }
 
         private void RefreshTransportStatus()
@@ -138,6 +152,13 @@ namespace RhythmForge.UI.Panels
             _eventBus?.Publish(new ParameterLabelsVisibilityChangedEvent(_showParams));
         }
 
+        private void ToggleConducting()
+        {
+            _conductingModeOn = !_conductingModeOn;
+            RefreshConductingButton();
+            _eventBus?.Publish(new ConductingModeChangedEvent(_conductingModeOn));
+        }
+
         private void RefreshParamsButton()
         {
             if (_toggleParamsLabel != null)
@@ -145,6 +166,15 @@ namespace RhythmForge.UI.Panels
         }
 
         public bool ShowParams => _showParams;
+
+        private void Update()
+        {
+            if (_gesturePulse <= 0f)
+                return;
+
+            _gesturePulse = Mathf.MoveTowards(_gesturePulse, 0f, Time.deltaTime / 0.20f);
+            RefreshConductingButton();
+        }
 
         private void HandleSessionStateChanged(SessionStateChangedEvent evt)
         {
@@ -164,6 +194,18 @@ namespace RhythmForge.UI.Panels
         private void HandleDrawShapeModeChanged(DrawShapeModeChangedEvent evt)
         {
             RefreshShapeModeButton(evt.Mode);
+        }
+
+        private void HandleConductingModeChanged(ConductingModeChangedEvent evt)
+        {
+            _conductingModeOn = evt.On;
+            RefreshConductingButton();
+        }
+
+        private void HandleConductorGestureFired(ConductorGestureFiredEvent evt)
+        {
+            _gesturePulse = 1f;
+            RefreshConductingButton();
         }
 
         private void RefreshModeButton(PatternType mode)
@@ -201,6 +243,29 @@ namespace RhythmForge.UI.Panels
             _shapeModeButton.colors = colors;
 
             var image = _shapeModeButton.GetComponent<Image>();
+            if (image != null)
+                image.color = color;
+        }
+
+        private void RefreshConductingButton()
+        {
+            if (_conductingLabel != null)
+                _conductingLabel.text = _conductingModeOn ? "Conduct\nON" : "Conduct\nOFF";
+
+            if (_conductingButton == null)
+                return;
+
+            Color offColor = new Color(0.32f, 0.34f, 0.40f);
+            Color onColor = new Color(0.96f, 0.58f, 0.18f);
+            Color color = Color.Lerp(_conductingModeOn ? onColor : offColor, Color.white, _gesturePulse * 0.35f);
+
+            var colors = _conductingButton.colors;
+            colors.normalColor = color;
+            colors.highlightedColor = Color.Lerp(color, Color.white, 0.18f);
+            colors.pressedColor = Color.Lerp(color, Color.black, 0.18f);
+            _conductingButton.colors = colors;
+
+            var image = _conductingButton.GetComponent<Image>();
             if (image != null)
                 image.color = color;
         }

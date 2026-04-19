@@ -71,7 +71,8 @@ namespace RhythmForge.Audio
         {
             if (!IsReady) return;
             soundProfile = soundProfile ?? new SoundProfile();
-            ApplyZoneBias(instanceId, ref gainTrim, ref reverbSend, ref delaySend);
+            if (!ApplyZoneBias(instanceId, ref gainTrim, ref reverbSend, ref delaySend))
+                return;
 
             float gainAmount = Mathf.Clamp01(
                 gainTrim * velocity * velocity * (0.72f + soundProfile.body * 0.42f));
@@ -96,7 +97,8 @@ namespace RhythmForge.Audio
         {
             if (!IsReady) return;
             soundProfile = soundProfile ?? new SoundProfile();
-            ApplyZoneBias(instanceId, ref gainTrim, ref reverbSend, ref delaySend);
+            if (!ApplyZoneBias(instanceId, ref gainTrim, ref reverbSend, ref delaySend))
+                return;
 
             float gainAmount = Mathf.Clamp01(
                 gainTrim * velocity * velocity * (0.72f + soundProfile.body * 0.32f));
@@ -130,7 +132,8 @@ namespace RhythmForge.Audio
             if (!IsReady) return;
             if (chord == null) return;
             soundProfile = soundProfile ?? new SoundProfile();
-            ApplyZoneBias(instanceId, ref gainTrim, ref reverbSend, ref delaySend);
+            if (!ApplyZoneBias(instanceId, ref gainTrim, ref reverbSend, ref delaySend))
+                return;
 
             for (int i = 0; i < chord.Count; i++)
             {
@@ -175,18 +178,25 @@ namespace RhythmForge.Audio
                 pool.Play(clip, volume, startDelay);
         }
 
-        private static void ApplyZoneBias(string instanceId, ref float gainTrim, ref float reverbSend, ref float delaySend)
+        private static bool ApplyZoneBias(string instanceId, ref float gainTrim, ref float reverbSend, ref float delaySend)
         {
             if (string.IsNullOrEmpty(instanceId))
-                return;
+                return true;
 
             var zone = SpatialZoneController.Shared?.GetZoneFor(instanceId);
             if (zone == null)
-                return;
+                return true;
+
+            SpatialZoneController.Shared.GetLiveBiases(zone.id, out var liveGainMult, out var liveReverbBoost, out var cutActive);
+            if (cutActive)
+                return false;
 
             reverbSend = Mathf.Clamp01(reverbSend + zone.reverbBias);
             delaySend = Mathf.Clamp01(delaySend + zone.delayBias);
             gainTrim = Mathf.Clamp(gainTrim * Mathf.Max(0.01f, zone.gainBias), 0.5f, 1.25f);
+            reverbSend = Mathf.Clamp01(reverbSend + liveReverbBoost);
+            gainTrim = Mathf.Clamp(gainTrim * liveGainMult, 0.5f, 1.25f);
+            return true;
         }
 
         private void RaiseEventScheduled(string instanceId)

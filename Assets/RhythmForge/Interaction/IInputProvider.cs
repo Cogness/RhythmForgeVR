@@ -17,6 +17,7 @@ namespace RhythmForge.Interaction
         bool FrontButtonConsumed { get; set; }
         bool BackButton { get; }
         bool IsStylusActive { get; }
+        bool LeftGrip { get; }
         bool LeftTrigger { get; }
         bool LeftTriggerDown { get; }
         bool LeftTriggerUp { get; }

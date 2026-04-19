@@ -59,7 +59,12 @@ namespace RhythmForge.UI
 
             var collider = sphere.GetComponent<Collider>();
             if (collider != null)
-                Destroy(collider);
+            {
+                if (Application.isPlaying)
+                    Destroy(collider);
+                else
+                    DestroyImmediate(collider);
+            }
 
             _sphereRenderer = sphere.GetComponent<MeshRenderer>();
             var shader = Shader.Find("Legacy Shaders/Particles/Alpha Blended")

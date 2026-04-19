@@ -152,6 +152,26 @@ namespace RhythmForge.Core.Events
         public bool Visible { get; }
     }
 
+    public readonly struct ConductingModeChangedEvent
+    {
+        public ConductingModeChangedEvent(bool on)
+        {
+            On = on;
+        }
+
+        public bool On { get; }
+    }
+
+    public readonly struct ConductorGestureFiredEvent
+    {
+        public ConductorGestureFiredEvent(ConductorGestureEvent gesture)
+        {
+            Gesture = gesture;
+        }
+
+        public ConductorGestureEvent Gesture { get; }
+    }
+
     public readonly struct GenreChangedEvent
     {
         public GenreChangedEvent(string previousGenreId, string newGenreId)

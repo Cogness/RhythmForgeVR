@@ -129,6 +129,7 @@ namespace RhythmForge.Core.Session
             {
                 case PatternType.Harmony:
                 case PatternType.Melody:
+                case PatternType.Groove:
                     return true;
                 default:
                     return false;

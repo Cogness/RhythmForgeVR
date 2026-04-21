@@ -72,15 +72,15 @@ namespace RhythmForge.Audio
         // Convenience overload — uses default lofi-piano preset.
         public void PlayMelody(int midi, float velocity, float duration,
             float pan, float brightness, float depth, float fxSend,
-            SoundProfile soundProfile, float glide = 0f)
+            SoundProfile soundProfile, float glide = 0f, float startDelay = 0f)
         {
             PlayMelody(InstrumentPresets.Get("lofi-piano"), midi, velocity, duration,
-                pan, brightness, depth, fxSend, soundProfile, glide);
+                pan, brightness, depth, fxSend, soundProfile, glide, startDelay);
         }
 
         public void PlayMelody(InstrumentPreset preset, int midi, float velocity, float duration,
             float pan, float brightness, float depth, float fxSend,
-            SoundProfile soundProfile, float glide = 0f)
+            SoundProfile soundProfile, float glide = 0f, float startDelay = 0f)
         {
             if (!IsReady) return;
             soundProfile = soundProfile ?? new SoundProfile();
@@ -99,7 +99,8 @@ namespace RhythmForge.Audio
                 fxSend,
                 soundProfile,
                 PatternType.MelodyLine,
-                glide);
+                glide,
+                startDelay);
         }
 
         // Convenience overload — uses default lofi-pad preset.

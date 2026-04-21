@@ -173,6 +173,12 @@ namespace RhythmForge.Core.Session
                 EventBus.Publish(new MelodyCommittedEvent(instance?.patternId));
             }
 
+            if (draft != null && draft.success && canonicalType == PatternType.Groove)
+            {
+                UpdateGroove(draft.derivedSequence?.grooveProfile);
+                EventBus.Publish(new GrooveCommittedEvent(instance?.patternId));
+            }
+
             return instance;
         }
 
@@ -533,7 +539,6 @@ namespace RhythmForge.Core.Session
                     };
                 case PatternType.Melody:
                 case PatternType.Bass:
-                case PatternType.Groove:
                     var melody = genre.MelodyDeriver.Derive(points, metrics, keyName, shapeProfile, soundProfile, genre);
                     return new PatternDerivationResult
                     {
@@ -543,6 +548,26 @@ namespace RhythmForge.Core.Session
                         derivedSequence = melody.derivedSequence,
                         summary = melody.summary,
                         details = melody.details
+                    };
+                case PatternType.Groove:
+                    var groove = GrooveShapeMapper.Map(shapeProfile);
+                    return new PatternDerivationResult
+                    {
+                        bars = GuidedDefaults.Bars,
+                        presetId = genre.GetDefaultPresetId(PatternType.Groove),
+                        tags = new List<string>
+                        {
+                            groove.density < 0.85f ? "sparse" : groove.density > 1.15f ? "busy" : "balanced",
+                            groove.syncopation > 0.22f ? "syncopated" : "steady"
+                        },
+                        derivedSequence = new DerivedSequence
+                        {
+                            kind = "groove",
+                            totalSteps = 0,
+                            grooveProfile = groove
+                        },
+                        summary = $"Groove profile with {(groove.quantizeGrid >= 16 ? "16th" : "8th")} grid and swing {Mathf.RoundToInt(groove.swing * 100f)}%.",
+                        details = "Groove remaps melody timing, density, and accents at schedule time while leaving pitch derivation untouched."
                     };
                 default:
                     var harmony = genre.HarmonyDeriver.Derive(points, metrics, keyName, shapeProfile, soundProfile, genre);
@@ -574,6 +599,13 @@ namespace RhythmForge.Core.Session
                 pattern.summary         = r.summary;
                 pattern.details         = r.details;
                 pattern.color           = r.color;
+
+                if (PatternTypeCompatibility.Canonicalize(pattern.type) == PatternType.Groove &&
+                    State.composition != null &&
+                    State.composition.GetPatternId(CompositionPhase.Groove) == r.patternId)
+                {
+                    State.composition.groove = r.derivedSequence?.grooveProfile?.Clone();
+                }
             }
 
             NotifyStateChanged();

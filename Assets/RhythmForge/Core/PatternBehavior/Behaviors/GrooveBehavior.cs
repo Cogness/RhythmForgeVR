@@ -3,6 +3,7 @@ using UnityEngine;
 using RhythmForge.Audio;
 using RhythmForge.Core.Analysis;
 using RhythmForge.Core.Data;
+using RhythmForge.Core.Sequencing;
 using RhythmForge.Sequencer;
 
 namespace RhythmForge.Core.PatternBehavior.Behaviors
@@ -24,22 +25,47 @@ namespace RhythmForge.Core.PatternBehavior.Behaviors
             ShapeProfile shapeProfile,
             SoundProfile soundProfile)
         {
-            return MelodyDelegate.Derive(points, metrics, keyName, groupId, shapeProfile, soundProfile);
+            var grooveProfile = GrooveShapeMapper.Map(shapeProfile);
+            string presetId = InstrumentGroups.Get(groupId).defaultPresetByType.GetDefault(PatternType.Groove);
+            string densityWord = grooveProfile.density < 0.85f
+                ? "sparse"
+                : grooveProfile.density > 1.15f ? "busy" : "balanced";
+            string gridWord = grooveProfile.quantizeGrid >= 16 ? "16th-grid" : "8th-grid";
+
+            return new PatternDerivationResult
+            {
+                bars = GuidedDefaults.Bars,
+                presetId = presetId,
+                tags = new List<string>
+                {
+                    densityWord,
+                    grooveProfile.syncopation > 0.22f ? "syncopated" : "steady",
+                    gridWord
+                },
+                derivedSequence = new DerivedSequence
+                {
+                    kind = "groove",
+                    totalSteps = 0,
+                    grooveProfile = grooveProfile
+                },
+                summary = $"{densityWord} groove profile, {gridWord}, swing {Mathf.RoundToInt(grooveProfile.swing * 100f)}%.",
+                details = "Path length sets melodic density, angularity adds syncopation, curvature variance adds swing, and vertical span reshapes the beat accents without changing melody pitch choices."
+            };
         }
 
         public SoundProfile DeriveSoundProfile(ShapeProfile shapeProfile)
         {
-            return MelodyDelegate.DeriveSoundProfile(shapeProfile);
+            return GenreRegistry.GetActive().GetSoundMapping(PatternType.Groove).Evaluate(PatternType.Groove, shapeProfile);
         }
 
         public void Schedule(PatternSchedulingContext context)
         {
-            MelodyDelegate.Schedule(context);
+            // Groove is a schedule-time modifier for Melody and does not emit audio directly.
         }
 
         public void CollectVoiceSpecs(PatternSchedulingContext context, int totalSteps, List<ResolvedVoiceSpec> results)
         {
-            MelodyDelegate.CollectVoiceSpecs(context, totalSteps, results);
+            // Groove owns no audio clips of its own; Melody warms the clips it needs after groove shaping.
         }
 
         public PlaybackVisualSpec AdjustVisualSpec(PlaybackVisualSpec baseSpec, SoundProfile soundProfile)

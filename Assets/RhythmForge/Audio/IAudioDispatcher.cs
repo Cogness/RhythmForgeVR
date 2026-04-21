@@ -25,7 +25,8 @@ namespace RhythmForge.Audio
             float depth,
             float fxSend,
             SoundProfile soundProfile,
-            float glide = 0f);
+            float glide = 0f,
+            float startDelay = 0f);
 
         void PlayChord(
             InstrumentPreset preset,

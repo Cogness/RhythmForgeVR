@@ -61,6 +61,7 @@ namespace RhythmForge.Core.Data
 
         // Melody-specific
         public List<MelodyNote> notes;
+        public GrooveProfile grooveProfile;
 
         // Harmony-specific
         public string flavor;

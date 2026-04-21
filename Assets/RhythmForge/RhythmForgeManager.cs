@@ -261,6 +261,8 @@ namespace RhythmForge
             _eventBus.Subscribe<DrawModeChangedEvent>(HandleDrawModeChanged);
             _eventBus.Subscribe<ParameterLabelsVisibilityChangedEvent>(HandleParameterLabelsVisibilityChanged);
             _eventBus.Subscribe<GenreChangedEvent>(HandleGenreChanged);
+            _eventBus.Subscribe<MelodyCommittedEvent>(HandleMelodyCommitted);
+            _eventBus.Subscribe<GrooveCommittedEvent>(HandleGrooveCommitted);
         }
 
         private void UnsubscribeFromEventBus()
@@ -275,6 +277,8 @@ namespace RhythmForge
             _eventBus.Unsubscribe<DrawModeChangedEvent>(HandleDrawModeChanged);
             _eventBus.Unsubscribe<ParameterLabelsVisibilityChangedEvent>(HandleParameterLabelsVisibilityChanged);
             _eventBus.Unsubscribe<GenreChangedEvent>(HandleGenreChanged);
+            _eventBus.Unsubscribe<MelodyCommittedEvent>(HandleMelodyCommitted);
+            _eventBus.Unsubscribe<GrooveCommittedEvent>(HandleGrooveCommitted);
         }
 
         private void HandleSessionStateChanged(SessionStateChangedEvent evt)
@@ -315,6 +319,21 @@ namespace RhythmForge
                 _toast.Show($"Genre: {genre.DisplayName}");
             // Rebuild visuals — colors have changed
             _visualizerManager?.RebuildInstanceVisuals(_showParamLabels);
+        }
+
+        private void HandleMelodyCommitted(MelodyCommittedEvent evt)
+        {
+            if (_store?.GetComposition()?.groove == null)
+                return;
+
+            _samplePlayer?.InvalidateAll();
+            _sequencer?.ResetWarmBar();
+        }
+
+        private void HandleGrooveCommitted(GrooveCommittedEvent evt)
+        {
+            _samplePlayer?.InvalidateAll();
+            _sequencer?.ResetWarmBar();
         }
 
         private void HandleSceneAndTransportInput()

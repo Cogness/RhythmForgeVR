@@ -193,6 +193,35 @@ namespace RhythmForge.Editor
             Assert.That(notifyCount, Is.EqualTo(2));
         }
 
+        [Test]
+        public void CommitDraft_InGuidedMode_ReplacesPreviousGroovePattern()
+        {
+            var state = AppStateFactory.CreateEmpty();
+            int notifyCount = 0;
+            var repository = new PatternRepository(
+                () => state,
+                sceneId => GetScene(state, sceneId),
+                () => notifyCount++,
+                type => $"Reserved-{type}");
+
+            var firstDraft = CreateGrooveDraft("First Groove", 0.7f);
+            repository.CommitDraft(firstDraft, duplicate: false);
+
+            string firstPatternId = state.patterns[0].id;
+            Assert.That(state.patterns, Has.Count.EqualTo(1));
+            Assert.That(state.instances, Has.Count.EqualTo(1));
+
+            var secondDraft = CreateGrooveDraft("Second Groove", 1.3f);
+            repository.CommitDraft(secondDraft, duplicate: false);
+
+            Assert.That(state.patterns, Has.Count.EqualTo(1));
+            Assert.That(state.instances, Has.Count.EqualTo(1));
+            Assert.That(state.patterns[0].id, Is.Not.EqualTo(firstPatternId));
+            Assert.That(state.composition.GetPatternId(CompositionPhase.Groove), Is.EqualTo(state.patterns[0].id));
+            Assert.That(state.scenes[0].instanceIds, Has.Count.EqualTo(1));
+            Assert.That(notifyCount, Is.EqualTo(2));
+        }
+
         private static DraftResult CreateHarmonyDraft(string name)
         {
             var progression = GuidedDefaults.CreateDefaultProgression();
@@ -261,6 +290,45 @@ namespace RhythmForge.Editor
                 soundProfile = new SoundProfile(),
                 shapeSummary = "arching lead line",
                 summary = "melody phrase",
+                details = "details"
+            };
+        }
+
+        private static DraftResult CreateGrooveDraft(string name, float density)
+        {
+            return new DraftResult
+            {
+                success = true,
+                type = PatternType.Groove,
+                name = name,
+                bars = GuidedDefaults.Bars,
+                tempoBase = GuidedDefaults.Tempo,
+                key = GuidedDefaults.Key,
+                groupId = "lofi",
+                presetId = "lofi-piano",
+                points = new List<Vector2> { Vector2.zero, new Vector2(0.3f, 0.2f), new Vector2(0.8f, 0.4f) },
+                renderRotation = Quaternion.identity,
+                hasRenderRotation = true,
+                spawnPosition = new Vector3(0.25f, 0.3f, 0.15f),
+                derivedSequence = new DerivedSequence
+                {
+                    kind = "groove",
+                    totalSteps = 0,
+                    grooveProfile = new GrooveProfile
+                    {
+                        density = density,
+                        syncopation = 0.24f,
+                        swing = 0.16f,
+                        quantizeGrid = 16,
+                        accentCurve = new[] { 1f, 0.7f, 0.85f, 0.7f }
+                    }
+                },
+                tags = new List<string> { "guided", "groove" },
+                color = Color.yellow,
+                shapeProfile = new ShapeProfile(),
+                soundProfile = new SoundProfile(),
+                shapeSummary = "groove contour",
+                summary = "groove profile",
                 details = "details"
             };
         }

@@ -183,4 +183,14 @@ namespace RhythmForge.Core.Events
 
         public string PatternId { get; }
     }
+
+    public readonly struct GrooveCommittedEvent
+    {
+        public GrooveCommittedEvent(string patternId)
+        {
+            PatternId = patternId;
+        }
+
+        public string PatternId { get; }
+    }
 }

@@ -111,6 +111,59 @@ namespace RhythmForge.Editor
             Assert.That(published.HasValue, Is.True);
             Assert.That(published.Value.PatternId, Is.EqualTo(instance.patternId));
         }
+
+        [Test]
+        public void CommitDraft_ForGroove_StoresProfile_AndPublishesGrooveCommittedEvent()
+        {
+            var store = new SessionStore();
+            GrooveCommittedEvent? published = null;
+            store.EventBus.Subscribe<GrooveCommittedEvent>(evt => published = evt);
+
+            var draft = new DraftResult
+            {
+                success = true,
+                type = PatternType.Groove,
+                name = "Groove-01",
+                bars = GuidedDefaults.Bars,
+                tempoBase = GuidedDefaults.Tempo,
+                key = GuidedDefaults.Key,
+                groupId = "lofi",
+                presetId = "lofi-piano",
+                points = new List<Vector2> { Vector2.zero, Vector2.right * 0.4f, new Vector2(0.8f, 0.2f) },
+                renderRotation = Quaternion.identity,
+                hasRenderRotation = true,
+                spawnPosition = Vector3.zero,
+                derivedSequence = new DerivedSequence
+                {
+                    kind = "groove",
+                    totalSteps = 0,
+                    grooveProfile = new GrooveProfile
+                    {
+                        density = 1.1f,
+                        syncopation = 0.22f,
+                        swing = 0.16f,
+                        quantizeGrid = 16,
+                        accentCurve = new[] { 1f, 0.72f, 0.9f, 0.72f }
+                    }
+                },
+                tags = new List<string> { "groove" },
+                color = Color.yellow,
+                shapeProfile = new ShapeProfile(),
+                soundProfile = new SoundProfile(),
+                shapeSummary = "focused groove line",
+                summary = "groove profile",
+                details = "details"
+            };
+
+            var instance = store.CommitDraft(draft, duplicate: false);
+
+            Assert.That(instance, Is.Not.Null);
+            Assert.That(store.GetComposition().groove, Is.Not.Null);
+            Assert.That(store.GetComposition().groove.density, Is.EqualTo(1.1f));
+            Assert.That(store.GetComposition().GetPatternId(CompositionPhase.Groove), Is.EqualTo(instance.patternId));
+            Assert.That(published.HasValue, Is.True);
+            Assert.That(published.Value.PatternId, Is.EqualTo(instance.patternId));
+        }
     }
 }
 #endif

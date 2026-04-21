@@ -37,25 +37,21 @@ namespace RhythmForge.Core.Sequencing
                 "electronic");
 
             var firstChord = progression.GetSlotForBar(0);
-            var chord = firstChord?.voicing != null ? new List<int>(firstChord.voicing) : new List<int>();
-            string flavor = firstChord != null && !string.IsNullOrEmpty(firstChord.flavor) ? firstChord.flavor : "triad";
+            string flavorLabel = firstChord != null && !string.IsNullOrEmpty(firstChord.flavor) ? firstChord.flavor : "triad";
 
             string bloomWord = sound.reverbBias > 0.56f ? "bloom" : "dry bed";
             return new HarmonyDerivationResult
             {
                 bars = bars,
                 presetId = presetId,
-                tags = new List<string> { flavor, bloomWord, "8-bar progression" },
+                tags = new List<string> { flavorLabel, bloomWord, "8-bar progression" },
                 derivedSequence = new DerivedSequence
                 {
                     kind = "harmony",
                     totalSteps = totalSteps,
-                    flavor = flavor,
-                    rootMidi = firstChord != null ? firstChord.rootMidi : 67,
-                    chord = chord,
                     chordEvents = progression.Clone().chords
                 },
-                summary = $"{sizeWord} {flavor} progression, 8 bars, voicing {Mathf.Round(sp.horizontalSpan * 100f)}%, bloom {Mathf.Round(sound.reverbBias * 100f)}%.",
+                summary = $"{sizeWord} {flavorLabel} progression, 8 bars, voicing {Mathf.Round(sp.horizontalSpan * 100f)}%, bloom {Mathf.Round(sound.reverbBias * 100f)}%.",
                 details = "Tilt selects the harmonic color, horizontal span picks a shared inversion, centroid height shifts the register, and symmetry can strengthen the cadences in bars 4 and 8."
             };
         }

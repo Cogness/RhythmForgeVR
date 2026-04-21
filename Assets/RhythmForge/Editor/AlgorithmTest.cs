@@ -106,13 +106,18 @@ namespace RhythmForge.Editor
             var sound = SoundProfileMapper.Derive(PatternType.HarmonyPad, sp);
 
             var result = HarmonyDeriver.Derive(pts, metrics, "A minor", "lofi", sp, sound);
-            Debug.Log($"  HarmonySeq: bars={result.bars}, flavor={result.derivedSequence.flavor}" +
-                      $", chord={string.Join(",", result.derivedSequence.chord)}");
+            var firstSlot = result.derivedSequence.chordEvents != null && result.derivedSequence.chordEvents.Count > 0
+                ? result.derivedSequence.chordEvents[0] : null;
+            Debug.Log($"  HarmonySeq: bars={result.bars}, chordEvents={result.derivedSequence.chordEvents?.Count ?? 0}" +
+                      $", firstFlavor={firstSlot?.flavor ?? "none"}" +
+                      $", firstVoicing={string.Join(",", firstSlot?.voicing ?? new List<int>())}");
             Debug.Log($"  Summary: {result.summary}");
 
-            AssertTrue(result.derivedSequence.chord != null && result.derivedSequence.chord.Count >= 3,
-                "Chord must have at least 3 notes");
-            AssertTrue(!string.IsNullOrEmpty(result.derivedSequence.flavor), "Flavor must be set");
+            AssertTrue(result.derivedSequence.chordEvents != null && result.derivedSequence.chordEvents.Count == GuidedDefaults.Bars,
+                $"Harmony must have {GuidedDefaults.Bars} chord events (one per bar)");
+            AssertTrue(firstSlot != null && firstSlot.voicing != null && firstSlot.voicing.Count >= 3,
+                "First chord slot must have at least 3 voicing notes");
+            AssertTrue(!string.IsNullOrEmpty(firstSlot?.flavor), "First chord slot flavor must be set");
         }
 
         // ──────────────────────────── GUIDED STARTER SESSION ────────────────────────────

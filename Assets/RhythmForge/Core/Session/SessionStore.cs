@@ -538,7 +538,6 @@ namespace RhythmForge.Core.Session
                         details = rhythm.details
                     };
                 case PatternType.Melody:
-                case PatternType.Bass:
                     var melody = genre.MelodyDeriver.Derive(points, metrics, keyName, shapeProfile, soundProfile, genre);
                     return new PatternDerivationResult
                     {
@@ -548,6 +547,17 @@ namespace RhythmForge.Core.Session
                         derivedSequence = melody.derivedSequence,
                         summary = melody.summary,
                         details = melody.details
+                    };
+                case PatternType.Bass:
+                    var bass = BassDeriver.Derive(points, metrics, keyName, genre.Id, shapeProfile, soundProfile);
+                    return new PatternDerivationResult
+                    {
+                        bars = bass.bars,
+                        presetId = bass.presetId,
+                        tags = bass.tags,
+                        derivedSequence = bass.derivedSequence,
+                        summary = bass.summary,
+                        details = bass.details
                     };
                 case PatternType.Groove:
                     var groove = GrooveShapeMapper.Map(shapeProfile);

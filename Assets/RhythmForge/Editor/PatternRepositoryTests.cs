@@ -222,6 +222,35 @@ namespace RhythmForge.Editor
             Assert.That(notifyCount, Is.EqualTo(2));
         }
 
+        [Test]
+        public void CommitDraft_InGuidedMode_ReplacesPreviousBassPattern()
+        {
+            var state = AppStateFactory.CreateEmpty();
+            int notifyCount = 0;
+            var repository = new PatternRepository(
+                () => state,
+                sceneId => GetScene(state, sceneId),
+                () => notifyCount++,
+                type => $"Reserved-{type}");
+
+            var firstDraft = CreateBassDraft("First Bass", 43);
+            repository.CommitDraft(firstDraft, duplicate: false);
+
+            string firstPatternId = state.patterns[0].id;
+            Assert.That(state.patterns, Has.Count.EqualTo(1));
+            Assert.That(state.instances, Has.Count.EqualTo(1));
+
+            var secondDraft = CreateBassDraft("Second Bass", 40);
+            repository.CommitDraft(secondDraft, duplicate: false);
+
+            Assert.That(state.patterns, Has.Count.EqualTo(1));
+            Assert.That(state.instances, Has.Count.EqualTo(1));
+            Assert.That(state.patterns[0].id, Is.Not.EqualTo(firstPatternId));
+            Assert.That(state.composition.GetPatternId(CompositionPhase.Bass), Is.EqualTo(state.patterns[0].id));
+            Assert.That(state.scenes[0].instanceIds, Has.Count.EqualTo(1));
+            Assert.That(notifyCount, Is.EqualTo(2));
+        }
+
         private static DraftResult CreateHarmonyDraft(string name)
         {
             var progression = GuidedDefaults.CreateDefaultProgression();
@@ -329,6 +358,42 @@ namespace RhythmForge.Editor
                 soundProfile = new SoundProfile(),
                 shapeSummary = "groove contour",
                 summary = "groove profile",
+                details = "details"
+            };
+        }
+
+        private static DraftResult CreateBassDraft(string name, int rootMidi)
+        {
+            return new DraftResult
+            {
+                success = true,
+                type = PatternType.Bass,
+                name = name,
+                bars = GuidedDefaults.Bars,
+                tempoBase = GuidedDefaults.Tempo,
+                key = GuidedDefaults.Key,
+                groupId = "lofi",
+                presetId = "trap-bass",
+                points = new List<Vector2> { Vector2.zero, new Vector2(0.35f, 0.18f), new Vector2(0.82f, 0.2f) },
+                renderRotation = Quaternion.identity,
+                hasRenderRotation = true,
+                spawnPosition = new Vector3(0.25f, 0.3f, 0.15f),
+                derivedSequence = new DerivedSequence
+                {
+                    kind = "bass",
+                    totalSteps = GuidedDefaults.Bars * AppStateFactory.BarSteps,
+                    notes = new List<MelodyNote>
+                    {
+                        new MelodyNote { step = 0, midi = rootMidi, durationSteps = 8, velocity = 0.56f, glide = 0f },
+                        new MelodyNote { step = 8, midi = rootMidi + 7, durationSteps = 6, velocity = 0.48f, glide = 0f }
+                    }
+                },
+                tags = new List<string> { "bass", "guided" },
+                color = Color.red,
+                shapeProfile = new ShapeProfile(),
+                soundProfile = new SoundProfile(),
+                shapeSummary = "grounded bass line",
+                summary = "bass phrase",
                 details = "details"
             };
         }

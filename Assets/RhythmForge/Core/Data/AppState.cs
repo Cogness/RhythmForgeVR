@@ -10,9 +10,9 @@ namespace RhythmForge.Core.Data
     [Serializable]
     public class HarmonicContext
     {
-        public int rootMidi = 57;                       // A3 — default A minor root
+        public int rootMidi = 67;                       // G4 — guided default root
         public List<int> chordTones = new List<int>();  // in-key pitches of the current chord
-        public string flavor = "minor";
+        public string flavor = "major";
 
         public bool HasChord => chordTones != null && chordTones.Count > 0;
 
@@ -55,17 +55,19 @@ namespace RhythmForge.Core.Data
     [Serializable]
     public class AppState
     {
-        public int version = 6;
-        public float tempo = 85f;
-        public string key = "A minor";
+        public int version = 7;
+        public float tempo = GuidedDefaults.Tempo;
+        public string key = GuidedDefaults.Key;
         public string activeGroupId = "lofi"; // kept for migration; use activeGenreId at runtime
-        public string activeGenreId = "electronic";
+        public string activeGenreId = GuidedDefaults.ActiveGenreId;
         public string drawMode = "Percussion";
         public string activeSceneId = "scene-a";
         public string selectedInstanceId;
         public string selectedPatternId;
         public string queuedSceneId;
         public HarmonicContext harmonicContext = new HarmonicContext();
+        public bool guidedMode = true;
+        public Composition composition = GuidedDefaults.Create();
         public List<PatternDefinition> patterns = new List<PatternDefinition>();
         public List<PatternInstance> instances = new List<PatternInstance>();
         public List<SceneData> scenes = new List<SceneData>();
@@ -116,6 +118,12 @@ namespace RhythmForge.Core.Data
         public static AppState CreateEmpty()
         {
             var state = new AppState();
+            state.guidedMode = true;
+            state.composition = GuidedDefaults.Create();
+            state.tempo = state.composition.tempo;
+            state.key = state.composition.key;
+            state.activeGenreId = GuidedDefaults.ActiveGenreId;
+            state.harmonicContext = state.composition.progression.ToHarmonicContext(0);
             state.scenes = new List<SceneData>
             {
                 new SceneData("scene-a", "Scene A"),

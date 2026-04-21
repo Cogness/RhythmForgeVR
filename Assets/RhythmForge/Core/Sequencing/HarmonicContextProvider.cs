@@ -19,6 +19,16 @@ namespace RhythmForge.Core.Sequencing
             _current = ctx?.Clone() ?? new HarmonicContext();
         }
 
+        public static HarmonicContext FromProgression(ChordProgression progression, int barIndex)
+        {
+            return progression?.ToHarmonicContext(barIndex) ?? new HarmonicContext();
+        }
+
+        public static void SetFromProgression(ChordProgression progression, int barIndex)
+        {
+            Set(FromProgression(progression, barIndex));
+        }
+
         /// <summary>Returns the current shared context (never null).</summary>
         public static HarmonicContext Current => _current ?? (_current = new HarmonicContext());
 

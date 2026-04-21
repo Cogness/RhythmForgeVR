@@ -15,6 +15,8 @@ namespace RhythmForge.Core.Session
         public static AppState CreateDemoState(SessionStore store)
         {
             var state = AppStateFactory.CreateEmpty();
+            state.guidedMode = false;
+            state.composition = GuidedDefaults.Create();
             state.tempo = 85f;
             state.key = "A minor";
             state.activeGroupId = "lofi";

@@ -153,4 +153,14 @@ namespace RhythmForge.Core.Events
         public string PreviousGenreId { get; }
         public string NewGenreId { get; }
     }
+
+    public readonly struct ChordProgressionChangedEvent
+    {
+        public ChordProgressionChangedEvent(ChordProgression progression)
+        {
+            Progression = progression;
+        }
+
+        public ChordProgression Progression { get; }
+    }
 }

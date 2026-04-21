@@ -225,6 +225,59 @@ namespace RhythmForge.Core.Session
             });
         }
 
+        public Composition GetComposition()
+        {
+            if (State.composition == null)
+                State.composition = GuidedDefaults.Create();
+            if (State.composition.progression == null)
+                State.composition.progression = GuidedDefaults.CreateDefaultProgression();
+            if (State.composition.phasePatternIds == null)
+                State.composition.phasePatternIds = new List<CompositionPhasePatternRef>();
+
+            return State.composition;
+        }
+
+        public void SetComposition(Composition composition)
+        {
+            var next = composition?.Clone() ?? GuidedDefaults.Create();
+            if (next.progression == null)
+                next.progression = GuidedDefaults.CreateDefaultProgression();
+            if (next.phasePatternIds == null)
+                next.phasePatternIds = new List<CompositionPhasePatternRef>();
+
+            State.composition = next;
+            State.guidedMode = true;
+            State.tempo = next.tempo;
+            State.key = string.IsNullOrEmpty(next.key) ? GuidedDefaults.Key : next.key;
+            State.harmonicContext = GetHarmonicContextForBar(0);
+            NotifyStateChanged();
+        }
+
+        public void UpdateProgression(ChordProgression progression)
+        {
+            var composition = GetComposition();
+            composition.progression = progression?.Clone() ?? GuidedDefaults.CreateDefaultProgression();
+            State.harmonicContext = GetHarmonicContextForBar(0);
+            NotifyStateChanged();
+            EventBus.Publish(new ChordProgressionChangedEvent(composition.progression.Clone()));
+        }
+
+        public void UpdateGroove(GrooveProfile groove)
+        {
+            var composition = GetComposition();
+            composition.groove = groove?.Clone();
+            NotifyStateChanged();
+        }
+
+        public HarmonicContext GetHarmonicContextForBar(int barIndex)
+        {
+            var progression = GetComposition().progression;
+            if (progression == null)
+                return GetHarmonicContext().Clone();
+
+            return progression.ToHarmonicContext(barIndex);
+        }
+
         private struct PatternSnapshot
         {
             public string patternId;

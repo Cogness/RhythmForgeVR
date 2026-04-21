@@ -12,7 +12,7 @@ namespace RhythmForge.Core.Session
         {
             var fallback = AppStateFactory.CreateEmpty();
             int loadedVersion = state.version;
-            state.version = 6;
+            state.version = 7;
 
             if (state.scenes == null || state.scenes.Count != 4)
                 state.scenes = fallback.scenes;
@@ -26,6 +26,16 @@ namespace RhythmForge.Core.Session
                 state.instances = new List<PatternInstance>();
             if (state.counters == null)
                 state.counters = new DraftCounters();
+            if (state.harmonicContext == null)
+                state.harmonicContext = new HarmonicContext();
+            if (state.composition == null)
+                state.composition = GuidedDefaults.Create();
+            if (state.composition.progression == null)
+                state.composition.progression = GuidedDefaults.CreateDefaultProgression();
+            if (state.composition.phasePatternIds == null)
+                state.composition.phasePatternIds = new List<CompositionPhasePatternRef>();
+            if (loadedVersion < 7)
+                state.guidedMode = true;
 
             if (string.IsNullOrEmpty(state.activeGroupId))
                 state.activeGroupId = "lofi";

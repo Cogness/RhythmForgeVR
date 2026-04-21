@@ -49,12 +49,14 @@ namespace RhythmForge.Editor
 
             migrator.NormalizeState(state);
 
-            Assert.That(state.version, Is.EqualTo(6));
+            Assert.That(state.version, Is.EqualTo(7));
             Assert.That(state.drawMode, Is.EqualTo(PatternType.Percussion.ToString()));
             Assert.That(state.scenes[0].instanceIds, Does.Not.Contain("missing-instance"));
             Assert.That(state.scenes[1].instanceIds, Does.Contain(instance.id));
             Assert.That(pattern.hasRenderRotation, Is.False);
             Assert.That(pattern.renderRotation, Is.EqualTo(Quaternion.identity));
+            Assert.That(state.composition, Is.Not.Null);
+            Assert.That(state.guidedMode, Is.True);
         }
 
         [TestCase("RhythmLoop", PatternType.Percussion)]
@@ -72,6 +74,38 @@ namespace RhythmForge.Editor
             migrator.NormalizeState(state);
 
             Assert.That(state.drawMode, Is.EqualTo(expectedMode.ToString()));
+        }
+
+        [Test]
+        public void NormalizeState_BackfillsComposition_WithoutOverwritingLegacyTempoKeyGenreOrHarmony()
+        {
+            var migrator = new StateMigrator();
+            var state = AppStateFactory.CreateEmpty();
+            state.version = 6;
+            state.tempo = 72f;
+            state.key = "A minor";
+            state.activeGenreId = "jazz";
+            state.guidedMode = false;
+            state.composition = null;
+            state.harmonicContext = new HarmonicContext
+            {
+                rootMidi = 57,
+                chordTones = new System.Collections.Generic.List<int> { 57, 60, 64 },
+                flavor = "minor"
+            };
+
+            migrator.NormalizeState(state);
+
+            Assert.That(state.version, Is.EqualTo(7));
+            Assert.That(state.guidedMode, Is.True);
+            Assert.That(state.tempo, Is.EqualTo(72f));
+            Assert.That(state.key, Is.EqualTo("A minor"));
+            Assert.That(state.activeGenreId, Is.EqualTo("jazz"));
+            Assert.That(state.harmonicContext.rootMidi, Is.EqualTo(57));
+            Assert.That(state.composition, Is.Not.Null);
+            Assert.That(state.composition.tempo, Is.EqualTo(GuidedDefaults.Tempo));
+            Assert.That(state.composition.key, Is.EqualTo(GuidedDefaults.Key));
+            Assert.That(state.composition.progression, Is.Not.Null);
         }
     }
 }

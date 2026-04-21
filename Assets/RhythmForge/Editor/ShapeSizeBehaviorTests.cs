@@ -118,7 +118,7 @@ namespace RhythmForge.Editor
             store.LoadState(state);
 
             var loaded = store.GetPattern("pattern-legacy");
-            Assert.That(store.State.version, Is.EqualTo(4));
+            Assert.That(store.State.version, Is.EqualTo(7));
             Assert.That(loaded.shapeProfile.worldWidth, Is.EqualTo(0.57f).Within(0.02f));
             Assert.That(loaded.shapeProfile.worldHeight, Is.EqualTo(0.38f).Within(0.02f));
             Assert.That(loaded.shapeProfile.worldLength, Is.EqualTo(1.375f).Within(0.05f));

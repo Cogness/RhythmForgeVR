@@ -72,7 +72,8 @@ namespace RhythmForge.Core.Analysis
             float closedness = Mathf.Clamp01(1f - closeDistance / 0.28f);
 
             // Circularity
-            float perimeter = metrics.length + (type == PatternType.RhythmLoop ? closeDistance : 0f);
+            bool percussionLike = PatternTypeCompatibility.IsPercussion(type);
+            float perimeter = metrics.length + (percussionLike ? closeDistance : 0f);
             float circularity = perimeter > 0f
                 ? Mathf.Clamp01((4f * Mathf.PI * MathUtils.PolygonArea(points)) / Mathf.Pow(perimeter, 2f) / 0.9f)
                 : 0f;
@@ -109,7 +110,7 @@ namespace RhythmForge.Core.Analysis
             return new ShapeProfile
             {
                 closedness = closedness,
-                circularity = type == PatternType.RhythmLoop
+                circularity = percussionLike
                     ? circularity
                     : Mathf.Clamp01(circularity * 0.35f + closedness * 0.3f),
                 aspectRatio = aspectRatio,
@@ -172,12 +173,14 @@ namespace RhythmForge.Core.Analysis
             float averageSize = Mathf.Max(0f, sp.worldAverageSize);
             float maxDimension = Mathf.Max(0f, sp.worldMaxDimension);
 
-            switch (type)
+            switch (PatternTypeCompatibility.Canonicalize(type))
             {
-                case PatternType.RhythmLoop:
+                case PatternType.Percussion:
                     return NormalizeRange(Mathf.Max(averageSize, maxDimension * 0.92f), 0.14f, 0.52f);
 
-                case PatternType.MelodyLine:
+                case PatternType.Melody:
+                case PatternType.Bass:
+                case PatternType.Groove:
                 {
                     float melodicExtent = Mathf.Max(length * 0.7f, averageSize * 1.15f + maxDimension * 0.2f);
                     return NormalizeRange(melodicExtent, 0.18f, 1.05f);

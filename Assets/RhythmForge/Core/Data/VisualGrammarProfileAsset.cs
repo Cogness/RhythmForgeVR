@@ -25,10 +25,13 @@ namespace RhythmForge.Core.Data
 
         public Color Get(PatternType type)
         {
-            switch (type)
+            switch (PatternTypeCompatibility.Canonicalize(type))
             {
-                case PatternType.MelodyLine: return melodyLine;
-                case PatternType.HarmonyPad: return harmonyPad;
+                case PatternType.Percussion: return rhythmLoop;
+                case PatternType.Melody: return melodyLine;
+                case PatternType.Harmony: return harmonyPad;
+                case PatternType.Bass: return ProfileColorUtility.HexColor("#ff6b57");
+                case PatternType.Groove: return ProfileColorUtility.HexColor("#f3bf3a");
                 default: return rhythmLoop;
             }
         }

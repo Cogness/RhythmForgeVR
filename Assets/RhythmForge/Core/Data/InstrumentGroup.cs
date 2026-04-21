@@ -23,11 +23,14 @@ namespace RhythmForge.Core.Data
 
         public string GetDefault(PatternType type)
         {
-            switch (type)
+            switch (PatternTypeCompatibility.Canonicalize(type))
             {
-                case PatternType.RhythmLoop: return RhythmLoop;
-                case PatternType.MelodyLine: return MelodyLine;
-                case PatternType.HarmonyPad: return HarmonyPad;
+                case PatternType.Percussion: return RhythmLoop;
+                case PatternType.Harmony: return HarmonyPad;
+                case PatternType.Melody:
+                case PatternType.Bass:
+                case PatternType.Groove:
+                    return MelodyLine;
                 default: return RhythmLoop;
             }
         }

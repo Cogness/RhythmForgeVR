@@ -49,12 +49,29 @@ namespace RhythmForge.Editor
 
             migrator.NormalizeState(state);
 
-            Assert.That(state.version, Is.EqualTo(4));
-            Assert.That(state.drawMode, Is.EqualTo(PatternType.RhythmLoop.ToString()));
+            Assert.That(state.version, Is.EqualTo(6));
+            Assert.That(state.drawMode, Is.EqualTo(PatternType.Percussion.ToString()));
             Assert.That(state.scenes[0].instanceIds, Does.Not.Contain("missing-instance"));
             Assert.That(state.scenes[1].instanceIds, Does.Contain(instance.id));
             Assert.That(pattern.hasRenderRotation, Is.False);
             Assert.That(pattern.renderRotation, Is.EqualTo(Quaternion.identity));
+        }
+
+        [TestCase("RhythmLoop", PatternType.Percussion)]
+        [TestCase("MelodyLine", PatternType.Melody)]
+        [TestCase("HarmonyPad", PatternType.Harmony)]
+        [TestCase("Bass", PatternType.Bass)]
+        [TestCase("Groove", PatternType.Groove)]
+        public void NormalizeState_NormalizesLegacyAndCanonicalDrawModes(string serializedMode, PatternType expectedMode)
+        {
+            var migrator = new StateMigrator();
+            var state = AppStateFactory.CreateEmpty();
+            state.version = 5;
+            state.drawMode = serializedMode;
+
+            migrator.NormalizeState(state);
+
+            Assert.That(state.drawMode, Is.EqualTo(expectedMode.ToString()));
         }
     }
 }

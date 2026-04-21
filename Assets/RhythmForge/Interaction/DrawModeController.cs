@@ -8,7 +8,7 @@ namespace RhythmForge.Interaction
 {
     public class DrawModeController : MonoBehaviour
     {
-        private PatternType _currentMode = PatternType.RhythmLoop;
+        private PatternType _currentMode = PatternType.Percussion;
         private RhythmForgeEventBus _eventBus;
 
         public PatternType CurrentMode => _currentMode;
@@ -32,7 +32,7 @@ namespace RhythmForge.Interaction
             var registeredTypes = PatternBehaviorRegistry.GetRegisteredTypes();
             if (registeredTypes.Count == 0)
             {
-                SetMode(PatternType.RhythmLoop);
+                SetMode(PatternType.Percussion);
                 return;
             }
 

@@ -12,7 +12,7 @@ namespace RhythmForge.Core.Session
         {
             var fallback = AppStateFactory.CreateEmpty();
             int loadedVersion = state.version;
-            state.version = 5;
+            state.version = 6;
 
             if (state.scenes == null || state.scenes.Count != 4)
                 state.scenes = fallback.scenes;
@@ -33,17 +33,37 @@ namespace RhythmForge.Core.Session
             if (string.IsNullOrEmpty(state.activeGenreId))
                 state.activeGenreId = "electronic";
             if (string.IsNullOrEmpty(state.drawMode))
-                state.drawMode = PatternType.RhythmLoop.ToString();
+                state.drawMode = PatternType.Percussion.ToString();
             if (string.IsNullOrEmpty(state.activeSceneId))
                 state.activeSceneId = "scene-a";
 
+            state.drawMode = NormalizeDrawMode(state.drawMode);
             if (!Enum.TryParse(state.drawMode, true, out PatternType mode))
-                mode = PatternType.RhythmLoop;
-            state.drawMode = mode.ToString();
+                mode = PatternType.Percussion;
+            state.drawMode = PatternTypeCompatibility.Canonicalize(mode).ToString();
 
             NormalizePatternShapeData(state, loadedVersion);
             NormalizePatternOrientations(state, loadedVersion);
             CleanupSceneMembership(state);
+        }
+
+        private static string NormalizeDrawMode(string drawMode)
+        {
+            if (string.IsNullOrWhiteSpace(drawMode))
+                return PatternType.Percussion.ToString();
+
+            switch (drawMode.Trim())
+            {
+                case "RhythmLoop":
+                case "Rhythm":
+                    return PatternType.Percussion.ToString();
+                case "MelodyLine":
+                    return PatternType.Melody.ToString();
+                case "HarmonyPad":
+                    return PatternType.Harmony.ToString();
+                default:
+                    return drawMode;
+            }
         }
 
         private void NormalizePatternShapeData(AppState state, int loadedVersion)

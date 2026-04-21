@@ -265,7 +265,7 @@ namespace RhythmForge.Bootstrap
             BuildAudio();
 
             // ── 2. Default stroke material (StrokeCapture only; manager creates per-type materials itself) ──
-            var defaultStrokeMat = MaterialFactory.CreateStrokeMaterial(PatternType.RhythmLoop);
+            var defaultStrokeMat = MaterialFactory.CreateStrokeMaterial(PatternType.Percussion);
 
             // ── 3. Core subsystems ──
             var subsystems = BuildSubsystems(defaultStrokeMat);
@@ -512,8 +512,8 @@ namespace RhythmForge.Bootstrap
             var paramsLabel = paramsBtn.GetComponentInChildren<Text>();
 
             // Mode button
-            var modeBtn = UIFactory.CreateButton(canvas.transform, "ModeButton", "Mode\nRhythm",
-                new Rect(532, 8, 100, 84), TypeColors.RhythmLoop, Color.white, 18, null);
+            var modeBtn = UIFactory.CreateButton(canvas.transform, "ModeButton", "Mode\nPercussion",
+                new Rect(532, 8, 100, 84), TypeColors.Percussion, Color.white, 18, null);
             var modeLabel = modeBtn.GetComponentInChildren<Text>();
 
             // Info labels
@@ -582,7 +582,7 @@ namespace RhythmForge.Bootstrap
 
             // Type label
             var typeLabel = UIFactory.CreateRectText(canvas.transform, "TypeLabel",
-                "RhythmLoop", 14, new Color(0.7f, 1f, 1f), TextAnchor.MiddleLeft,
+                "Percussion", 14, new Color(0.7f, 1f, 1f), TextAnchor.MiddleLeft,
                 new Rect(12, 212, 300, 24));
 
             // Name
@@ -634,7 +634,7 @@ namespace RhythmForge.Bootstrap
             var pName = UIFactory.CreateRectText(canvas.transform, "PatternName",
                 "Pattern", 20, Color.white, TextAnchor.MiddleLeft, new Rect(10, 368, 320, 28));
             var pType = UIFactory.CreateRectText(canvas.transform, "PatternType",
-                "RhythmLoop", 14, new Color(0.7f, 1f, 1f), TextAnchor.MiddleLeft, new Rect(10, 348, 200, 20));
+                "Percussion", 14, new Color(0.7f, 1f, 1f), TextAnchor.MiddleLeft, new Rect(10, 348, 200, 20));
             var pBars = UIFactory.CreateRectText(canvas.transform, "PatternBars",
                 "2 bars", 14, new Color(0.6f, 0.7f, 0.8f), TextAnchor.MiddleRight, new Rect(200, 348, 130, 20));
 

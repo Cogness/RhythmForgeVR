@@ -55,12 +55,12 @@ namespace RhythmForge.Core.Data
     [Serializable]
     public class AppState
     {
-        public int version = 5;
+        public int version = 6;
         public float tempo = 85f;
         public string key = "A minor";
         public string activeGroupId = "lofi"; // kept for migration; use activeGenreId at runtime
         public string activeGenreId = "electronic";
-        public string drawMode = "RhythmLoop";
+        public string drawMode = "Percussion";
         public string activeSceneId = "scene-a";
         public string selectedInstanceId;
         public string selectedPatternId;
@@ -79,24 +79,31 @@ namespace RhythmForge.Core.Data
         public int rhythm = 1;
         public int melody = 1;
         public int harmony = 1;
+        public int bass = 1;
+        public int groove = 1;
 
         public int GetCount(PatternType type)
         {
-            switch (type)
+            switch (PatternTypeCompatibility.Canonicalize(type))
             {
-                case PatternType.RhythmLoop: return rhythm;
-                case PatternType.MelodyLine: return melody;
-                default:                     return harmony;
+                case PatternType.Percussion: return rhythm;
+                case PatternType.Melody:     return melody;
+                case PatternType.Harmony:    return harmony;
+                case PatternType.Bass:       return bass;
+                case PatternType.Groove:     return groove;
+                default:                     return rhythm;
             }
         }
 
         public void Increment(PatternType type)
         {
-            switch (type)
+            switch (PatternTypeCompatibility.Canonicalize(type))
             {
-                case PatternType.RhythmLoop: rhythm++;  break;
-                case PatternType.MelodyLine: melody++;  break;
-                default:                     harmony++; break;
+                case PatternType.Percussion: rhythm++;  break;
+                case PatternType.Melody:     melody++;  break;
+                case PatternType.Harmony:    harmony++; break;
+                case PatternType.Bass:       bass++;    break;
+                case PatternType.Groove:     groove++;  break;
             }
         }
     }

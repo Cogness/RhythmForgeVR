@@ -229,7 +229,7 @@ namespace RhythmForge.Sequencer
             string playbackSceneId = GetPlaybackSceneId();
             if (_playbackVisualTracker == null)
             {
-                state = PatternPlaybackVisualState.CreateInactive(pattern?.type ?? PatternType.RhythmLoop, null, playbackSceneId);
+                state = PatternPlaybackVisualState.CreateInactive(pattern?.type ?? PatternType.Percussion, null, playbackSceneId);
                 return false;
             }
 

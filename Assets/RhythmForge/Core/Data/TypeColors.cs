@@ -4,17 +4,25 @@ namespace RhythmForge.Core.Data
 {
     public static class TypeColors
     {
-        public static Color RhythmLoop => VisualGrammarProfiles.GetTypeColor(PatternType.RhythmLoop);
-        public static Color MelodyLine => VisualGrammarProfiles.GetTypeColor(PatternType.MelodyLine);
-        public static Color HarmonyPad => VisualGrammarProfiles.GetTypeColor(PatternType.HarmonyPad);
+        public static Color Percussion => VisualGrammarProfiles.GetTypeColor(PatternType.Percussion);
+        public static Color Melody => VisualGrammarProfiles.GetTypeColor(PatternType.Melody);
+        public static Color Harmony => VisualGrammarProfiles.GetTypeColor(PatternType.Harmony);
+        public static Color Bass => VisualGrammarProfiles.GetTypeColor(PatternType.Bass);
+        public static Color Groove => VisualGrammarProfiles.GetTypeColor(PatternType.Groove);
+
+        public static Color RhythmLoop => Percussion;
+        public static Color MelodyLine => Melody;
+        public static Color HarmonyPad => Harmony;
 
         public static Color GetColor(PatternType type)
         {
-            switch (type)
+            switch (PatternTypeCompatibility.Canonicalize(type))
             {
-                case PatternType.RhythmLoop: return RhythmLoop;
-                case PatternType.MelodyLine: return MelodyLine;
-                case PatternType.HarmonyPad: return HarmonyPad;
+                case PatternType.Percussion: return Percussion;
+                case PatternType.Melody: return Melody;
+                case PatternType.Harmony: return Harmony;
+                case PatternType.Bass: return Bass;
+                case PatternType.Groove: return Groove;
                 default: return Color.white;
             }
         }

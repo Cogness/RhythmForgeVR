@@ -93,7 +93,7 @@ namespace RhythmForge.UI.Panels
         private void Refresh()
         {
             RefreshTransportStatus();
-            RefreshModeButton(_drawMode != null ? _drawMode.CurrentMode : PatternType.RhythmLoop);
+            RefreshModeButton(_drawMode != null ? _drawMode.CurrentMode : PatternType.Percussion);
         }
 
         private void RefreshTransportStatus()

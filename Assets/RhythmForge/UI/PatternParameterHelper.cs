@@ -24,9 +24,9 @@ namespace RhythmForge.UI
             var list = new List<ParamEntry>();
             if (sp == null) return list;
 
-            switch (type)
+            switch (PatternTypeCompatibility.Canonicalize(type))
             {
-                case PatternType.RhythmLoop:
+                case PatternType.Percussion:
                     list.Add(new ParamEntry { label = "size", value = ShapeProfileSizing.GetSizeFactor(type, sp) });
                     list.Add(new ParamEntry { label = "ang", value = sp.angularity });
                     list.Add(new ParamEntry { label = "circ", value = sp.circularity });
@@ -35,7 +35,9 @@ namespace RhythmForge.UI
                     list.Add(new ParamEntry { label = "curvVar", value = sp.curvatureVariance });
                     break;
 
-                case PatternType.MelodyLine:
+                case PatternType.Melody:
+                case PatternType.Bass:
+                case PatternType.Groove:
                     list.Add(new ParamEntry { label = "size", value = ShapeProfileSizing.GetSizeFactor(type, sp) });
                     list.Add(new ParamEntry { label = "ang", value = sp.angularity });
                     list.Add(new ParamEntry { label = "centH", value = sp.centroidHeight });
@@ -47,7 +49,7 @@ namespace RhythmForge.UI
                     list.Add(new ParamEntry { label = "dirBias", value = sp.directionBias });
                     break;
 
-                default: // HarmonyPad
+                default:
                     list.Add(new ParamEntry { label = "size", value = ShapeProfileSizing.GetSizeFactor(type, sp) });
                     list.Add(new ParamEntry { label = "centH", value = sp.centroidHeight });
                     list.Add(new ParamEntry { label = "ang", value = sp.angularity });
@@ -68,9 +70,9 @@ namespace RhythmForge.UI
             var list = new List<ParamEntry>();
             if (snd == null) return list;
 
-            switch (type)
+            switch (PatternTypeCompatibility.Canonicalize(type))
             {
-                case PatternType.RhythmLoop:
+                case PatternType.Percussion:
                     list.Add(new ParamEntry { label = "bright", value = snd.brightness });
                     list.Add(new ParamEntry { label = "drive", value = snd.drive });
                     list.Add(new ParamEntry { label = "trans", value = snd.transientSharpness });
@@ -81,7 +83,9 @@ namespace RhythmForge.UI
                     list.Add(new ParamEntry { label = "stereo", value = snd.stereoSpread });
                     break;
 
-                case PatternType.MelodyLine:
+                case PatternType.Melody:
+                case PatternType.Bass:
+                case PatternType.Groove:
                     list.Add(new ParamEntry { label = "bright", value = snd.brightness });
                     list.Add(new ParamEntry { label = "reson", value = snd.resonance });
                     list.Add(new ParamEntry { label = "drive", value = snd.drive });
@@ -92,7 +96,7 @@ namespace RhythmForge.UI
                     list.Add(new ParamEntry { label = "filter", value = snd.filterMotion });
                     break;
 
-                default: // HarmonyPad
+                default:
                     list.Add(new ParamEntry { label = "bright", value = snd.brightness });
                     list.Add(new ParamEntry { label = "reson", value = snd.resonance });
                     list.Add(new ParamEntry { label = "detune", value = snd.detune });

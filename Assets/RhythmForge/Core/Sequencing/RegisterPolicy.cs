@@ -32,14 +32,16 @@ namespace RhythmForge.Core.Sequencing
             bool newAge = genreId == "newage";
             bool jazz   = genreId == "jazz";
 
-            switch (mode)
+            switch (PatternTypeCompatibility.Canonicalize(mode))
             {
-                case PatternType.MelodyLine:
+                case PatternType.Melody:
+                case PatternType.Bass:
+                case PatternType.Groove:
                     if (newAge) return (NA_MelMin,  NA_MelMax);
                     if (jazz)   return (Jz_MelMin,  Jz_MelMax);
                     return (Elec_MelMin, Elec_MelMax);
 
-                case PatternType.HarmonyPad:
+                case PatternType.Harmony:
                     if (newAge) return (NA_HarmMin, NA_HarmMax);
                     if (jazz)   return (Jz_HarmMin, Jz_HarmMax);
                     return (Elec_HarmMin, Elec_HarmMax);

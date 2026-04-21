@@ -181,7 +181,7 @@ namespace RhythmForge.Interaction
             List<Vector2> projected = ProjectTo2D(_worldPoints, center, strokeFrame.right, strokeFrame.up);
 
             // Build draft
-            PatternType type = _drawMode != null ? _drawMode.CurrentMode : PatternType.RhythmLoop;
+            PatternType type = _drawMode != null ? _drawMode.CurrentMode : PatternType.Percussion;
             var draft = DraftBuilder.BuildFromStroke(
                 type, projected, center, strokeFrame.rotation, _store.State, _store);
 

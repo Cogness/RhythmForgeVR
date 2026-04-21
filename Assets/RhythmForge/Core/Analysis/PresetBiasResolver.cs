@@ -70,7 +70,7 @@ namespace RhythmForge.Core.Analysis
                 b.attackBias += 0.08f;
                 b.waveMorph -= 0.04f;
             }
-            if (voice.Contains("drums") || type == PatternType.RhythmLoop)
+            if (voice.Contains("drums") || PatternTypeCompatibility.IsPercussion(type))
             {
                 b.transientSharpness += 0.16f;
                 b.grooveInstability += 0.08f;
@@ -134,14 +134,16 @@ namespace RhythmForge.Core.Analysis
             string shapeWord = sp.angularity > 0.7f ? "spiky" : sp.angularity > 0.45f ? "creased" : "smooth";
             string balanceWord = sp.symmetry > 0.65f ? "balanced" : sp.symmetry < 0.35f ? "off-balance" : "tilted";
 
-            switch (type)
+            switch (PatternTypeCompatibility.Canonicalize(type))
             {
-                case PatternType.RhythmLoop:
+                case PatternType.Percussion:
                     string bodyWord = sound.body > 0.65f ? "heavy body"
                         : sound.transientSharpness > 0.68f ? "hard transient edge" : "tight body";
                     return $"{sizeWord} {shapeWord} {balanceWord} loop with {bodyWord}";
 
-                case PatternType.MelodyLine:
+                case PatternType.Melody:
+                case PatternType.Bass:
+                case PatternType.Groove:
                     string motionWord = sound.modDepth > 0.6f ? "singing modulation"
                         : sound.transientSharpness > 0.6f ? "biting attack" : "soft contour";
                     string registerWord = sp.verticalSpan > 0.55f ? "wide register reach" : "contained register";

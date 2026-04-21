@@ -60,7 +60,7 @@ namespace RhythmForge.Core.Session
             {
                 // Soft warning only — on-device VR drawing rarely closes perfectly.
                 // Proceed with the stroke; the rhythm deriver will handle it gracefully.
-                Debug.Log("[RhythmForge] RhythmLoop stroke not fully closed — proceeding anyway.");
+                Debug.Log("[RhythmForge] Percussion stroke not fully closed — proceeding anyway.");
             }
 
             var normalizedPoints = StrokeAnalyzer.NormalizePoints(rawPoints, metrics);
@@ -89,7 +89,7 @@ namespace RhythmForge.Core.Session
 
             // Keep shared harmonic context up-to-date whenever a harmony pad is drawn.
             // Melody and bass derivers read this to constrain strong-beat pitches to chord tones.
-            if (type == PatternType.HarmonyPad && derivation.derivedSequence?.chord != null)
+            if (PatternTypeCompatibility.IsHarmony(type) && derivation.derivedSequence?.chord != null)
             {
                 store.SetHarmonicContext(
                     derivation.derivedSequence.rootMidi,

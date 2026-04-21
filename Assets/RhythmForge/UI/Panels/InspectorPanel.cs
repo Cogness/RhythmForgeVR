@@ -138,7 +138,7 @@ namespace RhythmForge.UI.Panels
 
             // Pattern identity
             if (_patternName) _patternName.text = pattern.name;
-            if (_patternType) _patternType.text = pattern.type.ToString();
+            if (_patternType) _patternType.text = PatternTypeCompatibility.GetDisplayName(pattern.type);
             if (_patternBars) _patternBars.text = $"{pattern.bars} bars";
             if (_typeColorBar) _typeColorBar.color = pattern.color;
 
@@ -190,13 +190,15 @@ namespace RhythmForge.UI.Panels
             string[] labels;
             float[] values;
 
-            switch (pattern.type)
+            switch (PatternTypeCompatibility.Canonicalize(pattern.type))
             {
-                case PatternType.RhythmLoop:
+                case PatternType.Percussion:
                     labels = new[] { "Size", "Circularity", "Angularity", "Symmetry", "Wobble", "Path" };
                     values = new[] { ShapeProfileSizing.GetSizeFactor(pattern.type, sp), sp.circularity, sp.angularity, sp.symmetry, sp.wobble, sp.pathLength };
                     break;
-                case PatternType.MelodyLine:
+                case PatternType.Melody:
+                case PatternType.Bass:
+                case PatternType.Groove:
                     labels = new[] { "Size", "V-Span", "Angularity", "Curvature", "Speed Var", "Dir Bias" };
                     values = new[] { ShapeProfileSizing.GetSizeFactor(pattern.type, sp), sp.verticalSpan, sp.angularity, sp.curvatureMean,
                         sp.speedVariance, Mathf.Abs(sp.directionBias - 0.5f) * 2f };

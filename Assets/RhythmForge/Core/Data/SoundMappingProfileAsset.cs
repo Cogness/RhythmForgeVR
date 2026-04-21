@@ -223,12 +223,14 @@ namespace RhythmForge.Core.Data
         {
             var profile = ResolveProfile();
 
-            switch (type)
+            switch (PatternTypeCompatibility.Canonicalize(type))
             {
-                case PatternType.MelodyLine:
+                case PatternType.Melody:
+                case PatternType.Bass:
+                case PatternType.Groove:
                     return profile?.melodyLine ?? DefaultMelody;
 
-                case PatternType.HarmonyPad:
+                case PatternType.Harmony:
                     return profile?.harmonyPad ?? DefaultHarmony;
 
                 default:
@@ -242,11 +244,16 @@ namespace RhythmForge.Core.Data
             var profile = ResolveProfile();
             if (profile == null) return null;
 
-            switch (type)
+            switch (PatternTypeCompatibility.Canonicalize(type))
             {
-                case PatternType.MelodyLine: return profile.melodyLine;
-                case PatternType.HarmonyPad: return profile.harmonyPad;
-                default:                     return profile.rhythmLoop;
+                case PatternType.Melody:
+                case PatternType.Bass:
+                case PatternType.Groove:
+                    return profile.melodyLine;
+                case PatternType.Harmony:
+                    return profile.harmonyPad;
+                default:
+                    return profile.rhythmLoop;
             }
         }
 

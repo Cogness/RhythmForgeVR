@@ -63,14 +63,28 @@ namespace RhythmForge.Core.Data
 
         public string GetDefaultPresetId(PatternType type)
         {
-            if (_defaultPresetIds.TryGetValue(type, out var id))
+            if (_defaultPresetIds.TryGetValue(PatternTypeCompatibility.Canonicalize(type), out var id))
+                return id;
+
+            if (PatternTypeCompatibility.IsMelodyFamily(type) &&
+                _defaultPresetIds.TryGetValue(PatternType.Melody, out id))
+                return id;
+
+            if (_defaultPresetIds.TryGetValue(type, out id))
                 return id;
             return _presets.Count > 0 ? _presets[0].id : string.Empty;
         }
 
         public PatternSoundMappingProfile GetSoundMapping(PatternType type)
         {
-            if (_soundMappings.TryGetValue(type, out var mapping))
+            if (_soundMappings.TryGetValue(PatternTypeCompatibility.Canonicalize(type), out var mapping))
+                return mapping;
+
+            if (PatternTypeCompatibility.IsMelodyFamily(type) &&
+                _soundMappings.TryGetValue(PatternType.Melody, out mapping))
+                return mapping;
+
+            if (_soundMappings.TryGetValue(type, out mapping))
                 return mapping;
             return PatternSoundMappingProfile.CreateRhythmDefaults();
         }

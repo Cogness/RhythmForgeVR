@@ -107,14 +107,14 @@ namespace RhythmForge.Core.Session
         public PatternType GetDrawMode()
         {
             if (Enum.TryParse(State.drawMode, true, out PatternType mode))
-                return mode;
+                return PatternTypeCompatibility.Canonicalize(mode);
 
-            return PatternType.RhythmLoop;
+            return PatternType.Percussion;
         }
 
         public void SetDrawMode(PatternType mode)
         {
-            string serialized = mode.ToString();
+            string serialized = PatternTypeCompatibility.Canonicalize(mode).ToString();
             if (State.drawMode == serialized)
                 return;
 
@@ -310,7 +310,7 @@ namespace RhythmForge.Core.Session
                         soundProfile);
                 }
 
-                if (snap.type == PatternType.HarmonyPad && derivation.derivedSequence?.chord != null)
+                if (PatternTypeCompatibility.IsHarmony(snap.type) && derivation.derivedSequence?.chord != null)
                 {
                     harmonicContext = new HarmonicContext
                     {
@@ -346,9 +346,9 @@ namespace RhythmForge.Core.Session
             ShapeProfile shapeProfile,
             SoundProfile soundProfile)
         {
-            switch (type)
+            switch (PatternTypeCompatibility.Canonicalize(type))
             {
-                case PatternType.RhythmLoop:
+                case PatternType.Percussion:
                     var rhythm = genre.RhythmDeriver.Derive(points, metrics, shapeProfile, soundProfile, genre);
                     return new PatternDerivationResult
                     {
@@ -359,7 +359,9 @@ namespace RhythmForge.Core.Session
                         summary = rhythm.summary,
                         details = rhythm.details
                     };
-                case PatternType.MelodyLine:
+                case PatternType.Melody:
+                case PatternType.Bass:
+                case PatternType.Groove:
                     var melody = genre.MelodyDeriver.Derive(points, metrics, keyName, shapeProfile, soundProfile, genre);
                     return new PatternDerivationResult
                     {

@@ -54,7 +54,7 @@ namespace RhythmForge.Sequencer
             float stepDuration,
             out PatternPlaybackVisualState state)
         {
-            state = PatternPlaybackVisualState.CreateInactive(pattern?.type ?? PatternType.RhythmLoop, null, playbackSceneId);
+            state = PatternPlaybackVisualState.CreateInactive(pattern?.type ?? PatternType.Percussion, null, playbackSceneId);
 
             if (transport == null || !transport.playing || store == null || pattern == null || pattern.derivedSequence == null)
                 return false;

@@ -11,7 +11,7 @@ namespace RhythmForge.Core.PatternBehavior.Behaviors
     public sealed class RhythmLoopBehavior : IPatternBehavior
     {
         public PatternType Type => PatternType.RhythmLoop;
-        public string DisplayName => "Rhythm";
+        public string DisplayName => "Percussion";
         public bool PrefersClosedStroke => true;
         public string DraftNamePrefix => "Beat";
 

@@ -38,6 +38,7 @@ namespace RhythmForge.Core.Session
             Scenes = new SceneController(() => State, GetScene, GetInstance, NotifyStateChanged);
             SoundResolver = new SoundProfileResolver(GetPreset);
             _stateMigrator = new StateMigrator();
+            EventBus.Subscribe<ChordProgressionChangedEvent>(HandleChordProgressionChanged);
         }
 
         public void LoadState(AppState state)
@@ -147,7 +148,25 @@ namespace RhythmForge.Core.Session
             NotifyStateChanged();
         }
 
-        public PatternInstance CommitDraft(DraftResult draft, bool duplicate) => Patterns.CommitDraft(draft, duplicate);
+        public PatternInstance CommitDraft(DraftResult draft, bool duplicate)
+        {
+            var instance = Patterns.CommitDraft(draft, duplicate);
+
+            if (draft != null &&
+                draft.success &&
+                PatternTypeCompatibility.IsHarmony(draft.type) &&
+                draft.derivedSequence?.chordEvents != null &&
+                draft.derivedSequence.chordEvents.Count > 0)
+            {
+                UpdateProgression(new ChordProgression
+                {
+                    bars = draft.bars > 0 ? draft.bars : GuidedDefaults.Bars,
+                    chords = CloneChordSlots(draft.derivedSequence.chordEvents)
+                });
+            }
+
+            return instance;
+        }
 
         public PatternInstance SpawnPattern(string patternId, string sceneId = null, Vector3? coords = null, bool notify = true)
             => Patterns.SpawnPattern(patternId, sceneId, coords, notify);
@@ -337,6 +356,67 @@ namespace RhythmForge.Core.Session
                 });
             }
             return snapshots;
+        }
+
+        private void HandleChordProgressionChanged(ChordProgressionChangedEvent evt)
+        {
+            if (evt.Progression == null)
+                return;
+
+            var snapshot = BuildDependentProgressionRederivationSnapshot();
+            if (snapshot.Count == 0)
+                return;
+
+            var queue = _mainThreadQueue;
+            var harmonicContext = evt.Progression.ToHarmonicContext(0);
+            string genreId = GetActiveGenreId();
+
+            Task.Run(() =>
+            {
+                var results = RederivePatternsBackground(snapshot, genreId, harmonicContext);
+                queue.Enqueue(() => ApplyRederivationResults(results, genreId));
+            });
+        }
+
+        private List<PatternSnapshot> BuildDependentProgressionRederivationSnapshot()
+        {
+            var snapshots = new List<PatternSnapshot>();
+            foreach (var pattern in State.patterns)
+            {
+                if (pattern?.shapeProfile == null || pattern.points == null || pattern.points.Count < 3)
+                    continue;
+
+                PatternType canonicalType = PatternTypeCompatibility.Canonicalize(pattern.type);
+                if (canonicalType != PatternType.Melody && canonicalType != PatternType.Bass)
+                    continue;
+
+                snapshots.Add(new PatternSnapshot
+                {
+                    patternId = pattern.id,
+                    type = pattern.type,
+                    shapeProfile = pattern.shapeProfile,
+                    points = new List<Vector2>(pattern.points),
+                    key = pattern.key ?? State.key,
+                    shapeSummary = pattern.shapeSummary
+                });
+            }
+
+            return snapshots;
+        }
+
+        private static List<ChordSlot> CloneChordSlots(List<ChordSlot> chords)
+        {
+            var result = new List<ChordSlot>();
+            if (chords == null)
+                return result;
+
+            for (int i = 0; i < chords.Count; i++)
+            {
+                if (chords[i] != null)
+                    result.Add(chords[i].Clone());
+            }
+
+            return result;
         }
 
         private static List<PatternRederivation> RederivePatternsBackground(

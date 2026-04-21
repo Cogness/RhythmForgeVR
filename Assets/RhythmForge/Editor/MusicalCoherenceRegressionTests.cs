@@ -39,10 +39,33 @@ namespace RhythmForge.Editor
         private static readonly MethodInfo HandleGenreChangedMethod =
             typeof(RhythmForgeManager).GetMethod("HandleGenreChanged", BindingFlags.Instance | BindingFlags.NonPublic);
 
-        [TestCase("electronic")]
+        [Test]
+        public void GuidedElectronicHarmony_UsesProgressionRootsAndHarmonyRegister()
+        {
+            var points = CreatePoints();
+            var metrics = new StrokeMetrics { length = 1.0f, averageSize = 0.42f, height = 1f, width = 1f };
+            var shape = CreateHarmonyShape();
+            var sound = new SoundProfile { reverbBias = 0.4f, filterMotion = 0.3f };
+            var result = HarmonyDeriver.Derive(points, metrics, GuidedDefaults.Key, "electronic", shape, sound);
+            var harmonyRange = RegisterPolicy.GetRange(PatternType.Harmony, "electronic");
+            var expectedRoots = new[] { 67, 64, 60, 62, 67, 64, 60, 62 };
+
+            Assert.That(result.bars, Is.EqualTo(8));
+            Assert.That(result.derivedSequence.chordEvents, Has.Count.EqualTo(8));
+
+            for (int i = 0; i < result.derivedSequence.chordEvents.Count; i++)
+            {
+                var slot = result.derivedSequence.chordEvents[i];
+                Assert.That(slot.rootMidi, Is.EqualTo(expectedRoots[i]));
+                Assert.That(slot.voicing.Count, Is.GreaterThan(0));
+                foreach (var midi in slot.voicing)
+                    Assert.That(midi, Is.InRange(harmonyRange.min, harmonyRange.max));
+            }
+        }
+
         [TestCase("newage")]
         [TestCase("jazz")]
-        public void HarmonyRoles_StayWithinExpectedRegisters(string genreId)
+        public void LegacyGenreHarmonyRoles_StayWithinExpectedRegisters(string genreId)
         {
             var genre = GenreRegistry.Get(genreId);
             var points = CreatePoints();
@@ -61,7 +84,7 @@ namespace RhythmForge.Editor
             using (PatternContextScope.Push(new ShapeRole { index = 2, count = 3 }, new HarmonicContext()))
                 role2 = genre.HarmonyDeriver.Derive(points, metrics, "C major", shape, sound, genre).derivedSequence.chord;
 
-            var harmonyRange = RegisterPolicy.GetRange(PatternType.HarmonyPad, genreId);
+            var harmonyRange = RegisterPolicy.GetRange(PatternType.Harmony, genreId);
             var bassRange = RegisterPolicy.GetBassRange(genreId);
 
             Assert.That(role0.Count, Is.GreaterThan(0));

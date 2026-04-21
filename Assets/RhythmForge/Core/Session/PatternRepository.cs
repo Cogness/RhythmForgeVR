@@ -61,6 +61,9 @@ namespace RhythmForge.Core.Session
         public PatternInstance CommitDraft(DraftResult draft, bool duplicate)
         {
             var state = _getState();
+            if (state.guidedMode && state.composition != null && PatternTypeCompatibility.IsHarmony(draft.type))
+                RemoveGuidedPhasePattern(state.composition.GetPatternId(draft.type.ToCompositionPhase()));
+
             var pattern = new PatternDefinition
             {
                 id = RhythmForge.Core.MathUtils.CreateId("pattern"),
@@ -99,6 +102,31 @@ namespace RhythmForge.Core.Session
             state.selectedInstanceId = instance?.id;
             _notifyStateChanged?.Invoke();
             return instance;
+        }
+
+        private void RemoveGuidedPhasePattern(string patternId)
+        {
+            if (string.IsNullOrEmpty(patternId))
+                return;
+
+            var state = _getState();
+            for (int sceneIndex = 0; sceneIndex < state.scenes.Count; sceneIndex++)
+                state.scenes[sceneIndex]?.instanceIds.RemoveAll(id => InstanceMatchesPattern(id, patternId));
+
+            state.instances.RemoveAll(instance => instance != null && instance.patternId == patternId);
+            state.patterns.RemoveAll(pattern => pattern != null && pattern.id == patternId);
+
+            if (state.selectedPatternId == patternId)
+            {
+                state.selectedPatternId = null;
+                state.selectedInstanceId = null;
+            }
+        }
+
+        private bool InstanceMatchesPattern(string instanceId, string patternId)
+        {
+            var instance = GetInstance(instanceId);
+            return instance != null && instance.patternId == patternId;
         }
 
         public PatternInstance SpawnPattern(string patternId, string sceneId = null, Vector3? coords = null, bool notify = true)

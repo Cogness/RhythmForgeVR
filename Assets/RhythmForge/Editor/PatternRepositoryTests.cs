@@ -136,6 +136,70 @@ namespace RhythmForge.Editor
             Assert.That(notifyCount, Is.EqualTo(1));
         }
 
+        [Test]
+        public void CommitDraft_InGuidedMode_ReplacesPreviousHarmonyPattern()
+        {
+            var state = AppStateFactory.CreateEmpty();
+            int notifyCount = 0;
+            var repository = new PatternRepository(
+                () => state,
+                sceneId => GetScene(state, sceneId),
+                () => notifyCount++,
+                type => $"Reserved-{type}");
+
+            var firstDraft = CreateHarmonyDraft("First Harmony");
+            repository.CommitDraft(firstDraft, duplicate: false);
+
+            string firstPatternId = state.patterns[0].id;
+            Assert.That(state.patterns, Has.Count.EqualTo(1));
+            Assert.That(state.instances, Has.Count.EqualTo(1));
+
+            var secondDraft = CreateHarmonyDraft("Second Harmony");
+            repository.CommitDraft(secondDraft, duplicate: false);
+
+            Assert.That(state.patterns, Has.Count.EqualTo(1));
+            Assert.That(state.instances, Has.Count.EqualTo(1));
+            Assert.That(state.patterns[0].id, Is.Not.EqualTo(firstPatternId));
+            Assert.That(state.composition.GetPatternId(CompositionPhase.Harmony), Is.EqualTo(state.patterns[0].id));
+            Assert.That(state.scenes[0].instanceIds, Has.Count.EqualTo(1));
+        }
+
+        private static DraftResult CreateHarmonyDraft(string name)
+        {
+            var progression = GuidedDefaults.CreateDefaultProgression();
+            return new DraftResult
+            {
+                success = true,
+                type = PatternType.Harmony,
+                name = name,
+                bars = GuidedDefaults.Bars,
+                tempoBase = GuidedDefaults.Tempo,
+                key = GuidedDefaults.Key,
+                groupId = "lofi",
+                presetId = "lofi-pad",
+                points = new List<Vector2> { Vector2.zero, Vector2.right, Vector2.up },
+                renderRotation = Quaternion.identity,
+                hasRenderRotation = true,
+                spawnPosition = new Vector3(0.4f, 0.3f, 0.25f),
+                derivedSequence = new DerivedSequence
+                {
+                    kind = "harmony",
+                    totalSteps = GuidedDefaults.Bars * AppStateFactory.BarSteps,
+                    rootMidi = progression.chords[0].rootMidi,
+                    flavor = progression.chords[0].flavor,
+                    chord = new List<int>(progression.chords[0].voicing),
+                    chordEvents = progression.chords
+                },
+                tags = new List<string> { "guided", "harmony" },
+                color = Color.green,
+                shapeProfile = new ShapeProfile(),
+                soundProfile = new SoundProfile(),
+                shapeSummary = "broad balanced arc",
+                summary = "harmony bed",
+                details = "details"
+            };
+        }
+
         private static SceneData GetScene(AppState state, string sceneId)
         {
             foreach (var scene in state.scenes)

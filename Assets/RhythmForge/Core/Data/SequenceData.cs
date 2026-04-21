@@ -66,5 +66,6 @@ namespace RhythmForge.Core.Data
         public string flavor;
         public int rootMidi;
         public List<int> chord;
+        public List<ChordSlot> chordEvents;
     }
 }

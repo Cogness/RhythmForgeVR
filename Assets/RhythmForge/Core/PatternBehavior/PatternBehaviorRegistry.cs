@@ -14,7 +14,7 @@ namespace RhythmForge.Core.PatternBehavior
         {
             Register(new RhythmLoopBehavior());
             Register(new MelodyLineBehavior());
-            Register(new HarmonyPadBehavior());
+            Register(new HarmonyBehavior());
             Register(new BassBehavior());
             Register(new GrooveBehavior());
         }

@@ -87,16 +87,6 @@ namespace RhythmForge.Core.Session
                 derivation = behavior.Derive(rawPoints, metrics, keyName, groupId, shapeProfile, soundProfile);
             }
 
-            // Keep shared harmonic context up-to-date whenever a harmony pad is drawn.
-            // Melody and bass derivers read this to constrain strong-beat pitches to chord tones.
-            if (PatternTypeCompatibility.IsHarmony(type) && derivation.derivedSequence?.chord != null)
-            {
-                store.SetHarmonicContext(
-                    derivation.derivedSequence.rootMidi,
-                    derivation.derivedSequence.chord,
-                    derivation.derivedSequence.flavor ?? "minor");
-            }
-
             return new DraftResult
             {
                 success = true,

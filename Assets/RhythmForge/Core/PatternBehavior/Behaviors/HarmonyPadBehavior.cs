@@ -8,9 +8,9 @@ using RhythmForge.Sequencer;
 
 namespace RhythmForge.Core.PatternBehavior.Behaviors
 {
-    public sealed class HarmonyPadBehavior : IPatternBehavior
+    public sealed class HarmonyBehavior : IPatternBehavior
     {
-        public PatternType Type => PatternType.HarmonyPad;
+        public PatternType Type => PatternType.Harmony;
         public string DisplayName => "Harmony";
         public bool PrefersClosedStroke => false;
         public string DraftNamePrefix => "Pad";
@@ -38,50 +38,114 @@ namespace RhythmForge.Core.PatternBehavior.Behaviors
 
         public SoundProfile DeriveSoundProfile(ShapeProfile shapeProfile)
         {
-            return GenreRegistry.GetActive().GetSoundMapping(PatternType.HarmonyPad).Evaluate(PatternType.HarmonyPad, shapeProfile);
+            return GenreRegistry.GetActive().GetSoundMapping(PatternType.Harmony).Evaluate(PatternType.Harmony, shapeProfile);
         }
 
         public void CollectVoiceSpecs(PatternSchedulingContext context, int totalSteps, List<ResolvedVoiceSpec> results)
         {
-            if (context.pattern.derivedSequence?.chord == null) return;
-            float duration = totalSteps * context.stepDuration * 0.96f;
+            if (context.pattern.derivedSequence == null)
+                return;
+
             using (PatternContextScope.ForPattern(context.appState, context.pattern))
             {
+                if (context.pattern.derivedSequence.chordEvents != null && context.pattern.derivedSequence.chordEvents.Count > 0)
+                {
+                    float duration = AppStateFactory.BarSteps * context.stepDuration * 0.96f;
+                    for (int i = 0; i < context.pattern.derivedSequence.chordEvents.Count; i++)
+                    {
+                        var slot = context.pattern.derivedSequence.chordEvents[i];
+                        if (slot?.voicing == null)
+                            continue;
+
+                        for (int n = 0; n < slot.voicing.Count; n++)
+                        {
+                            results.Add(VoiceSpecResolver.ResolveHarmony(
+                                context.preset,
+                                context.sound,
+                                slot.voicing[n],
+                                duration,
+                                context.instance.brightness,
+                                context.preset.fxSend));
+                        }
+                    }
+                    return;
+                }
+
+                if (context.pattern.derivedSequence.chord == null)
+                    return;
+
+                float fallbackDuration = totalSteps * context.stepDuration * 0.96f;
                 foreach (var midi in context.pattern.derivedSequence.chord)
+                {
                     results.Add(VoiceSpecResolver.ResolveHarmony(
                         context.preset,
                         context.sound,
                         midi,
-                        duration,
+                        fallbackDuration,
                         context.instance.brightness,
                         context.preset.fxSend));
+                }
             }
         }
 
         public void Schedule(PatternSchedulingContext context)
         {
+            if (context.pattern.derivedSequence == null)
+                return;
+
+            if (context.pattern.derivedSequence.chordEvents != null && context.pattern.derivedSequence.chordEvents.Count > 0)
+            {
+                ScheduleProgression(context);
+                return;
+            }
+
             if (context.localStep != 0 || context.pattern.derivedSequence.chord == null)
                 return;
 
             int totalSteps = context.pattern.derivedSequence.totalSteps > 0
                 ? context.pattern.derivedSequence.totalSteps
                 : AppStateFactory.BarSteps;
-            int effectiveSteps = totalSteps;
-
-            if (context.transport.mode == "arrangement" && context.transport.slotIndex >= 0)
-            {
-                var slot = context.appState.arrangement[context.transport.slotIndex];
-                if (slot != null)
-                    effectiveSteps = Mathf.Min(totalSteps, slot.bars * AppStateFactory.BarSteps);
-            }
-
-            float duration = effectiveSteps * context.stepDuration * 0.96f;
+            float duration = totalSteps * context.stepDuration * 0.96f;
 
             using (PatternContextScope.ForPattern(context.appState, context.pattern))
             {
                 context.audioDispatcher?.PlayChord(
                     context.preset,
                     context.pattern.derivedSequence.chord,
+                    0.38f,
+                    duration,
+                    context.instance.pan,
+                    context.instance.brightness,
+                    context.instance.depth,
+                    context.preset.fxSend + context.group.busFx.reverb * 0.18f,
+                    context.sound);
+            }
+
+            context.recordTrigger?.Invoke(
+                context.instance.id,
+                context.scheduledTime,
+                GetVisualDuration(duration, context.sound));
+        }
+
+        private void ScheduleProgression(PatternSchedulingContext context)
+        {
+            if (context.localStep % AppStateFactory.BarSteps != 0)
+                return;
+
+            int barIndex = context.localStep / AppStateFactory.BarSteps;
+            if (barIndex < 0 || barIndex >= context.pattern.derivedSequence.chordEvents.Count)
+                return;
+
+            var slot = context.pattern.derivedSequence.chordEvents[barIndex];
+            if (slot?.voicing == null || slot.voicing.Count == 0)
+                return;
+
+            float duration = AppStateFactory.BarSteps * context.stepDuration * 0.96f;
+            using (PatternContextScope.ForPattern(context.appState, context.pattern))
+            {
+                context.audioDispatcher?.PlayChord(
+                    context.preset,
+                    slot.voicing,
                     0.38f,
                     duration,
                     context.instance.pan,

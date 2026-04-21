@@ -18,95 +18,45 @@ namespace RhythmForge.Core.Sequencing
 
     public static class HarmonyDeriver
     {
-        // World-space thresholds (pilot: length > 1200 → 8 bars, > 700 → 4 bars)
-        private const float EightBarThreshold = 1.20f;
-        private const float FourBarThreshold = 0.70f;
-
         public static HarmonyDerivationResult Derive(
             List<Vector2> points, StrokeMetrics metrics,
             string keyName, string groupId,
             ShapeProfile sp, SoundProfile sound)
         {
-            float sizeFactor = ShapeProfileSizing.GetSizeFactor(PatternType.HarmonyPad, sp);
-            string sizeWord = ShapeProfileSizing.DescribeSize(PatternType.HarmonyPad, sp);
-            int bars = metrics.length > EightBarThreshold ? 8 : metrics.length > FourBarThreshold ? 4 : 2;
+            string sizeWord = ShapeProfileSizing.DescribeSize(PatternType.Harmony, sp);
+            int bars = GuidedDefaults.Bars;
             int totalSteps = bars * AppStateFactory.BarSteps;
             var group = InstrumentGroups.Get(groupId);
-            string presetId = group.defaultPresetByType.HarmonyPad;
+            string presetId = group.defaultPresetByType.GetDefault(PatternType.Harmony);
 
-            int rootMidi = PitchUtils.PitchFromRelative(1f - sp.centroidHeight, keyName) - 12;
-            rootMidi = MusicalKeys.QuantizeToKey(rootMidi, keyName);
+            var progression = HarmonyShapeModulator.Modulate(
+                metrics,
+                sp,
+                GuidedDefaults.CreateDefaultProgression(),
+                keyName,
+                "electronic");
 
-            var role = ShapeRoleProvider.Current;
-            List<int> chord;
-            string flavor;
-
-            if (role.index >= 2)
-            {
-                // Role 2+: bass pedal only
-                flavor = "bass-pedal";
-                int pedalMidi = RegisterPolicy.ClampBass(rootMidi - 12, "electronic");
-                chord = new List<int> { pedalMidi };
-            }
-            else if (role.index == 1)
-            {
-                // Role 1: root+5th one octave below primary voicing — no note duplication
-                flavor = "root5";
-                int bassRoot = RegisterPolicy.ClampBass(rootMidi - 12, "electronic");
-                int fifth    = RegisterPolicy.ClampBass(MusicalKeys.QuantizeToKey(bassRoot + 7, keyName), "electronic");
-                chord = new List<int> { bassRoot, fifth };
-            }
-            else
-            {
-                // Role 0: full voiced chord (existing behaviour)
-                int[] scaleDegreeSteps;
-                if (sp.tiltSigned > 0.28f)
-                {
-                    flavor = "maj7";
-                    scaleDegreeSteps = new[] { 0, 2, 4, 6 };
-                }
-                else if (sp.tiltSigned < -0.22f)
-                {
-                    flavor = "sus";
-                    scaleDegreeSteps = new[] { 0, 3, 4, 6 };
-                }
-                else
-                {
-                    flavor = "minor";
-                    scaleDegreeSteps = new[] { 0, 2, 4, 6 };
-                }
-
-                chord = MusicalKeys.BuildScaleChord(rootMidi, keyName, scaleDegreeSteps);
-
-                int spread = Mathf.RoundToInt(sp.horizontalSpan * 10f + sizeFactor * 6f);
-                if (chord.Count > 2)
-                    chord[2] += Mathf.RoundToInt(spread * 0.5f) / 12 * 12;
-                if (chord.Count > 3)
-                    chord[3] += (spread > 6 ? 12 : 0);
-
-                if (sp.horizontalSpan > 0.72f || sizeFactor > 0.66f)
-                    chord.Insert(0, rootMidi - 12);
-
-                for (int n = 0; n < chord.Count; n++)
-                    chord[n] = RegisterPolicy.Clamp(chord[n], PatternType.HarmonyPad, "electronic");
-            }
+            var firstChord = progression.GetSlotForBar(0);
+            var chord = firstChord?.voicing != null ? new List<int>(firstChord.voicing) : new List<int>();
+            string flavor = firstChord != null && !string.IsNullOrEmpty(firstChord.flavor) ? firstChord.flavor : "triad";
 
             string bloomWord = sound.reverbBias > 0.56f ? "bloom" : "dry bed";
             return new HarmonyDerivationResult
             {
                 bars = bars,
                 presetId = presetId,
-                tags = new List<string> { flavor, bloomWord },
+                tags = new List<string> { flavor, bloomWord, "8-bar progression" },
                 derivedSequence = new DerivedSequence
                 {
                     kind = "harmony",
                     totalSteps = totalSteps,
                     flavor = flavor,
-                    rootMidi = rootMidi,
-                    chord = chord
+                    rootMidi = firstChord != null ? firstChord.rootMidi : 67,
+                    chord = chord,
+                    chordEvents = progression.Clone().chords
                 },
-                summary = $"{sizeWord} {flavor} pad, {bars} bars, voicing {Mathf.Round(sp.horizontalSpan * 100f)}%, filter motion {Mathf.Round(sound.filterMotion * 100f)}%.",
-                details = "Size pushes voicing width, bloom, detune, and movement, while tilt controls chord family and filter direction."
+                summary = $"{sizeWord} {flavor} progression, 8 bars, voicing {Mathf.Round(sp.horizontalSpan * 100f)}%, bloom {Mathf.Round(sound.reverbBias * 100f)}%.",
+                details = "Tilt selects the harmonic color, horizontal span picks a shared inversion, centroid height shifts the register, and symmetry can strengthen the cadences in bars 4 and 8."
             };
         }
     }

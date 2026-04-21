@@ -61,7 +61,7 @@ namespace RhythmForge.Core.Session
         public PatternInstance CommitDraft(DraftResult draft, bool duplicate)
         {
             var state = _getState();
-            if (state.guidedMode && state.composition != null && PatternTypeCompatibility.IsHarmony(draft.type))
+            if (state.guidedMode && state.composition != null && ShouldReplaceGuidedPhasePattern(draft.type))
                 RemoveGuidedPhasePattern(state.composition.GetPatternId(draft.type.ToCompositionPhase()));
 
             var pattern = new PatternDefinition
@@ -120,6 +120,18 @@ namespace RhythmForge.Core.Session
             {
                 state.selectedPatternId = null;
                 state.selectedInstanceId = null;
+            }
+        }
+
+        private static bool ShouldReplaceGuidedPhasePattern(PatternType type)
+        {
+            switch (PatternTypeCompatibility.Canonicalize(type))
+            {
+                case PatternType.Harmony:
+                case PatternType.Melody:
+                    return true;
+                default:
+                    return false;
             }
         }
 

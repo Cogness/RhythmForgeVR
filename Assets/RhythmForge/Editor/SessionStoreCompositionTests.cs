@@ -3,6 +3,8 @@ using NUnit.Framework;
 using RhythmForge.Core.Data;
 using RhythmForge.Core.Events;
 using RhythmForge.Core.Session;
+using UnityEngine;
+using System.Collections.Generic;
 
 namespace RhythmForge.Editor
 {
@@ -62,6 +64,52 @@ namespace RhythmForge.Editor
             Assert.That(store.GetComposition().groove.density, Is.EqualTo(1.2f));
             Assert.That(store.GetComposition().groove.quantizeGrid, Is.EqualTo(16));
             Assert.That(published, Is.False);
+        }
+
+        [Test]
+        public void CommitDraft_ForMelody_PublishesMelodyCommittedEvent()
+        {
+            var store = new SessionStore();
+            MelodyCommittedEvent? published = null;
+            store.EventBus.Subscribe<MelodyCommittedEvent>(evt => published = evt);
+
+            var draft = new DraftResult
+            {
+                success = true,
+                type = PatternType.Melody,
+                name = "Melody-01",
+                bars = GuidedDefaults.Bars,
+                tempoBase = GuidedDefaults.Tempo,
+                key = GuidedDefaults.Key,
+                groupId = "lofi",
+                presetId = "lofi-piano",
+                points = new List<Vector2> { Vector2.zero, Vector2.right * 0.4f, new Vector2(0.8f, 0.2f) },
+                renderRotation = Quaternion.identity,
+                hasRenderRotation = true,
+                spawnPosition = Vector3.zero,
+                derivedSequence = new DerivedSequence
+                {
+                    kind = "melody",
+                    totalSteps = GuidedDefaults.Bars * AppStateFactory.BarSteps,
+                    notes = new List<MelodyNote>
+                    {
+                        new MelodyNote { step = 0, midi = 67, durationSteps = 8, velocity = 0.48f }
+                    }
+                },
+                tags = new List<string> { "lead" },
+                color = Color.yellow,
+                shapeProfile = new ShapeProfile(),
+                soundProfile = new SoundProfile(),
+                shapeSummary = "steady lead line",
+                summary = "melody phrase",
+                details = "details"
+            };
+
+            var instance = store.CommitDraft(draft, duplicate: false);
+
+            Assert.That(instance, Is.Not.Null);
+            Assert.That(published.HasValue, Is.True);
+            Assert.That(published.Value.PatternId, Is.EqualTo(instance.patternId));
         }
     }
 }

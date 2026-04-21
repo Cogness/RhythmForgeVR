@@ -164,6 +164,35 @@ namespace RhythmForge.Editor
             Assert.That(state.scenes[0].instanceIds, Has.Count.EqualTo(1));
         }
 
+        [Test]
+        public void CommitDraft_InGuidedMode_ReplacesPreviousMelodyPattern()
+        {
+            var state = AppStateFactory.CreateEmpty();
+            int notifyCount = 0;
+            var repository = new PatternRepository(
+                () => state,
+                sceneId => GetScene(state, sceneId),
+                () => notifyCount++,
+                type => $"Reserved-{type}");
+
+            var firstDraft = CreateMelodyDraft("First Melody");
+            repository.CommitDraft(firstDraft, duplicate: false);
+
+            string firstPatternId = state.patterns[0].id;
+            Assert.That(state.patterns, Has.Count.EqualTo(1));
+            Assert.That(state.instances, Has.Count.EqualTo(1));
+
+            var secondDraft = CreateMelodyDraft("Second Melody");
+            repository.CommitDraft(secondDraft, duplicate: false);
+
+            Assert.That(state.patterns, Has.Count.EqualTo(1));
+            Assert.That(state.instances, Has.Count.EqualTo(1));
+            Assert.That(state.patterns[0].id, Is.Not.EqualTo(firstPatternId));
+            Assert.That(state.composition.GetPatternId(CompositionPhase.Melody), Is.EqualTo(state.patterns[0].id));
+            Assert.That(state.scenes[0].instanceIds, Has.Count.EqualTo(1));
+            Assert.That(notifyCount, Is.EqualTo(2));
+        }
+
         private static DraftResult CreateHarmonyDraft(string name)
         {
             var progression = GuidedDefaults.CreateDefaultProgression();
@@ -196,6 +225,42 @@ namespace RhythmForge.Editor
                 soundProfile = new SoundProfile(),
                 shapeSummary = "broad balanced arc",
                 summary = "harmony bed",
+                details = "details"
+            };
+        }
+
+        private static DraftResult CreateMelodyDraft(string name)
+        {
+            return new DraftResult
+            {
+                success = true,
+                type = PatternType.Melody,
+                name = name,
+                bars = GuidedDefaults.Bars,
+                tempoBase = GuidedDefaults.Tempo,
+                key = GuidedDefaults.Key,
+                groupId = "lofi",
+                presetId = "lofi-piano",
+                points = new List<Vector2> { Vector2.zero, Vector2.right * 0.4f, new Vector2(0.8f, 0.2f) },
+                renderRotation = Quaternion.identity,
+                hasRenderRotation = true,
+                spawnPosition = new Vector3(0.25f, 0.3f, 0.15f),
+                derivedSequence = new DerivedSequence
+                {
+                    kind = "melody",
+                    totalSteps = GuidedDefaults.Bars * AppStateFactory.BarSteps,
+                    notes = new List<MelodyNote>
+                    {
+                        new MelodyNote { step = 0, midi = 67, durationSteps = 4, velocity = 0.52f, glide = 0f },
+                        new MelodyNote { step = 16, midi = 64, durationSteps = 4, velocity = 0.52f, glide = 0f }
+                    }
+                },
+                tags = new List<string> { "lead", "guided" },
+                color = Color.yellow,
+                shapeProfile = new ShapeProfile(),
+                soundProfile = new SoundProfile(),
+                shapeSummary = "arching lead line",
+                summary = "melody phrase",
                 details = "details"
             };
         }

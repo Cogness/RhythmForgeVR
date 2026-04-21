@@ -82,7 +82,8 @@ namespace RhythmForge.Core.Session
             PatternDerivationResult derivation;
             using (PatternContextScope.Push(
                 new ShapeRole { index = sameTypeCount, count = sameTypeCount + 1 },
-                PatternContextScope.CloneHarmonicContext(store.GetHarmonicContext())))
+                PatternContextScope.CloneHarmonicContext(store.GetHarmonicContext()),
+                state.guidedMode ? PatternContextScope.CloneProgression(store.GetComposition().progression) : null))
             {
                 derivation = behavior.Derive(rawPoints, metrics, keyName, groupId, shapeProfile, soundProfile);
             }

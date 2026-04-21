@@ -173,4 +173,14 @@ namespace RhythmForge.Core.Events
 
         public ChordProgression Progression { get; }
     }
+
+    public readonly struct MelodyCommittedEvent
+    {
+        public MelodyCommittedEvent(string patternId)
+        {
+            PatternId = patternId;
+        }
+
+        public string PatternId { get; }
+    }
 }

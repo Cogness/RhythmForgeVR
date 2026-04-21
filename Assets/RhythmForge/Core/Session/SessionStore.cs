@@ -151,10 +151,13 @@ namespace RhythmForge.Core.Session
         public PatternInstance CommitDraft(DraftResult draft, bool duplicate)
         {
             var instance = Patterns.CommitDraft(draft, duplicate);
+            PatternType canonicalType = draft != null
+                ? PatternTypeCompatibility.Canonicalize(draft.type)
+                : PatternType.Percussion;
 
             if (draft != null &&
                 draft.success &&
-                PatternTypeCompatibility.IsHarmony(draft.type) &&
+                canonicalType == PatternType.Harmony &&
                 draft.derivedSequence?.chordEvents != null &&
                 draft.derivedSequence.chordEvents.Count > 0)
             {
@@ -163,6 +166,11 @@ namespace RhythmForge.Core.Session
                     bars = draft.bars > 0 ? draft.bars : GuidedDefaults.Bars,
                     chords = CloneChordSlots(draft.derivedSequence.chordEvents)
                 });
+            }
+
+            if (draft != null && draft.success && canonicalType == PatternType.Melody)
+            {
+                EventBus.Publish(new MelodyCommittedEvent(instance?.patternId));
             }
 
             return instance;
@@ -235,11 +243,13 @@ namespace RhythmForge.Core.Session
             var snapshot = BuildRederivationSnapshot(genreId);
             var queue    = _mainThreadQueue;
 
-            var harmonicContext = PatternContextScope.CloneHarmonicContext(State.harmonicContext);
+            var progression = State.guidedMode
+                ? PatternContextScope.CloneProgression(State.composition?.progression)
+                : null;
 
             Task.Run(() =>
             {
-                var results = RederivePatternsBackground(snapshot, genreId, harmonicContext);
+                var results = RederivePatternsBackground(snapshot, genreId, progression);
                 queue.Enqueue(() => ApplyRederivationResults(results, genreId));
             });
         }
@@ -368,12 +378,11 @@ namespace RhythmForge.Core.Session
                 return;
 
             var queue = _mainThreadQueue;
-            var harmonicContext = evt.Progression.ToHarmonicContext(0);
             string genreId = GetActiveGenreId();
 
             Task.Run(() =>
             {
-                var results = RederivePatternsBackground(snapshot, genreId, harmonicContext);
+                var results = RederivePatternsBackground(snapshot, genreId, evt.Progression.Clone());
                 queue.Enqueue(() => ApplyRederivationResults(results, genreId));
             });
         }
@@ -422,12 +431,13 @@ namespace RhythmForge.Core.Session
         private static List<PatternRederivation> RederivePatternsBackground(
             List<PatternSnapshot> snapshots,
             string genreId,
-            HarmonicContext harmonicContext)
+            ChordProgression progression)
         {
             var genre   = GenreRegistry.Get(genreId);
             var results = new List<PatternRederivation>(snapshots.Count);
             var roleCounter = new Dictionary<PatternType, int>();
             var roleTotals = new Dictionary<PatternType, int>();
+            var harmonicContext = progression?.ToHarmonicContext(0) ?? new HarmonicContext();
 
             foreach (var snap in snapshots)
             {
@@ -448,7 +458,8 @@ namespace RhythmForge.Core.Session
                 PatternDerivationResult derivation;
                 using (PatternContextScope.Push(
                     new ShapeRole { index = roleIdx, count = roleTotals[snap.type] },
-                    harmonicContext))
+                    harmonicContext,
+                    progression))
                 {
                     derivation = DerivePatternForGenre(
                         genre,
@@ -460,7 +471,18 @@ namespace RhythmForge.Core.Session
                         soundProfile);
                 }
 
-                if (PatternTypeCompatibility.IsHarmony(snap.type) && derivation.derivedSequence?.chord != null)
+                if (PatternTypeCompatibility.IsHarmony(snap.type) &&
+                    derivation.derivedSequence?.chordEvents != null &&
+                    derivation.derivedSequence.chordEvents.Count > 0)
+                {
+                    progression = new ChordProgression
+                    {
+                        bars = derivation.bars > 0 ? derivation.bars : GuidedDefaults.Bars,
+                        chords = CloneChordSlots(derivation.derivedSequence.chordEvents)
+                    };
+                    harmonicContext = progression.ToHarmonicContext(0);
+                }
+                else if (PatternTypeCompatibility.IsHarmony(snap.type) && derivation.derivedSequence?.chord != null)
                 {
                     harmonicContext = new HarmonicContext
                     {

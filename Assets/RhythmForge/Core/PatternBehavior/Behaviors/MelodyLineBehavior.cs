@@ -8,9 +8,9 @@ using RhythmForge.Sequencer;
 
 namespace RhythmForge.Core.PatternBehavior.Behaviors
 {
-    public sealed class MelodyLineBehavior : IPatternBehavior
+    public sealed class MelodyBehavior : IPatternBehavior
     {
-        public PatternType Type => PatternType.MelodyLine;
+        public PatternType Type => PatternType.Melody;
         public string DisplayName => "Melody";
         public bool PrefersClosedStroke => false;
         public string DraftNamePrefix => "Melody";
@@ -38,7 +38,7 @@ namespace RhythmForge.Core.PatternBehavior.Behaviors
 
         public SoundProfile DeriveSoundProfile(ShapeProfile shapeProfile)
         {
-            return GenreRegistry.GetActive().GetSoundMapping(PatternType.MelodyLine).Evaluate(PatternType.MelodyLine, shapeProfile);
+            return GenreRegistry.GetActive().GetSoundMapping(PatternType.Melody).Evaluate(PatternType.Melody, shapeProfile);
         }
 
         public void CollectVoiceSpecs(PatternSchedulingContext context, int totalSteps, List<ResolvedVoiceSpec> results)

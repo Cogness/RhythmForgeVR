@@ -12,16 +12,23 @@ namespace RhythmForge.Core.Sequencing
             _active = active;
         }
 
-        public static PatternContextScope Push(ShapeRole role, HarmonicContext harmonicContext)
+        public static PatternContextScope Push(
+            ShapeRole role,
+            HarmonicContext harmonicContext,
+            ChordProgression progression = null)
         {
             ShapeRoleProvider.Set(role);
             HarmonicContextProvider.Set(harmonicContext);
+            HarmonicContextProvider.SetProgression(CloneProgression(progression));
             return new PatternContextScope(true);
         }
 
         public static PatternContextScope ForPattern(AppState state, PatternDefinition pattern)
         {
-            return Push(ResolveRole(state, pattern), CloneHarmonicContext(state?.harmonicContext));
+            return Push(
+                ResolveRole(state, pattern),
+                CloneHarmonicContext(state?.harmonicContext),
+                state != null && state.guidedMode ? CloneProgression(state.composition?.progression) : null);
         }
 
         public void Dispose()
@@ -69,6 +76,11 @@ namespace RhythmForge.Core.Sequencing
         public static HarmonicContext CloneHarmonicContext(HarmonicContext harmonicContext)
         {
             return harmonicContext?.Clone() ?? new HarmonicContext();
+        }
+
+        public static ChordProgression CloneProgression(ChordProgression progression)
+        {
+            return progression?.Clone();
         }
     }
 }

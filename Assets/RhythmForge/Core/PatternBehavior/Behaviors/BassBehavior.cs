@@ -9,7 +9,7 @@ namespace RhythmForge.Core.PatternBehavior.Behaviors
 {
     public sealed class BassBehavior : IPatternBehavior
     {
-        private static readonly MelodyLineBehavior MelodyDelegate = new MelodyLineBehavior();
+        private static readonly MelodyBehavior MelodyDelegate = new MelodyBehavior();
 
         public PatternType Type => PatternType.Bass;
         public string DisplayName => "Bass";

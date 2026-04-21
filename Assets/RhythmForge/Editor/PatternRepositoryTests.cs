@@ -94,6 +94,48 @@ namespace RhythmForge.Editor
             Assert.That(notifyCount, Is.EqualTo(1));
         }
 
+        [Test]
+        public void CommitDraft_InGuidedMode_TracksLatestPatternForPhase()
+        {
+            var state = AppStateFactory.CreateEmpty();
+            int notifyCount = 0;
+            var repository = new PatternRepository(
+                () => state,
+                sceneId => GetScene(state, sceneId),
+                () => notifyCount++,
+                type => $"Reserved-{type}");
+
+            var draft = new DraftResult
+            {
+                success = true,
+                type = PatternType.Bass,
+                name = "Test Bass",
+                bars = 2,
+                tempoBase = 100f,
+                key = GuidedDefaults.Key,
+                groupId = "lofi",
+                presetId = "trap-bass",
+                points = new List<Vector2> { Vector2.zero, Vector2.right, Vector2.up },
+                renderRotation = Quaternion.identity,
+                hasRenderRotation = true,
+                spawnPosition = new Vector3(0.4f, 0.3f, 0.25f),
+                derivedSequence = new DerivedSequence { kind = "melody", totalSteps = AppStateFactory.BarSteps },
+                tags = new List<string> { "grounded" },
+                color = Color.red,
+                shapeProfile = new ShapeProfile(),
+                soundProfile = new SoundProfile(),
+                shapeSummary = "focused bass motion",
+                summary = "bass phrase",
+                details = "details"
+            };
+
+            repository.CommitDraft(draft, duplicate: false);
+
+            Assert.That(state.patterns.Count, Is.EqualTo(1));
+            Assert.That(state.composition.GetPatternId(CompositionPhase.Bass), Is.EqualTo(state.patterns[0].id));
+            Assert.That(notifyCount, Is.EqualTo(1));
+        }
+
         private static SceneData GetScene(AppState state, string sceneId)
         {
             foreach (var scene in state.scenes)

@@ -106,6 +106,16 @@ namespace RhythmForge.Core.Events
         public PatternType Mode { get; }
     }
 
+    public readonly struct PhaseChangedEvent
+    {
+        public PhaseChangedEvent(CompositionPhase phase)
+        {
+            Phase = phase;
+        }
+
+        public CompositionPhase Phase { get; }
+    }
+
     public readonly struct TransportChangedEvent
     {
         public TransportChangedEvent(Transport transport, string playbackSceneId, bool isPlaying)

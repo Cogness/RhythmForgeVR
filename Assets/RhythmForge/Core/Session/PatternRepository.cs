@@ -85,6 +85,8 @@ namespace RhythmForge.Core.Session
             };
 
             state.patterns.Insert(0, pattern);
+            if (state.guidedMode && state.composition != null)
+                state.composition.SetPatternId(pattern.type.ToCompositionPhase(), pattern.id);
 
             var instance = SpawnPattern(pattern.id, state.activeSceneId, draft.spawnPosition, false);
             if (duplicate)

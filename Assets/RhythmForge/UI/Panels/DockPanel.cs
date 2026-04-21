@@ -45,6 +45,7 @@ namespace RhythmForge.UI.Panels
         private DrawModeController _drawMode;
         private RhythmForgeEventBus _eventBus;
         private string _activeTab = "instruments";
+        private bool _guidedMode;
 
         /// <summary>Called by RhythmForgeBootstrapper to inject all UI references (no prefabs required).</summary>
         public void SetUIRefs(
@@ -73,6 +74,7 @@ namespace RhythmForge.UI.Panels
             _store = store;
             _drawMode = drawMode;
             _eventBus = _store != null ? _store.EventBus : null;
+            _guidedMode = _store != null && _store.State.guidedMode;
 
             if (_instrumentsTab) _instrumentsTab.onClick.AddListener(() => SetTab("instruments"));
             if (_patternsTab) _patternsTab.onClick.AddListener(() => SetTab("patterns"));
@@ -86,6 +88,17 @@ namespace RhythmForge.UI.Panels
 
             SetTab("instruments");
             Refresh();
+        }
+
+        public void SetGuidedMode(bool guidedMode)
+        {
+            _guidedMode = guidedMode;
+            if (_scenesTab != null)
+                _scenesTab.gameObject.SetActive(!guidedMode);
+            if (guidedMode && _activeTab == "scenes")
+                SetTab("instruments");
+
+            RefreshDrawModeLabel();
         }
 
         private void OnDestroy()
@@ -107,8 +120,7 @@ namespace RhythmForge.UI.Panels
 
         private void OnModeChanged(PatternType mode)
         {
-            if (_drawModeLabel)
-                _drawModeLabel.text = $"Mode: {DrawModeController.GetModeLabel(mode)}";
+            RefreshDrawModeLabel();
         }
 
         private void HandleSessionStateChanged(SessionStateChangedEvent evt)
@@ -131,7 +143,13 @@ namespace RhythmForge.UI.Panels
 
         private void RefreshDrawModeLabel()
         {
-            if (_drawModeLabel && _drawMode != null)
+            if (_drawModeLabel == null || _drawMode == null || _store == null)
+                return;
+
+            _guidedMode = _store.State.guidedMode;
+            if (_guidedMode)
+                _drawModeLabel.text = $"Current phase: {_store.GetCurrentPhase()}";
+            else
                 _drawModeLabel.text = $"Mode: {_drawMode.GetCurrentModeLabel()}";
         }
 

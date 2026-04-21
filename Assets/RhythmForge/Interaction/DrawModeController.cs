@@ -22,7 +22,11 @@ namespace RhythmForge.Interaction
 
         public void SetMode(PatternType mode)
         {
-            _currentMode = mode;
+            PatternType canonical = PatternTypeCompatibility.Canonicalize(mode);
+            if (_currentMode == canonical)
+                return;
+
+            _currentMode = canonical;
             OnModeChanged?.Invoke(_currentMode);
             _eventBus?.Publish(new DrawModeChangedEvent(_currentMode));
         }

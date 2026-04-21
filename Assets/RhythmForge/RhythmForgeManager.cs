@@ -22,6 +22,7 @@ namespace RhythmForge
         public Sequencer.Sequencer sequencer;
         public StrokeCapture strokeCapture;
         public DrawModeController drawMode;
+        public PhaseController phaseController;
         public InputMapper inputMapper;
         public InstanceGrabber instanceGrabber;
     }
@@ -35,6 +36,7 @@ namespace RhythmForge
         public InspectorPanel    inspector;
         public DockPanel         dock;
         public TransportPanel    transport;
+        public PhasePanel        phase;
         public SceneStripPanel   sceneStrip;
         public ArrangementPanel  arrangement;
         public ToastMessage      toast;
@@ -51,6 +53,7 @@ namespace RhythmForge
         [SerializeField] private Sequencer.Sequencer _sequencer;
         [SerializeField] private StrokeCapture _strokeCapture;
         [SerializeField] private DrawModeController _drawModeController;
+        [SerializeField] private PhaseController _phaseController;
         [SerializeField] private InputMapper _inputMapper;
         [SerializeField] private InstanceGrabber _instanceGrabber;
 
@@ -59,6 +62,7 @@ namespace RhythmForge
         [SerializeField] private InspectorPanel   _inspectorPanel;
         [SerializeField] private DockPanel        _dockPanel;
         [SerializeField] private TransportPanel   _transportPanel;
+        [SerializeField] private PhasePanel       _phasePanel;
         [SerializeField] private SceneStripPanel  _sceneStripPanel;
         [SerializeField] private ArrangementPanel _arrangementPanel;
         [SerializeField] private ToastMessage     _toast;
@@ -91,6 +95,7 @@ namespace RhythmForge
             _sequencer          = subsystems.sequencer;
             _strokeCapture      = subsystems.strokeCapture;
             _drawModeController = subsystems.drawMode;
+            _phaseController    = subsystems.phaseController;
             _inputMapper        = subsystems.inputMapper;
             _inputProvider      = subsystems.inputMapper;
             _instanceGrabber    = subsystems.instanceGrabber;
@@ -98,6 +103,7 @@ namespace RhythmForge
             _inspectorPanel     = panels.inspector;
             _dockPanel          = panels.dock;
             _transportPanel     = panels.transport;
+            _phasePanel         = panels.phase;
             _sceneStripPanel    = panels.sceneStrip;
             _arrangementPanel     = panels.arrangement;
             _toast                = panels.toast;
@@ -132,7 +138,9 @@ namespace RhythmForge
             _eventBus = _store != null ? _store.EventBus : null;
             if (_drawModeController != null)
                 _drawModeController.SetEventBus(_eventBus);
-            SyncDrawModeFromStore();
+            if (_phaseController)
+                _phaseController.Initialize(_store, _drawModeController);
+            SyncInteractionModeFromStore();
 
             if (_sequencer)
                 _sequencer.Initialize(_store);
@@ -154,6 +162,8 @@ namespace RhythmForge
                 _transportPanel.Initialize(_store, _sequencer, _drawModeController);
                 _showParamLabels = _transportPanel.ShowParams;
             }
+            if (_phasePanel)
+                _phasePanel.Initialize(_store, _phaseController);
             if (_sceneStripPanel)
                 _sceneStripPanel.Initialize(_store, _sequencer);
             if (_arrangementPanel)
@@ -169,6 +179,7 @@ namespace RhythmForge
                 GetMaterialForType);
 
             SubscribeToEventBus();
+            ApplyGuidedModeUiState();
 
             _visualizerManager.RebuildInstanceVisuals(_showParamLabels);
         }
@@ -203,6 +214,7 @@ namespace RhythmForge
 
         private void OnStateChanged()
         {
+            ApplyGuidedModeUiState();
             _visualizerManager?.RebuildInstanceVisuals(_showParamLabels);
             _visualizerManager?.UpdatePlaybackVisuals();
         }
@@ -311,11 +323,15 @@ namespace RhythmForge
             if (input == null)
                 return;
 
-            Vector2 stick = input.LeftThumbstick;
-            if (stick.x < -0.7f)
-                SwitchSceneRelative(-1);
-            else if (stick.x > 0.7f)
-                SwitchSceneRelative(1);
+            bool guidedMode = _store != null && _store.State.guidedMode;
+            if (!guidedMode)
+            {
+                Vector2 stick = input.LeftThumbstick;
+                if (stick.x < -0.7f)
+                    SwitchSceneRelative(-1);
+                else if (stick.x > 0.7f)
+                    SwitchSceneRelative(1);
+            }
 
             if (input.ButtonTwo && _sequencer != null)
                 _sequencer.TogglePlayback();
@@ -356,15 +372,27 @@ namespace RhythmForge
         {
             var demo = DemoSession.CreateDemoState(_store);
             _store.LoadState(demo);
-            SyncDrawModeFromStore();
+            SyncInteractionModeFromStore();
+            ApplyGuidedModeUiState();
             if (_toast)
                 _toast.Show("Demo session loaded.");
+        }
+
+        public void LoadFreshGuidedSession()
+        {
+            _store.Reset();
+            SyncInteractionModeFromStore();
+            ApplyGuidedModeUiState();
+            _autosaveController?.ResetTimer();
+            if (_toast)
+                _toast.Show("Fresh guided session ready.");
         }
 
         public void ResetSession()
         {
             _store.Reset();
-            SyncDrawModeFromStore();
+            SyncInteractionModeFromStore();
+            ApplyGuidedModeUiState();
             _autosaveController?.ResetTimer();
             SessionPersistence.Delete();
             if (_toast)
@@ -378,10 +406,46 @@ namespace RhythmForge
                 _toast.Show("Session saved.");
         }
 
-        private void SyncDrawModeFromStore()
+        private void SyncInteractionModeFromStore()
         {
-            if (_store != null && _drawModeController != null)
+            if (_store == null || _drawModeController == null)
+                return;
+
+            if (_store.State.guidedMode && _phaseController != null)
+            {
+                _store.SetDrawMode(_store.GetCurrentPhase().ToPatternType());
+                _phaseController.SyncFromStore(true);
+            }
+            else
+            {
                 _drawModeController.SetMode(_store.GetDrawMode());
+            }
+        }
+
+        private void ApplyGuidedModeUiState()
+        {
+            if (_store == null)
+                return;
+
+            bool guidedMode = _store.State.guidedMode;
+            SetPanelVisibility(_phasePanel, guidedMode);
+            SetPanelVisibility(_sceneStripPanel, !guidedMode);
+            SetPanelVisibility(_arrangementPanel, !guidedMode);
+            _transportPanel?.SetGuidedMode(guidedMode);
+            _dockPanel?.SetGuidedMode(guidedMode);
+        }
+
+        private static void SetPanelVisibility(MonoBehaviour panel, bool visible)
+        {
+            if (panel == null)
+                return;
+
+            if (panel.gameObject.activeSelf != visible)
+                panel.gameObject.SetActive(visible);
+
+            var canvas = panel.GetComponent<Canvas>();
+            if (canvas != null)
+                canvas.enabled = visible;
         }
     }
 }

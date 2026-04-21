@@ -32,6 +32,7 @@ namespace RhythmForge.UI.Panels
         private Sequencer.Sequencer _sequencer;
         private DrawModeController _drawMode;
         private RhythmForgeEventBus _eventBus;
+        private bool _guidedMode;
 
         /// <summary>Called by RhythmForgeBootstrapper to inject UI element references.</summary>
         public void SetUIRefs(Button playStopButton, Text playStopLabel,
@@ -56,11 +57,12 @@ namespace RhythmForge.UI.Panels
             _sequencer = sequencer;
             _drawMode = drawMode;
             _eventBus = _store != null ? _store.EventBus : null;
+            _guidedMode = _store != null && _store.State.guidedMode;
 
             if (_playStopButton)
                 _playStopButton.onClick.AddListener(() => _sequencer.TogglePlayback());
             if (_modeButton && _drawMode != null)
-                _modeButton.onClick.AddListener(() => _drawMode.CycleMode());
+                _modeButton.onClick.AddListener(CycleModeIfAllowed);
             if (_toggleParamsButton)
                 _toggleParamsButton.onClick.AddListener(ToggleParams);
 
@@ -90,6 +92,12 @@ namespace RhythmForge.UI.Panels
             RefreshModeButton(mode);
         }
 
+        public void SetGuidedMode(bool guidedMode)
+        {
+            _guidedMode = guidedMode;
+            Refresh();
+        }
+
         private void Refresh()
         {
             RefreshTransportStatus();
@@ -100,12 +108,17 @@ namespace RhythmForge.UI.Panels
         {
             if (_store == null || _sequencer == null) return;
 
+            _guidedMode = _store.State.guidedMode;
+            var composition = _store.GetComposition();
+            float tempo = _guidedMode && composition != null ? composition.tempo : _store.State.tempo;
+            string key = _guidedMode && composition != null ? composition.key : _store.State.key;
+
             if (_playStopLabel)
                 _playStopLabel.text = _sequencer.IsPlaying ? "Stop" : "Play";
             if (_bpmText)
-                _bpmText.text = $"{_store.State.tempo:F0} BPM";
+                _bpmText.text = $"{tempo:F0} BPM";
             if (_keyText)
-                _keyText.text = _store.State.key;
+                _keyText.text = key;
 
             if (_transportStatus)
             {
@@ -136,6 +149,14 @@ namespace RhythmForge.UI.Panels
 
         public bool ShowParams => _showParams;
 
+        private void CycleModeIfAllowed()
+        {
+            if (_guidedMode)
+                return;
+
+            _drawMode?.CycleMode();
+        }
+
         private void HandleSessionStateChanged(SessionStateChangedEvent evt)
         {
             Refresh();
@@ -154,11 +175,15 @@ namespace RhythmForge.UI.Panels
         private void RefreshModeButton(PatternType mode)
         {
             if (_modeButtonLabel != null)
-                _modeButtonLabel.text = $"Mode\n{DrawModeController.GetModeLabel(mode)}";
+                _modeButtonLabel.text = _guidedMode ? "Phase\nLocked" : $"Mode\n{DrawModeController.GetModeLabel(mode)}";
 
             if (_modeButton == null) return;
 
-            Color color = TypeColors.GetColor(mode);
+            _modeButton.interactable = !_guidedMode;
+
+            Color color = _guidedMode
+                ? new Color(0.38f, 0.38f, 0.44f, 1f)
+                : TypeColors.GetColor(mode);
             var colors = _modeButton.colors;
             colors.normalColor = color;
             colors.highlightedColor = Color.Lerp(color, Color.white, 0.25f);

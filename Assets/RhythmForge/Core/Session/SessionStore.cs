@@ -253,6 +253,23 @@ namespace RhythmForge.Core.Session
             NotifyStateChanged();
         }
 
+        public CompositionPhase GetCurrentPhase()
+        {
+            return GetComposition().currentPhase;
+        }
+
+        public void SetCurrentPhase(CompositionPhase phase)
+        {
+            var composition = GetComposition();
+            bool guidedModeChanged = !State.guidedMode;
+            if (!guidedModeChanged && composition.currentPhase == phase)
+                return;
+
+            State.guidedMode = true;
+            composition.currentPhase = phase;
+            NotifyStateChanged();
+        }
+
         public void UpdateProgression(ChordProgression progression)
         {
             var composition = GetComposition();

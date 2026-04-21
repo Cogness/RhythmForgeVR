@@ -39,8 +39,9 @@ namespace RhythmForge.Bootstrap
         [Tooltip("Assign Assets/RhythmForge/Audio/RhythmForgeMixer.mixer here")]
         [SerializeField] private AudioMixer _rhythmForgeMixer;
 
-        [Header("Demo")]
-        [SerializeField] private bool _loadDemoOnStart = true;
+        [Header("Startup")]
+        [Tooltip("When enabled, Play Mode starts in a fresh guided session so the Phase C UI is visible immediately.")]
+        [SerializeField] private bool _startFreshGuidedSessionOnStart = true;
 
         // ──────────── built references (inspectable after play) ────────────
         [Header("── Built at Runtime (read-only) ──")]
@@ -120,12 +121,12 @@ namespace RhythmForge.Bootstrap
             // NOTE: RepositionPanels deferred — OVR tracking needs ~0.5s to report
             // valid head position/rotation after tracking initializes.
 
-            // Initialize subsystems and panels before loading the demo.
+            // Initialize subsystems and panels before loading startup session content.
             if (_manager != null)
             {
                 _manager.InitializeSubsystems();
-                if (_loadDemoOnStart)
-                    _manager.LoadDemoSession();
+                if (_startFreshGuidedSessionOnStart)
+                    _manager.LoadFreshGuidedSession();
             }
         }
 
@@ -290,6 +291,7 @@ namespace RhythmForge.Bootstrap
                     sequencer       = subsystems.sequencer,
                     strokeCapture   = subsystems.strokeCapture,
                     drawMode        = subsystems.drawMode,
+                    phaseController = subsystems.phaseController,
                     inputMapper     = subsystems.inputMapper,
                     instanceGrabber = subsystems.instanceGrabber
                 },
@@ -299,6 +301,7 @@ namespace RhythmForge.Bootstrap
                     inspector     = panels.inspector,
                     dock          = panels.dock,
                     transport     = panels.transport,
+                    phase         = panels.phase,
                     sceneStrip    = panels.sceneStrip,
                     arrangement   = panels.arrangement,
                     toast         = panels.toast,
@@ -346,6 +349,7 @@ namespace RhythmForge.Bootstrap
         {
             public InputMapper inputMapper;
             public DrawModeController drawMode;
+            public PhaseController phaseController;
             public StrokeCapture strokeCapture;
             public InstanceGrabber instanceGrabber;
             public AudioEngine audioEngine;
@@ -370,6 +374,10 @@ namespace RhythmForge.Bootstrap
             var dmGo = new GameObject("DrawModeController");
             dmGo.transform.SetParent(transform);
             refs.drawMode = dmGo.AddComponent<DrawModeController>();
+
+            var phaseGo = new GameObject("PhaseController");
+            phaseGo.transform.SetParent(transform);
+            refs.phaseController = phaseGo.AddComponent<PhaseController>();
 
             // StylusUIPointer — created first so StrokeCapture can reference it
             var uiPointerGo = new GameObject("StylusUIPointer");
@@ -447,6 +455,7 @@ namespace RhythmForge.Bootstrap
             public InspectorPanel     inspector;
             public DockPanel          dock;
             public TransportPanel     transport;
+            public PhasePanel         phase;
             public SceneStripPanel    sceneStrip;
             public ArrangementPanel   arrangement;
             public ToastMessage       toast;
@@ -461,6 +470,7 @@ namespace RhythmForge.Bootstrap
 
             refs.toast         = BuildToastPanel(head);
             refs.transport     = BuildTransportPanel(head);
+            refs.phase         = BuildPhasePanel(head);
             refs.sceneStrip    = BuildSceneStripPanel(head);
             refs.commitCard    = BuildCommitCardPanel(head, strokeCapture);
             refs.inspector     = BuildInspectorPanel(head);
@@ -529,6 +539,45 @@ namespace RhythmForge.Bootstrap
 
             var panel = canvas.gameObject.AddComponent<TransportPanel>();
             panel.SetUIRefs(playBtn, playLabel, modeBtn, modeLabel, bpmText, keyText, statusText, paramsBtn, paramsLabel);
+            return panel;
+        }
+
+        // ──────── Phase Panel ────────
+
+        private PhasePanel BuildPhasePanel(Transform head)
+        {
+            var canvas = UIFactory.CreateWorldCanvas("PhasePanel",
+                transform, new Vector2(640, 110),
+                PositionInFront(0f, -0.36f, 1.1f), 0.001f);
+            RegisterPanel(canvas, 0f, -0.36f, 1.1f, PanelDragCoordinator.DragMembership.MainGroup);
+
+            UIFactory.CreateBackground(canvas.transform,
+                new Vector2(640, 110), MaterialFactory.PanelBg);
+
+            var banner = UIFactory.CreateRectText(canvas.transform, "PhaseBanner",
+                "Current phase: Harmony", 16, new Color(1f, 0.92f, 0.58f), TextAnchor.MiddleLeft,
+                new Rect(12, 80, 320, 24));
+
+            var buttons = new List<Button>();
+            var labels = new List<Text>();
+            var phases = CompositionPhaseExtensions.All;
+            float buttonWidth = 118f;
+            float gap = 8f;
+            float startX = 10f;
+
+            for (int i = 0; i < phases.Length; i++)
+            {
+                float x = startX + i * (buttonWidth + gap);
+                var button = UIFactory.CreateButton(canvas.transform, $"PhaseBtn_{phases[i]}",
+                    $"{phases[i]}\nEmpty",
+                    new Rect(x, 12, buttonWidth, 60),
+                    new Color(0.25f, 0.25f, 0.3f, 1f), Color.white, 14, null);
+                buttons.Add(button);
+                labels.Add(button.GetComponentInChildren<Text>());
+            }
+
+            var panel = canvas.gameObject.AddComponent<PhasePanel>();
+            panel.SetUIRefs(banner, buttons, labels);
             return panel;
         }
 

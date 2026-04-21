@@ -31,7 +31,6 @@ Not implemented in Phase F:
 - auto-advance after commit is still not done
 - pending downstream badges are still not done
 - guided demo replacement is still not done
-- density values above `1.0` do not yet create brand-new extra melody notes
 
 ## What Was Implemented
 
@@ -160,6 +159,7 @@ New scheduling behavior:
 Schedule-time Groove rules that landed:
 
 - sparse Groove profiles thin Melody notes by stride
+- dense Groove profiles can add safe retriggers of already-derived Melody notes
 - notes are optionally re-quantized to the Groove grid:
   - `8th` grid -> 2-step spacing
   - `16th` grid -> 1-step spacing
@@ -175,15 +175,9 @@ Important safety rules preserved:
 
 Important implementation interpretation:
 
-- the Phase F plan talked about density values up to `1.5`
-- the landed implementation fully supports thinning for density below `1.0`
-- for density `>= 1.0`, Melody notes are preserved rather than expanded into extra retriggers
-
-Why this is important:
-
-- the current implementation meets the "Groove does not change Melody pitch derivation" goal
-- it keeps the change isolated to schedule-time logic
-- but it does mean "busier" Groove is currently more subtle than "sparser" Groove
+- Groove still does not create new Melody pitches
+- when density rises above `1.0`, the schedule-time path can now add extra retriggers using already-derived Melody pitches
+- this makes busy Groove shapes audibly clearer without moving pitch derivation out of Phase E
 
 ### 6. Syncopation is audible through micro-delay, not note re-derivation
 
@@ -214,6 +208,7 @@ New runtime behavior:
 - on `GrooveCommittedEvent`:
   - `SamplePlayer.InvalidateAll()`
   - `Sequencer.ResetWarmBar()`
+  - if no Melody is committed yet, the user now gets a toast explaining that Groove will become audible after Melody is added
 - on `MelodyCommittedEvent`, if a Groove profile is currently active:
   - `SamplePlayer.InvalidateAll()`
   - `Sequencer.ResetWarmBar()`
@@ -297,13 +292,14 @@ Validation for this phase was therefore limited to:
 
 ## Known Gaps And Follow-Up Notes
 
-### 1. Busy Groove is currently gentler than sparse Groove
+### 1. Busy Groove now works through retriggers, but should still be monitored in VR
 
-The current implementation fully supports note thinning when density drops below `1.0`.
+The current implementation now supports:
 
-For density above `1.0`, the Groove path currently preserves existing Melody notes instead of creating new schedule-time retriggers.
+- thinning when density drops below `1.0`
+- safe retriggers of existing Melody notes when density rises above `1.0`
 
-If a later agent wants a stronger "busy groove" effect, the clean extension point is:
+If a later agent wants even stronger "busy groove" articulation, the clean extension point is still:
 
 - `Assets/RhythmForge/Core/Sequencing/MelodyGrooveApplier.cs`
 

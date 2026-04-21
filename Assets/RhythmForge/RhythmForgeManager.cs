@@ -326,14 +326,17 @@ namespace RhythmForge
             if (_store?.GetComposition()?.groove == null)
                 return;
 
-            _samplePlayer?.InvalidateAll();
+            _samplePlayer?.RefreshPendingWork();
             _sequencer?.ResetWarmBar();
         }
 
         private void HandleGrooveCommitted(GrooveCommittedEvent evt)
         {
-            _samplePlayer?.InvalidateAll();
+            _samplePlayer?.RefreshPendingWork();
             _sequencer?.ResetWarmBar();
+
+            if (_store?.GetComposition()?.GetPatternId(CompositionPhase.Melody) == null && _toast)
+                _toast.Show("Groove saved. Add Melody to hear the groove effect.");
         }
 
         private void HandleSceneAndTransportInput()

@@ -274,6 +274,14 @@ namespace RhythmForge.Audio
             _cacheAge = 0;
         }
 
+        public void RefreshPendingWork()
+        {
+            _renderGeneration++;
+            _pendingPlays.Clear();
+            _inFlightKeys.Clear();
+            _renderQueue.Clear();
+        }
+
         // ── Internal play path ────────────────────────────────────────────────────
 
         private void PlayClip(ResolvedVoiceSpec spec, float volume, float pan, float startDelay)

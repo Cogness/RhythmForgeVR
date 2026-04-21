@@ -74,6 +74,9 @@ namespace RhythmForge.Core.Sequencing
                 });
             }
 
+            if (groove.density > 1.05f)
+                AddDenseRetriggers(scheduled, groove, totalSteps, gridStep);
+
             scheduled.Sort((a, b) =>
             {
                 int stepCompare = a.step.CompareTo(b.step);
@@ -90,10 +93,13 @@ namespace RhythmForge.Core.Sequencing
 
         private static int ResolveStride(float density)
         {
-            if (density >= 0.99f)
+            if (density >= 0.9f)
                 return 1;
 
-            return Mathf.Clamp(Mathf.RoundToInt(1f / Mathf.Max(0.01f, density)), 1, 4);
+            if (density >= 0.66f)
+                return 2;
+
+            return 3;
         }
 
         private static int QuantizeStep(int step, int gridStep, int totalSteps, bool preserveAnchor)
@@ -150,6 +156,67 @@ namespace RhythmForge.Core.Sequencing
             int available = Mathf.Max(8, totalSteps - cadence.step);
             cadence.durationSteps = Mathf.Clamp(Mathf.Max(cadence.durationSteps, 8), 8, available);
             notes[lastIndex] = cadence;
+        }
+
+        private static void AddDenseRetriggers(List<ScheduledMelodyNote> notes, GrooveProfile groove, int totalSteps, int gridStep)
+        {
+            if (notes == null || notes.Count == 0)
+                return;
+
+            int targetExtra = Mathf.Clamp(
+                Mathf.RoundToInt(notes.Count * Mathf.Clamp01((groove.density - 1f) / 0.5f)),
+                0,
+                notes.Count);
+            if (targetExtra <= 0)
+                return;
+
+            var additions = new List<ScheduledMelodyNote>();
+            int cadenceStart = Mathf.Max(0, totalSteps - AppStateFactory.BarSteps);
+
+            for (int i = 0; i < notes.Count && additions.Count < targetExtra; i++)
+            {
+                var source = notes[i];
+                if (IsPhraseAnchor(source.step, totalSteps))
+                    continue;
+                if (source.step >= cadenceStart)
+                    continue;
+
+                float nextStart = i < notes.Count - 1
+                    ? notes[i + 1].step + notes[i + 1].startDelaySteps
+                    : totalSteps;
+                int candidateStep = source.step + Mathf.Max(1, gridStep);
+                if (candidateStep >= totalSteps)
+                    continue;
+                if (candidateStep >= Mathf.FloorToInt(nextStart))
+                    continue;
+                if (ContainsStep(notes, candidateStep) || ContainsStep(additions, candidateStep))
+                    continue;
+
+                int available = Mathf.Max(2, Mathf.FloorToInt(nextStart - candidateStep));
+                additions.Add(new ScheduledMelodyNote
+                {
+                    step = candidateStep,
+                    midi = source.midi,
+                    durationSteps = Mathf.Clamp(Mathf.Min(source.durationSteps, 2 + gridStep), 2, available),
+                    velocity = Mathf.Clamp(MathUtils.RoundTo(source.velocity * 0.78f, 2), 0.12f, 0.92f),
+                    glide = source.glide * 0.65f,
+                    startDelaySteps = Mathf.Clamp(groove.syncopation * 0.25f, 0f, 0.35f)
+                });
+            }
+
+            if (additions.Count > 0)
+                notes.AddRange(additions);
+        }
+
+        private static bool ContainsStep(List<ScheduledMelodyNote> notes, int step)
+        {
+            for (int i = 0; i < notes.Count; i++)
+            {
+                if (notes[i].step == step)
+                    return true;
+            }
+
+            return false;
         }
 
         private static bool IsPhraseAnchor(int step, int totalSteps)

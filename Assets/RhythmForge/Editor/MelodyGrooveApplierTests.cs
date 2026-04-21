@@ -30,8 +30,9 @@ namespace RhythmForge.Editor
 
             var scheduled = MelodyGrooveApplier.Apply(notes, groove, GuidedDefaults.Bars * AppStateFactory.BarSteps);
 
-            Assert.That(scheduled, Has.Count.EqualTo(notes.Count));
-            Assert.That(scheduled.Select(note => note.midi).ToArray(), Is.EqualTo(notes.Select(note => note.midi).ToArray()));
+            Assert.That(scheduled.Count, Is.GreaterThanOrEqualTo(notes.Count));
+            Assert.That(scheduled.Select(note => note.midi).Distinct().OrderBy(midi => midi).ToArray(),
+                Is.EqualTo(notes.Select(note => note.midi).Distinct().OrderBy(midi => midi).ToArray()));
         }
 
         [Test]
@@ -56,6 +57,36 @@ namespace RhythmForge.Editor
 
             var scheduled = MelodyGrooveApplier.Apply(notes, groove, GuidedDefaults.Bars * AppStateFactory.BarSteps);
 
+            Assert.That(scheduled.Exists(note => note.step == 0), Is.True);
+            Assert.That(scheduled.Exists(note => note.step == 64), Is.True);
+        }
+
+        [Test]
+        public void SparseDensity_RemovesSomeNonAnchorNotes()
+        {
+            var notes = new List<MelodyNote>
+            {
+                new MelodyNote { step = 0, midi = 67, durationSteps = 4, velocity = 0.5f, glide = 0f },
+                new MelodyNote { step = 8, midi = 69, durationSteps = 4, velocity = 0.5f, glide = 0f },
+                new MelodyNote { step = 16, midi = 71, durationSteps = 4, velocity = 0.5f, glide = 0f },
+                new MelodyNote { step = 24, midi = 72, durationSteps = 4, velocity = 0.5f, glide = 0f },
+                new MelodyNote { step = 32, midi = 74, durationSteps = 4, velocity = 0.5f, glide = 0f },
+                new MelodyNote { step = 40, midi = 76, durationSteps = 4, velocity = 0.5f, glide = 0f },
+                new MelodyNote { step = 48, midi = 77, durationSteps = 4, velocity = 0.5f, glide = 0f },
+                new MelodyNote { step = 64, midi = 79, durationSteps = 4, velocity = 0.5f, glide = 0f }
+            };
+            var groove = new GrooveProfile
+            {
+                density = 0.5f,
+                syncopation = 0.1f,
+                swing = 0.08f,
+                quantizeGrid = 8,
+                accentCurve = new[] { 1f, 0.7f, 0.85f, 0.7f }
+            };
+
+            var scheduled = MelodyGrooveApplier.Apply(notes, groove, GuidedDefaults.Bars * AppStateFactory.BarSteps);
+
+            Assert.That(scheduled.Count, Is.LessThan(notes.Count));
             Assert.That(scheduled.Exists(note => note.step == 0), Is.True);
             Assert.That(scheduled.Exists(note => note.step == 64), Is.True);
         }

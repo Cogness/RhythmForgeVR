@@ -19,6 +19,7 @@ After Phase F:
 - drawing in the `Groove` phase now creates a stored Groove profile
 - the Groove profile changes how the committed Melody is played
 - Groove can make the Melody feel sparser, more syncopated, or more accented
+- dense Groove shapes can also make the Melody feel busier by adding extra repeats of the same tune notes
 - Groove should not change which notes Melody chose in Phase E
 - drawing a new Groove shape replaces the previous Groove pattern
 
@@ -42,7 +43,7 @@ You should not expect:
 - Groove to create a brand-new Melody pitch contour
 - Groove to rewrite Harmony
 - Groove to replace the future Bass or Percussion work
-- a dramatic "extra-note generator" effect every time
+- a totally separate Groove instrument layer by itself
 
 ## Important Tester Advice
 
@@ -189,6 +190,7 @@ What you should expect:
 - the Melody rhythm should feel different from before
 - the Melody should still sound like the same tune
 - the change may be subtle on a moderate Groove shape
+- very dense Groove shapes can make the Melody feel busier without changing the tune itself
 
 What you should not expect:
 

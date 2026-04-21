@@ -45,7 +45,7 @@ namespace RhythmForge.Core.PatternBehavior.Behaviors
                 derivedSequence = new DerivedSequence
                 {
                     kind = "groove",
-                    totalSteps = 0,
+                    totalSteps = GuidedDefaults.Bars * AppStateFactory.BarSteps,
                     grooveProfile = grooveProfile
                 },
                 summary = $"{densityWord} groove profile, {gridWord}, swing {Mathf.RoundToInt(grooveProfile.swing * 100f)}%.",
@@ -60,7 +60,30 @@ namespace RhythmForge.Core.PatternBehavior.Behaviors
 
         public void Schedule(PatternSchedulingContext context)
         {
-            // Groove is a schedule-time modifier for Melody and does not emit audio directly.
+            var groove = context.appState?.composition?.groove;
+            if (groove == null || context.recordTrigger == null)
+                return;
+
+            int gridStep = groove.quantizeGrid >= 16 ? 1 : 2;
+            int stride = ResolveVisualStride(groove.density, gridStep);
+            if (stride <= 0)
+                return;
+
+            bool isTriggerStep = context.localStep % stride == 0;
+            bool isAnchor = context.localStep == 0 || context.localStep == AppStateFactory.BarSteps * 4;
+            if (!isTriggerStep && !isAnchor)
+                return;
+
+            float[] accentCurve = groove.accentCurve != null && groove.accentCurve.Length >= 4
+                ? groove.accentCurve
+                : new[] { 1f, 0.7f, 0.85f, 0.7f };
+            float accent = accentCurve[Mathf.Abs(context.localStep) % 4];
+            float duration = 0.08f + accent * 0.1f + groove.swing * 0.06f;
+
+            context.recordTrigger.Invoke(
+                context.instance.id,
+                context.scheduledTime,
+                duration);
         }
 
         public void CollectVoiceSpecs(PatternSchedulingContext context, int totalSteps, List<ResolvedVoiceSpec> results)
@@ -81,6 +104,17 @@ namespace RhythmForge.Core.PatternBehavior.Behaviors
             float timeSeconds)
         {
             return MelodyDelegate.ComputeAnimation(state, pulse, sustain, renderedHeight, timeSeconds);
+        }
+
+        private static int ResolveVisualStride(float density, int gridStep)
+        {
+            if (density < 0.66f)
+                return Mathf.Max(2, gridStep * 4);
+            if (density < 0.9f)
+                return Mathf.Max(2, gridStep * 2);
+            if (density > 1.2f)
+                return 1;
+            return Mathf.Max(1, gridStep);
         }
     }
 }

@@ -573,7 +573,7 @@ namespace RhythmForge.Core.Session
                         derivedSequence = new DerivedSequence
                         {
                             kind = "groove",
-                            totalSteps = 0,
+                            totalSteps = GuidedDefaults.Bars * AppStateFactory.BarSteps,
                             grooveProfile = groove
                         },
                         summary = $"Groove profile with {(groove.quantizeGrid >= 16 ? "16th" : "8th")} grid and swing {Mathf.RoundToInt(groove.swing * 100f)}%.",

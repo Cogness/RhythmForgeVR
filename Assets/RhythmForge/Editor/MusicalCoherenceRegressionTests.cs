@@ -224,6 +224,61 @@ namespace RhythmForge.Editor
         }
 
         [Test]
+        public void SamplePlayer_RefreshPendingWork_KeepsCacheWhileClearingQueuedPlayback()
+        {
+            var go = new GameObject("SamplePlayerRefreshPendingWork");
+            var player = go.AddComponent<SamplePlayer>();
+            player.Configure();
+
+            try
+            {
+                player.PlayNote(
+                    InstrumentPresets.Get("dream-pad"),
+                    60,
+                    0.72f,
+                    1.8f,
+                    0f,
+                    0.52f,
+                    0.8f,
+                    0.42f,
+                    CreateSoundProfile(),
+                    PatternType.HarmonyPad);
+
+                DateTime deadline = DateTime.UtcNow.AddSeconds(3);
+                while (GetVoiceCache(player).Count == 0 && DateTime.UtcNow < deadline)
+                {
+                    Thread.Sleep(20);
+                    SamplePlayerUpdateMethod.Invoke(player, null);
+                }
+
+                Assert.That(GetVoiceCache(player).Count, Is.GreaterThan(0));
+
+                player.PlayNote(
+                    InstrumentPresets.Get("dream-pad"),
+                    64,
+                    0.72f,
+                    1.6f,
+                    0f,
+                    0.52f,
+                    0.8f,
+                    0.42f,
+                    CreateSoundProfile(),
+                    PatternType.HarmonyPad);
+
+                Assert.That(GetPendingPlays(player).Count, Is.GreaterThanOrEqualTo(1));
+
+                player.RefreshPendingWork();
+
+                Assert.That(GetPendingPlays(player).Count, Is.EqualTo(0));
+                Assert.That(GetVoiceCache(player).Count, Is.GreaterThan(0));
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(go);
+            }
+        }
+
+        [Test]
         public void GenreChangedEvent_ReroutesSamplePlayerToNewMixerGroup()
         {
             var mixer = AssetDatabase.LoadAssetAtPath<AudioMixer>("Assets/RhythmForge/Audio/RhythmForgeMixer.mixer");

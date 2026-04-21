@@ -209,10 +209,10 @@ namespace RhythmForge.Audio
         // ── Public play API ──────────────────────────────────────────────────────
 
         public void PlayDrum(InstrumentPreset preset, string lane, float velocity, float pan,
-            float brightness, float gain, float fxSend, SoundProfile profile)
+            float brightness, float gain, float fxSend, SoundProfile profile, float startDelay = 0f)
         {
             var spec = VoiceSpecResolver.ResolveDrum(lane, preset, profile, brightness, fxSend);
-            PlayClip(spec, Mathf.Clamp01(velocity * gain), pan, 0f);
+            PlayClip(spec, Mathf.Clamp01(velocity * gain), pan, startDelay);
         }
 
         public void PlayNote(InstrumentPreset preset, int midi, float velocity, float duration,

@@ -59,12 +59,12 @@ namespace RhythmForge.Editor
             AssertRange(sound.body, 0f, 1f, "body in [0,1]");
             AssertRange(sound.brightness, 0f, 1f, "brightness in [0,1]");
 
-            var result = RhythmDeriver.Derive(pts, metrics, "lofi", sp, sound);
+            var result = PercussionDeriver.Derive(pts, metrics, "lofi", sp, sound);
             Debug.Log($"  RhythmSeq: bars={result.bars}, events={result.derivedSequence.events.Count}" +
                       $", swing={result.derivedSequence.swing:F3}");
             Debug.Log($"  Summary: {result.summary}");
 
-            AssertTrue(result.bars == 2 || result.bars == 4, "Bars must be 2 or 4");
+            AssertTrue(result.bars == GuidedDefaults.Bars, "Bars must follow the guided 8-bar loop");
             AssertTrue(result.derivedSequence.events.Count > 0, "Must have events");
         }
 

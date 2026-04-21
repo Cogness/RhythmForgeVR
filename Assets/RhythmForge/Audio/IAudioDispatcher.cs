@@ -13,7 +13,8 @@ namespace RhythmForge.Audio
             float brightness,
             float depth,
             float fxSend,
-            SoundProfile soundProfile);
+            SoundProfile soundProfile,
+            float startDelay = 0f);
 
         void PlayMelody(
             InstrumentPreset preset,

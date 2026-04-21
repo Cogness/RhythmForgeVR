@@ -251,6 +251,35 @@ namespace RhythmForge.Editor
             Assert.That(notifyCount, Is.EqualTo(2));
         }
 
+        [Test]
+        public void CommitDraft_InGuidedMode_ReplacesPreviousPercussionPattern()
+        {
+            var state = AppStateFactory.CreateEmpty();
+            int notifyCount = 0;
+            var repository = new PatternRepository(
+                () => state,
+                sceneId => GetScene(state, sceneId),
+                () => notifyCount++,
+                type => $"Reserved-{type}");
+
+            var firstDraft = CreatePercussionDraft("First Percussion", 0.42f);
+            repository.CommitDraft(firstDraft, duplicate: false);
+
+            string firstPatternId = state.patterns[0].id;
+            Assert.That(state.patterns, Has.Count.EqualTo(1));
+            Assert.That(state.instances, Has.Count.EqualTo(1));
+
+            var secondDraft = CreatePercussionDraft("Second Percussion", 0.88f);
+            repository.CommitDraft(secondDraft, duplicate: false);
+
+            Assert.That(state.patterns, Has.Count.EqualTo(1));
+            Assert.That(state.instances, Has.Count.EqualTo(1));
+            Assert.That(state.patterns[0].id, Is.Not.EqualTo(firstPatternId));
+            Assert.That(state.composition.GetPatternId(CompositionPhase.Percussion), Is.EqualTo(state.patterns[0].id));
+            Assert.That(state.scenes[0].instanceIds, Has.Count.EqualTo(1));
+            Assert.That(notifyCount, Is.EqualTo(2));
+        }
+
         private static DraftResult CreateHarmonyDraft(string name)
         {
             var progression = GuidedDefaults.CreateDefaultProgression();
@@ -394,6 +423,48 @@ namespace RhythmForge.Editor
                 soundProfile = new SoundProfile(),
                 shapeSummary = "grounded bass line",
                 summary = "bass phrase",
+                details = "details"
+            };
+        }
+
+        private static DraftResult CreatePercussionDraft(string name, float swing)
+        {
+            return new DraftResult
+            {
+                success = true,
+                type = PatternType.Percussion,
+                name = name,
+                bars = GuidedDefaults.Bars,
+                tempoBase = GuidedDefaults.Tempo,
+                key = GuidedDefaults.Key,
+                groupId = "lofi",
+                presetId = "lofi-drums",
+                points = new List<Vector2> { Vector2.zero, new Vector2(0.18f, 0.28f), new Vector2(0.42f, 0.1f), new Vector2(0.6f, 0.34f) },
+                renderRotation = Quaternion.identity,
+                hasRenderRotation = true,
+                spawnPosition = new Vector3(0.3f, 0.36f, 0.18f),
+                derivedSequence = new DerivedSequence
+                {
+                    kind = "rhythm",
+                    totalSteps = GuidedDefaults.Bars * AppStateFactory.BarSteps,
+                    swing = swing,
+                    events = new List<RhythmEvent>
+                    {
+                        new RhythmEvent { step = 0, lane = "kick", velocity = 0.72f, microShift = 0f },
+                        new RhythmEvent { step = 8, lane = "snare", velocity = 0.66f, microShift = 0f },
+                        new RhythmEvent { step = 62, lane = "snare", velocity = 0.58f, microShift = 0f },
+                        new RhythmEvent { step = 63, lane = "snare", velocity = 0.64f, microShift = 0f },
+                        new RhythmEvent { step = 125, lane = "snare", velocity = 0.58f, microShift = 0f },
+                        new RhythmEvent { step = 126, lane = "snare", velocity = 0.62f, microShift = 0f },
+                        new RhythmEvent { step = 127, lane = "snare", velocity = 0.68f, microShift = 0f }
+                    }
+                },
+                tags = new List<string> { "guided", "percussion" },
+                color = Color.cyan,
+                shapeProfile = new ShapeProfile(),
+                soundProfile = new SoundProfile(),
+                shapeSummary = "guided percussion contour",
+                summary = "percussion loop",
                 details = "details"
             };
         }

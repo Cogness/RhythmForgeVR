@@ -14,7 +14,7 @@ namespace RhythmForge.Core.Sequencing.Electronic
             SoundProfile soundProfile,
             GenreProfile genre)
         {
-            var result = RhythmDeriver.Derive(points, metrics, genre.Id, shapeProfile, soundProfile);
+            var result = PercussionDeriver.Derive(points, metrics, genre.Id, shapeProfile, soundProfile);
             return result;
         }
     }

@@ -127,6 +127,7 @@ namespace RhythmForge.Core.Session
         {
             switch (PatternTypeCompatibility.Canonicalize(type))
             {
+                case PatternType.Percussion:
                 case PatternType.Harmony:
                 case PatternType.Melody:
                 case PatternType.Groove:

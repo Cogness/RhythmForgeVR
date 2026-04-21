@@ -10,10 +10,12 @@ namespace RhythmForge.Core.PatternBehavior.Behaviors
 {
     public sealed class RhythmLoopBehavior : IPatternBehavior
     {
+        private static readonly PercussionBehavior Inner = new PercussionBehavior();
+
         public PatternType Type => PatternType.RhythmLoop;
-        public string DisplayName => "Percussion";
-        public bool PrefersClosedStroke => true;
-        public string DraftNamePrefix => "Beat";
+        public string DisplayName => Inner.DisplayName;
+        public bool PrefersClosedStroke => Inner.PrefersClosedStroke;
+        public string DraftNamePrefix => Inner.DraftNamePrefix;
 
         public PatternDerivationResult Derive(
             List<Vector2> points,
@@ -23,72 +25,27 @@ namespace RhythmForge.Core.PatternBehavior.Behaviors
             ShapeProfile shapeProfile,
             SoundProfile soundProfile)
         {
-            var genre = GenreRegistry.GetActive();
-            var result = genre.RhythmDeriver.Derive(points, metrics, shapeProfile, soundProfile, genre);
-            return new PatternDerivationResult
-            {
-                bars = result.bars,
-                presetId = result.presetId,
-                tags = result.tags,
-                derivedSequence = result.derivedSequence,
-                summary = result.summary,
-                details = result.details
-            };
+            return Inner.Derive(points, metrics, keyName, groupId, shapeProfile, soundProfile);
         }
 
         public SoundProfile DeriveSoundProfile(ShapeProfile shapeProfile)
         {
-            return GenreRegistry.GetActive().GetSoundMapping(PatternType.RhythmLoop).Evaluate(PatternType.RhythmLoop, shapeProfile);
+            return Inner.DeriveSoundProfile(shapeProfile);
         }
 
         public void CollectVoiceSpecs(PatternSchedulingContext context, int totalSteps, List<ResolvedVoiceSpec> results)
         {
-            if (context.pattern.derivedSequence?.events == null) return;
-            using (PatternContextScope.ForPattern(context.appState, context.pattern))
-            {
-                foreach (var evt in context.pattern.derivedSequence.events)
-                    results.Add(VoiceSpecResolver.ResolveDrum(
-                        evt.lane,
-                        context.preset,
-                        context.sound,
-                        context.instance.brightness,
-                        context.preset.fxSend));
-            }
+            Inner.CollectVoiceSpecs(context, totalSteps, results);
         }
 
         public void Schedule(PatternSchedulingContext context)
         {
-            if (context.pattern.derivedSequence.events == null)
-                return;
-
-            foreach (var evt in context.pattern.derivedSequence.events)
-            {
-                if (evt.step != context.localStep)
-                    continue;
-
-                using (PatternContextScope.ForPattern(context.appState, context.pattern))
-                {
-                    context.audioDispatcher?.PlayDrum(
-                        context.preset,
-                        evt.lane,
-                        evt.velocity,
-                        context.instance.pan,
-                        context.instance.brightness,
-                        context.instance.depth,
-                        context.preset.fxSend + context.group.busFx.reverb * 0.2f,
-                        context.sound);
-                }
-
-                context.recordTrigger?.Invoke(
-                    context.instance.id,
-                    context.scheduledTime,
-                    GetVisualDuration(evt.lane, context.sound));
-            }
+            Inner.Schedule(context);
         }
 
         public PlaybackVisualSpec AdjustVisualSpec(PlaybackVisualSpec baseSpec, SoundProfile soundProfile)
         {
-            return VisualGrammarProfiles.GetRhythmLoop().Apply(baseSpec, soundProfile);
+            return Inner.AdjustVisualSpec(baseSpec, soundProfile);
         }
 
         public AnimationEnergies ComputeAnimation(
@@ -98,18 +55,7 @@ namespace RhythmForge.Core.PatternBehavior.Behaviors
             float renderedHeight,
             float timeSeconds)
         {
-            return VisualGrammarProfiles.GetRhythmLoop().Animate(state, pulse, sustain, renderedHeight, timeSeconds);
-        }
-
-        private static float GetVisualDuration(string lane, SoundProfile sound)
-        {
-            float baseDuration = lane == "kick"
-                ? 0.22f
-                : lane == "snare" ? 0.18f
-                : lane == "perc" ? 0.14f : 0.1f;
-
-            sound = sound ?? new SoundProfile();
-            return baseDuration + sound.body * 0.14f + sound.releaseBias * 0.24f;
+            return Inner.ComputeAnimation(state, pulse, sustain, renderedHeight, timeSeconds);
         }
     }
 }

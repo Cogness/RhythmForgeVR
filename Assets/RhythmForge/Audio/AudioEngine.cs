@@ -46,11 +46,11 @@ namespace RhythmForge.Audio
         public void PlayDrum(string lane, float velocity, float pan, float brightness,
             float depth, float fxSend, SoundProfile soundProfile)
         {
-            PlayDrum(InstrumentPresets.Get("lofi-drums"), lane, velocity, pan, brightness, depth, fxSend, soundProfile);
+            PlayDrum(InstrumentPresets.Get("lofi-drums"), lane, velocity, pan, brightness, depth, fxSend, soundProfile, 0f);
         }
 
         public void PlayDrum(InstrumentPreset preset, string lane, float velocity, float pan, float brightness,
-            float depth, float fxSend, SoundProfile soundProfile)
+            float depth, float fxSend, SoundProfile soundProfile, float startDelay = 0f)
         {
             if (!IsReady) return;
             soundProfile = soundProfile ?? new SoundProfile();
@@ -66,7 +66,8 @@ namespace RhythmForge.Audio
                 brightness,
                 gainAmount * _masterVolume,
                 fxSend,
-                soundProfile);
+                soundProfile,
+                startDelay);
         }
 
         // Convenience overload — uses default lofi-piano preset.

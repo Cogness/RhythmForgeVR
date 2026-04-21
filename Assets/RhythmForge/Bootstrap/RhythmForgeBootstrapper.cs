@@ -547,19 +547,24 @@ namespace RhythmForge.Bootstrap
         private PhasePanel BuildPhasePanel(Transform head)
         {
             var canvas = UIFactory.CreateWorldCanvas("PhasePanel",
-                transform, new Vector2(640, 110),
+                transform, new Vector2(640, 150),
                 PositionInFront(0f, -0.36f, 1.1f), 0.001f);
             RegisterPanel(canvas, 0f, -0.36f, 1.1f, PanelDragCoordinator.DragMembership.MainGroup);
 
             UIFactory.CreateBackground(canvas.transform,
-                new Vector2(640, 110), MaterialFactory.PanelBg);
+                new Vector2(640, 150), MaterialFactory.PanelBg);
 
             var banner = UIFactory.CreateRectText(canvas.transform, "PhaseBanner",
                 "Current phase: Harmony", 16, new Color(1f, 0.92f, 0.58f), TextAnchor.MiddleLeft,
-                new Rect(12, 80, 320, 24));
+                new Rect(12, 116, 320, 24));
+
+            var playPieceButton = UIFactory.CreateButton(canvas.transform, "PlayPieceButton", "Play Piece",
+                new Rect(494, 112, 134, 28),
+                MaterialFactory.ButtonActive, Color.white, 14, null);
 
             var buttons = new List<Button>();
             var labels = new List<Text>();
+            var clearButtons = new List<Button>();
             var phases = CompositionPhaseExtensions.All;
             float buttonWidth = 118f;
             float gap = 8f;
@@ -570,14 +575,19 @@ namespace RhythmForge.Bootstrap
                 float x = startX + i * (buttonWidth + gap);
                 var button = UIFactory.CreateButton(canvas.transform, $"PhaseBtn_{phases[i]}",
                     $"{phases[i]}\nEmpty",
-                    new Rect(x, 12, buttonWidth, 60),
+                    new Rect(x, 42, buttonWidth, 60),
                     new Color(0.25f, 0.25f, 0.3f, 1f), Color.white, 14, null);
+                var clearButton = UIFactory.CreateButton(canvas.transform, $"PhaseClear_{phases[i]}",
+                    "Clear",
+                    new Rect(x, 10, buttonWidth, 24),
+                    MaterialFactory.ButtonDanger, Color.white, 11, null);
                 buttons.Add(button);
                 labels.Add(button.GetComponentInChildren<Text>());
+                clearButtons.Add(clearButton);
             }
 
             var panel = canvas.gameObject.AddComponent<PhasePanel>();
-            panel.SetUIRefs(banner, buttons, labels);
+            panel.SetUIRefs(banner, buttons, labels, clearButtons, playPieceButton, playPieceButton.GetComponentInChildren<Text>());
             return panel;
         }
 

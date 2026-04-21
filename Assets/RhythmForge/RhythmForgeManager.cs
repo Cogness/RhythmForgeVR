@@ -152,7 +152,7 @@ namespace RhythmForge
                 _instanceGrabber.Initialize(_store);
 
             if (_commitCard)
-                _commitCard.Initialize(_strokeCapture);
+                _commitCard.Initialize(_strokeCapture, _store, _phaseController);
             if (_inspectorPanel)
                 _inspectorPanel.Initialize(_store);
             if (_dockPanel)
@@ -163,7 +163,7 @@ namespace RhythmForge
                 _showParamLabels = _transportPanel.ShowParams;
             }
             if (_phasePanel)
-                _phasePanel.Initialize(_store, _phaseController);
+                _phasePanel.Initialize(_store, _phaseController, _sequencer);
             if (_sceneStripPanel)
                 _sceneStripPanel.Initialize(_store, _sequencer);
             if (_arrangementPanel)
@@ -335,6 +335,9 @@ namespace RhythmForge
             _samplePlayer?.RefreshPendingWork();
             _sequencer?.ResetWarmBar();
 
+            if (string.IsNullOrEmpty(evt.PatternId))
+                return;
+
             if (_store?.GetComposition()?.GetPatternId(CompositionPhase.Melody) == null && _toast)
                 _toast.Show("Groove saved. Add Melody to hear the groove effect.");
         }
@@ -392,17 +395,17 @@ namespace RhythmForge
 
         public void LoadDemoSession()
         {
-            var demo = DemoSession.CreateDemoState(_store);
+            var demo = GuidedDemoComposition.CreateDemoState(_store);
             _store.LoadState(demo);
             SyncInteractionModeFromStore();
             ApplyGuidedModeUiState();
             if (_toast)
-                _toast.Show("Demo session loaded.");
+                _toast.Show("Guided composition ready.");
         }
 
         public void LoadFreshGuidedSession()
         {
-            _store.Reset();
+            _store.LoadState(GuidedDemoComposition.CreateDemoState(_store));
             SyncInteractionModeFromStore();
             ApplyGuidedModeUiState();
             _autosaveController?.ResetTimer();

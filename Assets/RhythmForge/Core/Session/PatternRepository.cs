@@ -104,6 +104,22 @@ namespace RhythmForge.Core.Session
             return instance;
         }
 
+        public bool RemovePatternAndInstances(string patternId, bool notify = true)
+        {
+            if (string.IsNullOrEmpty(patternId))
+                return false;
+
+            var pattern = GetPattern(patternId);
+            if (pattern == null)
+                return false;
+
+            RemoveGuidedPhasePattern(patternId);
+            if (notify)
+                _notifyStateChanged?.Invoke();
+
+            return true;
+        }
+
         private void RemoveGuidedPhasePattern(string patternId)
         {
             if (string.IsNullOrEmpty(patternId))

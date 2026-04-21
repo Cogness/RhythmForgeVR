@@ -45,6 +45,7 @@ namespace RhythmForge.UI.Panels
         private SessionStore _store;
         private RhythmForgeEventBus _eventBus;
         private bool _updating;
+        private CompositionPhase? _guidedSelectedPhase;
 
         /// <summary>Called by RhythmForgeBootstrapper to inject all UI element references.</summary>
         public void SetUIRefs(
@@ -173,6 +174,8 @@ namespace RhythmForge.UI.Panels
             if (_panText) _panText.text = $"Pan: {instance.pan:F2}";
             if (_gainText) _gainText.text = $"Gain: {instance.gain:F2}";
             if (_brightnessText) _brightnessText.text = $"Bright: {instance.brightness:F2}";
+            _guidedSelectedPhase = GetGuidedSelectedPhase(pattern);
+            RefreshActionButtons(instance);
 
             _updating = false;
         }
@@ -244,6 +247,15 @@ namespace RhythmForge.UI.Panels
         private void OnToggleMute()
         {
             if (_store == null) return;
+
+            if (_guidedSelectedPhase.HasValue)
+            {
+                var phase = _guidedSelectedPhase.Value;
+                _store.ClearPhase(phase);
+                _store.SetCurrentPhase(phase);
+                return;
+            }
+
             var inst = _store.GetInstance(_store.State.selectedInstanceId);
             if (inst != null)
                 _store.UpdateInstance(inst.id, muted: !inst.muted);
@@ -252,12 +264,26 @@ namespace RhythmForge.UI.Panels
         private void OnRemove()
         {
             if (_store == null) return;
+
+            if (_guidedSelectedPhase.HasValue)
+            {
+                _store.SetSelectedInstance(_store.State.selectedInstanceId);
+                return;
+            }
+
             _store.RemoveInstance(_store.State.selectedInstanceId);
         }
 
         private void OnDuplicate()
         {
             if (_store == null) return;
+
+            if (_guidedSelectedPhase.HasValue)
+            {
+                _store.ClearPhase(_guidedSelectedPhase.Value);
+                return;
+            }
+
             _store.DuplicateInstance(_store.State.selectedInstanceId);
         }
 
@@ -267,6 +293,69 @@ namespace RhythmForge.UI.Panels
             string presetId = value > 0 && value <= InstrumentPresets.All.Count
                 ? InstrumentPresets.All[value - 1].id : null;
             _store.SetPresetOverride(_store.State.selectedInstanceId, presetId);
+        }
+
+        private CompositionPhase? GetGuidedSelectedPhase(PatternDefinition pattern)
+        {
+            if (_store == null || pattern == null || !_store.State.guidedMode)
+                return null;
+
+            CompositionPhase phase = pattern.type.ToCompositionPhase();
+            string committedPatternId = _store.GetComposition().GetPatternId(phase);
+            if (string.IsNullOrEmpty(committedPatternId) || committedPatternId != pattern.id)
+                return null;
+
+            return phase;
+        }
+
+        private void RefreshActionButtons(PatternInstance instance)
+        {
+            if (_muteButton == null || _removeButton == null || _duplicateButton == null)
+                return;
+
+            if (_guidedSelectedPhase.HasValue)
+            {
+                SetButtonLabel(_muteButton, "Redraw");
+                SetButtonLabel(_removeButton, "Adjust");
+                SetButtonLabel(_duplicateButton, "Clear");
+                ApplyButtonColor(_muteButton, new Color(0.24f, 0.58f, 0.92f, 1f));
+                ApplyButtonColor(_removeButton, new Color(0.32f, 0.32f, 0.38f, 1f));
+                ApplyButtonColor(_duplicateButton, new Color(0.76f, 0.28f, 0.28f, 1f));
+                return;
+            }
+
+            SetButtonLabel(_muteButton, instance != null && instance.muted ? "Unmute" : "Mute");
+            SetButtonLabel(_removeButton, "Remove");
+            SetButtonLabel(_duplicateButton, "Dup");
+            ApplyButtonColor(_muteButton, new Color(0.24f, 0.32f, 0.44f, 1f));
+            ApplyButtonColor(_removeButton, new Color(0.76f, 0.28f, 0.28f, 1f));
+            ApplyButtonColor(_duplicateButton, new Color(0.24f, 0.32f, 0.44f, 1f));
+        }
+
+        private static void SetButtonLabel(Button button, string text)
+        {
+            if (button == null)
+                return;
+
+            var label = button.GetComponentInChildren<Text>();
+            if (label != null)
+                label.text = text;
+        }
+
+        private static void ApplyButtonColor(Button button, Color color)
+        {
+            if (button == null)
+                return;
+
+            var colors = button.colors;
+            colors.normalColor = color;
+            colors.highlightedColor = Color.Lerp(color, Color.white, 0.2f);
+            colors.pressedColor = Color.Lerp(color, Color.black, 0.2f);
+            button.colors = colors;
+
+            var image = button.GetComponent<Image>();
+            if (image != null)
+                image.color = color;
         }
     }
 }

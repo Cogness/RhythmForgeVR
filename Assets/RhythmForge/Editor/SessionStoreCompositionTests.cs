@@ -164,6 +164,113 @@ namespace RhythmForge.Editor
             Assert.That(published.HasValue, Is.True);
             Assert.That(published.Value.PatternId, Is.EqualTo(instance.patternId));
         }
+
+        [Test]
+        public void GuidedDemoComposition_SeedsFoundation_LeavesPhasesEmpty()
+        {
+            var store = new SessionStore();
+            var state = GuidedDemoComposition.CreateDemoState(store);
+
+            Assert.That(state.guidedMode, Is.True);
+            Assert.That(state.patterns, Is.Empty);
+            Assert.That(state.instances, Is.Empty);
+            Assert.That(state.composition, Is.Not.Null);
+            Assert.That(state.composition.currentPhase, Is.EqualTo(CompositionPhase.Harmony));
+            Assert.That(state.composition.progression, Is.Not.Null);
+            Assert.That(state.composition.phasePatternIds, Is.Empty);
+        }
+
+        [Test]
+        public void ClearPhase_ForGroove_RemovesPatternReference_AndProfile()
+        {
+            var store = new SessionStore();
+            var pattern = CreatePhasePattern("groove-1", PatternType.Groove);
+            store.State.patterns.Add(pattern);
+            store.State.instances.Add(new PatternInstance(pattern.id, store.State.activeSceneId, Vector3.zero, 0.3f));
+            store.State.scenes[0].instanceIds.Add(store.State.instances[0].id);
+            store.GetComposition().SetPatternId(CompositionPhase.Groove, pattern.id);
+            store.GetComposition().groove = new GrooveProfile
+            {
+                density = 1.2f,
+                syncopation = 0.18f,
+                swing = 0.11f,
+                quantizeGrid = 16,
+                accentCurve = new[] { 1f, 0.7f, 0.85f, 0.7f }
+            };
+
+            store.ClearPhase(CompositionPhase.Groove);
+
+            Assert.That(store.GetComposition().GetPatternId(CompositionPhase.Groove), Is.Null);
+            Assert.That(store.GetComposition().groove, Is.Null);
+            Assert.That(store.GetPattern(pattern.id), Is.Null);
+            Assert.That(store.State.instances, Is.Empty);
+        }
+
+        [Test]
+        public void ClearPhase_ForHarmony_ResetsProgression_AndMarksDependentPhasesPending()
+        {
+            var store = new SessionStore();
+            var harmony = CreatePhasePattern("harmony-1", PatternType.Harmony);
+            var melody = CreatePhasePattern("melody-1", PatternType.Melody);
+            var bass = CreatePhasePattern("bass-1", PatternType.Bass);
+
+            store.State.patterns.Add(harmony);
+            store.State.patterns.Add(melody);
+            store.State.patterns.Add(bass);
+            store.GetComposition().SetPatternId(CompositionPhase.Harmony, harmony.id);
+            store.GetComposition().SetPatternId(CompositionPhase.Melody, melody.id);
+            store.GetComposition().SetPatternId(CompositionPhase.Bass, bass.id);
+
+            store.GetComposition().progression.chords[0].flavor = "maj7";
+
+            store.ClearPhase(CompositionPhase.Harmony);
+
+            Assert.That(store.GetComposition().GetPatternId(CompositionPhase.Harmony), Is.Null);
+            Assert.That(store.GetPattern(harmony.id), Is.Null);
+            Assert.That(store.GetComposition().progression.chords[0].flavor, Is.EqualTo(GuidedDefaults.CreateDefaultProgression().chords[0].flavor));
+            Assert.That(store.IsPhasePending(CompositionPhase.Melody), Is.True);
+            Assert.That(store.IsPhasePending(CompositionPhase.Bass), Is.True);
+        }
+
+        private static PatternDefinition CreatePhasePattern(string id, PatternType type)
+        {
+            return new PatternDefinition
+            {
+                id = id,
+                type = type,
+                name = id,
+                bars = GuidedDefaults.Bars,
+                tempoBase = GuidedDefaults.Tempo,
+                key = GuidedDefaults.Key,
+                groupId = "lofi",
+                presetId = "lofi-piano",
+                points = new List<Vector2> { Vector2.zero, Vector2.right * 0.4f, new Vector2(0.8f, 0.2f) },
+                renderRotation = Quaternion.identity,
+                hasRenderRotation = true,
+                derivedSequence = new DerivedSequence
+                {
+                    kind = type == PatternType.Groove ? "groove" : "melody",
+                    totalSteps = GuidedDefaults.Bars * AppStateFactory.BarSteps,
+                    grooveProfile = type == PatternType.Groove
+                        ? new GrooveProfile
+                        {
+                            density = 1f,
+                            syncopation = 0.1f,
+                            swing = 0.1f,
+                            quantizeGrid = 8,
+                            accentCurve = new[] { 1f, 0.7f, 0.85f, 0.7f }
+                        }
+                        : null
+                },
+                tags = new List<string> { "test" },
+                color = Color.white,
+                shapeProfile = new ShapeProfile(),
+                soundProfile = new SoundProfile(),
+                shapeSummary = "test shape",
+                summary = "summary",
+                details = "details"
+            };
+        }
     }
 }
 #endif

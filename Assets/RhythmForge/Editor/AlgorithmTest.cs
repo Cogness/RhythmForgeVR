@@ -115,29 +115,25 @@ namespace RhythmForge.Editor
             AssertTrue(!string.IsNullOrEmpty(result.derivedSequence.flavor), "Flavor must be set");
         }
 
-        // ──────────────────────────── DEMO SESSION ────────────────────────────
+        // ──────────────────────────── GUIDED STARTER SESSION ────────────────────────────
 
         static void TestDemoSession()
         {
-            Debug.Log("── Demo Session ──");
+            Debug.Log("── Guided Starter Session ──");
 
             var store = new SessionStore();
-            var state = DemoSession.CreateDemoState(store);
+            var state = GuidedDemoComposition.CreateDemoState(store);
 
             Debug.Log($"  Patterns: {state.patterns.Count}");
             Debug.Log($"  Instances: {state.instances.Count}");
             Debug.Log($"  Active scene: {state.activeSceneId}");
 
-            AssertTrue(state.patterns.Count == 3, "Demo should create 3 patterns");
-            AssertTrue(state.instances.Count == 3, "Demo should create 3 instances");
+            AssertTrue(state.guidedMode, "Guided starter session must enable guided mode");
+            AssertTrue(state.patterns.Count == 0, "Guided starter session should not pre-seed patterns");
+            AssertTrue(state.instances.Count == 0, "Guided starter session should not pre-seed instances");
             AssertTrue(!string.IsNullOrEmpty(state.activeSceneId), "Active scene must be set");
-
-            foreach (var p in state.patterns)
-            {
-                AssertTrue(!string.IsNullOrEmpty(p.id), "Pattern id must be set");
-                AssertTrue(p.derivedSequence != null, $"Pattern {p.name} must have sequence");
-                AssertTrue(!string.IsNullOrEmpty(p.shapeSummary), $"Pattern {p.name} must have shapeSummary");
-            }
+            AssertTrue(state.composition != null, "Composition must be seeded");
+            AssertTrue(state.composition.currentPhase == CompositionPhase.Harmony, "Harmony must be the entry phase");
         }
 
         // ──────────────────────────── PROCEDURAL AUDIO ────────────────────────────

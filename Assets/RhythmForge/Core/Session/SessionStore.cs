@@ -24,6 +24,7 @@ namespace RhythmForge.Core.Session
 
         // Main-thread dispatch queue: background tasks post completions here; Tick() drains it.
         private readonly ConcurrentQueue<Action> _mainThreadQueue = new ConcurrentQueue<Action>();
+        private readonly Dictionary<CompositionPhase, int> _pendingPhaseCounts = new Dictionary<CompositionPhase, int>();
 
         /// <summary>Fired on the main thread after a background genre re-derivation completes.</summary>
         public event Action<string> OnGenreRederived;
@@ -45,6 +46,7 @@ namespace RhythmForge.Core.Session
         {
             State = state ?? AppStateFactory.CreateEmpty();
             _stateMigrator.NormalizeState(State);
+            _pendingPhaseCounts.Clear();
             // Sync registry to the loaded genre
             GenreRegistry.SetActive(State.activeGenreId ?? "electronic");
             NotifyStateChanged();
@@ -53,6 +55,7 @@ namespace RhythmForge.Core.Session
         public void Reset()
         {
             State = AppStateFactory.CreateEmpty();
+            _pendingPhaseCounts.Clear();
             NotifyStateChanged();
         }
 
@@ -293,6 +296,21 @@ namespace RhythmForge.Core.Session
             return GetComposition().currentPhase;
         }
 
+        public bool IsPhasePending(CompositionPhase phase)
+        {
+            return _pendingPhaseCounts.TryGetValue(phase, out int count) && count > 0;
+        }
+
+        public bool HasCommittedPhase(CompositionPhase phase)
+        {
+            var composition = GetComposition();
+            if (phase == CompositionPhase.Groove)
+                return composition.groove != null;
+
+            string patternId = composition.GetPatternId(phase);
+            return !string.IsNullOrEmpty(patternId) && GetPattern(patternId) != null;
+        }
+
         public void SetCurrentPhase(CompositionPhase phase)
         {
             var composition = GetComposition();
@@ -303,6 +321,34 @@ namespace RhythmForge.Core.Session
             State.guidedMode = true;
             composition.currentPhase = phase;
             NotifyStateChanged();
+        }
+
+        public void ClearPhase(CompositionPhase phase)
+        {
+            var composition = GetComposition();
+            string patternId = composition.GetPatternId(phase);
+
+            Patterns.RemovePatternAndInstances(patternId, notify: false);
+            composition.RemovePatternId(phase);
+
+            switch (phase)
+            {
+                case CompositionPhase.Harmony:
+                    UpdateProgression(GuidedDefaults.CreateDefaultProgression());
+                    return;
+                case CompositionPhase.Groove:
+                    composition.groove = null;
+                    NotifyStateChanged();
+                    EventBus.Publish(new GrooveCommittedEvent(null));
+                    return;
+                case CompositionPhase.Melody:
+                    NotifyStateChanged();
+                    EventBus.Publish(new MelodyCommittedEvent(null));
+                    return;
+                default:
+                    NotifyStateChanged();
+                    return;
+            }
         }
 
         public void UpdateProgression(ChordProgression progression)
@@ -383,6 +429,7 @@ namespace RhythmForge.Core.Session
             if (snapshot.Count == 0)
                 return;
 
+            MarkPendingPhases(snapshot, notify: true);
             var queue = _mainThreadQueue;
             string genreId = GetActiveGenreId();
 
@@ -595,10 +642,15 @@ namespace RhythmForge.Core.Session
 
         private void ApplyRederivationResults(List<PatternRederivation> results, string genreId)
         {
+            var completedPhases = new List<CompositionPhase>();
             foreach (var r in results)
             {
                 var pattern = GetPattern(r.patternId);
                 if (pattern == null) continue;
+
+                CompositionPhase phase = pattern.type.ToCompositionPhase();
+                if (!completedPhases.Contains(phase))
+                    completedPhases.Add(phase);
 
                 pattern.genreId         = r.genreId;
                 pattern.presetId        = r.presetId;
@@ -618,8 +670,47 @@ namespace RhythmForge.Core.Session
                 }
             }
 
+            ClearPendingPhases(completedPhases, notify: false);
             NotifyStateChanged();
             OnGenreRederived?.Invoke(genreId);
+        }
+
+        private void MarkPendingPhases(List<PatternSnapshot> snapshots, bool notify)
+        {
+            bool changed = false;
+            for (int i = 0; i < snapshots.Count; i++)
+            {
+                CompositionPhase phase = snapshots[i].type.ToCompositionPhase();
+                if (!_pendingPhaseCounts.TryGetValue(phase, out int count))
+                    count = 0;
+
+                _pendingPhaseCounts[phase] = count + 1;
+                changed = true;
+            }
+
+            if (changed && notify)
+                NotifyStateChanged();
+        }
+
+        private void ClearPendingPhases(List<CompositionPhase> phases, bool notify)
+        {
+            bool changed = false;
+            for (int i = 0; i < phases.Count; i++)
+            {
+                CompositionPhase phase = phases[i];
+                if (!_pendingPhaseCounts.TryGetValue(phase, out int count) || count <= 0)
+                    continue;
+
+                if (count == 1)
+                    _pendingPhaseCounts.Remove(phase);
+                else
+                    _pendingPhaseCounts[phase] = count - 1;
+
+                changed = true;
+            }
+
+            if (changed && notify)
+                NotifyStateChanged();
         }
 
         private void NotifyStateChanged()

@@ -27,8 +27,11 @@ namespace RhythmForge.UI.Panels
         [SerializeField] private Transform _lookAtTarget; // camera
 
         private StrokeCapture _strokeCapture;
+        private SessionStore _store;
+        private PhaseController _phaseController;
         private RhythmForgeEventBus _eventBus;
         private DraftResult _currentDraft;
+        private bool _guidedAutoAdvance = true;
 
         /// <summary>Called by RhythmForgeBootstrapper to inject all UI element references.</summary>
         public void SetUIRefs(Text nameText, Text summaryText, Text detailsText,
@@ -46,9 +49,11 @@ namespace RhythmForge.UI.Panels
             _lookAtTarget  = lookAt;
         }
 
-        public void Initialize(StrokeCapture strokeCapture)
+        public void Initialize(StrokeCapture strokeCapture, SessionStore store, PhaseController phaseController)
         {
             _strokeCapture = strokeCapture;
+            _store = store;
+            _phaseController = phaseController;
             _eventBus = strokeCapture != null ? strokeCapture.EventBus : null;
 
             if (_eventBus != null)
@@ -63,7 +68,7 @@ namespace RhythmForge.UI.Panels
             }
 
             if (_saveButton) _saveButton.onClick.AddListener(() => Confirm(false));
-            if (_saveDupButton) _saveDupButton.onClick.AddListener(() => Confirm(true));
+            if (_saveDupButton) _saveDupButton.onClick.AddListener(HandleSecondaryAction);
             if (_discardButton) _discardButton.onClick.AddListener(Discard);
 
             gameObject.SetActive(false);
@@ -119,15 +124,32 @@ namespace RhythmForge.UI.Panels
             if (_detailsText) _detailsText.text = draft.details;
             if (_typeLabel) _typeLabel.text = draft.type.ToString();
             if (_typeColorBar) _typeColorBar.color = draft.color;
+            RefreshActionButtons();
         }
 
         private void Confirm(bool duplicate)
         {
+            bool guidedMode = IsGuidedMode();
             if (_strokeCapture != null && _currentDraft != null)
-                _strokeCapture.ConfirmDraft(duplicate);
+                _strokeCapture.ConfirmDraft(guidedMode ? false : duplicate);
+
+            if (guidedMode && _guidedAutoAdvance && _currentDraft != null)
+                _phaseController?.Next();
 
             _currentDraft = null;
             Hide();
+        }
+
+        private void HandleSecondaryAction()
+        {
+            if (IsGuidedMode())
+            {
+                _guidedAutoAdvance = !_guidedAutoAdvance;
+                RefreshActionButtons();
+                return;
+            }
+
+            Confirm(true);
         }
 
         private void Discard()
@@ -142,6 +164,50 @@ namespace RhythmForge.UI.Panels
         private void Hide()
         {
             gameObject.SetActive(false);
+        }
+
+        private bool IsGuidedMode()
+        {
+            return _store != null && _store.State.guidedMode;
+        }
+
+        private void RefreshActionButtons()
+        {
+            if (_saveDupButton == null)
+                return;
+
+            var label = _saveDupButton.GetComponentInChildren<Text>();
+            if (label == null)
+                return;
+
+            if (IsGuidedMode())
+            {
+                label.text = _guidedAutoAdvance ? "Auto Next\nON" : "Auto Next\nOFF";
+                var colors = _saveDupButton.colors;
+                Color baseColor = _guidedAutoAdvance
+                    ? new Color(0.24f, 0.58f, 0.92f, 1f)
+                    : new Color(0.32f, 0.32f, 0.38f, 1f);
+                colors.normalColor = baseColor;
+                colors.highlightedColor = Color.Lerp(baseColor, Color.white, 0.2f);
+                colors.pressedColor = Color.Lerp(baseColor, Color.black, 0.2f);
+                _saveDupButton.colors = colors;
+                var image = _saveDupButton.GetComponent<Image>();
+                if (image != null)
+                    image.color = baseColor;
+            }
+            else
+            {
+                label.text = "Save+Dup";
+                var colors = _saveDupButton.colors;
+                Color baseColor = new Color(0.24f, 0.32f, 0.44f, 1f);
+                colors.normalColor = baseColor;
+                colors.highlightedColor = Color.Lerp(baseColor, Color.white, 0.2f);
+                colors.pressedColor = Color.Lerp(baseColor, Color.black, 0.2f);
+                _saveDupButton.colors = colors;
+                var image = _saveDupButton.GetComponent<Image>();
+                if (image != null)
+                    image.color = baseColor;
+            }
         }
     }
 }

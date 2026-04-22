@@ -10,6 +10,7 @@ namespace RhythmForge.Core.Sequencing
         private static readonly int[] TriadDegrees = { 0, 2, 4 };
         private static readonly int[] Maj7Degrees = { 0, 2, 4, 6 };
         private static readonly int[] Sus2Degrees = { 0, 1, 4 };
+        private static readonly int[] NinthDegrees = { 1 };
 
         public static ChordProgression Modulate(
             StrokeMetrics metrics,
@@ -24,7 +25,7 @@ namespace RhythmForge.Core.Sequencing
 
             int inversion = GetInversion(shapeProfile);
             bool addUpperOctave = shapeProfile != null && shapeProfile.verticalSpan > 0.5f;
-            bool cadenceLift = shapeProfile != null && shapeProfile.symmetry < 0.45f;
+            float symmetry = shapeProfile != null ? shapeProfile.symmetry : 1f;
             var harmonyRange = RegisterPolicy.GetRange(PatternType.Harmony, genreId);
 
             for (int i = 0; i < baseProgression.chords.Count; i++)
@@ -37,15 +38,9 @@ namespace RhythmForge.Core.Sequencing
                 int[] degrees = GetScaleDegrees(flavor);
                 var voicing = MusicalKeys.BuildScaleChord(original.rootMidi, keyName, degrees);
 
-                if (cadenceLift && (original.barIndex == 3 || original.barIndex == 7))
-                {
-                    int seventh = MusicalKeys.BuildScaleChord(original.rootMidi, keyName, new[] { 6 })[0];
-                    voicing.Add(seventh);
-                    if (flavor == "triad")
-                        flavor = "triad-lift";
-                    else if (flavor == "sus2")
-                        flavor = "sus2-lift";
-                }
+                bool cadenceBar = original.barIndex == 3 || original.barIndex == 7;
+                if (cadenceBar)
+                    ApplyCadenceLift(voicing, original.rootMidi, keyName, symmetry, ref flavor);
 
                 ApplyInversion(voicing, inversion);
 
@@ -156,6 +151,41 @@ namespace RhythmForge.Core.Sequencing
             voicing.Clear();
             voicing.AddRange(unique);
             voicing.Sort();
+        }
+
+        private static void ApplyCadenceLift(
+            List<int> voicing,
+            int rootMidi,
+            string keyName,
+            float symmetry,
+            ref string flavor)
+        {
+            AddPitchClassIfMissing(voicing, MusicalKeys.BuildScaleChord(rootMidi, keyName, new[] { 6 })[0]);
+
+            if (symmetry < 0.45f)
+                AddPitchClassIfMissing(voicing, MusicalKeys.BuildScaleChord(rootMidi, keyName, NinthDegrees)[0]);
+
+            if (flavor == "triad")
+                flavor = symmetry < 0.45f ? "triad-cadence-rich" : "triad-lift";
+            else if (flavor == "sus2")
+                flavor = symmetry < 0.45f ? "sus2-cadence-rich" : "sus2-lift";
+            else if (flavor == "maj7" && symmetry < 0.45f)
+                flavor = "maj9-lift";
+        }
+
+        private static void AddPitchClassIfMissing(List<int> voicing, int midi)
+        {
+            if (voicing == null)
+                return;
+
+            int pitchClass = ((midi % 12) + 12) % 12;
+            for (int i = 0; i < voicing.Count; i++)
+            {
+                if ((((voicing[i] % 12) + 12) % 12) == pitchClass)
+                    return;
+            }
+
+            voicing.Add(midi);
         }
     }
 }

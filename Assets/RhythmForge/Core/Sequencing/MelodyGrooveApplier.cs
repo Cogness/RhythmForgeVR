@@ -19,7 +19,11 @@ namespace RhythmForge.Core.Sequencing
     {
         private static readonly float[] DefaultAccentCurve = { 1f, 0.7f, 0.85f, 0.7f };
 
-        public static List<ScheduledMelodyNote> Apply(IReadOnlyList<MelodyNote> notes, GrooveProfile groove, int totalSteps)
+        public static List<ScheduledMelodyNote> Apply(
+            IReadOnlyList<MelodyNote> notes,
+            GrooveProfile groove,
+            int totalSteps,
+            ChordProgression progression = null)
         {
             var scheduled = new List<ScheduledMelodyNote>();
             if (notes == null || notes.Count == 0)
@@ -53,15 +57,18 @@ namespace RhythmForge.Core.Sequencing
             for (int i = 0; i < notes.Count; i++)
             {
                 var note = notes[i];
-                bool isAnchor = IsPhraseAnchor(note.step, totalSteps);
-                if (!isAnchor && stride > 1 && i % stride != 0)
+                bool preserveTiming = ShouldPreserveTiming(note, totalSteps, progression);
+                if (!preserveTiming && stride > 1 && i % stride != 0)
                     continue;
 
-                int quantizedStep = QuantizeStep(note.step, gridStep, totalSteps, isAnchor);
-                float shiftedStep = ApplySyncopation(quantizedStep, groove.syncopation, totalSteps);
+                int quantizedStep = QuantizeStep(note.step, gridStep, totalSteps, preserveTiming);
+                float shiftedStep = preserveTiming
+                    ? quantizedStep
+                    : ApplySyncopation(quantizedStep, groove.syncopation, totalSteps);
                 int effectiveStep = Mathf.Clamp(Mathf.FloorToInt(shiftedStep), 0, Mathf.Max(0, totalSteps - 1));
                 float startDelaySteps = Mathf.Clamp(shiftedStep - effectiveStep, 0f, 0.99f);
-                float accent = accentCurve[Mathf.Abs(effectiveStep) % 4];
+                int accentStep = preserveTiming ? note.step : effectiveStep;
+                float accent = accentCurve[Mathf.Abs(accentStep) % 4];
 
                 scheduled.Add(new ScheduledMelodyNote
                 {
@@ -226,6 +233,36 @@ namespace RhythmForge.Core.Sequencing
 
             int answerAnchor = AppStateFactory.BarSteps * 4;
             return totalSteps > answerAnchor && step == answerAnchor;
+        }
+
+        private static bool ShouldPreserveTiming(MelodyNote note, int totalSteps, ChordProgression progression)
+        {
+            if (IsPhraseAnchor(note.step, totalSteps))
+                return true;
+
+            if (note.step % 4 != 0)
+                return false;
+
+            return IsChordToneOfCurrentBar(note, progression);
+        }
+
+        private static bool IsChordToneOfCurrentBar(MelodyNote note, ChordProgression progression)
+        {
+            if (progression == null || progression.chords == null || progression.chords.Count == 0)
+                return false;
+
+            var slot = progression.GetSlotForBar(note.step / AppStateFactory.BarSteps);
+            if (slot == null || slot.voicing == null || slot.voicing.Count == 0)
+                return false;
+
+            int pitchClass = ((note.midi % 12) + 12) % 12;
+            for (int i = 0; i < slot.voicing.Count; i++)
+            {
+                if ((((slot.voicing[i] % 12) + 12) % 12) == pitchClass)
+                    return true;
+            }
+
+            return false;
         }
     }
 }

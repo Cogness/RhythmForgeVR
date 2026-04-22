@@ -127,7 +127,10 @@ namespace RhythmForge.Core.PatternBehavior.Behaviors
             GrooveProfile groove = context.appState != null && context.appState.guidedMode
                 ? context.appState.composition?.groove
                 : null;
-            return MelodyGrooveApplier.Apply(context.pattern.derivedSequence.notes, groove, totalSteps);
+            ChordProgression progression = context.appState != null && context.appState.guidedMode
+                ? context.appState.composition?.progression
+                : null;
+            return MelodyGrooveApplier.Apply(context.pattern.derivedSequence.notes, groove, totalSteps, progression);
         }
     }
 }

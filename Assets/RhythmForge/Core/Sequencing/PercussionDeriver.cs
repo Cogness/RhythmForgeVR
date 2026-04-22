@@ -33,15 +33,8 @@ namespace RhythmForge.Core.Sequencing
             var events = new List<RhythmEvent>();
             int barSteps = AppStateFactory.BarSteps;
 
-            int[] kickPattern;
-            if (sp.aspectRatio < 0.52f)
-                kickPattern = new[] { 0, 6, 10, 13 };
-            else if (sp.circularity > 0.75f)
-                kickPattern = new[] { 0, 8, 12 };
-            else
-                kickPattern = new[] { 0, 7, 10, 13 };
-
-            int[] snarePattern = sp.symmetry > 0.6f ? new[] { 8 } : new[] { 5, 8, 13 };
+            var kickPattern = BuildKickPattern(sp);
+            var snarePattern = BuildSnarePattern(sp);
             int hatStride = (sp.angularity > 0.68f || sizeFactor > 0.68f) ? 1 : 2;
             int[] ghostSteps = { 3, 11, 15 };
 
@@ -49,7 +42,7 @@ namespace RhythmForge.Core.Sequencing
             {
                 int offset = bar * barSteps;
 
-                for (int i = 0; i < kickPattern.Length; i++)
+                for (int i = 0; i < kickPattern.Count; i++)
                 {
                     int step = kickPattern[i];
                     events.Add(new RhythmEvent
@@ -61,7 +54,7 @@ namespace RhythmForge.Core.Sequencing
                     });
                 }
 
-                for (int i = 0; i < snarePattern.Length; i++)
+                for (int i = 0; i < snarePattern.Count; i++)
                 {
                     int step = snarePattern[i];
                     events.Add(new RhythmEvent
@@ -136,8 +129,40 @@ namespace RhythmForge.Core.Sequencing
                     events = events
                 },
                 summary = $"{sizeWord} percussion loop, {bars} bars, {density} accents, swing {Mathf.Round(swing * 100f)}%, {angularWord} DNA.",
-                details = "Aspect ratio and circularity reshape the kick pattern, symmetry adds or removes snare ghosting, angularity can double the hat grid, and guided fills reinforce the phase transitions into bars 5 and 1."
+                details = "Every guided loop starts from the beginner-safe backbeat, then shape traits add pickup kicks, ghost snare hits, denser hats, and short transition fills without removing the base pulse."
             };
+        }
+
+        private static List<int> BuildKickPattern(ShapeProfile shapeProfile)
+        {
+            var kickSteps = new List<int> { 0, 8 };
+
+            if (shapeProfile.aspectRatio < 0.52f)
+            {
+                AddUniqueStep(kickSteps, 6);
+                AddUniqueStep(kickSteps, 10);
+                AddUniqueStep(kickSteps, 13);
+            }
+            else if (shapeProfile.circularity > 0.75f)
+            {
+                AddUniqueStep(kickSteps, 12);
+            }
+
+            kickSteps.Sort();
+            return kickSteps;
+        }
+
+        private static List<int> BuildSnarePattern(ShapeProfile shapeProfile)
+        {
+            var snareSteps = new List<int> { 4, 12 };
+            if (shapeProfile.symmetry < 0.6f)
+            {
+                AddUniqueStep(snareSteps, 5);
+                AddUniqueStep(snareSteps, 13);
+            }
+
+            snareSteps.Sort();
+            return snareSteps;
         }
 
         private static void AddGuidedFills(List<RhythmEvent> events, int barIndex, int offset, SoundProfile sound)
@@ -183,7 +208,9 @@ namespace RhythmForge.Core.Sequencing
         private static void EnsureAnchorEvents(List<RhythmEvent> events, SoundProfile sound)
         {
             EnsureLaneAtStep(events, 0, "kick", 0.72f + sound.body * 0.18f);
-            EnsureLaneAtStep(events, 8, "snare", 0.66f + sound.transientSharpness * 0.18f);
+            EnsureLaneAtStep(events, 4, "snare", 0.66f + sound.transientSharpness * 0.18f);
+            EnsureLaneAtStep(events, 8, "kick", 0.68f + sound.body * 0.16f);
+            EnsureLaneAtStep(events, 12, "snare", 0.64f + sound.transientSharpness * 0.16f);
         }
 
         private static void EnsureLaneAtStep(List<RhythmEvent> events, int step, string lane, float velocity)
@@ -208,9 +235,15 @@ namespace RhythmForge.Core.Sequencing
             });
         }
 
-        private static bool Contains(int[] array, int value)
+        private static void AddUniqueStep(List<int> steps, int step)
         {
-            for (int i = 0; i < array.Length; i++)
+            if (!Contains(steps, step))
+                steps.Add(step);
+        }
+
+        private static bool Contains(IReadOnlyList<int> array, int value)
+        {
+            for (int i = 0; i < array.Count; i++)
             {
                 if (array[i] == value)
                     return true;

@@ -49,6 +49,9 @@ namespace RhythmForge.Editor
             Assert.That(melody.derivedSequence.notes, Is.Not.Empty);
             Assert.That(bass.derivedSequence.notes, Is.Not.Empty);
             Assert.That(percussion.derivedSequence.events, Is.Not.Empty);
+
+            AssertKickAndBassAlignOnBarBeatOne(bass.derivedSequence.notes, percussion.derivedSequence.events, 0);
+            AssertKickAndBassAlignOnBarBeatOne(bass.derivedSequence.notes, percussion.derivedSequence.events, 4);
         }
 
         [Test]
@@ -212,6 +215,13 @@ namespace RhythmForge.Editor
                 new Vector2(-0.18f, 0.22f),
                 new Vector2(-0.2f, -0.2f)
             };
+        }
+
+        private static void AssertKickAndBassAlignOnBarBeatOne(List<MelodyNote> bassNotes, List<RhythmEvent> events, int barIndex)
+        {
+            int step = barIndex * AppStateFactory.BarSteps;
+            Assert.That(bassNotes.Exists(note => note.step == step), Is.True, $"Expected bass note on bar {barIndex + 1} beat 1.");
+            Assert.That(events.Exists(evt => evt.step == step && evt.lane == "kick"), Is.True, $"Expected kick on bar {barIndex + 1} beat 1.");
         }
     }
 }

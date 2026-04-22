@@ -19,11 +19,33 @@ namespace RhythmForge.Editor
         }
 
         [Test]
-        public void SnareOnStep8_AlwaysPresent()
+        public void DefaultKick_IsOnBeats1And3()
         {
-            var result = Derive(CreateShape(aspectRatio: 0.9f, circularity: 0.2f, symmetry: 0.95f, angularity: 0.1f));
+            var result = Derive(CreateShape(aspectRatio: 0.8f, circularity: 0.3f, symmetry: 0.95f, angularity: 0.1f));
 
-            Assert.That(HasLaneAtStep(result.derivedSequence.events, 8, "snare"), Is.True);
+            Assert.That(HasLaneAtStep(result.derivedSequence.events, 0, "kick"), Is.True);
+            Assert.That(HasLaneAtStep(result.derivedSequence.events, 8, "kick"), Is.True);
+        }
+
+        [Test]
+        public void DefaultSnare_IsOnBeats2And4()
+        {
+            var result = Derive(CreateShape(aspectRatio: 0.8f, circularity: 0.3f, symmetry: 0.95f, angularity: 0.1f));
+
+            Assert.That(HasLaneAtStep(result.derivedSequence.events, 4, "snare"), Is.True);
+            Assert.That(HasLaneAtStep(result.derivedSequence.events, 12, "snare"), Is.True);
+        }
+
+        [Test]
+        public void AspectRatioShape_AddsPickupHits_WithoutRemovingBaseKicks()
+        {
+            var result = Derive(CreateShape(aspectRatio: 0.4f, circularity: 0.3f, symmetry: 0.95f, angularity: 0.1f));
+
+            Assert.That(HasLaneAtStep(result.derivedSequence.events, 0, "kick"), Is.True);
+            Assert.That(HasLaneAtStep(result.derivedSequence.events, 8, "kick"), Is.True);
+            Assert.That(HasLaneAtStep(result.derivedSequence.events, 6, "kick"), Is.True);
+            Assert.That(HasLaneAtStep(result.derivedSequence.events, 10, "kick"), Is.True);
+            Assert.That(HasLaneAtStep(result.derivedSequence.events, 13, "kick"), Is.True);
         }
 
         [Test]

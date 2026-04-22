@@ -56,6 +56,28 @@ namespace RhythmForge.Editor
             for (int i = 0; i < expectedRoots.Length; i++)
                 Assert.That(progression.chords[i].rootMidi, Is.EqualTo(expectedRoots[i]));
         }
+
+        [Test]
+        public void Bars4And8_AlwaysIncludeCadenceLift()
+        {
+            var defaults = GuidedDefaults.CreateDefaultProgression();
+            var progression = HarmonyShapeModulator.Modulate(
+                new StrokeMetrics(),
+                new ShapeProfile
+                {
+                    tiltSigned = 0f,
+                    verticalSpan = 0.3f,
+                    horizontalSpan = 0.3f,
+                    centroidHeight = 0.5f,
+                    symmetry = 0.9f
+                },
+                defaults,
+                GuidedDefaults.Key,
+                GuidedDefaults.ActiveGenreId);
+
+            Assert.That(progression.chords[3].voicing.Count, Is.GreaterThan(defaults.chords[3].voicing.Count));
+            Assert.That(progression.chords[7].voicing.Count, Is.GreaterThan(defaults.chords[7].voicing.Count));
+        }
     }
 }
 #endif

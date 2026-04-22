@@ -68,10 +68,9 @@ namespace RhythmForge.Core.PatternBehavior.Behaviors
             float grooveSwing = ResolveGrooveSwing(context);
             foreach (var evt in context.pattern.derivedSequence.events)
             {
-                if (evt.step != context.localStep)
+                if (!TryResolveStartDelay(evt, context.localStep, context.stepDuration, grooveSwing, out float startDelay))
                     continue;
 
-                float startDelay = ResolveStartDelay(evt, context.stepDuration, grooveSwing);
                 using (PatternContextScope.ForPattern(context.appState, context.pattern))
                 {
                     context.audioDispatcher?.PlayDrum(
@@ -116,19 +115,51 @@ namespace RhythmForge.Core.PatternBehavior.Behaviors
             return Mathf.Clamp01(context.appState.composition?.groove?.swing ?? 0f);
         }
 
-        private static float ResolveStartDelay(RhythmEvent evt, float stepDuration, float grooveSwing)
+        private static bool TryResolveStartDelay(
+            RhythmEvent evt,
+            int localStep,
+            float stepDuration,
+            float grooveSwing,
+            out float startDelay)
         {
-            float microShift = Mathf.Max(0f, evt.microShift) * stepDuration;
-            if (!IsSwingOffBeat(evt.step) || grooveSwing <= 0.001f)
-                return microShift;
+            float shiftSteps = ResolveShiftSteps(evt, grooveSwing);
+            int scheduledStep = evt.step;
 
-            return microShift + grooveSwing * stepDuration;
+            while (shiftSteps < 0f && scheduledStep > 0)
+            {
+                scheduledStep--;
+                shiftSteps += 1f;
+            }
+
+            while (shiftSteps >= 1f)
+            {
+                scheduledStep++;
+                shiftSteps -= 1f;
+            }
+
+            if (scheduledStep != localStep)
+            {
+                startDelay = 0f;
+                return false;
+            }
+
+            startDelay = Mathf.Clamp(shiftSteps, 0f, 0.99f) * stepDuration;
+            return true;
         }
 
-        private static bool IsSwingOffBeat(int step)
+        private static float ResolveShiftSteps(RhythmEvent evt, float grooveSwing)
         {
-            int beatStep = Mathf.Abs(step) % 4;
-            return beatStep == 2;
+            float shiftSteps = evt.microShift;
+            if (grooveSwing <= 0.001f)
+                return shiftSteps;
+
+            int beatStep = Mathf.Abs(evt.step) % 4;
+            if (beatStep == 2)
+                return shiftSteps + grooveSwing;
+            if (beatStep == 3)
+                return shiftSteps - grooveSwing * 0.5f;
+
+            return shiftSteps;
         }
 
         private static float GetVisualDuration(string lane, SoundProfile sound)

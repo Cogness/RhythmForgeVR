@@ -16,7 +16,7 @@ namespace RhythmForge.Core.Sequencing
             float syncopation = Mathf.Lerp(0f, 0.5f, Mathf.Clamp01(shapeProfile.angularity));
             float swing = Mathf.Lerp(0f, 0.42f, Mathf.Clamp01(shapeProfile.curvatureVariance));
             int quantizeGrid = shapeProfile.speedVariance > 0.65f ? 16 : 8;
-            float accentAmplitude = Mathf.Lerp(0.1f, 0.35f, Mathf.Clamp01(shapeProfile.verticalSpan));
+            float accentAmplitude = Mathf.Lerp(0.6f, 1.4f, Mathf.Clamp01(shapeProfile.verticalSpan));
 
             return new GrooveProfile
             {
@@ -33,8 +33,8 @@ namespace RhythmForge.Core.Sequencing
             var accents = new float[BaseAccentCurve.Length];
             for (int i = 0; i < BaseAccentCurve.Length; i++)
             {
-                float centered = BaseAccentCurve[i] - 0.8f;
-                accents[i] = Mathf.Clamp(MathUtils.RoundTo(0.8f + centered * (1f + accentAmplitude), 2), 0.45f, 1.25f);
+                float deviationFromDownbeat = BaseAccentCurve[i] - 1f;
+                accents[i] = Mathf.Clamp(MathUtils.RoundTo(1f + deviationFromDownbeat * accentAmplitude, 2), 0.45f, 1.25f);
             }
 
             return accents;

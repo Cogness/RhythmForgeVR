@@ -51,6 +51,50 @@ namespace RhythmForge.Editor
             Assert.That(finalNote.durationSteps, Is.GreaterThanOrEqualTo(8));
         }
 
+        [Test]
+        public void AnchorNote_AtStep0_AlwaysPresent()
+        {
+            var result = DeriveGuidedMelody(CreateShape(tiltSigned: 0.1f), GuidedDefaults.CreateDefaultProgression());
+
+            Assert.That(HasNoteAtStep(result.derivedSequence.notes, 0), Is.True);
+        }
+
+        [Test]
+        public void AnchorNote_AtStep64_AlwaysPresent_WhenBarsGreaterThan4()
+        {
+            var result = DeriveGuidedMelody(CreateShape(tiltSigned: 0.1f), GuidedDefaults.CreateDefaultProgression());
+
+            Assert.That(result.bars, Is.GreaterThan(4));
+            Assert.That(HasNoteAtStep(result.derivedSequence.notes, AppStateFactory.BarSteps * 4), Is.True);
+        }
+
+        [Test]
+        public void AnchorNotes_AreChordTonesOfBar0AndBar4()
+        {
+            var progression = GuidedDefaults.CreateDefaultProgression();
+            var result = DeriveGuidedMelody(CreateShape(tiltSigned: 0.1f), progression);
+            var barOneAnchor = GetNoteAtStep(result.derivedSequence.notes, 0);
+            var barFiveAnchor = GetNoteAtStep(result.derivedSequence.notes, AppStateFactory.BarSteps * 4);
+
+            Assert.That(ContainsPitchClass(progression.GetSlotForBar(0).voicing, barOneAnchor.midi), Is.True);
+            Assert.That(ContainsPitchClass(progression.GetSlotForBar(4).voicing, barFiveAnchor.midi), Is.True);
+            Assert.That(barOneAnchor.durationSteps, Is.GreaterThanOrEqualTo(4));
+            Assert.That(barFiveAnchor.durationSteps, Is.GreaterThanOrEqualTo(4));
+        }
+
+        [Test]
+        public void PositiveTilt_LiftsAnswerPhraseAcrossBars5To8()
+        {
+            var progression = GuidedDefaults.CreateDefaultProgression();
+            var neutral = DeriveGuidedMelody(CreateShape(tiltSigned: 0f), progression);
+            var lifted = DeriveGuidedMelody(CreateShape(tiltSigned: 0.35f), progression);
+
+            float neutralAverage = AverageMidiInAnswerPhrase(neutral.derivedSequence.notes);
+            float liftedAverage = AverageMidiInAnswerPhrase(lifted.derivedSequence.notes);
+
+            Assert.That(liftedAverage, Is.GreaterThan(neutralAverage));
+        }
+
         private static MelodyDerivationResult DeriveGuidedMelody(ShapeProfile shapeProfile, ChordProgression progression)
         {
             var points = CreatePoints();
@@ -118,6 +162,46 @@ namespace RhythmForge.Editor
             }
 
             return false;
+        }
+
+        private static bool HasNoteAtStep(List<MelodyNote> notes, int step)
+        {
+            for (int i = 0; i < notes.Count; i++)
+            {
+                if (notes[i].step == step)
+                    return true;
+            }
+
+            return false;
+        }
+
+        private static MelodyNote GetNoteAtStep(List<MelodyNote> notes, int step)
+        {
+            for (int i = 0; i < notes.Count; i++)
+            {
+                if (notes[i].step == step)
+                    return notes[i];
+            }
+
+            Assert.Fail($"Expected note at step {step}.");
+            return new MelodyNote();
+        }
+
+        private static float AverageMidiInAnswerPhrase(List<MelodyNote> notes)
+        {
+            int answerStart = AppStateFactory.BarSteps * 4;
+            float total = 0f;
+            int count = 0;
+            for (int i = 0; i < notes.Count; i++)
+            {
+                if (notes[i].step < answerStart)
+                    continue;
+
+                total += notes[i].midi;
+                count++;
+            }
+
+            return count > 0 ? total / count : 0f;
         }
     }
 }

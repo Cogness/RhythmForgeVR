@@ -20,7 +20,7 @@ namespace RhythmForge.Core.Sequencing
     {
         private const float FourBarThreshold = 0.80f;
         private const float SixteenSliceThreshold = 0.75f;
-        private const string GuidedGenreId = "electronic";
+        private const string GuidedGenreId = GuidedDefaults.ActiveGenreId;
         private const int StrongBeatStepSize = 4;
 
         public static MelodyDerivationResult Derive(
@@ -82,7 +82,7 @@ namespace RhythmForge.Core.Sequencing
                     0f, 0.999f);
 
                 int midi = PitchUtils.PitchFromRelative(centeredY, keyName);
-                if (liftAnswerPhrase && (barIndex == 4 || barIndex == 5))
+                if (liftAnswerPhrase && barIndex >= 4)
                     midi = TransposeByScaleDegrees(midi, keyName, 2);
 
                 bool isStrongBeat = step % StrongBeatStepSize == 0;
@@ -117,6 +117,11 @@ namespace RhythmForge.Core.Sequencing
                 });
             }
 
+            EnsurePhraseAnchor(notes, progression, keyName, 0, totalSteps);
+            int answerAnchorStep = AppStateFactory.BarSteps * 4;
+            if (totalSteps > answerAnchorStep)
+                EnsurePhraseAnchor(notes, progression, keyName, answerAnchorStep, totalSteps);
+
             FitDurationsToPhrase(notes, totalSteps);
             EnsureCadenceHold(notes, totalSteps);
 
@@ -134,7 +139,7 @@ namespace RhythmForge.Core.Sequencing
                     notes = notes
                 },
                 summary = $"{sizeWord} lead line, {bars} bars, strong beats locked to the harmony, {answerWord}.",
-                details = "The stroke contour chooses in-key pitch motion, strong beats snap to the current bar's chord tones, speed variance opens 16th-note placement, and a positive tilt lifts the answer phrase in bars 5 and 6."
+                details = "The stroke contour chooses in-key pitch motion, strong beats snap to the current bar's chord tones, phrase anchors are guaranteed on bars 1 and 5, speed variance opens 16th-note placement, and a positive tilt lifts the answer phrase across bars 5 to 8."
             };
         }
 
@@ -312,6 +317,96 @@ namespace RhythmForge.Core.Sequencing
             notes[notes.Count - 1] = finalNote;
 
             FitDurationsToPhrase(notes, totalSteps);
+        }
+
+        private static void EnsurePhraseAnchor(
+            List<MelodyNote> notes,
+            ChordProgression progression,
+            string keyName,
+            int anchorStep,
+            int totalSteps)
+        {
+            if (notes == null || totalSteps <= 0 || anchorStep < 0 || anchorStep >= totalSteps)
+                return;
+
+            int anchorIndex = FindNoteIndexAtStep(notes, anchorStep);
+            int targetMidi = ResolveAnchorMidi(notes, progression, keyName, anchorStep);
+            float velocity = ResolveAnchorVelocity(notes, anchorStep);
+
+            if (anchorIndex >= 0)
+            {
+                var anchor = notes[anchorIndex];
+                anchor.midi = targetMidi;
+                anchor.durationSteps = Mathf.Max(anchor.durationSteps, 4);
+                anchor.velocity = Mathf.Max(anchor.velocity, velocity);
+                notes[anchorIndex] = anchor;
+                return;
+            }
+
+            notes.Add(new MelodyNote
+            {
+                step = anchorStep,
+                midi = targetMidi,
+                durationSteps = Mathf.Clamp(4, 2, Mathf.Max(2, totalSteps - anchorStep)),
+                velocity = velocity,
+                glide = 0f
+            });
+
+            notes.Sort((a, b) => a.step.CompareTo(b.step));
+        }
+
+        private static int FindNoteIndexAtStep(List<MelodyNote> notes, int step)
+        {
+            for (int i = 0; i < notes.Count; i++)
+            {
+                if (notes[i].step == step)
+                    return i;
+            }
+
+            return -1;
+        }
+
+        private static int ResolveAnchorMidi(
+            List<MelodyNote> notes,
+            ChordProgression progression,
+            string keyName,
+            int anchorStep)
+        {
+            int fallbackMidi = MusicalKeys.Get(keyName).rootMidi;
+            int sourceMidi = fallbackMidi;
+            int bestDistance = int.MaxValue;
+
+            for (int i = 0; i < notes.Count; i++)
+            {
+                int distance = Mathf.Abs(notes[i].step - anchorStep);
+                if (distance >= bestDistance)
+                    continue;
+
+                bestDistance = distance;
+                sourceMidi = notes[i].midi;
+            }
+
+            var slot = progression?.GetSlotForBar(anchorStep / AppStateFactory.BarSteps);
+            if (slot != null && slot.voicing != null && slot.voicing.Count > 0)
+            {
+                var harmonicContext = progression.ToHarmonicContext(anchorStep / AppStateFactory.BarSteps);
+                int clamped = RegisterPolicy.Clamp(sourceMidi, PatternType.Melody, GuidedGenreId);
+                return harmonicContext.NearestChordTone(clamped);
+            }
+
+            int quantized = MusicalKeys.QuantizeToKey(sourceMidi, keyName);
+            return RegisterPolicy.Clamp(quantized, PatternType.Melody, GuidedGenreId);
+        }
+
+        private static float ResolveAnchorVelocity(List<MelodyNote> notes, int anchorStep)
+        {
+            for (int i = 0; i < notes.Count; i++)
+            {
+                if (Mathf.Abs(notes[i].step - anchorStep) <= 4)
+                    return Mathf.Clamp(MathUtils.RoundTo(notes[i].velocity + 0.06f, 2), 0.38f, 0.88f);
+            }
+
+            return 0.62f;
         }
 
         private static int TransposeByScaleDegrees(int midi, string keyName, int degreeSteps)

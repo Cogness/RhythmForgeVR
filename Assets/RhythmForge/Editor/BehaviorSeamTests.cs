@@ -107,13 +107,71 @@ namespace RhythmForge.Editor
             }
         }
 
+        [Test]
+        public void PercussionBehavior_Schedule_CanPullPickupHitFromPreviousStep()
+        {
+            var behavior = new PercussionBehavior();
+            var dispatcher = new FakeAudioDispatcher();
+            var state = AppStateFactory.CreateEmpty();
+            state.composition.groove = new GrooveProfile
+            {
+                density = 1f,
+                syncopation = 0f,
+                swing = 0.2f,
+                quantizeGrid = 8,
+                accentCurve = new[] { 1f, 0.7f, 0.85f, 0.7f }
+            };
+
+            var pattern = new PatternDefinition
+            {
+                id = "perc-1",
+                type = PatternType.Percussion,
+                name = "Percussion",
+                groupId = "lofi",
+                presetId = "lofi-piano",
+                color = Color.green,
+                shapeProfile = new ShapeProfile(),
+                soundProfile = new SoundProfile(),
+                derivedSequence = new DerivedSequence
+                {
+                    kind = "rhythm",
+                    totalSteps = GuidedDefaults.Bars * AppStateFactory.BarSteps,
+                    events = new System.Collections.Generic.List<RhythmEvent>
+                    {
+                        new RhythmEvent { step = 3, lane = "perc", velocity = 0.4f, microShift = 0f }
+                    }
+                }
+            };
+
+            behavior.Schedule(new PatternSchedulingContext
+            {
+                pattern = pattern,
+                instance = new PatternInstance(pattern.id, "scene-a", Vector3.zero, 0.3f),
+                localStep = 2,
+                stepDuration = 0.15f,
+                scheduledTime = 1d,
+                sound = new SoundProfile(),
+                preset = InstrumentPresets.Get("lofi-piano"),
+                group = InstrumentGroups.Get("lofi"),
+                appState = state,
+                audioDispatcher = dispatcher
+            });
+
+            Assert.That(dispatcher.PlayDrumCalls, Is.EqualTo(1));
+            Assert.That(dispatcher.LastDrumStartDelay, Is.GreaterThan(0f));
+        }
+
         private sealed class FakeAudioDispatcher : IAudioDispatcher
         {
             public int PlayBassCalls { get; private set; }
             public int PlayMelodyCalls { get; private set; }
+            public int PlayDrumCalls { get; private set; }
+            public float LastDrumStartDelay { get; private set; }
 
             public void PlayDrum(InstrumentPreset preset, string lane, float velocity, float pan, float brightness, float depth, float fxSend, SoundProfile soundProfile, float startDelay = 0f)
             {
+                PlayDrumCalls++;
+                LastDrumStartDelay = startDelay;
             }
 
             public void PlayMelody(InstrumentPreset preset, int midi, float velocity, float duration, float pan, float brightness, float depth, float fxSend, SoundProfile soundProfile, float glide = 0f, float startDelay = 0f)

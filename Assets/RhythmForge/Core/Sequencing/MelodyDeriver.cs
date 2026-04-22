@@ -16,12 +16,39 @@ namespace RhythmForge.Core.Sequencing
         public string details;
     }
 
+    /// <summary>
+    /// Per-genre overrides for the guided melody derivation. Leaves all fields at
+    /// their Electronic defaults when null is passed. Jazz/NewAge derivers populate
+    /// <see cref="scaleIntervals"/>, <see cref="genreId"/>, and optionally
+    /// <see cref="presetId"/> to keep the guided invariants (phrase anchors, strong-beat
+    /// chord-tone lock, answer lift, cadence hold) while swapping the in-key scale and
+    /// register clamp for their own idiomatic choices.
+    /// </summary>
+    public sealed class MelodyDerivationOptions
+    {
+        /// <summary>
+        /// Custom scale intervals (relative to the key's root, 0..11 pitch classes)
+        /// used for non-strong-beat pitches. When null the key's diatonic scale is used.
+        /// </summary>
+        public int[] scaleIntervals;
+
+        /// <summary>Genre id for <see cref="RegisterPolicy.Clamp"/>. Null -> active guided genre.</summary>
+        public string genreId;
+
+        /// <summary>Explicit preset id override. Null -> genre's default melody preset.</summary>
+        public string presetId;
+
+        /// <summary>Optional tag override written to the derived sequence (e.g. "blues", "pentatonic").</summary>
+        public string styleTag;
+    }
+
     public static class MelodyDeriver
     {
         private const float FourBarThreshold = 0.80f;
         private const float SixteenSliceThreshold = 0.75f;
-        private const string GuidedGenreId = GuidedDefaults.ActiveGenreId;
         private const int StrongBeatStepSize = 4;
+
+        private static string GuidedGenreId => GuidedPolicy.Active.genreId;
 
         public static MelodyDerivationResult Derive(
             List<Vector2> points, StrokeMetrics metrics,
@@ -30,26 +57,37 @@ namespace RhythmForge.Core.Sequencing
         {
             var progression = HarmonicContextProvider.CurrentProgression;
             if (progression != null && progression.chords != null && progression.chords.Count > 0)
-                return DeriveGuided(points, metrics, keyName, groupId, sp, sound, progression);
+                return DeriveGuided(points, metrics, keyName, groupId, sp, sound, progression, null);
 
             return DeriveLegacy(points, metrics, keyName, groupId, sp, sound);
         }
 
-        private static MelodyDerivationResult DeriveGuided(
+        /// <summary>
+        /// Guided melody derivation with an optional per-genre options bundle. Used by
+        /// <c>JazzMelodyDeriver</c> and <c>NewAgeMelodyDeriver</c> to reuse the guided
+        /// invariants while overriding the in-key scale, register clamp genre, and preset.
+        /// </summary>
+        public static MelodyDerivationResult DeriveGuided(
             List<Vector2> points,
             StrokeMetrics metrics,
             string keyName,
             string groupId,
             ShapeProfile sp,
             SoundProfile sound,
-            ChordProgression progression)
+            ChordProgression progression,
+            MelodyDerivationOptions options)
         {
+            sp = sp ?? new ShapeProfile();
+            sound = sound ?? new SoundProfile();
+            options = options ?? new MelodyDerivationOptions();
+            string effectiveGenreId = !string.IsNullOrEmpty(options.genreId) ? options.genreId : GuidedGenreId;
+            int[] scaleIntervals = options.scaleIntervals;
+
             float sizeFactor = ShapeProfileSizing.GetSizeFactor(PatternType.Melody, sp);
             string sizeWord = ShapeProfileSizing.DescribeSize(PatternType.Melody, sp);
             int bars = progression != null && progression.bars > 0 ? progression.bars : GuidedDefaults.Bars;
             int totalSteps = bars * AppStateFactory.BarSteps;
-            var group = InstrumentGroups.Get(groupId);
-            string presetId = group.defaultPresetByType.GetDefault(PatternType.Melody);
+            string presetId = ResolveMelodyPresetId(groupId, options);
 
             int sampleCount = DetermineGuidedSampleCount(metrics, sp);
             int quantizeGrid = sp.speedVariance > 0.65f ? 1 : 2;
@@ -81,18 +119,18 @@ namespace RhythmForge.Core.Sequencing
                     (curr.y - pitchCenter) / Mathf.Max(metrics.height, 0.001f) * verticalScale + 0.5f,
                     0f, 0.999f);
 
-                int midi = PitchUtils.PitchFromRelative(centeredY, keyName);
+                int midi = PitchUtils.PitchFromRelative(centeredY, keyName, scaleIntervals);
                 if (liftAnswerPhrase && barIndex >= 4)
-                    midi = TransposeByScaleDegrees(midi, keyName, 2);
+                    midi = TransposeByScaleDegrees(midi, keyName, 2, scaleIntervals);
 
                 bool isStrongBeat = step % StrongBeatStepSize == 0;
                 midi = isStrongBeat && harmCtx.HasChord
                     ? harmCtx.NearestChordTone(midi)
-                    : MusicalKeys.QuantizeToKey(midi, keyName);
-                midi = RegisterPolicy.Clamp(midi, PatternType.Melody, GuidedGenreId);
+                    : PitchUtils.QuantizeToScale(midi, keyName, scaleIntervals);
+                midi = RegisterPolicy.Clamp(midi, PatternType.Melody, effectiveGenreId);
                 midi = isStrongBeat && harmCtx.HasChord
                     ? harmCtx.NearestChordTone(midi)
-                    : MusicalKeys.QuantizeToKey(midi, keyName);
+                    : PitchUtils.QuantizeToScale(midi, keyName, scaleIntervals);
 
                 float speed = Vector2.Distance(prev, next);
                 float curvature = Mathf.Abs(next.y - curr.y) + Mathf.Abs(curr.y - prev.y);
@@ -117,21 +155,22 @@ namespace RhythmForge.Core.Sequencing
                 });
             }
 
-            EnsurePhraseAnchor(notes, progression, keyName, 0, totalSteps);
+            EnsurePhraseAnchor(notes, progression, keyName, 0, totalSteps, effectiveGenreId);
             int answerAnchorStep = AppStateFactory.BarSteps * 4;
             if (totalSteps > answerAnchorStep)
-                EnsurePhraseAnchor(notes, progression, keyName, answerAnchorStep, totalSteps);
+                EnsurePhraseAnchor(notes, progression, keyName, answerAnchorStep, totalSteps, effectiveGenreId);
 
             FitDurationsToPhrase(notes, totalSteps);
             EnsureCadenceHold(notes, totalSteps);
 
             string motionWord = sp.angularity > 0.6f ? "edged" : "smooth";
             string answerWord = liftAnswerPhrase ? "lifted answer" : "grounded answer";
+            string styleTag = !string.IsNullOrEmpty(options.styleTag) ? options.styleTag : "lead";
             return new MelodyDerivationResult
             {
                 bars = bars,
                 presetId = presetId,
-                tags = new List<string> { "lead", motionWord, answerWord },
+                tags = new List<string> { styleTag, motionWord, answerWord },
                 derivedSequence = new DerivedSequence
                 {
                     kind = "melody",
@@ -141,6 +180,14 @@ namespace RhythmForge.Core.Sequencing
                 summary = $"{sizeWord} lead line, {bars} bars, strong beats locked to the harmony, {answerWord}.",
                 details = "The stroke contour chooses in-key pitch motion, strong beats snap to the current bar's chord tones, phrase anchors are guaranteed on bars 1 and 5, speed variance opens 16th-note placement, and a positive tilt lifts the answer phrase across bars 5 to 8."
             };
+        }
+
+        private static string ResolveMelodyPresetId(string groupId, MelodyDerivationOptions options)
+        {
+            if (options != null && !string.IsNullOrEmpty(options.presetId))
+                return options.presetId;
+            var group = InstrumentGroups.Get(groupId);
+            return group.defaultPresetByType.GetDefault(PatternType.Melody);
         }
 
         private static MelodyDerivationResult DeriveLegacy(
@@ -324,13 +371,14 @@ namespace RhythmForge.Core.Sequencing
             ChordProgression progression,
             string keyName,
             int anchorStep,
-            int totalSteps)
+            int totalSteps,
+            string genreId = null)
         {
             if (notes == null || totalSteps <= 0 || anchorStep < 0 || anchorStep >= totalSteps)
                 return;
 
             int anchorIndex = FindNoteIndexAtStep(notes, anchorStep);
-            int targetMidi = ResolveAnchorMidi(notes, progression, keyName, anchorStep);
+            int targetMidi = ResolveAnchorMidi(notes, progression, keyName, anchorStep, genreId);
             float velocity = ResolveAnchorVelocity(notes, anchorStep);
 
             if (anchorIndex >= 0)
@@ -370,8 +418,10 @@ namespace RhythmForge.Core.Sequencing
             List<MelodyNote> notes,
             ChordProgression progression,
             string keyName,
-            int anchorStep)
+            int anchorStep,
+            string genreId)
         {
+            string effectiveGenreId = string.IsNullOrEmpty(genreId) ? GuidedGenreId : genreId;
             int fallbackMidi = MusicalKeys.Get(keyName).rootMidi;
             int sourceMidi = fallbackMidi;
             int bestDistance = int.MaxValue;
@@ -390,12 +440,12 @@ namespace RhythmForge.Core.Sequencing
             if (slot != null && slot.voicing != null && slot.voicing.Count > 0)
             {
                 var harmonicContext = progression.ToHarmonicContext(anchorStep / AppStateFactory.BarSteps);
-                int clamped = RegisterPolicy.Clamp(sourceMidi, PatternType.Melody, GuidedGenreId);
+                int clamped = RegisterPolicy.Clamp(sourceMidi, PatternType.Melody, effectiveGenreId);
                 return harmonicContext.NearestChordTone(clamped);
             }
 
             int quantized = MusicalKeys.QuantizeToKey(sourceMidi, keyName);
-            return RegisterPolicy.Clamp(quantized, PatternType.Melody, GuidedGenreId);
+            return RegisterPolicy.Clamp(quantized, PatternType.Melody, effectiveGenreId);
         }
 
         private static float ResolveAnchorVelocity(List<MelodyNote> notes, int anchorStep)
@@ -411,7 +461,12 @@ namespace RhythmForge.Core.Sequencing
 
         private static int TransposeByScaleDegrees(int midi, string keyName, int degreeSteps)
         {
-            int quantized = MusicalKeys.QuantizeToKey(midi, keyName);
+            return TransposeByScaleDegrees(midi, keyName, degreeSteps, null);
+        }
+
+        private static int TransposeByScaleDegrees(int midi, string keyName, int degreeSteps, int[] scaleIntervals)
+        {
+            int quantized = PitchUtils.QuantizeToScale(midi, keyName, scaleIntervals);
             int direction = degreeSteps >= 0 ? 1 : -1;
             int remaining = Mathf.Abs(degreeSteps);
             int current = quantized;
@@ -419,7 +474,7 @@ namespace RhythmForge.Core.Sequencing
             while (remaining > 0)
             {
                 current += direction;
-                while (MusicalKeys.QuantizeToKey(current, keyName) != current)
+                while (PitchUtils.QuantizeToScale(current, keyName, scaleIntervals) != current)
                     current += direction;
                 remaining--;
             }

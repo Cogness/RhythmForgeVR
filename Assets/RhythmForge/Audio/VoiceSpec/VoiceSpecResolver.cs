@@ -131,7 +131,7 @@ namespace RhythmForge.Audio
                 delayBias = Quantize01(profile.delayBias),
                 reverbBias = Quantize01(profile.reverbBias),
                 fxSend = QuantizeFxSend(fxSend),
-                isBass = voiceDescriptor.Contains("bass"),
+                isBass = voiceDescriptor.Contains("bass") || voiceDescriptor.Contains("upright"),
                 isBell = voiceDescriptor.Contains("bell"),
                 isLoFi = familyIdentity.Contains("lofi"),
                 isTrap = familyIdentity.Contains("trap"),

@@ -262,6 +262,21 @@ namespace RhythmForge.Core.Session
             GenreRegistry.SetActive(genreId);
             State.activeGenreId = genreId;
 
+            // In guided mode: re-seed the composition key, tempo and chord progression
+            // from the incoming genre's policy so derivers immediately work in the new key.
+            if (State.guidedMode)
+            {
+                var policy = GuidedPolicy.Get(genreId);
+                var composition = GetComposition();
+                composition.key    = policy.keyName;
+                composition.tempo  = policy.tempo;
+                composition.progression = policy.CreateDefaultProgression();
+                State.key   = policy.keyName;
+                State.tempo = policy.tempo;
+                State.harmonicContext = composition.progression.ToHarmonicContext(0);
+                EventBus.Publish(new ChordProgressionChangedEvent(composition.progression.Clone()));
+            }
+
             // Fire the UI-visible event immediately so buttons highlight without waiting.
             EventBus.Publish(new GenreChangedEvent(previousId, genreId));
 

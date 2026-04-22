@@ -128,6 +128,7 @@ namespace RhythmForge.Core.Data
                 new InstrumentPreset("newage-bowl",    "Singing Bowl",  "newage-bowl",    "newage", 0.42f, 0.05f, 1.8f),
                 new InstrumentPreset("newage-kalimba", "Kalimba",       "newage-kalimba", "newage", 0.28f, 0.006f, 0.35f),
                 new InstrumentPreset("newage-drone",   "Drone Pad",     "newage-drone",   "newage", 0.52f, 0.45f, 2.2f),
+                new InstrumentPreset("newage-subbass", "Sub Bass",      "newage-subbass", "newage", 0.18f, 0.012f, 0.72f),
             };
 
             var defaultPresets = new Dictionary<PatternType, string>
@@ -135,6 +136,7 @@ namespace RhythmForge.Core.Data
                 { PatternType.RhythmLoop, "newage-bowl"    },
                 { PatternType.MelodyLine, "newage-kalimba" },
                 { PatternType.HarmonyPad, "newage-drone"   },
+                { PatternType.Bass,       "newage-subbass" },
             };
 
             var soundMappings = new Dictionary<PatternType, PatternSoundMappingProfile>
@@ -240,16 +242,18 @@ namespace RhythmForge.Core.Data
         {
             var presets = new List<InstrumentPreset>
             {
-                new InstrumentPreset("jazz-brush",  "Brush Kit",   "jazz-brush",  "jazz", 0.18f, 0.003f, 0.26f),
-                new InstrumentPreset("jazz-rhodes", "Rhodes",      "jazz-rhodes", "jazz", 0.24f, 0.008f, 0.54f),
-                new InstrumentPreset("jazz-comp",   "Jazz Comp",   "jazz-comp",   "jazz", 0.28f, 0.4f,   1.6f),
+                new InstrumentPreset("jazz-brush",   "Brush Kit",     "jazz-brush",   "jazz", 0.18f, 0.003f, 0.26f),
+                new InstrumentPreset("jazz-rhodes",  "Rhodes",        "jazz-rhodes",  "jazz", 0.24f, 0.008f, 0.54f),
+                new InstrumentPreset("jazz-comp",    "Jazz Comp",     "jazz-comp",    "jazz", 0.28f, 0.4f,   1.6f),
+                new InstrumentPreset("jazz-upright", "Upright Bass",  "jazz-upright", "jazz", 0.14f, 0.006f, 0.42f),
             };
 
             var defaultPresets = new Dictionary<PatternType, string>
             {
-                { PatternType.RhythmLoop, "jazz-brush"  },
-                { PatternType.MelodyLine, "jazz-rhodes" },
-                { PatternType.HarmonyPad, "jazz-comp"   },
+                { PatternType.RhythmLoop, "jazz-brush"   },
+                { PatternType.MelodyLine, "jazz-rhodes"  },
+                { PatternType.HarmonyPad, "jazz-comp"    },
+                { PatternType.Bass,       "jazz-upright" },
             };
 
             var soundMappings = new Dictionary<PatternType, PatternSoundMappingProfile>

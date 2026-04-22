@@ -8,8 +8,10 @@ using RhythmForge.Core.Sequencing;
 namespace RhythmForge.Core.Sequencing.NewAge
 {
     /// <summary>
-    /// New Age harmony deriver: open, spacious voicings (sus2/sus4/5ths), long sustained drones.
-    /// Tilt → modal color (light vs. dark). Horizontal span → voicing width. Size → bars.
+    /// New Age harmony deriver (guided): emits an 8-bar floating I-V-vi-IV progression
+    /// in C major seeded from <see cref="GuidedPolicy"/>, modulated by shape through
+    /// <see cref="HarmonyShapeModulator"/> using the NewAge flavor vocabulary (sus2/sus4/drone5/triad).
+    /// Cadence bars (4 and 8) always add a 9 (low symmetry) or 11 (high symmetry).
     /// </summary>
     public sealed class NewAgeHarmonyDeriver : IHarmonyDeriver
     {
@@ -21,79 +23,51 @@ namespace RhythmForge.Core.Sequencing.NewAge
             SoundProfile sound,
             GenreProfile genre)
         {
-            float sizeFactor = ShapeProfileSizing.GetSizeFactor(PatternType.HarmonyPad, sp);
+            sp = sp ?? new ShapeProfile();
+            sound = sound ?? new SoundProfile();
+
             string sizeWord = ShapeProfileSizing.DescribeSize(PatternType.HarmonyPad, sp);
-            // New Age always holds longer — 4 or 8 bars
-            int bars = metrics.length > 0.70f ? 8 : 4;
+            var policy = GuidedPolicy.Get("newage");
+            int bars = policy.bars;
             int totalSteps = bars * AppStateFactory.BarSteps;
-            string presetId = genre.GetDefaultPresetId(PatternType.HarmonyPad);
+            string presetId = genre != null
+                ? genre.GetDefaultPresetId(PatternType.HarmonyPad)
+                : "newage-drone";
 
-            int rootMidi = PitchUtils.PitchFromRelative(1f - sp.centroidHeight, keyName) - 12;
-            rootMidi = MusicalKeys.QuantizeToKey(rootMidi, keyName);
+            string effectiveKey = !string.IsNullOrEmpty(keyName)
+                && MusicalKeys.All.ContainsKey(keyName)
+                ? keyName
+                : policy.keyName;
 
-            List<int> chord;
-            string flavor;
-            int[] scaleDegreeSteps;
-            if (sp.tiltSigned > 0.22f)
-            {
-                flavor = "sus2";
-                scaleDegreeSteps = new[] { 0, 1, 4, 7 };
-            }
-            else if (sp.tiltSigned < -0.18f)
-            {
-                flavor = "sus4";
-                scaleDegreeSteps = new[] { 0, 3, 4, 7 };
-            }
-            else
-            {
-                flavor = "drone5";
-                scaleDegreeSteps = new[] { 0, 4, 7, 11 };
-            }
+            var seed = policy.CreateDefaultProgression();
+            var progression = HarmonyShapeModulator.Modulate(
+                metrics,
+                sp,
+                seed,
+                effectiveKey,
+                "newage",
+                HarmonyFlavorPolicies.NewAge);
 
-            chord = MusicalKeys.BuildScaleChord(rootMidi, keyName, scaleDegreeSteps);
-
-            int spread = Mathf.RoundToInt(sp.horizontalSpan * 8f + sizeFactor * 4f);
-            if (chord.Count > 0)
-                chord[chord.Count - 1] += Mathf.RoundToInt(spread * 0.3f) / 12 * 12;
-
-            if (sizeFactor > 0.55f || sp.horizontalSpan > 0.6f)
-                chord.Insert(0, rootMidi - 12);
-
-            for (int n = 0; n < chord.Count; n++)
-                chord[n] = RegisterPolicy.Clamp(chord[n], PatternType.HarmonyPad, "newage");
-
+            var firstChord = progression.GetSlotForBar(0);
+            string flavorLabel = firstChord != null && !string.IsNullOrEmpty(firstChord.flavor)
+                ? firstChord.flavor
+                : "triad";
             string depthWord = sound.reverbBias > 0.5f ? "deep bloom" : "open space";
+
             return new HarmonyDerivationResult
             {
                 bars = bars,
                 presetId = presetId,
-                tags = new List<string> { flavor, depthWord, "meditative" },
+                tags = new List<string> { flavorLabel, depthWord, "meditative" },
                 derivedSequence = new DerivedSequence
                 {
                     kind = "harmony",
                     totalSteps = totalSteps,
-                    chordEvents = BuildRepeatedProgression(bars, rootMidi, flavor, chord)
+                    chordEvents = progression.Clone().chords
                 },
-                summary = $"{sizeWord} {flavor} drone, {bars} bars, open {Mathf.Round(sp.horizontalSpan * 100f)}% spread.",
-                details = "Open voicings avoid dissonance. Tilt steers modal flavor, size gives breath length, and horizontal span opens the overtone space."
+                summary = $"{sizeWord} {flavorLabel} drone, {bars} bars in {effectiveKey}, open {Mathf.Round(sp.horizontalSpan * 100f)}% spread.",
+                details = "Tilt steers sus2/sus4 color. Circular shapes drop to bare 5ths (drone). Symmetry on bars 4 and 8 lifts the voicing with an added 9 or 11."
             };
-        }
-
-        private static List<ChordSlot> BuildRepeatedProgression(int bars, int rootMidi, string flavor, List<int> chord)
-        {
-            var slots = new List<ChordSlot>(bars);
-            for (int barIndex = 0; barIndex < bars; barIndex++)
-            {
-                slots.Add(new ChordSlot
-                {
-                    barIndex = barIndex,
-                    rootMidi = rootMidi,
-                    flavor = flavor,
-                    voicing = chord != null ? new List<int>(chord) : new List<int>()
-                });
-            }
-
-            return slots;
         }
     }
 }

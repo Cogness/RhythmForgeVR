@@ -8,9 +8,10 @@ namespace RhythmForge.Core.Sequencing
 {
     public static class BassDeriver
     {
-        private const string GuidedGenreId = GuidedDefaults.ActiveGenreId;
-        private const string DefaultPresetId = "trap-bass";
         private const int StepsPerBar = AppStateFactory.BarSteps;
+
+        private static string GuidedGenreId => GuidedPolicy.Active.genreId;
+        private static string DefaultPresetId => GuidedPolicy.Active.defaultBassPresetId;
 
         public static MelodyDerivationResult Derive(
             List<Vector2> points,

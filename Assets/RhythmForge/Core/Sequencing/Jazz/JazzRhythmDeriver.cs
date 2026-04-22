@@ -8,12 +8,14 @@ using RhythmForge.Core.Sequencing;
 namespace RhythmForge.Core.Sequencing.Jazz
 {
     /// <summary>
-    /// Jazz rhythm deriver: ride-dominant with swing feel, brush snare, and soft kick.
-    /// Circularity → smoother ride. Angularity → cross-stick and accents. Size → fills and complexity.
+    /// Jazz rhythm deriver (guided): 8-bar loop built on the beginner-safe backbeat
+    /// floor (kick on 1+3, brush snare on 2+4) with a swung ride pattern and brush
+    /// fills on bars 4 and 8. Shape traits layer ghost hits and off-beat ride
+    /// additions on top of the backbone instead of replacing it.
     /// </summary>
     public sealed class JazzRhythmDeriver : IRhythmDeriver
     {
-        // Jazz swing: triplet feel — every other 8th note pushed ~33% late
+        // Jazz swing: triplet feel — every other 8th note pushed ~33% late.
         private const float SwingBase = 0.28f;
 
         public RhythmDerivationResult Derive(
@@ -23,13 +25,17 @@ namespace RhythmForge.Core.Sequencing.Jazz
             SoundProfile sound,
             GenreProfile genre)
         {
+            sp = sp ?? new ShapeProfile();
+            sound = sound ?? new SoundProfile();
+
             float sizeFactor = ShapeProfileSizing.GetSizeFactor(PatternType.RhythmLoop, sp);
             string sizeWord = ShapeProfileSizing.DescribeSize(PatternType.RhythmLoop, sp);
-            int bars = metrics.averageSize > 0.30f ? 4 : 2;
+            int bars = GuidedPolicy.Get("jazz").bars;
             int totalSteps = bars * AppStateFactory.BarSteps;
-            string presetId = genre.GetDefaultPresetId(PatternType.RhythmLoop);
+            string presetId = genre != null
+                ? genre.GetDefaultPresetId(PatternType.RhythmLoop)
+                : "jazz-brush";
 
-            // Jazz swing: base swing + shape instability contribution
             float swing = MathUtils.RoundTo(
                 Mathf.Clamp(SwingBase + sound.grooveInstability * 0.12f + sp.wobble * 0.06f, 0.22f, 0.38f), 2);
 
@@ -39,6 +45,40 @@ namespace RhythmForge.Core.Sequencing.Jazz
             for (int bar = 0; bar < bars; bar++)
             {
                 int offset = bar * barSteps;
+
+                // Backbone: kick on beats 1 + 3.
+                events.Add(new RhythmEvent
+                {
+                    step = offset + 0,
+                    lane = "kick",
+                    velocity = MathUtils.RoundTo(0.46f + sound.body * 0.18f, 2),
+                    microShift = 0f
+                });
+                events.Add(new RhythmEvent
+                {
+                    step = offset + 8,
+                    lane = "kick",
+                    velocity = MathUtils.RoundTo(0.38f + sound.body * 0.14f, 2),
+                    microShift = 0f
+                });
+
+                // Backbone: brush snare on beats 2 + 4.
+                events.Add(new RhythmEvent
+                {
+                    step = offset + 4,
+                    lane = "snare",
+                    velocity = MathUtils.RoundTo(0.52f + sound.transientSharpness * 0.2f, 2),
+                    microShift = MathUtils.RoundTo(swing * 0.02f, 3)
+                });
+                events.Add(new RhythmEvent
+                {
+                    step = offset + 12,
+                    lane = "snare",
+                    velocity = MathUtils.RoundTo(0.48f + sound.transientSharpness * 0.18f, 2),
+                    microShift = MathUtils.RoundTo(swing * 0.02f, 3)
+                });
+
+                // Ride on every beat.
                 int[] rideSteps = { 0, 4, 8, 12 };
                 foreach (int step in rideSteps)
                 {
@@ -51,10 +91,10 @@ namespace RhythmForge.Core.Sequencing.Jazz
                     });
                 }
 
+                // Shape additions layered on top — never replacing the backbone.
                 if (sp.circularity > 0.55f)
                 {
-                    int[] offSteps = { 2, 6, 10, 14 };
-                    foreach (int step in offSteps)
+                    foreach (int step in new[] { 2, 6, 10, 14 })
                     {
                         events.Add(new RhythmEvent
                         {
@@ -66,28 +106,39 @@ namespace RhythmForge.Core.Sequencing.Jazz
                     }
                 }
 
-                events.Add(new RhythmEvent { step = offset + 0, lane = "kick", velocity = MathUtils.RoundTo(0.34f + sound.body * 0.18f, 2), microShift = 0f });
-                if (sp.angularity > 0.45f)
-                    events.Add(new RhythmEvent { step = offset + 8, lane = "kick", velocity = MathUtils.RoundTo(0.22f + sound.body * 0.12f, 2), microShift = 0f });
-
-                events.Add(new RhythmEvent { step = offset + 8, lane = "snare", velocity = MathUtils.RoundTo(0.44f + sound.transientSharpness * 0.2f, 2), microShift = MathUtils.RoundTo(swing * 0.02f, 3) });
-
-                if (sizeFactor > 0.52f || sp.wobble > 0.4f)
+                if (sp.angularity > 0.5f || sizeFactor > 0.52f || sp.wobble > 0.4f)
                 {
                     foreach (int step in new[] { 3, 11 })
-                        events.Add(new RhythmEvent { step = offset + step, lane = "snare", velocity = MathUtils.RoundTo(0.16f + sound.drive * 0.1f, 2), microShift = MathUtils.RoundTo(swing * 0.08f, 3) });
+                    {
+                        events.Add(new RhythmEvent
+                        {
+                            step = offset + step,
+                            lane = "snare",
+                            velocity = MathUtils.RoundTo(0.18f + sound.drive * 0.1f, 2),
+                            microShift = MathUtils.RoundTo(swing * 0.08f, 3)
+                        });
+                    }
                 }
 
-                if (sizeFactor > 0.65f && bar == bars - 1)
-                    events.Add(new RhythmEvent { step = offset + 14, lane = "perc", velocity = MathUtils.RoundTo(0.28f + sound.drive * 0.14f, 2), microShift = 0f });
+                // Turnaround fills on bar 4 and bar 8.
+                if (bar == 3 || bar == 7)
+                    AddBrushFill(events, offset, bar == 7, sound);
             }
 
-            string swingWord  = swing > 0.32f ? "heavy swing" : "light swing";
+            events.Sort((a, b) =>
+            {
+                int stepCompare = a.step.CompareTo(b.step);
+                if (stepCompare != 0)
+                    return stepCompare;
+                return string.CompareOrdinal(a.lane, b.lane);
+            });
+
+            string swingWord = swing > 0.32f ? "heavy swing" : "light swing";
             return new RhythmDerivationResult
             {
                 bars = bars,
                 presetId = presetId,
-                tags = new List<string> { "ride pattern", swingWord, sp.angularity > 0.5f ? "cross-stick" : "smooth" },
+                tags = new List<string> { "backbeat", swingWord, sp.angularity > 0.5f ? "cross-stick" : "smooth" },
                 derivedSequence = new DerivedSequence
                 {
                     kind = "rhythm",
@@ -95,9 +146,33 @@ namespace RhythmForge.Core.Sequencing.Jazz
                     swing = swing,
                     events = events
                 },
-                summary = $"{sizeWord} jazz ride pattern, {bars} bars, {swingWord} ({Mathf.Round(swing * 100f)}%).",
-                details = "Ride cymbal drives the pulse with jazz swing. Circularity adds off-beat smoothness, angularity brings cross-stick accents and ghost notes."
+                summary = $"{sizeWord} jazz backbone, {bars} bars, {swingWord} ({Mathf.Round(swing * 100f)}%).",
+                details = "Kick on 1+3, brush snare on 2+4, ride on every beat. Circularity adds off-beat ride fill, angularity adds ghost snares. Bars 4 and 8 close with a brush swirl."
             };
+        }
+
+        private static void AddBrushFill(List<RhythmEvent> events, int offset, bool finalBar, SoundProfile sound)
+        {
+            int[] snareSteps = finalBar ? new[] { 13, 14, 15 } : new[] { 14, 15 };
+            float startVelocity = finalBar ? 0.46f : 0.42f;
+            for (int i = 0; i < snareSteps.Length; i++)
+            {
+                events.Add(new RhythmEvent
+                {
+                    step = offset + snareSteps[i],
+                    lane = "snare",
+                    velocity = MathUtils.RoundTo(startVelocity + i * 0.05f + sound.transientSharpness * 0.14f, 2),
+                    microShift = 0f
+                });
+            }
+
+            events.Add(new RhythmEvent
+            {
+                step = offset + 15,
+                lane = "perc",
+                velocity = MathUtils.RoundTo(0.3f + sound.drive * 0.14f, 2),
+                microShift = 0f
+            });
         }
     }
 }

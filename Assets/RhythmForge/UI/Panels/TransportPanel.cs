@@ -27,15 +27,53 @@ namespace RhythmForge.UI.Panels
         [SerializeField] private Button _viewModeButton;
         [SerializeField] private Text _viewModeLabel;
 
-        private bool _showParams = true;
+        private bool _showParams = false;
 
         public event Action<bool> OnParamsVisibilityChanged;
+
+        // ── Merged-panel section refs (populated by RhythmForgeBootstrapper) ──
+        [SerializeField] private RectTransform _mergedCanvasRect;
+        [SerializeField] private RectTransform _dockSection;
+        [SerializeField] private RectTransform _genreSection;
+        [SerializeField] private RectTransform _transportSection;
+        [SerializeField] private RectTransform _phaseSection;
+        [SerializeField] private RectTransform _sceneSection;
+        [SerializeField] private RectTransform _arrangementSection;
+
+        // Merged-panel layout constants (pixels, with canvas pivot at bottom-left).
+        //
+        // Layout (guided mode, total 1088 × 450):
+        //
+        //   ┌────────────┬──────────────────────────────┐
+        //   │            │  Genre      740×200          │ y = H - 200
+        //   │            ├──────────────────────────────┤
+        //   │  Dock      │  Transport  740×100          │ y = H - 300
+        //   │  340×H     ├──────────────────────────────┤
+        //   │            │  Phase      740×150 (guided) │
+        //   │            │  Scene+Arr  740×170 (free)   │ y = 0
+        //   └────────────┴──────────────────────────────┘
+        //
+        public const float DockSectionW        = 340f;
+        public const float DockGutter          = 8f;
+        public const float RightColumnW        = 740f;
+        public const float MergedWidth         = DockSectionW + DockGutter + RightColumnW; // 1088
+        public const float GenreSectionH       = 200f;
+        public const float TransportSectionH   = 100f;
+        public const float PhaseSectionH       = 150f;
+        public const float SceneSectionH       = 70f;
+        public const float ArrangementSectionH = 100f;
+        public const float GuidedTotalH        = GenreSectionH + TransportSectionH + PhaseSectionH;      // 450
+        public const float FreeTotalH          = GenreSectionH + TransportSectionH + SceneSectionH + ArrangementSectionH; // 470
 
         private SessionStore _store;
         private Sequencer.Sequencer _sequencer;
         private DrawModeController _drawMode;
         private RhythmForgeEventBus _eventBus;
         private bool _guidedMode;
+        // Tracks how many pixels (in canvas-local space) we've shifted the canvas DOWN from its
+        // registered baseline to keep the Transport strip's top edge visually anchored when the
+        // panel grows/shrinks with mode changes. 0 for guided (baseline), 20 for free.
+        private float _currentAppliedOffsetPixels;
         private ImmersionController _immersion;
 
         // Visual palette for the view-mode button.
@@ -60,6 +98,28 @@ namespace RhythmForge.UI.Panels
             _toggleParamsLabel   = toggleParamsLabel;
             _viewModeButton      = viewModeButton;
             _viewModeLabel       = viewModeLabel;
+        }
+
+        /// <summary>
+        /// Injects the merged Transport canvas + section RectTransforms so the panel can
+        /// resize itself when switching between guided and free modes.
+        /// </summary>
+        public void SetSectionRefs(
+            RectTransform mergedCanvasRect,
+            RectTransform dockSection,
+            RectTransform genreSection,
+            RectTransform transportSection,
+            RectTransform phaseSection,
+            RectTransform sceneSection,
+            RectTransform arrangementSection)
+        {
+            _mergedCanvasRect    = mergedCanvasRect;
+            _dockSection         = dockSection;
+            _genreSection        = genreSection;
+            _transportSection    = transportSection;
+            _phaseSection        = phaseSection;
+            _sceneSection        = sceneSection;
+            _arrangementSection  = arrangementSection;
         }
 
         /// <summary>
@@ -147,7 +207,89 @@ namespace RhythmForge.UI.Panels
         public void SetGuidedMode(bool guidedMode)
         {
             _guidedMode = guidedMode;
+            ApplyMergedLayout();
             Refresh();
+        }
+
+        /// <summary>
+        /// Resizes the merged Transport canvas and repositions its sections so the Transport
+        /// strip always occupies the top of the panel. Guided mode shows the Phase section
+        /// below Transport; free mode swaps in the Scene + Arrangement sections.
+        ///
+        /// The canvas's world position is shifted so the Transport strip's top edge stays
+        /// visually anchored — the panel grows DOWNWARD into empty space when entering free
+        /// mode (20 px taller), and shrinks back when returning to guided. The applied shift
+        /// is tracked so repeated calls (or re-calls after <see cref="ResetAfterReposition"/>)
+        /// converge on the correct offset without accumulating drift.
+        /// </summary>
+        private void ApplyMergedLayout()
+        {
+            if (_mergedCanvasRect == null || _transportSection == null) return;
+
+            // Target canvas-local pixel offset DOWN from the registered baseline.
+            // Baseline corresponds to guided mode (canvas built at height GuidedTotalH).
+            float targetOffsetPixels = _guidedMode ? 0f : (FreeTotalH - GuidedTotalH); // 0 or 20
+            float deltaPixels = targetOffsetPixels - _currentAppliedOffsetPixels;
+            if (Mathf.Abs(deltaPixels) > 0.01f)
+            {
+                // TransformVector applies the canvas's scale (0.001) and rotation, giving
+                // the correct world-space down offset for the canvas's current orientation.
+                _mergedCanvasRect.position +=
+                    _mergedCanvasRect.TransformVector(new Vector3(0f, -deltaPixels, 0f));
+                _currentAppliedOffsetPixels = targetOffsetPixels;
+            }
+
+            float newHeight = _guidedMode ? GuidedTotalH : FreeTotalH;
+            _mergedCanvasRect.sizeDelta = new Vector2(MergedWidth, newHeight);
+
+            // Dock spans the FULL canvas height on the left.
+            if (_dockSection != null)
+            {
+                _dockSection.anchoredPosition = new Vector2(0f, 0f);
+                _dockSection.sizeDelta = new Vector2(DockSectionW, newHeight);
+            }
+
+            // Genre stays at the TOP of the right column.
+            if (_genreSection != null)
+            {
+                _genreSection.anchoredPosition = new Vector2(
+                    _genreSection.anchoredPosition.x, newHeight - GenreSectionH);
+            }
+
+            // Transport sits directly below Genre.
+            _transportSection.anchoredPosition = new Vector2(
+                _transportSection.anchoredPosition.x,
+                newHeight - GenreSectionH - TransportSectionH);
+
+            // Phase / Scene+Arrangement fill the remaining bottom of the right column. We only
+            // adjust Y — the X offsets were set at build time so each section is horizontally
+            // positioned within the right column of the 1088-wide canvas.
+            if (_guidedMode)
+            {
+                if (_phaseSection != null)
+                    _phaseSection.anchoredPosition = new Vector2(_phaseSection.anchoredPosition.x, 0f);
+            }
+            else
+            {
+                if (_sceneSection != null)
+                    _sceneSection.anchoredPosition = new Vector2(
+                        _sceneSection.anchoredPosition.x, ArrangementSectionH);
+                if (_arrangementSection != null)
+                    _arrangementSection.anchoredPosition = new Vector2(
+                        _arrangementSection.anchoredPosition.x, 0f);
+            }
+        }
+
+        /// <summary>
+        /// Called by the bootstrapper after <c>RepositionPanels</c> has placed the canvas at
+        /// its registered baseline (guided-mode position). Resets our tracking so the next
+        /// <see cref="ApplyMergedLayout"/> re-applies the mode-appropriate offset from that
+        /// fresh baseline.
+        /// </summary>
+        public void ResetAfterReposition()
+        {
+            _currentAppliedOffsetPixels = 0f;
+            ApplyMergedLayout();
         }
 
         private void Refresh()

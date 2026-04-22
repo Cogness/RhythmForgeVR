@@ -57,6 +57,7 @@ namespace RhythmForge.Bootstrap
 
         private VRRigLocator _rig;
         private GameObject _immersiveEnvironment;
+        private TransportPanel _transportPanelRef;
         private bool _built;
 
         private void Awake() => Bootstrap();
@@ -257,6 +258,12 @@ namespace RhythmForge.Bootstrap
                 if (!canvas.gameObject.activeSelf)
                     canvas.enabled = false;
             }
+
+            // The merged Transport panel shifts its world position based on guided/free mode so
+            // the Transport strip's top edge stays anchored when the panel grows/shrinks. We
+            // just overwrote that shift with the registered (guided-mode) baseline, so ask the
+            // panel to re-apply the current mode's offset now.
+            _transportPanelRef?.ResetAfterReposition();
         }
 
         private void BuildAll()
@@ -491,16 +498,32 @@ namespace RhythmForge.Bootstrap
             Transform head = _rig.CenterEye;
 
             refs.toast         = BuildToastPanel(head);
-            refs.transport     = BuildTransportPanel(head);
-            refs.phase         = BuildPhasePanel(head);
-            refs.sceneStrip    = BuildSceneStripPanel(head);
+
+            // Transport + Phase + SceneStrip + Arrangement + Dock + Genre all live inside one
+            // mega-canvas that drags as a single unit.
+            var tp = BuildMergedTransportPanel(head);
+            refs.transport     = tp.transport;
+            refs.phase         = tp.phase;
+            refs.sceneStrip    = tp.sceneStrip;
+            refs.arrangement   = tp.arrangement;
+            refs.dock          = tp.dock;
+            refs.genreSelector = tp.genreSelector;
+            _transportPanelRef = tp.transport;
+
             refs.commitCard    = BuildCommitCardPanel(head, strokeCapture);
             refs.inspector     = BuildInspectorPanel(head);
-            refs.dock          = BuildDockPanel(head, drawMode);
-            refs.arrangement   = BuildArrangementPanel(head);
-            refs.genreSelector = BuildGenreSelectorPanel(head);
 
             return refs;
+        }
+
+        private struct MergedTransportBuild
+        {
+            public TransportPanel      transport;
+            public PhasePanel          phase;
+            public SceneStripPanel     sceneStrip;
+            public ArrangementPanel    arrangement;
+            public DockPanel           dock;
+            public GenreSelectorPanel  genreSelector;
         }
 
         // ──────── Toast ────────
@@ -521,73 +544,209 @@ namespace RhythmForge.Bootstrap
             return toast;
         }
 
-        // ──────── Transport ────────
+        // ──────── Merged Transport Mega-Panel ────────
+        // One canvas contains:
+        //   • Dock (left, full height)
+        //   • Genre (top of right column)
+        //   • Transport (middle of right column)
+        //   • Phase (bottom, guided) OR Scene + Arrangement (bottom, free)
+        //
+        // Canvas size: 1088 × 450 (guided) or 1088 × 470 (free).
+        // Registered world bottom-left is chosen so the Transport section's bottom edge sits at
+        // exactly eye-0.22 (matching its legacy stand-alone location). Dock extends down with
+        // the canvas bottom; Genre sits above Transport.
 
-        private TransportPanel BuildTransportPanel(Transform head)
+        private MergedTransportBuild BuildMergedTransportPanel(Transform head)
         {
-            // Widened from 640 → 740 to make room for the View-mode (PassThrough/Immersed) button.
+            const float width       = TransportPanel.MergedWidth;     // 1088
+            const float initialH    = TransportPanel.GuidedTotalH;    // 450 (guided default)
+            const float dockW       = TransportPanel.DockSectionW;    // 340
+            const float gutter      = TransportPanel.DockGutter;      // 8
+            const float rightX      = dockW + gutter;                 // 348 — left edge of right column
+            const float rightW      = TransportPanel.RightColumnW;    // 740
+            const float genreH      = TransportPanel.GenreSectionH;   // 200
+            const float transportH  = TransportPanel.TransportSectionH; // 100
+            const float phaseH      = TransportPanel.PhaseSectionH;   // 150
+            const float sceneH      = TransportPanel.SceneSectionH;   // 70
+            const float arrangeH    = TransportPanel.ArrangementSectionH; // 100
+
+            // Canvas pivot is bottom-left. We want the Transport section (at canvas-local
+            // y = initialH - genreH - transportH = 150, x = rightX = 348) to land at world
+            // PositionInFront(0, -0.37, 1.1) — identical to its legacy position. So the canvas
+            // bottom-left sits at PositionInFront(0 - 0.348, -0.37 - 0.150, 1.1).
             var canvas = UIFactory.CreateWorldCanvas("TransportPanel",
-                transform, new Vector2(740, 100),
-                PositionInFront(0f, -0.22f, 1.1f), 0.001f);
-            RegisterPanel(canvas, 0f, -0.22f, 1.1f, PanelDragCoordinator.DragMembership.MainGroup);
+                transform, new Vector2(width, initialH),
+                PositionInFront(-0.348f, -0.52f, 1.1f), 0.001f);
+            RegisterPanel(canvas, -0.348f, -0.52f, 1.1f, PanelDragCoordinator.DragMembership.MainGroup);
 
             UIFactory.CreateBackground(canvas.transform,
-                new Vector2(740, 100), MaterialFactory.PanelBg);
+                new Vector2(width, initialH), MaterialFactory.PanelBg);
 
-            // Play/Stop button
-            var playBtn = UIFactory.CreateButton(canvas.transform, "PlayStopButton", "Play",
+            // ── Section containers (pivot bottom-left, positioned inside the canvas) ──
+            // Dock: full canvas height on the LEFT.
+            var dockRt = CreateSectionContainer("DockSection", canvas.transform,
+                new Rect(0f, 0f, dockW, initialH));
+
+            // Genre: top of right column.
+            var genreRt = CreateSectionContainer("GenreSection", canvas.transform,
+                new Rect(rightX, initialH - genreH, rightW, genreH));
+
+            // Transport: directly below Genre, full right-column width.
+            var transportRt = CreateSectionContainer("TransportSection", canvas.transform,
+                new Rect(rightX, initialH - genreH - transportH, rightW, transportH));
+
+            // Phase: 640-wide content centered in the 740-wide right column.
+            float phaseContentW = 640f;
+            float phaseOffsetX = rightX + (rightW - phaseContentW) * 0.5f;
+            var phaseRt = CreateSectionContainer("PhaseSection", canvas.transform,
+                new Rect(phaseOffsetX, 0f, phaseContentW, phaseH));
+
+            // Scene strip: 540-wide centered in 740-wide right column.
+            float sceneContentW = 540f;
+            float sceneOffsetX = rightX + (rightW - sceneContentW) * 0.5f;
+            var sceneRt = CreateSectionContainer("SceneSection", canvas.transform,
+                new Rect(sceneOffsetX, arrangeH, sceneContentW, sceneH));
+            sceneRt.gameObject.SetActive(false);
+
+            // Arrangement: 560-wide centered in 740-wide right column.
+            float arrangeContentW = 560f;
+            float arrangeOffsetX = rightX + (rightW - arrangeContentW) * 0.5f;
+            var arrangeRt = CreateSectionContainer("ArrangementSection", canvas.transform,
+                new Rect(arrangeOffsetX, 0f, arrangeContentW, arrangeH));
+            arrangeRt.gameObject.SetActive(false);
+
+            // ── Decorative dividers ──
+            // Vertical divider between Dock and right column — child of the canvas, spans full
+            // canvas height via stretched anchors so it follows the canvas when it resizes.
+            CreateFullHeightVerticalDivider(canvas.transform, "DockDivider",
+                xOffset: dockW + gutter * 0.5f - 0.75f);
+
+            // Horizontal divider at the top of the Transport section (bottom edge of Genre).
+            // Parented to the Transport section so it moves with it when Transport shifts y.
+            UIFactory.CreateImage(transportRt.transform, "GenreTransportDivider",
+                new Color(1f, 1f, 1f, 0.08f),
+                new Rect(0f, transportH - 1.5f, rightW, 1.5f));
+
+            // Horizontal divider at the bottom of the Transport section (top edge of Phase / Scene).
+            UIFactory.CreateImage(transportRt.transform, "TransportBottomDivider",
+                new Color(1f, 1f, 1f, 0.08f),
+                new Rect(0f, 0f, rightW, 1.5f));
+
+            // ── Content ──
+            var dockPanel     = BuildDockSectionContent(dockRt, head);
+            var genrePanel    = BuildGenreSectionContent(genreRt);
+            var transportRefs = BuildTransportSectionContent(transportRt.transform);
+            var phasePanel    = BuildPhaseSectionContent(phaseRt);
+            var scenePanel    = BuildSceneStripSectionContent(sceneRt);
+            var arrangePanel  = BuildArrangementSectionContent(arrangeRt);
+
+            // ── TransportPanel component wires everything together ──
+            var panel = canvas.gameObject.AddComponent<TransportPanel>();
+            panel.SetUIRefs(
+                transportRefs.playBtn, transportRefs.playLabel,
+                transportRefs.modeBtn, transportRefs.modeLabel,
+                transportRefs.bpmText, transportRefs.keyText, transportRefs.statusText,
+                transportRefs.paramsBtn, transportRefs.paramsLabel,
+                transportRefs.viewBtn, transportRefs.viewLabel);
+            panel.SetSectionRefs(
+                canvas.GetComponent<RectTransform>(),
+                dockRt, genreRt, transportRt, phaseRt, sceneRt, arrangeRt);
+
+            return new MergedTransportBuild
+            {
+                transport     = panel,
+                phase         = phasePanel,
+                sceneStrip    = scenePanel,
+                arrangement   = arrangePanel,
+                dock          = dockPanel,
+                genreSelector = genrePanel,
+            };
+        }
+
+        /// <summary>
+        /// Creates a thin vertical line image that spans the full height of its parent via
+        /// stretched anchors, positioned at the given X pixel offset from the parent's left.
+        /// </summary>
+        private static void CreateFullHeightVerticalDivider(Transform parent, string name, float xOffset)
+        {
+            var go = new GameObject(name);
+            go.transform.SetParent(parent, false);
+            var img = go.AddComponent<Image>();
+            img.color = new Color(1f, 1f, 1f, 0.08f);
+            img.raycastTarget = false;
+            var rt = go.GetComponent<RectTransform>();
+            // Stretch vertically across the full parent height.
+            rt.anchorMin = new Vector2(0f, 0f);
+            rt.anchorMax = new Vector2(0f, 1f);
+            rt.pivot = new Vector2(0f, 0.5f);
+            rt.anchoredPosition = new Vector2(xOffset, 0f);
+            rt.sizeDelta = new Vector2(1.5f, 0f);
+        }
+
+        private static RectTransform CreateSectionContainer(string name, Transform parent, Rect rect)
+        {
+            var go = new GameObject(name);
+            go.transform.SetParent(parent, false);
+            var rt = go.AddComponent<RectTransform>();
+            UIFactory.SetAnchoredRect(rt, rect);
+            return rt;
+        }
+
+        private struct TransportSectionRefs
+        {
+            public Button playBtn;      public Text playLabel;
+            public Button modeBtn;      public Text modeLabel;
+            public Button paramsBtn;    public Text paramsLabel;
+            public Button viewBtn;      public Text viewLabel;
+            public Text   bpmText;
+            public Text   keyText;
+            public Text   statusText;
+        }
+
+        private static TransportSectionRefs BuildTransportSectionContent(Transform section)
+        {
+            // Coordinates are relative to the section (pivot bottom-left, size 740×100) —
+            // identical to the legacy stand-alone TransportPanel's 740×100 canvas, so no
+            // button positions change when a panel-level move converts to a section-level move.
+            var playBtn = UIFactory.CreateButton(section, "PlayStopButton", "Play",
                 new Rect(8, 8, 100, 84), MaterialFactory.ButtonActive, Color.white, 20, null);
-            var playLabel = playBtn.GetComponentInChildren<Text>();
-
-            // Params toggle button (near Mode)
-            var paramsBtn = UIFactory.CreateButton(canvas.transform, "ToggleParamsButton", "Params\nON",
+            var paramsBtn = UIFactory.CreateButton(section, "ToggleParamsButton", "Params\nOFF",
                 new Rect(420, 8, 100, 84), new Color(0.28f, 0.32f, 0.42f), Color.white, 16, null);
-            var paramsLabel = paramsBtn.GetComponentInChildren<Text>();
-
-            // Mode button
-            var modeBtn = UIFactory.CreateButton(canvas.transform, "ModeButton", "Mode\nPercussion",
+            var modeBtn = UIFactory.CreateButton(section, "ModeButton", "Mode\nPercussion",
                 new Rect(532, 8, 100, 84), TypeColors.Percussion, Color.white, 18, null);
-            var modeLabel = modeBtn.GetComponentInChildren<Text>();
-
-            // View-mode (PassThrough ↔ Immersed) button — initial label set by TransportPanel.BindImmersion.
-            var viewBtn = UIFactory.CreateButton(canvas.transform, "ViewModeButton", "View\nImmersed",
+            var viewBtn = UIFactory.CreateButton(section, "ViewModeButton", "View\nImmersed",
                 new Rect(644, 8, 88, 84), new Color(0.18f, 0.22f, 0.32f, 1f), Color.white, 14, null);
-            var viewLabel = viewBtn.GetComponentInChildren<Text>();
 
-            // Info labels
-            var bpmText    = UIFactory.CreateRectText(canvas.transform, "BpmText",
+            var bpmText = UIFactory.CreateRectText(section, "BpmText",
                 "85 BPM", 18, Color.white, TextAnchor.MiddleLeft,
                 new Rect(120, 58, 280, 34));
-            var keyText    = UIFactory.CreateRectText(canvas.transform, "KeyText",
+            var keyText = UIFactory.CreateRectText(section, "KeyText",
                 "A minor", 16, new Color(0.7f, 0.9f, 1f), TextAnchor.MiddleLeft,
                 new Rect(120, 28, 280, 28));
-            var statusText = UIFactory.CreateRectText(canvas.transform, "StatusText",
+            var statusText = UIFactory.CreateRectText(section, "StatusText",
                 "Idle", 14, new Color(0.55f, 0.55f, 0.65f), TextAnchor.MiddleLeft,
                 new Rect(120, 6, 400, 22));
 
-            var panel = canvas.gameObject.AddComponent<TransportPanel>();
-            panel.SetUIRefs(playBtn, playLabel, modeBtn, modeLabel, bpmText, keyText, statusText,
-                paramsBtn, paramsLabel, viewBtn, viewLabel);
-            return panel;
+            return new TransportSectionRefs
+            {
+                playBtn    = playBtn, playLabel   = playBtn.GetComponentInChildren<Text>(),
+                modeBtn    = modeBtn, modeLabel   = modeBtn.GetComponentInChildren<Text>(),
+                paramsBtn  = paramsBtn, paramsLabel = paramsBtn.GetComponentInChildren<Text>(),
+                viewBtn    = viewBtn, viewLabel   = viewBtn.GetComponentInChildren<Text>(),
+                bpmText    = bpmText,
+                keyText    = keyText,
+                statusText = statusText,
+            };
         }
 
-        // ──────── Phase Panel ────────
-
-        private PhasePanel BuildPhasePanel(Transform head)
+        private static PhasePanel BuildPhaseSectionContent(RectTransform section)
         {
-            var canvas = UIFactory.CreateWorldCanvas("PhasePanel",
-                transform, new Vector2(640, 150),
-                PositionInFront(0f, -0.36f, 1.1f), 0.001f);
-            RegisterPanel(canvas, 0f, -0.36f, 1.1f, PanelDragCoordinator.DragMembership.MainGroup);
-
-            UIFactory.CreateBackground(canvas.transform,
-                new Vector2(640, 150), MaterialFactory.PanelBg);
-
-            var banner = UIFactory.CreateRectText(canvas.transform, "PhaseBanner",
+            // Section is 640×150, pivot bottom-left — identical to legacy PhasePanel canvas.
+            var banner = UIFactory.CreateRectText(section.transform, "PhaseBanner",
                 "Current phase: Harmony", 16, new Color(1f, 0.92f, 0.58f), TextAnchor.MiddleLeft,
                 new Rect(12, 116, 320, 24));
 
-            var playPieceButton = UIFactory.CreateButton(canvas.transform, "PlayPieceButton", "Play Piece",
+            var playPieceButton = UIFactory.CreateButton(section.transform, "PlayPieceButton", "Play Piece",
                 new Rect(494, 112, 134, 28),
                 MaterialFactory.ButtonActive, Color.white, 14, null);
 
@@ -602,11 +761,11 @@ namespace RhythmForge.Bootstrap
             for (int i = 0; i < phases.Length; i++)
             {
                 float x = startX + i * (buttonWidth + gap);
-                var button = UIFactory.CreateButton(canvas.transform, $"PhaseBtn_{phases[i]}",
+                var button = UIFactory.CreateButton(section.transform, $"PhaseBtn_{phases[i]}",
                     $"{phases[i]}\nEmpty",
                     new Rect(x, 42, buttonWidth, 60),
                     new Color(0.25f, 0.25f, 0.3f, 1f), Color.white, 14, null);
-                var clearButton = UIFactory.CreateButton(canvas.transform, $"PhaseClear_{phases[i]}",
+                var clearButton = UIFactory.CreateButton(section.transform, $"PhaseClear_{phases[i]}",
                     "Clear",
                     new Rect(x, 10, buttonWidth, 24),
                     MaterialFactory.ButtonDanger, Color.white, 11, null);
@@ -615,23 +774,15 @@ namespace RhythmForge.Bootstrap
                 clearButtons.Add(clearButton);
             }
 
-            var panel = canvas.gameObject.AddComponent<PhasePanel>();
-            panel.SetUIRefs(banner, buttons, labels, clearButtons, playPieceButton, playPieceButton.GetComponentInChildren<Text>());
+            var panel = section.gameObject.AddComponent<PhasePanel>();
+            panel.SetUIRefs(banner, buttons, labels, clearButtons,
+                playPieceButton, playPieceButton.GetComponentInChildren<Text>());
             return panel;
         }
 
-        // ──────── Scene Strip ────────
-
-        private SceneStripPanel BuildSceneStripPanel(Transform head)
+        private static SceneStripPanel BuildSceneStripSectionContent(RectTransform section)
         {
-            var canvas = UIFactory.CreateWorldCanvas("SceneStripPanel",
-                transform, new Vector2(540, 70),
-                PositionInFront(0f, -0.36f, 1.1f), 0.001f);
-            RegisterPanel(canvas, 0f, -0.36f, 1.1f, PanelDragCoordinator.DragMembership.MainGroup);
-
-            UIFactory.CreateBackground(canvas.transform,
-                new Vector2(540, 70), MaterialFactory.PanelBg);
-
+            // Section is 540×70, pivot bottom-left — identical to legacy SceneStripPanel canvas.
             var sceneNames = new[] { "Scene A", "Scene B", "Scene C", "Scene D" };
             var buttons    = new List<Button>();
             var labels     = new List<Text>();
@@ -640,14 +791,14 @@ namespace RhythmForge.Bootstrap
             for (int i = 0; i < 4; i++)
             {
                 float bx = startX + i * (bw + gap);
-                var btn = UIFactory.CreateButton(canvas.transform, $"SceneBtn_{i}",
+                var btn = UIFactory.CreateButton(section.transform, $"SceneBtn_{i}",
                     sceneNames[i], new Rect(bx, cy, bw, bh),
                     MaterialFactory.ButtonDefault, Color.white, 16, null);
                 buttons.Add(btn);
                 labels.Add(btn.GetComponentInChildren<Text>());
             }
 
-            var panel = canvas.gameObject.AddComponent<SceneStripPanel>();
+            var panel = section.gameObject.AddComponent<SceneStripPanel>();
             panel.SetUIRefs(buttons, labels);
             return panel;
         }
@@ -785,65 +936,52 @@ namespace RhythmForge.Bootstrap
             return panel;
         }
 
-        // ──────── Dock Panel ────────
+        // ──────── Dock section (left column of the merged Transport panel) ────────
 
-        private DockPanel BuildDockPanel(Transform head, DrawModeController drawMode)
+        private static DockPanel BuildDockSectionContent(RectTransform section, Transform head)
         {
-            var canvas = UIFactory.CreateWorldCanvas("DockPanel",
-                transform, new Vector2(340, 380),
-                PositionInFront(-0.45f, 0.05f, 1.1f), 0.001f);
-            RegisterPanel(canvas, -0.45f, 0.05f, 1.1f, PanelDragCoordinator.DragMembership.MainGroup);
+            // The section's size is dynamic (canvas height changes with guided/free mode). Tabs
+            // and mode label top-anchor to the section so they stay at the top. The three tab
+            // sub-panels stretch-fill the area below the label so they auto-resize with the
+            // section.
 
-            UIFactory.CreateBackground(canvas.transform,
-                new Vector2(340, 380), MaterialFactory.PanelBg);
+            const float tabRowHeight   = 24f;
+            const float tabRowTopPad   = 4f;       // gap from section top to tab row top
+            const float modeLblTopPad  = 32f;      // y-from-top for mode label
+            const float modeLblHeight  = 26f;
+            const float subPanelTopIns = 62f;      // top inset for the tab sub-panels
+            const float subPanelBotIns = 4f;       // bottom inset for the tab sub-panels
 
-            // Tab buttons (top row)
-            var instrTab = UIFactory.CreateButton(canvas.transform, "InstrumentsTab", "Instruments",
-                new Rect(4, 352, 108, 24), MaterialFactory.ButtonActive, Color.white, 13, null);
-            var patternsTab = UIFactory.CreateButton(canvas.transform, "PatternsTab", "Patterns",
-                new Rect(116, 352, 100, 24), MaterialFactory.ButtonDefault, Color.white, 13, null);
-            var scenesTab = UIFactory.CreateButton(canvas.transform, "ScenesTab", "Scenes",
-                new Rect(220, 352, 116, 24), MaterialFactory.ButtonDefault, Color.white, 13, null);
+            // Tab buttons (top row) — top-anchored so they stay at the section top on resize.
+            var instrTab = UIFactory.CreateButton(section.transform, "InstrumentsTab", "Instruments",
+                new Rect(4, 0, 108, tabRowHeight), MaterialFactory.ButtonActive, Color.white, 13, null);
+            var patternsTab = UIFactory.CreateButton(section.transform, "PatternsTab", "Patterns",
+                new Rect(116, 0, 100, tabRowHeight), MaterialFactory.ButtonDefault, Color.white, 13, null);
+            var scenesTab = UIFactory.CreateButton(section.transform, "ScenesTab", "Scenes",
+                new Rect(220, 0, 116, tabRowHeight), MaterialFactory.ButtonDefault, Color.white, 13, null);
+            TopAnchorRect(instrTab.GetComponent<RectTransform>(),    xFromLeft: 4f,   yFromTop: tabRowTopPad, width: 108f, height: tabRowHeight);
+            TopAnchorRect(patternsTab.GetComponent<RectTransform>(), xFromLeft: 116f, yFromTop: tabRowTopPad, width: 100f, height: tabRowHeight);
+            TopAnchorRect(scenesTab.GetComponent<RectTransform>(),   xFromLeft: 220f, yFromTop: tabRowTopPad, width: 116f, height: tabRowHeight);
 
-            // Draw mode label
-            var modeLbl = UIFactory.CreateRectText(canvas.transform, "DrawModeLabel",
+            // Draw-mode / current-phase label.
+            var modeLbl = UIFactory.CreateRectText(section.transform, "DrawModeLabel",
                 "Mode: Rhythm", 15, new Color(0.3f, 0.9f, 1f), TextAnchor.MiddleLeft,
-                new Rect(10, 324, 320, 26));
+                new Rect(10, 0, 320, modeLblHeight));
+            TopAnchorRect(modeLbl.GetComponent<RectTransform>(), xFromLeft: 10f, yFromTop: modeLblTopPad, width: 320f, height: modeLblHeight);
 
-            // ── Instruments sub-panel ──
-            var instrPanelGo = new GameObject("InstrumentsPanel");
-            instrPanelGo.transform.SetParent(canvas.transform, false);
-            var instrRt = instrPanelGo.AddComponent<RectTransform>();
-            instrRt.anchorMin = Vector2.zero; instrRt.anchorMax = Vector2.zero;
-            instrRt.pivot = Vector2.zero;
-            instrRt.sizeDelta = new Vector2(340, 316);
-            instrRt.anchoredPosition = new Vector2(0, 4);
-            var instrScroll = UIFactory.CreateScrollView(instrPanelGo.transform, "GroupList",
-                new Rect(0, 0, 340, 316));
+            // ── Sub-panels: each stretches to fill the section from y=subPanelBotIns up to
+            // (sectionTop - subPanelTopIns). They grow/shrink automatically with the section.
+            var instrPanelGo   = CreateStretchedSubPanel(section.transform, "InstrumentsPanel", subPanelTopIns, subPanelBotIns, activeInitially: true);
+            var patternPanelGo = CreateStretchedSubPanel(section.transform, "PatternsPanel",    subPanelTopIns, subPanelBotIns, activeInitially: false);
+            var scenePanelGo   = CreateStretchedSubPanel(section.transform, "ScenesPanel",      subPanelTopIns, subPanelBotIns, activeInitially: false);
 
-            // ── Patterns sub-panel ──
-            var patternPanelGo = new GameObject("PatternsPanel");
-            patternPanelGo.transform.SetParent(canvas.transform, false);
-            var patternRt = patternPanelGo.AddComponent<RectTransform>();
-            patternRt.anchorMin = Vector2.zero; patternRt.anchorMax = Vector2.zero;
-            patternRt.pivot = Vector2.zero;
-            patternRt.sizeDelta = new Vector2(340, 316);
-            patternRt.anchoredPosition = new Vector2(0, 4);
-            patternPanelGo.SetActive(false);
-            var patternScroll = UIFactory.CreateScrollView(patternPanelGo.transform, "PatternList",
-                new Rect(0, 0, 340, 316));
+            // Scroll view inside each tab sub-panel — stretched to fill its parent.
+            var instrScroll   = UIFactory.CreateScrollView(instrPanelGo.transform,   "GroupList",   new Rect(0, 0, 1, 1));
+            var patternScroll = UIFactory.CreateScrollView(patternPanelGo.transform, "PatternList", new Rect(0, 0, 1, 1));
+            StretchToParent(instrScroll.GetComponent<RectTransform>());
+            StretchToParent(patternScroll.GetComponent<RectTransform>());
 
-            // ── Scenes sub-panel ──
-            var scenePanelGo = new GameObject("ScenesPanel");
-            scenePanelGo.transform.SetParent(canvas.transform, false);
-            var sceneRt = scenePanelGo.AddComponent<RectTransform>();
-            sceneRt.anchorMin = Vector2.zero; sceneRt.anchorMax = Vector2.zero;
-            sceneRt.pivot = Vector2.zero;
-            sceneRt.sizeDelta = new Vector2(340, 316);
-            sceneRt.anchoredPosition = new Vector2(0, 4);
-            scenePanelGo.SetActive(false);
-
-            var panel = canvas.gameObject.AddComponent<DockPanel>();
+            var panel = section.gameObject.AddComponent<DockPanel>();
             panel.SetUIRefs(
                 instrTab, patternsTab, scenesTab,
                 instrPanelGo, patternPanelGo, scenePanelGo,
@@ -852,18 +990,55 @@ namespace RhythmForge.Bootstrap
             return panel;
         }
 
-        // ──────── Arrangement ────────
-
-        private ArrangementPanel BuildArrangementPanel(Transform head)
+        /// <summary>
+        /// Positions a RectTransform so that (xFromLeft, yFromTop) is its top-left corner and
+        /// (width, height) is its size, with top-left anchor so it follows the parent's top
+        /// edge when the parent resizes.
+        /// </summary>
+        private static void TopAnchorRect(RectTransform rt, float xFromLeft, float yFromTop, float width, float height)
         {
-            var canvas = UIFactory.CreateWorldCanvas("ArrangementPanel",
-                transform, new Vector2(560, 100),
-                PositionInFront(0f, -0.50f, 1.1f), 0.001f);
-            RegisterPanel(canvas, 0f, -0.50f, 1.1f, PanelDragCoordinator.DragMembership.MainGroup);
+            rt.anchorMin = new Vector2(0f, 1f);
+            rt.anchorMax = new Vector2(0f, 1f);
+            rt.pivot     = new Vector2(0f, 1f);
+            rt.anchoredPosition = new Vector2(xFromLeft, -yFromTop);
+            rt.sizeDelta = new Vector2(width, height);
+        }
 
-            UIFactory.CreateBackground(canvas.transform,
-                new Vector2(560, 100), MaterialFactory.PanelBg);
+        /// <summary>
+        /// Stretches a RectTransform to fill its parent completely.
+        /// </summary>
+        private static void StretchToParent(RectTransform rt)
+        {
+            rt.anchorMin = Vector2.zero;
+            rt.anchorMax = Vector2.one;
+            rt.pivot     = new Vector2(0.5f, 0.5f);
+            rt.offsetMin = Vector2.zero;
+            rt.offsetMax = Vector2.zero;
+        }
 
+        /// <summary>
+        /// Creates a GameObject that stretch-fills the parent horizontally and fills the vertical
+        /// space between y=bottomInset and y=(parentTop - topInset). Used for Dock tab sub-panels.
+        /// </summary>
+        private static GameObject CreateStretchedSubPanel(Transform parent, string name, float topInset, float bottomInset, bool activeInitially)
+        {
+            var go = new GameObject(name);
+            go.transform.SetParent(parent, false);
+            var rt = go.AddComponent<RectTransform>();
+            rt.anchorMin = Vector2.zero;
+            rt.anchorMax = Vector2.one;
+            rt.pivot     = new Vector2(0.5f, 0.5f);
+            rt.offsetMin = new Vector2(0f, bottomInset);
+            rt.offsetMax = new Vector2(0f, -topInset);
+            go.SetActive(activeInitially);
+            return go;
+        }
+
+        // ──────── Arrangement section (free-mode child of the merged Transport panel) ────────
+
+        private static ArrangementPanel BuildArrangementSectionContent(RectTransform section)
+        {
+            // Section is 560×100, pivot bottom-left — identical to legacy ArrangementPanel canvas.
             var slotUIs = new List<ArrangementPanel.SlotUI>();
             float sw = 62f, gap = 4f;
 
@@ -871,15 +1046,15 @@ namespace RhythmForge.Bootstrap
             {
                 float sx = 6f + i * (sw + gap);
 
-                var slotLabel = UIFactory.CreateRectText(canvas.transform, $"Slot{i + 1}Label",
+                var slotLabel = UIFactory.CreateRectText(section.transform, $"Slot{i + 1}Label",
                     $"Slot {i + 1}", 11, new Color(0.5f, 0.6f, 0.7f), TextAnchor.MiddleCenter,
                     new Rect(sx, 78, sw, 18));
 
-                var sceneBtn = UIFactory.CreateButton(canvas.transform, $"SceneBtn{i}", "--",
+                var sceneBtn = UIFactory.CreateButton(section.transform, $"SceneBtn{i}", "--",
                     new Rect(sx, 46, sw, 28), MaterialFactory.ButtonDefault, Color.white, 11, null);
                 var sceneLabel = sceneBtn.GetComponentInChildren<Text>();
 
-                var barsBtn = UIFactory.CreateButton(canvas.transform, $"BarsBtn{i}", "4",
+                var barsBtn = UIFactory.CreateButton(section.transform, $"BarsBtn{i}", "4",
                     new Rect(sx, 14, sw, 28), MaterialFactory.ButtonDefault, Color.white, 11, null);
                 var barsLabel = barsBtn.GetComponentInChildren<Text>();
 
@@ -893,27 +1068,26 @@ namespace RhythmForge.Bootstrap
                 });
             }
 
-            var panel = canvas.gameObject.AddComponent<ArrangementPanel>();
+            var panel = section.gameObject.AddComponent<ArrangementPanel>();
             SetPrivateField(panel, "_slots", slotUIs);
             return panel;
         }
 
-        // ──────── Genre Selector ────────
+        // ──────── Genre section (top of the right column inside the merged Transport panel) ────────
 
-        private GenreSelectorPanel BuildGenreSelectorPanel(Transform head)
+        private static GenreSelectorPanel BuildGenreSectionContent(RectTransform section)
         {
-            var canvas = UIFactory.CreateWorldCanvas("GenreSelectorPanel",
-                transform, new Vector2(400, 200),
-                PositionInFront(0.5f, 0.25f, 1.1f), 0.001f);
-            RegisterPanel(canvas, 0.5f, 0.25f, 1.1f);
+            // Section is 740 × 200 (pivot bottom-left). Layout:
+            //   • "GENRE" title across the top
+            //   • 3 genre buttons + sub-labels, horizontally centered in the 740-wide area
+            //   • Description label spanning the remaining vertical space
+            //   • Info line at the bottom
 
-            UIFactory.CreateBackground(canvas.transform,
-                new Vector2(400, 200), MaterialFactory.PanelBg);
+            const float sectionW = TransportPanel.RightColumnW; // 740
 
-            // Title
-            UIFactory.CreateRectText(canvas.transform, "GenreTitle",
+            UIFactory.CreateRectText(section.transform, "GenreTitle",
                 "GENRE", 14, new Color(0.5f, 0.6f, 0.8f), TextAnchor.MiddleCenter,
-                new Rect(0, 172, 400, 22));
+                new Rect(0, 172, sectionW, 22));
 
             var genres   = new System.Collections.Generic.List<string>   { "electronic", "newage", "jazz" };
             var labels   = new System.Collections.Generic.List<string>   { "Electronic", "New Age", "Jazz" };
@@ -926,18 +1100,16 @@ namespace RhythmForge.Bootstrap
                 "Brush kit, Rhodes & jazz voicings"
             };
 
-            float bw = 114f, bh = 56f, gap = 8f, startX = 13f, by = 96f;
+            // 3 buttons of width 114 with 8 px gaps → total content width = 350 px.
+            // Centered in a 740-wide section → startX = (740 - 350) / 2 = 195.
+            float bw = 114f, bh = 56f, gap = 8f, by = 96f;
+            float contentW = 3f * bw + 2f * gap;
+            float startX = (sectionW - contentW) * 0.5f;
 
             for (int i = 0; i < genres.Count; i++)
             {
                 float bx = startX + i * (bw + gap);
-                var color = i == 0
-                    ? new Color(0.24f, 0.72f, 0.96f, 1f)   // electronic blue
-                    : i == 1
-                        ? new Color(0.36f, 0.66f, 0.44f, 1f)  // new age green
-                        : new Color(0.62f, 0.44f, 0.28f, 1f); // jazz amber
-
-                var btn = UIFactory.CreateButton(canvas.transform, $"GenreBtn_{genres[i]}",
+                var btn = UIFactory.CreateButton(section.transform, $"GenreBtn_{genres[i]}",
                     labels[i],
                     new Rect(bx, by, bw, bh),
                     new Color(0.18f, 0.18f, 0.24f, 1f), Color.white, 15, null);
@@ -945,29 +1117,29 @@ namespace RhythmForge.Bootstrap
                 btnTexts.Add(btn.GetComponentInChildren<Text>());
             }
 
-            // Description label
-            var descLabel = UIFactory.CreateRectText(canvas.transform, "GenreDescription",
+            // Description label — stretches nearly the full section width.
+            var descLabel = UIFactory.CreateRectText(section.transform, "GenreDescription",
                 "Lo-Fi, Trap & Dream synthesis", 12,
                 new Color(0.6f, 0.7f, 0.85f), TextAnchor.MiddleCenter,
-                new Rect(8, 56, 384, 34));
+                new Rect(8, 30, sectionW - 16f, 34));
 
-            // Sub-labels for each genre
+            // Sub-labels for each genre (just below the buttons).
             float lby = 74f;
             for (int i = 0; i < genres.Count; i++)
             {
                 float lbx = startX + i * (bw + gap);
-                UIFactory.CreateRectText(canvas.transform, $"GenreDesc_{genres[i]}",
+                UIFactory.CreateRectText(section.transform, $"GenreDesc_{genres[i]}",
                     descLines[i], 10, new Color(0.45f, 0.5f, 0.6f), TextAnchor.UpperCenter,
                     new Rect(lbx, lby, bw, 20));
             }
 
-            // Info line at bottom
-            UIFactory.CreateRectText(canvas.transform, "GenreInfo",
+            // Info line at bottom.
+            UIFactory.CreateRectText(section.transform, "GenreInfo",
                 "Switching genre re-derives all patterns", 11,
                 new Color(0.38f, 0.4f, 0.5f), TextAnchor.MiddleCenter,
-                new Rect(8, 8, 384, 18));
+                new Rect(8, 8, sectionW - 16f, 18));
 
-            var panel = canvas.gameObject.AddComponent<GenreSelectorPanel>();
+            var panel = section.gameObject.AddComponent<GenreSelectorPanel>();
             panel.SetUIRefs(buttons, btnTexts, genres, descLabel);
             return panel;
         }

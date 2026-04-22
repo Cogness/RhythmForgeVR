@@ -77,7 +77,7 @@ namespace RhythmForge
         private VisualizerManager _visualizerManager;
         private AutosaveController _autosaveController;
         private IInputProvider _inputProvider;
-        private bool _showParamLabels = true;
+        private bool _showParamLabels = false;
         private bool _initialized;
         private float _sceneSwapCooldown;
         private readonly Dictionary<PatternType, Material> _materialCache = new Dictionary<PatternType, Material>();

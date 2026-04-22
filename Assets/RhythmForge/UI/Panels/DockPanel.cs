@@ -146,11 +146,10 @@ namespace RhythmForge.UI.Panels
             if (_drawModeLabel == null || _drawMode == null || _store == null)
                 return;
 
+            // Always show the draw mode. The "current phase" info is already displayed in the
+            // Phase section of the merged Transport panel, so we drop the duplicate here.
             _guidedMode = _store.State.guidedMode;
-            if (_guidedMode)
-                _drawModeLabel.text = $"Current phase: {_store.GetCurrentPhase()}";
-            else
-                _drawModeLabel.text = $"Mode: {_drawMode.GetCurrentModeLabel()}";
+            _drawModeLabel.text = $"Mode: {_drawMode.GetCurrentModeLabel()}";
         }
 
         private void RefreshInstruments()

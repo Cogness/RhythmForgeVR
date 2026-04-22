@@ -35,16 +35,12 @@ namespace RhythmForge.UI.Panels
         [SerializeField] private GameObject _patternsPanel;
         [SerializeField] private GameObject _scenesPanel;
 
-        [Header("Instruments Tab")]
-        [SerializeField] private Text _drawModeLabel;
-
         [Header("References")]
         [SerializeField] private Transform _lookAtTarget;
 
         private readonly List<PhaseCardUI> _phaseCardSlots = new List<PhaseCardUI>();
 
         private SessionStore _store;
-        private DrawModeController _drawMode;
         private RhythmForgeEventBus _eventBus;
         private string _activeTab = "instruments";
         private bool _guidedMode;
@@ -84,7 +80,6 @@ namespace RhythmForge.UI.Panels
         public void SetUIRefs(
             Button instrumentsTab, Button patternsTab, Button scenesTab,
             GameObject instrumentsPanel, GameObject patternsPanel, GameObject scenesPanel,
-            Text drawModeLabel,
             List<PhaseCardUI> phaseCardSlots,
             Transform lookAt)
         {
@@ -94,7 +89,6 @@ namespace RhythmForge.UI.Panels
             _instrumentsPanel = instrumentsPanel;
             _patternsPanel    = patternsPanel;
             _scenesPanel      = scenesPanel;
-            _drawModeLabel    = drawModeLabel;
             _lookAtTarget     = lookAt;
 
             _phaseCardSlots.Clear();
@@ -105,7 +99,6 @@ namespace RhythmForge.UI.Panels
         public void Initialize(SessionStore store, DrawModeController drawMode)
         {
             _store    = store;
-            _drawMode = drawMode;
             _eventBus = _store != null ? _store.EventBus : null;
             _guidedMode = _store != null && _store.State.guidedMode;
 
@@ -114,10 +107,7 @@ namespace RhythmForge.UI.Panels
             if (_scenesTab)      _scenesTab.onClick.AddListener(()      => SetTab("scenes"));
 
             if (_eventBus != null)
-            {
                 _eventBus.Subscribe<SessionStateChangedEvent>(HandleSessionStateChanged);
-                _eventBus.Subscribe<DrawModeChangedEvent>(HandleDrawModeChanged);
-            }
 
             SetTab("instruments");
             Refresh();
@@ -130,15 +120,12 @@ namespace RhythmForge.UI.Panels
                 _scenesTab.gameObject.SetActive(!guidedMode);
             if (guidedMode && _activeTab == "scenes")
                 SetTab("instruments");
-
-            RefreshDrawModeLabel();
         }
 
         private void OnDestroy()
         {
             if (_eventBus == null) return;
             _eventBus.Unsubscribe<SessionStateChangedEvent>(HandleSessionStateChanged);
-            _eventBus.Unsubscribe<DrawModeChangedEvent>(HandleDrawModeChanged);
         }
 
         private void SetTab(string tab)
@@ -166,24 +153,10 @@ namespace RhythmForge.UI.Panels
 
         private void HandleSessionStateChanged(SessionStateChangedEvent evt) => Refresh();
 
-        private void HandleDrawModeChanged(DrawModeChangedEvent evt) => RefreshDrawModeLabel();
-
         private void Refresh()
         {
             if (_store == null) return;
-            RefreshDrawModeLabel();
             RefreshInstruments();
-        }
-
-        private void RefreshDrawModeLabel()
-        {
-            if (_drawModeLabel == null || _drawMode == null || _store == null)
-                return;
-
-            // Always show the draw mode. The "current phase" info is already displayed in the
-            // Phase section of the merged Transport panel, so we drop the duplicate here.
-            _guidedMode = _store.State.guidedMode;
-            _drawModeLabel.text = $"Mode: {_drawMode.GetCurrentModeLabel()}";
         }
 
         private void RefreshInstruments()

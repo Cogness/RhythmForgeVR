@@ -941,15 +941,12 @@ namespace RhythmForge.Bootstrap
         private static DockPanel BuildDockSectionContent(RectTransform section, Transform head)
         {
             // The section's size is dynamic (canvas height changes with guided/free mode). Tabs
-            // and mode label top-anchor to the section so they stay at the top. The three tab
-            // sub-panels stretch-fill the area below the label so they auto-resize with the
-            // section.
+            // top-anchor to the section so they stay at the top. The three tab sub-panels
+            // stretch-fill the area below the tabs so they auto-resize with the section.
 
             const float tabRowHeight   = 24f;
             const float tabRowTopPad   = 4f;       // gap from section top to tab row top
-            const float modeLblTopPad  = 32f;      // y-from-top for mode label
-            const float modeLblHeight  = 20f;
-            const float subPanelTopIns = 58f;      // top inset for the tab sub-panels
+            const float subPanelTopIns = 32f;      // top inset = tabRowTopPad + tabRowHeight + 4 gap
             const float subPanelBotIns = 4f;       // bottom inset for the tab sub-panels
 
             // Tab buttons (top row) — top-anchored so they stay at the section top on resize.
@@ -963,19 +960,13 @@ namespace RhythmForge.Bootstrap
             TopAnchorRect(patternsTab.GetComponent<RectTransform>(), xFromLeft: 116f, yFromTop: tabRowTopPad, width: 100f, height: tabRowHeight);
             TopAnchorRect(scenesTab.GetComponent<RectTransform>(),   xFromLeft: 220f, yFromTop: tabRowTopPad, width: 116f, height: tabRowHeight);
 
-            // Draw-mode label — top-anchored.
-            var modeLbl = UIFactory.CreateRectText(section.transform, "DrawModeLabel",
-                "Mode: Rhythm", 13, new Color(0.3f, 0.9f, 1f), TextAnchor.MiddleLeft,
-                new Rect(10, 0, 320, modeLblHeight));
-            TopAnchorRect(modeLbl.GetComponent<RectTransform>(), xFromLeft: 10f, yFromTop: modeLblTopPad, width: 320f, height: modeLblHeight);
-
-            // ── Sub-panels: each stretches to fill the section below the label. ──────────
+            // ── Sub-panels: each stretches to fill the section below the tab row. ─────
             var instrPanelGo   = CreateStretchedSubPanel(section.transform, "InstrumentsPanel", subPanelTopIns, subPanelBotIns, activeInitially: true);
             var patternPanelGo = CreateStretchedSubPanel(section.transform, "PatternsPanel",    subPanelTopIns, subPanelBotIns, activeInitially: false);
             var scenePanelGo   = CreateStretchedSubPanel(section.transform, "ScenesPanel",      subPanelTopIns, subPanelBotIns, activeInitially: false);
 
             // ── Instruments sub-panel: 5 phase cards stacked directly (no scroll view).
-            // 5 cards × 68 px + 4 × 4 gap + 8 padding ≈ 364 px → fits in the ~388 px sub-panel.
+            // 5 cards × 72 px + 4 × 4 gap + 8 padding ≈ 384 px → fills the ~416 px sub-panel.
             var phaseCards = BuildPhaseCardList(instrPanelGo.transform);
 
             // ── Patterns sub-panel: reserved, shows placeholder text ─────────────────────
@@ -987,7 +978,7 @@ namespace RhythmForge.Bootstrap
             panel.SetUIRefs(
                 instrTab, patternsTab, scenesTab,
                 instrPanelGo, patternPanelGo, scenePanelGo,
-                modeLbl, phaseCards, head);
+                phaseCards, head);
             return panel;
         }
 
@@ -996,12 +987,12 @@ namespace RhythmForge.Bootstrap
         /// <summary>
         /// Creates 5 phase cards inside <paramref name="container"/> (one per CompositionPhase).
         /// Each card: background Image + 4-px left accent bar + phase label + details line + summary line.
-        /// Cards are stacked top-to-bottom with a fixed height of 68 px and 4 px gap.
+        /// Cards are stacked top-to-bottom with a fixed height of 72 px and 4 px gap.
         /// Returns a list of PhaseCardUI structs for DockPanel to update at runtime.
         /// </summary>
         private static List<DockPanel.PhaseCardUI> BuildPhaseCardList(Transform container)
         {
-            const float cardH   = 68f;
+            const float cardH   = 72f;
             const float cardGap = 4f;
             const float cardW   = 320f;
             const float accentW = 4f;
@@ -1055,7 +1046,7 @@ namespace RhythmForge.Bootstrap
                     "● PHASE", 13, new Color(0.90f, 0.93f, 1f), TextAnchor.UpperLeft,
                     new Rect(accentW + padL, 0, cardW - accentW - padL - 4f, 20f));
                 TopAnchorRect(phaseLbl.GetComponent<RectTransform>(),
-                    xFromLeft: accentW + padL, yFromTop: 4f,
+                    xFromLeft: accentW + padL, yFromTop: 5f,
                     width: cardW - accentW - padL - 4f, height: 18f);
 
                 // Details line (preset · key · bars · tempo)
@@ -1063,16 +1054,16 @@ namespace RhythmForge.Bootstrap
                     "Not yet composed", 11, new Color(0.65f, 0.68f, 0.75f), TextAnchor.UpperLeft,
                     new Rect(accentW + padL, 0, cardW - accentW - padL - 4f, 18f));
                 TopAnchorRect(detailsLbl.GetComponent<RectTransform>(),
-                    xFromLeft: accentW + padL, yFromTop: 24f,
-                    width: cardW - accentW - padL - 4f, height: 16f);
+                    xFromLeft: accentW + padL, yFromTop: 25f,
+                    width: cardW - accentW - padL - 4f, height: 18f);
 
                 // Summary line
                 var summaryLbl = UIFactory.CreateRectText(cardGo.transform, "SummaryText",
                     string.Empty, 10, new Color(0.55f, 0.58f, 0.65f), TextAnchor.UpperLeft,
                     new Rect(accentW + padL, 0, cardW - accentW - padL - 4f, 22f));
                 TopAnchorRect(summaryLbl.GetComponent<RectTransform>(),
-                    xFromLeft: accentW + padL, yFromTop: 42f,
-                    width: cardW - accentW - padL - 4f, height: 22f);
+                    xFromLeft: accentW + padL, yFromTop: 45f,
+                    width: cardW - accentW - padL - 4f, height: 23f);
                 summaryLbl.horizontalOverflow = HorizontalWrapMode.Wrap;
                 summaryLbl.verticalOverflow   = VerticalWrapMode.Truncate;
 

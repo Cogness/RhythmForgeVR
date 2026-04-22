@@ -948,8 +948,8 @@ namespace RhythmForge.Bootstrap
             const float tabRowHeight   = 24f;
             const float tabRowTopPad   = 4f;       // gap from section top to tab row top
             const float modeLblTopPad  = 32f;      // y-from-top for mode label
-            const float modeLblHeight  = 26f;
-            const float subPanelTopIns = 62f;      // top inset for the tab sub-panels
+            const float modeLblHeight  = 20f;
+            const float subPanelTopIns = 58f;      // top inset for the tab sub-panels
             const float subPanelBotIns = 4f;       // bottom inset for the tab sub-panels
 
             // Tab buttons (top row) — top-anchored so they stay at the section top on resize.
@@ -963,31 +963,130 @@ namespace RhythmForge.Bootstrap
             TopAnchorRect(patternsTab.GetComponent<RectTransform>(), xFromLeft: 116f, yFromTop: tabRowTopPad, width: 100f, height: tabRowHeight);
             TopAnchorRect(scenesTab.GetComponent<RectTransform>(),   xFromLeft: 220f, yFromTop: tabRowTopPad, width: 116f, height: tabRowHeight);
 
-            // Draw-mode / current-phase label.
+            // Draw-mode label — top-anchored.
             var modeLbl = UIFactory.CreateRectText(section.transform, "DrawModeLabel",
-                "Mode: Rhythm", 15, new Color(0.3f, 0.9f, 1f), TextAnchor.MiddleLeft,
+                "Mode: Rhythm", 13, new Color(0.3f, 0.9f, 1f), TextAnchor.MiddleLeft,
                 new Rect(10, 0, 320, modeLblHeight));
             TopAnchorRect(modeLbl.GetComponent<RectTransform>(), xFromLeft: 10f, yFromTop: modeLblTopPad, width: 320f, height: modeLblHeight);
 
-            // ── Sub-panels: each stretches to fill the section from y=subPanelBotIns up to
-            // (sectionTop - subPanelTopIns). They grow/shrink automatically with the section.
+            // ── Sub-panels: each stretches to fill the section below the label. ──────────
             var instrPanelGo   = CreateStretchedSubPanel(section.transform, "InstrumentsPanel", subPanelTopIns, subPanelBotIns, activeInitially: true);
             var patternPanelGo = CreateStretchedSubPanel(section.transform, "PatternsPanel",    subPanelTopIns, subPanelBotIns, activeInitially: false);
             var scenePanelGo   = CreateStretchedSubPanel(section.transform, "ScenesPanel",      subPanelTopIns, subPanelBotIns, activeInitially: false);
 
-            // Scroll view inside each tab sub-panel — stretched to fill its parent.
-            var instrScroll   = UIFactory.CreateScrollView(instrPanelGo.transform,   "GroupList",   new Rect(0, 0, 1, 1));
-            var patternScroll = UIFactory.CreateScrollView(patternPanelGo.transform, "PatternList", new Rect(0, 0, 1, 1));
-            StretchToParent(instrScroll.GetComponent<RectTransform>());
-            StretchToParent(patternScroll.GetComponent<RectTransform>());
+            // ── Instruments sub-panel: 5 phase cards stacked directly (no scroll view).
+            // 5 cards × 68 px + 4 × 4 gap + 8 padding ≈ 364 px → fits in the ~388 px sub-panel.
+            var phaseCards = BuildPhaseCardList(instrPanelGo.transform);
+
+            // ── Patterns sub-panel: reserved, shows placeholder text ─────────────────────
+            UIFactory.CreateRectText(patternPanelGo.transform, "PatternsPlaceholder",
+                "Patterns — coming soon", 13, new Color(0.45f, 0.48f, 0.55f), TextAnchor.MiddleCenter,
+                new Rect(0, 0, 320, 40));
 
             var panel = section.gameObject.AddComponent<DockPanel>();
             panel.SetUIRefs(
                 instrTab, patternsTab, scenesTab,
                 instrPanelGo, patternPanelGo, scenePanelGo,
-                instrScroll.content, modeLbl,
-                patternScroll.content, scenePanelGo.transform, head);
+                modeLbl, phaseCards, head);
             return panel;
+        }
+
+        // ── Phase card list builder ──────────────────────────────────────────────────────
+
+        /// <summary>
+        /// Creates 5 phase cards inside <paramref name="container"/> (one per CompositionPhase).
+        /// Each card: background Image + 4-px left accent bar + phase label + details line + summary line.
+        /// Cards are stacked top-to-bottom with a fixed height of 68 px and 4 px gap.
+        /// Returns a list of PhaseCardUI structs for DockPanel to update at runtime.
+        /// </summary>
+        private static List<DockPanel.PhaseCardUI> BuildPhaseCardList(Transform container)
+        {
+            const float cardH   = 68f;
+            const float cardGap = 4f;
+            const float cardW   = 320f;
+            const float accentW = 4f;
+            const float padL    = 10f;  // text left padding (after accent bar)
+
+            var cards = new List<DockPanel.PhaseCardUI>();
+            var phases = CompositionPhaseExtensions.All;
+
+            // Vertical stack on the container so cards auto-lay out top-down.
+            var vlg = container.gameObject.GetComponent<UnityEngine.UI.VerticalLayoutGroup>();
+            if (vlg == null) vlg = container.gameObject.AddComponent<UnityEngine.UI.VerticalLayoutGroup>();
+            vlg.spacing                = cardGap;
+            vlg.childForceExpandWidth  = true;
+            vlg.childForceExpandHeight = false;
+            vlg.childControlWidth      = true;
+            vlg.childControlHeight     = true;
+            vlg.childAlignment         = TextAnchor.UpperCenter;
+            vlg.padding                = new RectOffset(4, 4, 4, 4);
+
+            for (int i = 0; i < phases.Length; i++)
+            {
+                // Card root
+                var cardGo = new GameObject($"PhaseCard_{phases[i]}");
+                cardGo.transform.SetParent(container, false);
+                var cardRt = cardGo.AddComponent<RectTransform>();
+                cardRt.sizeDelta = new Vector2(cardW, cardH);
+
+                // Tell the VerticalLayoutGroup the preferred height for this card.
+                var le = cardGo.AddComponent<UnityEngine.UI.LayoutElement>();
+                le.preferredHeight = cardH;
+                le.minHeight       = cardH;
+
+                // Background — slightly lighter than the dock panel bg so cards stand out.
+                var bg = cardGo.AddComponent<Image>();
+                bg.color = new Color(0.17f, 0.19f, 0.25f, 1f);
+
+                // Left accent bar (4 px wide, full card height, left-anchored)
+                var accentGo = new GameObject("AccentBar");
+                accentGo.transform.SetParent(cardGo.transform, false);
+                var accentRt  = accentGo.AddComponent<RectTransform>();
+                accentRt.anchorMin = new Vector2(0f, 0f);
+                accentRt.anchorMax = new Vector2(0f, 1f);
+                accentRt.pivot     = new Vector2(0f, 0.5f);
+                accentRt.offsetMin = Vector2.zero;
+                accentRt.offsetMax = new Vector2(accentW, 0f);
+                var accentImg = accentGo.AddComponent<Image>();
+                accentImg.color = Color.gray;
+
+                // Phase label — top-left
+                var phaseLbl = UIFactory.CreateRectText(cardGo.transform, "PhaseLabel",
+                    "● PHASE", 13, new Color(0.90f, 0.93f, 1f), TextAnchor.UpperLeft,
+                    new Rect(accentW + padL, 0, cardW - accentW - padL - 4f, 20f));
+                TopAnchorRect(phaseLbl.GetComponent<RectTransform>(),
+                    xFromLeft: accentW + padL, yFromTop: 4f,
+                    width: cardW - accentW - padL - 4f, height: 18f);
+
+                // Details line (preset · key · bars · tempo)
+                var detailsLbl = UIFactory.CreateRectText(cardGo.transform, "DetailsText",
+                    "Not yet composed", 11, new Color(0.65f, 0.68f, 0.75f), TextAnchor.UpperLeft,
+                    new Rect(accentW + padL, 0, cardW - accentW - padL - 4f, 18f));
+                TopAnchorRect(detailsLbl.GetComponent<RectTransform>(),
+                    xFromLeft: accentW + padL, yFromTop: 24f,
+                    width: cardW - accentW - padL - 4f, height: 16f);
+
+                // Summary line
+                var summaryLbl = UIFactory.CreateRectText(cardGo.transform, "SummaryText",
+                    string.Empty, 10, new Color(0.55f, 0.58f, 0.65f), TextAnchor.UpperLeft,
+                    new Rect(accentW + padL, 0, cardW - accentW - padL - 4f, 22f));
+                TopAnchorRect(summaryLbl.GetComponent<RectTransform>(),
+                    xFromLeft: accentW + padL, yFromTop: 42f,
+                    width: cardW - accentW - padL - 4f, height: 22f);
+                summaryLbl.horizontalOverflow = HorizontalWrapMode.Wrap;
+                summaryLbl.verticalOverflow   = VerticalWrapMode.Truncate;
+
+                cards.Add(new DockPanel.PhaseCardUI
+                {
+                    background  = bg,
+                    accentBar   = accentImg,
+                    phaseLabel  = phaseLbl,
+                    detailsText = detailsLbl,
+                    summaryText = summaryLbl,
+                });
+            }
+
+            return cards;
         }
 
         /// <summary>

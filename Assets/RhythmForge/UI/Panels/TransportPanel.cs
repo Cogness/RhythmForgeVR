@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.UI;
+using RhythmForge.Bootstrap;
 using RhythmForge.Core.Data;
 using RhythmForge.Core.Events;
 using RhythmForge.Core.Session;
@@ -23,6 +24,8 @@ namespace RhythmForge.UI.Panels
         [SerializeField] private Text _transportStatus;
         [SerializeField] private Button _toggleParamsButton;
         [SerializeField] private Text _toggleParamsLabel;
+        [SerializeField] private Button _viewModeButton;
+        [SerializeField] private Text _viewModeLabel;
 
         private bool _showParams = true;
 
@@ -33,12 +36,18 @@ namespace RhythmForge.UI.Panels
         private DrawModeController _drawMode;
         private RhythmForgeEventBus _eventBus;
         private bool _guidedMode;
+        private ImmersionController _immersion;
+
+        // Visual palette for the view-mode button.
+        private static readonly Color ImmersedBg    = new Color(0.18f, 0.22f, 0.32f, 1f); // indigo
+        private static readonly Color PassthroughBg = new Color(0.26f, 0.46f, 0.58f, 1f); // teal-ish
 
         /// <summary>Called by RhythmForgeBootstrapper to inject UI element references.</summary>
         public void SetUIRefs(Button playStopButton, Text playStopLabel,
             Button modeButton, Text modeButtonLabel,
             Text bpmText, Text keyText, Text transportStatus,
-            Button toggleParamsButton = null, Text toggleParamsLabel = null)
+            Button toggleParamsButton = null, Text toggleParamsLabel = null,
+            Button viewModeButton = null, Text viewModeLabel = null)
         {
             _playStopButton      = playStopButton;
             _playStopLabel       = playStopLabel;
@@ -49,6 +58,26 @@ namespace RhythmForge.UI.Panels
             _transportStatus     = transportStatus;
             _toggleParamsButton  = toggleParamsButton;
             _toggleParamsLabel   = toggleParamsLabel;
+            _viewModeButton      = viewModeButton;
+            _viewModeLabel       = viewModeLabel;
+        }
+
+        /// <summary>
+        /// Binds the view-mode button to an <see cref="ImmersionController"/>.
+        /// Must be called after <see cref="Initialize"/>. Safe to call with null.
+        /// </summary>
+        public void BindImmersion(ImmersionController controller)
+        {
+            _immersion = controller;
+            if (_viewModeButton != null)
+            {
+                _viewModeButton.onClick.AddListener(() => _immersion?.Toggle());
+            }
+            if (_immersion != null)
+            {
+                _immersion.OnModeChanged += HandleImmersionChanged;
+                HandleImmersionChanged(_immersion.PassthroughEnabled);
+            }
         }
 
         public void Initialize(SessionStore store, Sequencer.Sequencer sequencer, DrawModeController drawMode)
@@ -79,12 +108,35 @@ namespace RhythmForge.UI.Panels
 
         private void OnDestroy()
         {
+            if (_immersion != null)
+                _immersion.OnModeChanged -= HandleImmersionChanged;
+
             if (_eventBus == null)
                 return;
 
             _eventBus.Unsubscribe<SessionStateChangedEvent>(HandleSessionStateChanged);
             _eventBus.Unsubscribe<TransportChangedEvent>(HandleTransportChanged);
             _eventBus.Unsubscribe<DrawModeChangedEvent>(HandleDrawModeChanged);
+        }
+
+        private void HandleImmersionChanged(bool passthrough)
+        {
+            if (_viewModeLabel != null)
+                _viewModeLabel.text = passthrough ? "View\nPass-Thru" : "View\nImmersed";
+
+            if (_viewModeButton != null)
+            {
+                Color bg = passthrough ? PassthroughBg : ImmersedBg;
+                var colors = _viewModeButton.colors;
+                colors.normalColor = bg;
+                colors.highlightedColor = Color.Lerp(bg, Color.white, 0.25f);
+                colors.pressedColor = Color.Lerp(bg, Color.black, 0.25f);
+                _viewModeButton.colors = colors;
+
+                var image = _viewModeButton.GetComponent<Image>();
+                if (image != null)
+                    image.color = bg;
+            }
         }
 
         private void OnModeChanged(PatternType mode)

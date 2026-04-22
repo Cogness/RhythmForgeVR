@@ -53,8 +53,10 @@ namespace RhythmForge.Bootstrap
         [SerializeField] private AudioEngine _audioEngine;
         [SerializeField] private SamplePlayer _samplePlayer;
         [SerializeField] private Sequencer.Sequencer _sequencer;
+        [SerializeField] private ImmersionController _immersionController;
 
         private VRRigLocator _rig;
+        private GameObject _immersiveEnvironment;
         private bool _built;
 
         private void Awake() => Bootstrap();
@@ -265,6 +267,9 @@ namespace RhythmForge.Bootstrap
             // ── 1. Audio ──
             BuildAudio();
 
+            // ── 1b. Immersive environment + PassThrough controller ──
+            BuildImmersion();
+
             // ── 2. Default stroke material (StrokeCapture only; manager creates per-type materials itself) ──
             var defaultStrokeMat = MaterialFactory.CreateStrokeMaterial(PatternType.Percussion);
 
@@ -276,6 +281,10 @@ namespace RhythmForge.Bootstrap
 
             // ── 4b. Create drag coordinator (replaces individual panel draggers) ──
             CreateDragCoordinator(subsystems.inputMapper);
+
+            // ── 4c. Wire immersion toggle into the Transport panel. ──
+            if (_immersionController != null && panels.transport != null)
+                panels.transport.BindImmersion(_immersionController);
 
             // ── 5. Instance container ──
             var instanceContainer = new GameObject("InstanceContainer").transform;
@@ -339,6 +348,19 @@ namespace RhythmForge.Bootstrap
             _audioEngine.Configure(_samplePlayer, _rhythmForgeMixer);
             // Route pool sources to the genre group active at startup
             _audioEngine.SetGenre(GenreRegistry.GetActive().Id);
+        }
+
+        // ──────────────────────────────────────────────────────────
+        //  IMMERSION (PassThrough ↔ Immersed)
+        // ──────────────────────────────────────────────────────────
+
+        private void BuildImmersion()
+        {
+            // Parent the environment under this bootstrapper so it gets cleaned up with it.
+            _immersiveEnvironment = ImmersiveEnvironmentFactory.Build(transform);
+
+            _immersionController = GetOrAdd<ImmersionController>(gameObject);
+            _immersionController.Configure(_immersiveEnvironment, _rig != null ? _rig.CenterEye : null);
         }
 
         // ──────────────────────────────────────────────────────────
@@ -503,13 +525,14 @@ namespace RhythmForge.Bootstrap
 
         private TransportPanel BuildTransportPanel(Transform head)
         {
+            // Widened from 640 → 740 to make room for the View-mode (PassThrough/Immersed) button.
             var canvas = UIFactory.CreateWorldCanvas("TransportPanel",
-                transform, new Vector2(640, 100),
+                transform, new Vector2(740, 100),
                 PositionInFront(0f, -0.22f, 1.1f), 0.001f);
             RegisterPanel(canvas, 0f, -0.22f, 1.1f, PanelDragCoordinator.DragMembership.MainGroup);
 
             UIFactory.CreateBackground(canvas.transform,
-                new Vector2(640, 100), MaterialFactory.PanelBg);
+                new Vector2(740, 100), MaterialFactory.PanelBg);
 
             // Play/Stop button
             var playBtn = UIFactory.CreateButton(canvas.transform, "PlayStopButton", "Play",
@@ -526,6 +549,11 @@ namespace RhythmForge.Bootstrap
                 new Rect(532, 8, 100, 84), TypeColors.Percussion, Color.white, 18, null);
             var modeLabel = modeBtn.GetComponentInChildren<Text>();
 
+            // View-mode (PassThrough ↔ Immersed) button — initial label set by TransportPanel.BindImmersion.
+            var viewBtn = UIFactory.CreateButton(canvas.transform, "ViewModeButton", "View\nImmersed",
+                new Rect(644, 8, 88, 84), new Color(0.18f, 0.22f, 0.32f, 1f), Color.white, 14, null);
+            var viewLabel = viewBtn.GetComponentInChildren<Text>();
+
             // Info labels
             var bpmText    = UIFactory.CreateRectText(canvas.transform, "BpmText",
                 "85 BPM", 18, Color.white, TextAnchor.MiddleLeft,
@@ -538,7 +566,8 @@ namespace RhythmForge.Bootstrap
                 new Rect(120, 6, 400, 22));
 
             var panel = canvas.gameObject.AddComponent<TransportPanel>();
-            panel.SetUIRefs(playBtn, playLabel, modeBtn, modeLabel, bpmText, keyText, statusText, paramsBtn, paramsLabel);
+            panel.SetUIRefs(playBtn, playLabel, modeBtn, modeLabel, bpmText, keyText, statusText,
+                paramsBtn, paramsLabel, viewBtn, viewLabel);
             return panel;
         }
 

@@ -65,6 +65,7 @@ namespace RhythmForge.UI.Panels
                 _eventBus.Subscribe<SessionStateChangedEvent>(HandleSessionStateChanged);
                 _eventBus.Subscribe<PhaseChangedEvent>(HandlePhaseChanged);
                 _eventBus.Subscribe<TransportChangedEvent>(HandleTransportChanged);
+                _eventBus.Subscribe<PhaseInvalidationChangedEvent>(HandlePhaseInvalidationChanged);
             }
 
             Refresh();
@@ -78,6 +79,7 @@ namespace RhythmForge.UI.Panels
             _eventBus.Unsubscribe<SessionStateChangedEvent>(HandleSessionStateChanged);
             _eventBus.Unsubscribe<PhaseChangedEvent>(HandlePhaseChanged);
             _eventBus.Unsubscribe<TransportChangedEvent>(HandleTransportChanged);
+            _eventBus.Unsubscribe<PhaseInvalidationChangedEvent>(HandlePhaseInvalidationChanged);
         }
 
         private void HandleSessionStateChanged(SessionStateChangedEvent evt)
@@ -91,6 +93,11 @@ namespace RhythmForge.UI.Panels
         }
 
         private void HandleTransportChanged(TransportChangedEvent evt)
+        {
+            Refresh();
+        }
+
+        private void HandlePhaseInvalidationChanged(PhaseInvalidationChangedEvent evt)
         {
             Refresh();
         }
@@ -112,10 +119,14 @@ namespace RhythmForge.UI.Panels
                 CompositionPhase phase = phases[i];
                 bool isCurrent = phase == currentPhase;
                 bool isFilled = HasCommittedPattern(composition, phase);
-                bool isPending = _store.IsPhasePending(phase);
                 string stateLabel = isCurrent ? "Current" : isFilled ? "Filled" : "Empty";
-                if (isPending)
+                PhaseInvalidationKind invalidation = _store.GetPhaseInvalidation(phase);
+                if (invalidation == PhaseInvalidationKind.AsyncRederive)
                     stateLabel = $"{stateLabel} • Pending";
+                else if (invalidation == PhaseInvalidationKind.ScheduleDirty)
+                    stateLabel = $"{stateLabel} • Stale";
+                else if (invalidation != PhaseInvalidationKind.None)
+                    stateLabel = $"{stateLabel} • Pending/Stale";
                 Color color = isCurrent ? _currentColor : isFilled ? _filledColor : _emptyColor;
 
                 if (i < _phaseLabels.Count && _phaseLabels[i] != null)

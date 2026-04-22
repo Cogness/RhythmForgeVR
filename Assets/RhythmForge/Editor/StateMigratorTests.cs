@@ -49,7 +49,7 @@ namespace RhythmForge.Editor
 
             migrator.NormalizeState(state);
 
-            Assert.That(state.version, Is.EqualTo(7));
+            Assert.That(state.version, Is.EqualTo(8));
             Assert.That(state.drawMode, Is.EqualTo(PatternType.Percussion.ToString()));
             Assert.That(state.scenes[0].instanceIds, Does.Not.Contain("missing-instance"));
             Assert.That(state.scenes[1].instanceIds, Does.Contain(instance.id));
@@ -81,7 +81,7 @@ namespace RhythmForge.Editor
         {
             var migrator = new StateMigrator();
             var state = AppStateFactory.CreateEmpty();
-            state.version = 6;
+            state.version = 7;
             state.tempo = 72f;
             state.key = "A minor";
             state.activeGenreId = "jazz";
@@ -96,7 +96,7 @@ namespace RhythmForge.Editor
 
             migrator.NormalizeState(state);
 
-            Assert.That(state.version, Is.EqualTo(7));
+            Assert.That(state.version, Is.EqualTo(8));
             Assert.That(state.guidedMode, Is.True);
             Assert.That(state.tempo, Is.EqualTo(72f));
             Assert.That(state.key, Is.EqualTo("A minor"));
@@ -106,6 +106,53 @@ namespace RhythmForge.Editor
             Assert.That(state.composition.tempo, Is.EqualTo(GuidedDefaults.Tempo));
             Assert.That(state.composition.key, Is.EqualTo(GuidedDefaults.Key));
             Assert.That(state.composition.progression, Is.Not.Null);
+        }
+
+        [Test]
+        public void NormalizeState_RebuildsHarmonyChordEventsFromLegacyHarmonicContext_WhenMissing()
+        {
+            var migrator = new StateMigrator();
+            var state = AppStateFactory.CreateEmpty();
+            state.version = 7;
+            state.harmonicContext = new HarmonicContext
+            {
+                rootMidi = 60,
+                chordTones = new System.Collections.Generic.List<int> { 60, 64, 67, 71 },
+                flavor = "maj7"
+            };
+            state.composition.progression = new ChordProgression
+            {
+                bars = 0,
+                chords = new System.Collections.Generic.List<ChordSlot>()
+            };
+
+            var harmony = new PatternDefinition
+            {
+                id = "harmony-1",
+                type = PatternType.Harmony,
+                name = "Harmony-01",
+                bars = 4,
+                derivedSequence = new DerivedSequence
+                {
+                    kind = "harmony",
+                    totalSteps = 0,
+                    chordEvents = null
+                }
+            };
+
+            state.patterns.Add(harmony);
+            state.composition.SetPatternId(CompositionPhase.Harmony, harmony.id);
+
+            migrator.NormalizeState(state);
+
+            Assert.That(harmony.derivedSequence, Is.Not.Null);
+            Assert.That(harmony.derivedSequence.totalSteps, Is.EqualTo(4 * AppStateFactory.BarSteps));
+            Assert.That(harmony.derivedSequence.chordEvents, Has.Count.EqualTo(4));
+            Assert.That(harmony.derivedSequence.chordEvents[0].rootMidi, Is.EqualTo(60));
+            Assert.That(harmony.derivedSequence.chordEvents[0].flavor, Is.EqualTo("maj7"));
+            Assert.That(harmony.derivedSequence.chordEvents[0].voicing, Is.EquivalentTo(new[] { 60, 64, 67, 71 }));
+            Assert.That(state.composition.progression.chords, Has.Count.EqualTo(4));
+            Assert.That(state.composition.progression.chords[0].rootMidi, Is.EqualTo(60));
         }
     }
 }

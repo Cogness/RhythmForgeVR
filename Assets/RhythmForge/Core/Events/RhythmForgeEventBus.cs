@@ -193,4 +193,25 @@ namespace RhythmForge.Core.Events
 
         public string PatternId { get; }
     }
+
+    [Flags]
+    public enum PhaseInvalidationKind
+    {
+        None = 0,
+        AsyncRederive = 1 << 0,
+        ScheduleDirty = 1 << 1
+    }
+
+    public readonly struct PhaseInvalidationChangedEvent
+    {
+        public PhaseInvalidationChangedEvent(CompositionPhase phase, PhaseInvalidationKind kind)
+        {
+            Phase = phase;
+            Kind = kind;
+        }
+
+        public CompositionPhase Phase { get; }
+        public PhaseInvalidationKind Kind { get; }
+        public bool IsPending => Kind != PhaseInvalidationKind.None;
+    }
 }

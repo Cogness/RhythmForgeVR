@@ -70,21 +70,6 @@ namespace RhythmForge.Core.PatternBehavior.Behaviors
                     }
                     return;
                 }
-
-                if (context.pattern.derivedSequence.chord == null)
-                    return;
-
-                float fallbackDuration = totalSteps * context.stepDuration * 0.96f;
-                foreach (var midi in context.pattern.derivedSequence.chord)
-                {
-                    results.Add(VoiceSpecResolver.ResolveHarmony(
-                        context.preset,
-                        context.sound,
-                        midi,
-                        fallbackDuration,
-                        context.instance.brightness,
-                        context.preset.fxSend));
-                }
             }
         }
 
@@ -98,33 +83,6 @@ namespace RhythmForge.Core.PatternBehavior.Behaviors
                 ScheduleProgression(context);
                 return;
             }
-
-            if (context.localStep != 0 || context.pattern.derivedSequence.chord == null)
-                return;
-
-            int totalSteps = context.pattern.derivedSequence.totalSteps > 0
-                ? context.pattern.derivedSequence.totalSteps
-                : AppStateFactory.BarSteps;
-            float duration = totalSteps * context.stepDuration * 0.96f;
-
-            using (PatternContextScope.ForPattern(context.appState, context.pattern))
-            {
-                context.audioDispatcher?.PlayChord(
-                    context.preset,
-                    context.pattern.derivedSequence.chord,
-                    0.38f,
-                    duration,
-                    context.instance.pan,
-                    context.instance.brightness,
-                    context.instance.depth,
-                    context.preset.fxSend + context.group.busFx.reverb * 0.18f,
-                    context.sound);
-            }
-
-            context.recordTrigger?.Invoke(
-                context.instance.id,
-                context.scheduledTime,
-                GetVisualDuration(duration, context.sound));
         }
 
         private void ScheduleProgression(PatternSchedulingContext context)

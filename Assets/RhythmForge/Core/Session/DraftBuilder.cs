@@ -73,15 +73,9 @@ namespace RhythmForge.Core.Session
             var soundProfile = behavior.DeriveSoundProfile(shapeProfile);
             string shapeSummary = PresetBiasResolver.SummarizeShapeDNA(type, shapeProfile, soundProfile);
 
-            // Compute role index: count existing committed patterns of the same type → this shape's ensemble position.
-            int sameTypeCount = 0;
-            foreach (var p in store.State.patterns)
-                if (p?.type == type) sameTypeCount++;
-
             // Derive sequence
             PatternDerivationResult derivation;
             using (PatternContextScope.Push(
-                new ShapeRole { index = sameTypeCount, count = sameTypeCount + 1 },
                 PatternContextScope.CloneHarmonicContext(store.GetHarmonicContext()),
                 state.guidedMode ? PatternContextScope.CloneProgression(store.GetComposition().progression) : null))
             {

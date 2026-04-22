@@ -60,7 +60,6 @@ namespace RhythmForge.Editor
             };
 
             using (PatternContextScope.Push(
-                ShapeRole.Primary,
                 progression.ToHarmonicContext(0),
                 progression))
             {

@@ -55,7 +55,7 @@ namespace RhythmForge.Core.Data
     [Serializable]
     public class AppState
     {
-        public int version = 7;
+        public int version = 8;
         public float tempo = GuidedDefaults.Tempo;
         public string key = GuidedDefaults.Key;
         public string activeGroupId = "lofi"; // kept for migration; use activeGenreId at runtime

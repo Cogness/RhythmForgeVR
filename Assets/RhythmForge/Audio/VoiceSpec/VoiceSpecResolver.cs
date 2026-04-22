@@ -38,6 +38,7 @@ namespace RhythmForge.Audio
             {
                 case PatternType.HarmonyPad:  return isNewAge ? 0.562f : 0.631f;
                 case PatternType.MelodyLine:  return isNewAge ? 0.794f : 0.891f;
+                case PatternType.Bass:        return isNewAge ? 0.86f : 0.94f;
                 default:                       return 1.0f;
             }
         }
@@ -60,6 +61,24 @@ namespace RhythmForge.Audio
             return spec;
         }
 
+        public static ResolvedVoiceSpec ResolveBass(
+            InstrumentPreset preset,
+            SoundProfile profile,
+            int midi,
+            float duration,
+            float positionBrightness,
+            float fxSend,
+            float glide = 0f)
+        {
+            var spec = CreateBaseSpec(PatternType.Bass, preset, profile, positionBrightness, fxSend);
+            spec.midi = midi;
+            spec.durationSeconds = QuantizeDuration(duration, 0.04f, 0.08f, 2.2f);
+            spec.glide = QuantizeSigned(glide, 20f);
+            ResolveTonalDetails(ref spec);
+            spec.velocityScale = ModeGainLinear(PatternType.Bass, spec.isNewAge);
+            return spec;
+        }
+
         public static ResolvedVoiceSpec ResolveHarmony(
             InstrumentPreset preset,
             SoundProfile profile,
@@ -74,9 +93,7 @@ namespace RhythmForge.Audio
             spec.glide = 0f;
             ResolveTonalDetails(ref spec);
             spec.velocityScale = ModeGainLinear(PatternType.HarmonyPad, spec.isNewAge);
-            // §4c: role-1+ pads are narrower in the stereo field so role-0 owns the wide image
-            int padRoleIdx = ShapeRoleProvider.Current.index;
-            spec.chorusWidthScale = padRoleIdx > 0 ? 1f / (1f + padRoleIdx) : 1f;
+            spec.chorusWidthScale = 1f;
             return spec;
         }
 

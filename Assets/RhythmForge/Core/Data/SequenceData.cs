@@ -40,16 +40,6 @@ namespace RhythmForge.Core.Data
     }
 
     [Serializable]
-    public class HarmonySequence
-    {
-        public string kind = "harmony";
-        public int totalSteps;
-        public string flavor; // "maj7", "sus", "minor"
-        public int rootMidi;
-        public List<int> chord = new List<int>();
-    }
-
-    [Serializable]
     public class DerivedSequence
     {
         public string kind;
@@ -64,9 +54,6 @@ namespace RhythmForge.Core.Data
         public GrooveProfile grooveProfile;
 
         // Harmony-specific
-        public string flavor;
-        public int rootMidi;
-        public List<int> chord;
         public List<ChordSlot> chordEvents;
     }
 }

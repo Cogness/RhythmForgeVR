@@ -24,7 +24,7 @@ namespace RhythmForge.Core.Session
 
         // Main-thread dispatch queue: background tasks post completions here; Tick() drains it.
         private readonly ConcurrentQueue<Action> _mainThreadQueue = new ConcurrentQueue<Action>();
-        private readonly Dictionary<CompositionPhase, int> _pendingPhaseCounts = new Dictionary<CompositionPhase, int>();
+        private readonly Dictionary<CompositionPhase, PhaseInvalidationKind> _phaseInvalidations = new Dictionary<CompositionPhase, PhaseInvalidationKind>();
 
         /// <summary>Fired on the main thread after a background genre re-derivation completes.</summary>
         public event Action<string> OnGenreRederived;
@@ -46,7 +46,7 @@ namespace RhythmForge.Core.Session
         {
             State = state ?? AppStateFactory.CreateEmpty();
             _stateMigrator.NormalizeState(State);
-            _pendingPhaseCounts.Clear();
+            _phaseInvalidations.Clear();
             // Sync registry to the loaded genre
             GenreRegistry.SetActive(State.activeGenreId ?? "electronic");
             NotifyStateChanged();
@@ -55,7 +55,7 @@ namespace RhythmForge.Core.Session
         public void Reset()
         {
             State = AppStateFactory.CreateEmpty();
-            _pendingPhaseCounts.Clear();
+            _phaseInvalidations.Clear();
             NotifyStateChanged();
         }
 
@@ -164,23 +164,40 @@ namespace RhythmForge.Core.Session
                 draft.derivedSequence?.chordEvents != null &&
                 draft.derivedSequence.chordEvents.Count > 0)
             {
-                UpdateProgression(new ChordProgression
+                var progression = new ChordProgression
                 {
                     bars = draft.bars > 0 ? draft.bars : GuidedDefaults.Bars,
                     chords = CloneChordSlots(draft.derivedSequence.chordEvents)
-                });
+                };
+
+                ClearPhaseInvalidation(CompositionPhase.Harmony, PhaseInvalidationKind.AsyncRederive | PhaseInvalidationKind.ScheduleDirty, notifyState: false);
+                if (State.guidedMode)
+                    UpdateProgression(progression);
+                else
+                {
+                    State.harmonicContext = progression.ToHarmonicContext(0);
+                    NotifyStateChanged();
+                }
             }
 
             if (draft != null && draft.success && canonicalType == PatternType.Melody)
             {
+                ClearPhaseInvalidation(CompositionPhase.Melody, PhaseInvalidationKind.AsyncRederive | PhaseInvalidationKind.ScheduleDirty, notifyState: true);
                 EventBus.Publish(new MelodyCommittedEvent(instance?.patternId));
             }
 
             if (draft != null && draft.success && canonicalType == PatternType.Groove)
             {
+                ClearPhaseInvalidation(CompositionPhase.Groove, PhaseInvalidationKind.AsyncRederive | PhaseInvalidationKind.ScheduleDirty, notifyState: false);
                 UpdateGroove(draft.derivedSequence?.grooveProfile);
                 EventBus.Publish(new GrooveCommittedEvent(instance?.patternId));
             }
+
+            if (draft != null && draft.success && canonicalType == PatternType.Bass)
+                ClearPhaseInvalidation(CompositionPhase.Bass, PhaseInvalidationKind.AsyncRederive | PhaseInvalidationKind.ScheduleDirty, notifyState: true);
+
+            if (draft != null && draft.success && canonicalType == PatternType.Percussion)
+                ClearPhaseInvalidation(CompositionPhase.Percussion, PhaseInvalidationKind.AsyncRederive | PhaseInvalidationKind.ScheduleDirty, notifyState: true);
 
             return instance;
         }
@@ -288,6 +305,7 @@ namespace RhythmForge.Core.Session
             State.tempo = next.tempo;
             State.key = string.IsNullOrEmpty(next.key) ? GuidedDefaults.Key : next.key;
             State.harmonicContext = GetHarmonicContextForBar(0);
+            _phaseInvalidations.Clear();
             NotifyStateChanged();
         }
 
@@ -298,7 +316,14 @@ namespace RhythmForge.Core.Session
 
         public bool IsPhasePending(CompositionPhase phase)
         {
-            return _pendingPhaseCounts.TryGetValue(phase, out int count) && count > 0;
+            return GetPhaseInvalidation(phase) != PhaseInvalidationKind.None;
+        }
+
+        public PhaseInvalidationKind GetPhaseInvalidation(CompositionPhase phase)
+        {
+            return _phaseInvalidations.TryGetValue(phase, out var kind)
+                ? kind
+                : PhaseInvalidationKind.None;
         }
 
         public bool HasCommittedPhase(CompositionPhase phase)
@@ -330,6 +355,7 @@ namespace RhythmForge.Core.Session
 
             Patterns.RemovePatternAndInstances(patternId, notify: false);
             composition.RemovePatternId(phase);
+            ClearPhaseInvalidation(phase, PhaseInvalidationKind.AsyncRederive | PhaseInvalidationKind.ScheduleDirty, notifyState: false);
 
             switch (phase)
             {
@@ -338,6 +364,7 @@ namespace RhythmForge.Core.Session
                     return;
                 case CompositionPhase.Groove:
                     composition.groove = null;
+                    MarkPhaseInvalidations(ResolveScheduleDirtyDependentPhases(), PhaseInvalidationKind.ScheduleDirty, notifyState: false);
                     NotifyStateChanged();
                     EventBus.Publish(new GrooveCommittedEvent(null));
                     return;
@@ -364,6 +391,7 @@ namespace RhythmForge.Core.Session
         {
             var composition = GetComposition();
             composition.groove = groove?.Clone();
+            MarkPhaseInvalidations(ResolveScheduleDirtyDependentPhases(), PhaseInvalidationKind.ScheduleDirty, notifyState: false);
             NotifyStateChanged();
         }
 
@@ -429,7 +457,7 @@ namespace RhythmForge.Core.Session
             if (snapshot.Count == 0)
                 return;
 
-            MarkPendingPhases(snapshot, notify: true);
+            MarkPhaseInvalidations(snapshot, PhaseInvalidationKind.AsyncRederive, notifyState: true);
             var queue = _mainThreadQueue;
             string genreId = GetActiveGenreId();
 
@@ -488,29 +516,15 @@ namespace RhythmForge.Core.Session
         {
             var genre   = GenreRegistry.Get(genreId);
             var results = new List<PatternRederivation>(snapshots.Count);
-            var roleCounter = new Dictionary<PatternType, int>();
-            var roleTotals = new Dictionary<PatternType, int>();
             var harmonicContext = progression?.ToHarmonicContext(0) ?? new HarmonicContext();
-
-            foreach (var snap in snapshots)
-            {
-                if (!roleTotals.ContainsKey(snap.type))
-                    roleTotals[snap.type] = 0;
-                roleTotals[snap.type]++;
-            }
 
             foreach (var snap in snapshots)
             {
                 var metrics      = StrokeAnalyzer.Analyze(snap.points);
                 var soundProfile = genre.GetSoundMapping(snap.type).Evaluate(snap.type, snap.shapeProfile);
 
-                if (!roleCounter.TryGetValue(snap.type, out int roleIdx))
-                    roleIdx = 0;
-                roleCounter[snap.type] = roleIdx + 1;
-
                 PatternDerivationResult derivation;
                 using (PatternContextScope.Push(
-                    new ShapeRole { index = roleIdx, count = roleTotals[snap.type] },
                     harmonicContext,
                     progression))
                 {
@@ -534,15 +548,6 @@ namespace RhythmForge.Core.Session
                         chords = CloneChordSlots(derivation.derivedSequence.chordEvents)
                     };
                     harmonicContext = progression.ToHarmonicContext(0);
-                }
-                else if (PatternTypeCompatibility.IsHarmony(snap.type) && derivation.derivedSequence?.chord != null)
-                {
-                    harmonicContext = new HarmonicContext
-                    {
-                        rootMidi = derivation.derivedSequence.rootMidi,
-                        chordTones = new List<int>(derivation.derivedSequence.chord),
-                        flavor = derivation.derivedSequence.flavor ?? "minor"
-                    };
                 }
 
                 results.Add(new PatternRederivation
@@ -670,47 +675,88 @@ namespace RhythmForge.Core.Session
                 }
             }
 
-            ClearPendingPhases(completedPhases, notify: false);
+            ClearPhaseInvalidations(completedPhases, PhaseInvalidationKind.AsyncRederive, notifyState: false);
             NotifyStateChanged();
             OnGenreRederived?.Invoke(genreId);
         }
 
-        private void MarkPendingPhases(List<PatternSnapshot> snapshots, bool notify)
+        private List<CompositionPhase> ResolveScheduleDirtyDependentPhases()
         {
-            bool changed = false;
+            var phases = new List<CompositionPhase>();
+            if (HasCommittedPhase(CompositionPhase.Melody))
+                phases.Add(CompositionPhase.Melody);
+            if (HasCommittedPhase(CompositionPhase.Percussion))
+                phases.Add(CompositionPhase.Percussion);
+            return phases;
+        }
+
+        private void MarkPhaseInvalidations(List<PatternSnapshot> snapshots, PhaseInvalidationKind kind, bool notifyState)
+        {
+            var phases = new List<CompositionPhase>();
             for (int i = 0; i < snapshots.Count; i++)
             {
                 CompositionPhase phase = snapshots[i].type.ToCompositionPhase();
-                if (!_pendingPhaseCounts.TryGetValue(phase, out int count))
-                    count = 0;
-
-                _pendingPhaseCounts[phase] = count + 1;
-                changed = true;
+                if (!phases.Contains(phase))
+                    phases.Add(phase);
             }
 
-            if (changed && notify)
-                NotifyStateChanged();
+            MarkPhaseInvalidations(phases, kind, notifyState);
         }
 
-        private void ClearPendingPhases(List<CompositionPhase> phases, bool notify)
+        private void MarkPhaseInvalidations(List<CompositionPhase> phases, PhaseInvalidationKind kind, bool notifyState)
         {
             bool changed = false;
             for (int i = 0; i < phases.Count; i++)
             {
-                CompositionPhase phase = phases[i];
-                if (!_pendingPhaseCounts.TryGetValue(phase, out int count) || count <= 0)
+                var phase = phases[i];
+                var previous = GetPhaseInvalidation(phase);
+                var next = previous | kind;
+                if (previous == next)
                     continue;
 
-                if (count == 1)
-                    _pendingPhaseCounts.Remove(phase);
-                else
-                    _pendingPhaseCounts[phase] = count - 1;
-
+                _phaseInvalidations[phase] = next;
+                EventBus.Publish(new PhaseInvalidationChangedEvent(phase, next));
                 changed = true;
             }
 
-            if (changed && notify)
+            if (changed && notifyState)
                 NotifyStateChanged();
+        }
+
+        private void ClearPhaseInvalidations(List<CompositionPhase> phases, PhaseInvalidationKind kind, bool notifyState)
+        {
+            bool changed = false;
+            for (int i = 0; i < phases.Count; i++)
+            {
+                if (ClearPhaseInvalidationInternal(phases[i], kind))
+                    changed = true;
+            }
+
+            if (changed && notifyState)
+                NotifyStateChanged();
+        }
+
+        private void ClearPhaseInvalidation(CompositionPhase phase, PhaseInvalidationKind kind, bool notifyState)
+        {
+            bool changed = ClearPhaseInvalidationInternal(phase, kind);
+            if (changed && notifyState)
+                NotifyStateChanged();
+        }
+
+        private bool ClearPhaseInvalidationInternal(CompositionPhase phase, PhaseInvalidationKind kind)
+        {
+            var previous = GetPhaseInvalidation(phase);
+            var next = previous & ~kind;
+            if (previous == next)
+                return false;
+
+            if (next == PhaseInvalidationKind.None)
+                _phaseInvalidations.Remove(phase);
+            else
+                _phaseInvalidations[phase] = next;
+
+            EventBus.Publish(new PhaseInvalidationChangedEvent(phase, next));
+            return true;
         }
 
         private void NotifyStateChanged()

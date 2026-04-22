@@ -48,8 +48,7 @@ namespace RhythmForge.Core.PatternBehavior.Behaviors
             using (PatternContextScope.ForPattern(context.appState, context.pattern))
             {
                 foreach (var note in context.pattern.derivedSequence.notes)
-                {
-                    results.Add(VoiceSpecResolver.ResolveMelody(
+                    results.Add(VoiceSpecResolver.ResolveBass(
                         context.preset,
                         context.sound,
                         note.midi,
@@ -57,7 +56,6 @@ namespace RhythmForge.Core.PatternBehavior.Behaviors
                         context.instance.brightness,
                         context.preset.fxSend,
                         note.glide));
-                }
             }
         }
 
@@ -74,7 +72,7 @@ namespace RhythmForge.Core.PatternBehavior.Behaviors
                 float duration = note.durationSteps * context.stepDuration;
                 using (PatternContextScope.ForPattern(context.appState, context.pattern))
                 {
-                    context.audioDispatcher?.PlayMelody(
+                    context.audioDispatcher?.PlayBass(
                         context.preset,
                         note.midi,
                         note.velocity,
@@ -96,7 +94,7 @@ namespace RhythmForge.Core.PatternBehavior.Behaviors
 
         public PlaybackVisualSpec AdjustVisualSpec(PlaybackVisualSpec baseSpec, SoundProfile soundProfile)
         {
-            return VisualGrammarProfiles.GetMelodyLine().Apply(baseSpec, soundProfile);
+            return VisualGrammarProfiles.GetBass().Apply(baseSpec, soundProfile);
         }
 
         public AnimationEnergies ComputeAnimation(
@@ -106,7 +104,7 @@ namespace RhythmForge.Core.PatternBehavior.Behaviors
             float renderedHeight,
             float timeSeconds)
         {
-            return VisualGrammarProfiles.GetMelodyLine().Animate(state, pulse, sustain, renderedHeight, timeSeconds);
+            return VisualGrammarProfiles.GetBass().Animate(state, pulse, sustain, renderedHeight, timeSeconds);
         }
 
         private static float GetVisualDuration(float noteDuration, SoundProfile sound)

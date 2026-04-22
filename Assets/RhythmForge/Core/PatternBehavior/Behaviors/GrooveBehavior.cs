@@ -10,11 +10,9 @@ namespace RhythmForge.Core.PatternBehavior.Behaviors
 {
     public sealed class GrooveBehavior : IPatternBehavior
     {
-        private static readonly MelodyBehavior MelodyDelegate = new MelodyBehavior();
-
         public PatternType Type => PatternType.Groove;
         public string DisplayName => "Groove";
-        public bool PrefersClosedStroke => MelodyDelegate.PrefersClosedStroke;
+        public bool PrefersClosedStroke => false;
         public string DraftNamePrefix => "Groove";
 
         public PatternDerivationResult Derive(
@@ -93,7 +91,7 @@ namespace RhythmForge.Core.PatternBehavior.Behaviors
 
         public PlaybackVisualSpec AdjustVisualSpec(PlaybackVisualSpec baseSpec, SoundProfile soundProfile)
         {
-            return MelodyDelegate.AdjustVisualSpec(baseSpec, soundProfile);
+            return VisualGrammarProfiles.GetGroove().Apply(baseSpec, soundProfile);
         }
 
         public AnimationEnergies ComputeAnimation(
@@ -103,7 +101,7 @@ namespace RhythmForge.Core.PatternBehavior.Behaviors
             float renderedHeight,
             float timeSeconds)
         {
-            return MelodyDelegate.ComputeAnimation(state, pulse, sustain, renderedHeight, timeSeconds);
+            return VisualGrammarProfiles.GetGroove().Animate(state, pulse, sustain, renderedHeight, timeSeconds);
         }
 
         private static int ResolveVisualStride(float density, int gridStep)

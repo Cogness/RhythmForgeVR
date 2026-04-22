@@ -5,6 +5,7 @@ using RhythmForge.Core.Events;
 using RhythmForge.Core.Session;
 using UnityEngine;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace RhythmForge.Editor
 {
@@ -166,6 +167,65 @@ namespace RhythmForge.Editor
         }
 
         [Test]
+        public void CommitDraft_ForGroove_MarksMelodyAndPercussionScheduleDirty_AndPublishesInvalidationEvents()
+        {
+            var store = new SessionStore();
+            var melody = CreatePhasePattern("melody-1", PatternType.Melody);
+            var percussion = CreatePhasePattern("perc-1", PatternType.Percussion);
+
+            store.State.patterns.Add(melody);
+            store.State.patterns.Add(percussion);
+            store.GetComposition().SetPatternId(CompositionPhase.Melody, melody.id);
+            store.GetComposition().SetPatternId(CompositionPhase.Percussion, percussion.id);
+
+            var published = new List<PhaseInvalidationChangedEvent>();
+            store.EventBus.Subscribe<PhaseInvalidationChangedEvent>(evt => published.Add(evt));
+
+            var draft = new DraftResult
+            {
+                success = true,
+                type = PatternType.Groove,
+                name = "Groove-01",
+                bars = GuidedDefaults.Bars,
+                tempoBase = GuidedDefaults.Tempo,
+                key = GuidedDefaults.Key,
+                groupId = "lofi",
+                presetId = "lofi-piano",
+                points = new List<Vector2> { Vector2.zero, Vector2.right * 0.4f, new Vector2(0.8f, 0.2f) },
+                renderRotation = Quaternion.identity,
+                hasRenderRotation = true,
+                spawnPosition = Vector3.zero,
+                derivedSequence = new DerivedSequence
+                {
+                    kind = "groove",
+                    totalSteps = GuidedDefaults.Bars * AppStateFactory.BarSteps,
+                    grooveProfile = new GrooveProfile
+                    {
+                        density = 1.1f,
+                        syncopation = 0.22f,
+                        swing = 0.16f,
+                        quantizeGrid = 16,
+                        accentCurve = new[] { 1f, 0.72f, 0.9f, 0.72f }
+                    }
+                },
+                tags = new List<string> { "groove" },
+                color = Color.yellow,
+                shapeProfile = new ShapeProfile(),
+                soundProfile = new SoundProfile(),
+                shapeSummary = "focused groove line",
+                summary = "groove profile",
+                details = "details"
+            };
+
+            store.CommitDraft(draft, duplicate: false);
+
+            Assert.That(store.GetPhaseInvalidation(CompositionPhase.Melody), Is.EqualTo(PhaseInvalidationKind.ScheduleDirty));
+            Assert.That(store.GetPhaseInvalidation(CompositionPhase.Percussion), Is.EqualTo(PhaseInvalidationKind.ScheduleDirty));
+            Assert.That(published.Any(evt => evt.Phase == CompositionPhase.Melody && evt.Kind == PhaseInvalidationKind.ScheduleDirty), Is.True);
+            Assert.That(published.Any(evt => evt.Phase == CompositionPhase.Percussion && evt.Kind == PhaseInvalidationKind.ScheduleDirty), Is.True);
+        }
+
+        [Test]
         public void GuidedDemoComposition_SeedsFoundation_LeavesPhasesEmpty()
         {
             var store = new SessionStore();
@@ -213,6 +273,7 @@ namespace RhythmForge.Editor
             var harmony = CreatePhasePattern("harmony-1", PatternType.Harmony);
             var melody = CreatePhasePattern("melody-1", PatternType.Melody);
             var bass = CreatePhasePattern("bass-1", PatternType.Bass);
+            var published = new List<PhaseInvalidationChangedEvent>();
 
             store.State.patterns.Add(harmony);
             store.State.patterns.Add(melody);
@@ -220,6 +281,7 @@ namespace RhythmForge.Editor
             store.GetComposition().SetPatternId(CompositionPhase.Harmony, harmony.id);
             store.GetComposition().SetPatternId(CompositionPhase.Melody, melody.id);
             store.GetComposition().SetPatternId(CompositionPhase.Bass, bass.id);
+            store.EventBus.Subscribe<PhaseInvalidationChangedEvent>(evt => published.Add(evt));
 
             store.GetComposition().progression.chords[0].flavor = "maj7";
 
@@ -228,8 +290,10 @@ namespace RhythmForge.Editor
             Assert.That(store.GetComposition().GetPatternId(CompositionPhase.Harmony), Is.Null);
             Assert.That(store.GetPattern(harmony.id), Is.Null);
             Assert.That(store.GetComposition().progression.chords[0].flavor, Is.EqualTo(GuidedDefaults.CreateDefaultProgression().chords[0].flavor));
-            Assert.That(store.IsPhasePending(CompositionPhase.Melody), Is.True);
-            Assert.That(store.IsPhasePending(CompositionPhase.Bass), Is.True);
+            Assert.That(store.GetPhaseInvalidation(CompositionPhase.Melody), Is.EqualTo(PhaseInvalidationKind.AsyncRederive));
+            Assert.That(store.GetPhaseInvalidation(CompositionPhase.Bass), Is.EqualTo(PhaseInvalidationKind.AsyncRederive));
+            Assert.That(published.Any(evt => evt.Phase == CompositionPhase.Melody && evt.Kind == PhaseInvalidationKind.AsyncRederive), Is.True);
+            Assert.That(published.Any(evt => evt.Phase == CompositionPhase.Bass && evt.Kind == PhaseInvalidationKind.AsyncRederive), Is.True);
         }
 
         private static PatternDefinition CreatePhasePattern(string id, PatternType type)

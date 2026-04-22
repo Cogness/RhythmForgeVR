@@ -104,6 +104,31 @@ namespace RhythmForge.Audio
                 startDelay);
         }
 
+        public void PlayBass(InstrumentPreset preset, int midi, float velocity, float duration,
+            float pan, float brightness, float depth, float fxSend,
+            SoundProfile soundProfile, float glide = 0f, float startDelay = 0f)
+        {
+            if (!IsReady) return;
+            soundProfile = soundProfile ?? new SoundProfile();
+
+            float gainAmount = Mathf.Clamp01(
+                (1.08f - depth * 0.34f) * velocity * (0.82f + soundProfile.body * 0.4f));
+
+            _samplePlayer.PlayNote(
+                preset,
+                midi,
+                velocity,
+                duration,
+                pan,
+                brightness,
+                gainAmount * _masterVolume,
+                fxSend,
+                soundProfile,
+                PatternType.Bass,
+                glide,
+                startDelay);
+        }
+
         // Convenience overload — uses default lofi-pad preset.
         public void PlayChord(List<int> chord, float velocity,
             float duration, float pan, float brightness, float depth,

@@ -12,7 +12,7 @@ namespace RhythmForge.Core.Session
         {
             var fallback = AppStateFactory.CreateEmpty();
             int loadedVersion = state.version;
-            state.version = 7;
+            state.version = 8;
 
             if (state.scenes == null || state.scenes.Count != 4)
                 state.scenes = fallback.scenes;
@@ -34,7 +34,7 @@ namespace RhythmForge.Core.Session
                 state.composition.progression = GuidedDefaults.CreateDefaultProgression();
             if (state.composition.phasePatternIds == null)
                 state.composition.phasePatternIds = new List<CompositionPhasePatternRef>();
-            if (loadedVersion < 7)
+            if (loadedVersion < 8)
                 state.guidedMode = true;
 
             if (string.IsNullOrEmpty(state.activeGroupId))
@@ -52,6 +52,7 @@ namespace RhythmForge.Core.Session
                 mode = PatternType.Percussion;
             state.drawMode = PatternTypeCompatibility.Canonicalize(mode).ToString();
 
+            NormalizeHarmonyPayloads(state);
             NormalizePatternShapeData(state, loadedVersion);
             NormalizePatternOrientations(state, loadedVersion);
             CleanupSceneMembership(state);
@@ -103,6 +104,113 @@ namespace RhythmForge.Core.Session
                 if (loadedVersion < 4 || backfilledSize || pattern.soundProfile == null || string.IsNullOrEmpty(pattern.shapeSummary))
                     RefreshPatternDescriptors(pattern);
             }
+        }
+
+        private void NormalizeHarmonyPayloads(AppState state)
+        {
+            if (state?.patterns == null)
+                return;
+
+            var composition = state.composition;
+            bool progressionHasChords = composition?.progression?.chords != null && composition.progression.chords.Count > 0;
+
+            for (int i = 0; i < state.patterns.Count; i++)
+            {
+                var pattern = state.patterns[i];
+                if (pattern == null || !PatternTypeCompatibility.IsHarmony(pattern.type))
+                    continue;
+
+                if (pattern.derivedSequence == null)
+                    pattern.derivedSequence = new DerivedSequence();
+
+                int bars = ResolveHarmonyBars(pattern, composition);
+                pattern.derivedSequence.kind = string.IsNullOrEmpty(pattern.derivedSequence.kind)
+                    ? "harmony"
+                    : pattern.derivedSequence.kind;
+
+                if (pattern.derivedSequence.totalSteps <= 0)
+                    pattern.derivedSequence.totalSteps = bars * AppStateFactory.BarSteps;
+
+                if (pattern.derivedSequence.chordEvents == null || pattern.derivedSequence.chordEvents.Count == 0)
+                {
+                    pattern.derivedSequence.chordEvents = BuildHarmonyFallbackSlots(state, bars);
+                }
+
+                if (!progressionHasChords &&
+                    composition != null &&
+                    pattern.derivedSequence.chordEvents != null &&
+                    pattern.derivedSequence.chordEvents.Count > 0)
+                {
+                    composition.progression = new ChordProgression
+                    {
+                        bars = bars,
+                        chords = CloneChordSlots(pattern.derivedSequence.chordEvents, bars)
+                    };
+                    progressionHasChords = true;
+                }
+            }
+
+            if ((state.harmonicContext == null || !state.harmonicContext.HasChord) &&
+                composition?.progression?.chords != null &&
+                composition.progression.chords.Count > 0)
+            {
+                state.harmonicContext = composition.progression.ToHarmonicContext(0);
+            }
+        }
+
+        private static int ResolveHarmonyBars(PatternDefinition pattern, Composition composition)
+        {
+            if (pattern != null && pattern.bars > 0)
+                return pattern.bars;
+            if (composition != null && composition.bars > 0)
+                return composition.bars;
+            if (composition?.progression != null && composition.progression.bars > 0)
+                return composition.progression.bars;
+            return GuidedDefaults.Bars;
+        }
+
+        private static List<ChordSlot> BuildHarmonyFallbackSlots(AppState state, int bars)
+        {
+            var progression = state?.composition?.progression;
+            if (progression?.chords != null && progression.chords.Count > 0)
+                return CloneChordSlots(progression.chords, bars);
+
+            var harmonicContext = state?.harmonicContext ?? new HarmonicContext();
+            var slots = new List<ChordSlot>(bars);
+            for (int barIndex = 0; barIndex < bars; barIndex++)
+            {
+                slots.Add(new ChordSlot
+                {
+                    barIndex = barIndex,
+                    rootMidi = harmonicContext.rootMidi,
+                    flavor = string.IsNullOrEmpty(harmonicContext.flavor) ? "major" : harmonicContext.flavor,
+                    voicing = harmonicContext.chordTones != null
+                        ? new List<int>(harmonicContext.chordTones)
+                        : new List<int>()
+                });
+            }
+
+            return slots;
+        }
+
+        private static List<ChordSlot> CloneChordSlots(List<ChordSlot> source, int bars)
+        {
+            var slots = new List<ChordSlot>(bars);
+            if (source == null || source.Count == 0)
+                return slots;
+
+            for (int barIndex = 0; barIndex < bars; barIndex++)
+            {
+                var slot = source[barIndex % source.Count];
+                if (slot == null)
+                    continue;
+
+                var clone = slot.Clone();
+                clone.barIndex = barIndex;
+                slots.Add(clone);
+            }
+
+            return slots;
         }
 
         private void NormalizePatternOrientations(AppState state, int loadedVersion)

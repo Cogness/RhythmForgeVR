@@ -29,6 +29,19 @@ namespace RhythmForge.Audio
             float glide = 0f,
             float startDelay = 0f);
 
+        void PlayBass(
+            InstrumentPreset preset,
+            int midi,
+            float velocity,
+            float duration,
+            float pan,
+            float brightness,
+            float depth,
+            float fxSend,
+            SoundProfile soundProfile,
+            float glide = 0f,
+            float startDelay = 0f);
+
         void PlayChord(
             InstrumentPreset preset,
             List<int> chord,

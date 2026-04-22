@@ -13,6 +13,8 @@ namespace RhythmForge.Core.Data
         public PlaybackVisualBaseProfile playbackBase = PlaybackVisualBaseProfile.CreateDefaults();
         public RhythmLoopVisualProfile rhythmLoop = RhythmLoopVisualProfile.CreateDefaults();
         public MelodyLineVisualProfile melodyLine = MelodyLineVisualProfile.CreateDefaults();
+        public GrooveVisualProfile groove = GrooveVisualProfile.CreateDefaults();
+        public BassVisualProfile bass = BassVisualProfile.CreateDefaults();
         public HarmonyPadVisualProfile harmonyPad = HarmonyPadVisualProfile.CreateDefaults();
     }
 
@@ -344,6 +346,76 @@ namespace RhythmForge.Core.Data
         }
     }
 
+    [Serializable]
+    public class GrooveVisualProfile : MelodyLineVisualProfile
+    {
+        public static new GrooveVisualProfile CreateDefaults()
+        {
+            return new GrooveVisualProfile
+            {
+                markerScaleAdd = 0.08f,
+                haloStrengthBaseScale = 0.62f,
+                haloStrengthReleaseWeight = 0.1f,
+                secondaryStrengthModWeight = 0.28f,
+                motionSpeedMin = 0.75f,
+                motionSpeedMax = 1.6f,
+                motionSpeedFilterWeight = 0.22f,
+                motionSpeedModWeight = 0.78f,
+                lineEnergyPulseWeight = 0.5f,
+                lineEnergySustainWeight = 0.32f,
+                haloEnergyPulseWeight = 0.46f,
+                haloEnergySustainWeight = 0.4f,
+                markerPulseWeight = 0.88f,
+                markerSustainWeight = 0.56f,
+                markerScaleBase = 0.66f,
+                markerScalePulseWeight = 0.7f,
+                markerScaleSustainWeight = 0.2f,
+                normalOffsetBaseSpeed = 1.8f,
+                normalOffsetMotionSpeedWeight = 3.0f,
+                normalOffsetHeightWeight = 0.16f,
+                haloBreathBase = 1f,
+                haloBreathBaseSpeed = 1.5f,
+                haloBreathMotionSpeedWeight = 1.8f,
+                haloBreathAmplitude = 0.08f
+            };
+        }
+    }
+
+    [Serializable]
+    public class BassVisualProfile : MelodyLineVisualProfile
+    {
+        public static new BassVisualProfile CreateDefaults()
+        {
+            return new BassVisualProfile
+            {
+                markerScaleAdd = 0.02f,
+                haloStrengthBaseScale = 0.86f,
+                haloStrengthReleaseWeight = 0.08f,
+                secondaryStrengthModWeight = 0.14f,
+                motionSpeedMin = 0.35f,
+                motionSpeedMax = 0.95f,
+                motionSpeedFilterWeight = 0.35f,
+                motionSpeedModWeight = 0.4f,
+                lineEnergyPulseWeight = 0.28f,
+                lineEnergySustainWeight = 0.62f,
+                haloEnergyPulseWeight = 0.22f,
+                haloEnergySustainWeight = 0.68f,
+                markerPulseWeight = 0.7f,
+                markerSustainWeight = 0.96f,
+                markerScaleBase = 0.74f,
+                markerScalePulseWeight = 0.38f,
+                markerScaleSustainWeight = 0.46f,
+                normalOffsetBaseSpeed = 0.8f,
+                normalOffsetMotionSpeedWeight = 1.4f,
+                normalOffsetHeightWeight = 0.07f,
+                haloBreathBase = 1f,
+                haloBreathBaseSpeed = 0.7f,
+                haloBreathMotionSpeedWeight = 0.8f,
+                haloBreathAmplitude = 0.04f
+            };
+        }
+    }
+
     public static class VisualGrammarProfiles
     {
         public static void SetActiveProfile(VisualGrammarProfileAsset profile)
@@ -376,6 +448,16 @@ namespace RhythmForge.Core.Data
             return VisualGrammarProfileRuntime.GetMelodyLine();
         }
 
+        public static GrooveVisualProfile GetGroove()
+        {
+            return VisualGrammarProfileRuntime.GetGroove();
+        }
+
+        public static BassVisualProfile GetBass()
+        {
+            return VisualGrammarProfileRuntime.GetBass();
+        }
+
         public static HarmonyPadVisualProfile GetHarmonyPad()
         {
             return VisualGrammarProfileRuntime.GetHarmonyPad();
@@ -391,6 +473,8 @@ namespace RhythmForge.Core.Data
         private static readonly PlaybackVisualBaseProfile DefaultPlaybackBase = PlaybackVisualBaseProfile.CreateDefaults();
         private static readonly RhythmLoopVisualProfile DefaultRhythmLoop = RhythmLoopVisualProfile.CreateDefaults();
         private static readonly MelodyLineVisualProfile DefaultMelodyLine = MelodyLineVisualProfile.CreateDefaults();
+        private static readonly GrooveVisualProfile DefaultGroove = GrooveVisualProfile.CreateDefaults();
+        private static readonly BassVisualProfile DefaultBass = BassVisualProfile.CreateDefaults();
         private static readonly HarmonyPadVisualProfile DefaultHarmonyPad = HarmonyPadVisualProfile.CreateDefaults();
 
         private static VisualGrammarProfileAsset _activeProfile;
@@ -429,6 +513,16 @@ namespace RhythmForge.Core.Data
         public static MelodyLineVisualProfile GetMelodyLine()
         {
             return ResolveProfile()?.melodyLine ?? DefaultMelodyLine;
+        }
+
+        public static GrooveVisualProfile GetGroove()
+        {
+            return ResolveProfile()?.groove ?? DefaultGroove;
+        }
+
+        public static BassVisualProfile GetBass()
+        {
+            return ResolveProfile()?.bass ?? DefaultBass;
         }
 
         public static HarmonyPadVisualProfile GetHarmonyPad()

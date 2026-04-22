@@ -65,76 +65,63 @@ namespace RhythmForge.Editor
 
         [TestCase("newage")]
         [TestCase("jazz")]
-        public void LegacyGenreHarmonyRoles_StayWithinExpectedRegisters(string genreId)
+        public void LegacyGenreHarmony_UsesChordEventsWithinExpectedRegisters(string genreId)
         {
             var genre = GenreRegistry.Get(genreId);
             var points = CreatePoints();
             var metrics = new StrokeMetrics { length = 1.0f, averageSize = 0.42f, height = 1f, width = 1f };
             var shape = CreateHarmonyShape();
             var sound = new SoundProfile { reverbBias = 0.4f, filterMotion = 0.3f };
-
-            List<int> role0;
-            List<int> role1;
-            List<int> role2;
-
-            using (PatternContextScope.Push(new ShapeRole { index = 0, count = 3 }, new HarmonicContext()))
-                role0 = genre.HarmonyDeriver.Derive(points, metrics, "C major", shape, sound, genre).derivedSequence.chord;
-            using (PatternContextScope.Push(new ShapeRole { index = 1, count = 3 }, new HarmonicContext()))
-                role1 = genre.HarmonyDeriver.Derive(points, metrics, "C major", shape, sound, genre).derivedSequence.chord;
-            using (PatternContextScope.Push(new ShapeRole { index = 2, count = 3 }, new HarmonicContext()))
-                role2 = genre.HarmonyDeriver.Derive(points, metrics, "C major", shape, sound, genre).derivedSequence.chord;
+            var result = genre.HarmonyDeriver.Derive(points, metrics, "C major", shape, sound, genre);
 
             var harmonyRange = RegisterPolicy.GetRange(PatternType.Harmony, genreId);
-            var bassRange = RegisterPolicy.GetBassRange(genreId);
+            Assert.That(result.derivedSequence.chordEvents, Is.Not.Null);
+            Assert.That(result.derivedSequence.chordEvents, Has.Count.EqualTo(result.bars));
 
-            Assert.That(role0.Count, Is.GreaterThan(0));
-            foreach (var midi in role0)
-                Assert.That(midi, Is.InRange(harmonyRange.min, harmonyRange.max));
-
-            Assert.That(role1.Count, Is.EqualTo(2));
-            foreach (var midi in role1)
-                Assert.That(midi, Is.InRange(bassRange.min, bassRange.max));
-
-            Assert.That(role2.Count, Is.EqualTo(1));
-            Assert.That(role2[0], Is.InRange(bassRange.min, bassRange.max));
+            for (int i = 0; i < result.derivedSequence.chordEvents.Count; i++)
+            {
+                var slot = result.derivedSequence.chordEvents[i];
+                Assert.That(slot, Is.Not.Null);
+                Assert.That(slot.voicing, Is.Not.Empty);
+                foreach (var midi in slot.voicing)
+                    Assert.That(midi, Is.InRange(harmonyRange.min, harmonyRange.max));
+            }
         }
 
         [Test]
-        public void Providers_AreThreadLocal()
+        public void HarmonicContextProvider_IsThreadLocal()
         {
             try
             {
-                ShapeRoleProvider.Set(new ShapeRole { index = 2, count = 4 });
                 HarmonicContextProvider.Set(new HarmonicContext
                 {
                     rootMidi = 65,
                     chordTones = new List<int> { 65, 69, 72 },
                     flavor = "sus2"
                 });
+                HarmonicContextProvider.SetProgression(GuidedDefaults.CreateDefaultProgression());
 
-                ShapeRole workerRole = ShapeRole.Primary;
                 HarmonicContext workerContext = null;
+                ChordProgression workerProgression = null;
 
                 Task.Run(() =>
                 {
-                    workerRole = ShapeRoleProvider.Current;
                     workerContext = HarmonicContextProvider.Current;
+                    workerProgression = HarmonicContextProvider.CurrentProgression;
                 }).Wait();
 
-                Assert.That(workerRole.index, Is.EqualTo(0));
-                Assert.That(workerRole.count, Is.EqualTo(1));
                 Assert.That(workerContext, Is.Not.Null);
                 Assert.That(workerContext.HasChord, Is.False);
+                Assert.That(workerProgression, Is.Null);
             }
             finally
             {
-                ShapeRoleProvider.Clear();
                 HarmonicContextProvider.Clear();
             }
         }
 
         [Test]
-        public void SessionStore_SetGenre_RederivesRolesInPatternOrder_AndPropagatesHarmonyContext()
+        public void SessionStore_SetGenre_RederivesPatterns_AndPropagatesHarmonyContext()
         {
             var store = new SessionStore();
             var state = AppStateFactory.CreateEmpty();
@@ -169,13 +156,22 @@ namespace RhythmForge.Editor
             var melody1 = store.GetPattern("m2");
             var melody2 = store.GetPattern("m3");
 
-            CollectionAssert.Contains(melody0.tags, "primary");
-            CollectionAssert.Contains(melody1.tags, "counter");
-            CollectionAssert.Contains(melody2.tags, "fill");
+            Assert.That(harmony.derivedSequence.chordEvents, Is.Not.Null);
+            Assert.That(harmony.derivedSequence.chordEvents, Is.Not.Empty);
 
-            int expectedFillMidi = RegisterPolicy.Clamp(harmony.derivedSequence.rootMidi, PatternType.MelodyLine, "newage");
-            foreach (var note in melody2.derivedSequence.notes)
-                Assert.That(note.midi, Is.EqualTo(expectedFillMidi));
+            foreach (var melody in new[] { melody0, melody1, melody2 })
+            {
+                CollectionAssert.Contains(melody.tags, "lead");
+                Assert.That(melody.derivedSequence.notes, Is.Not.Empty);
+
+                foreach (var note in melody.derivedSequence.notes)
+                {
+                    if (note.step % 4 != 0)
+                        continue;
+
+                    Assert.That(ContainsPitchClass(harmony.derivedSequence.chordEvents[0].voicing, note.midi), Is.True);
+                }
+            }
         }
 
         [Test]
@@ -411,6 +407,18 @@ namespace RhythmForge.Editor
                 new Vector2(1f, 0.2f),
                 new Vector2(0.7f, 0.9f)
             };
+        }
+
+        private static bool ContainsPitchClass(List<int> pitches, int midi)
+        {
+            int targetClass = ((midi % 12) + 12) % 12;
+            for (int i = 0; i < pitches.Count; i++)
+            {
+                if ((((pitches[i] % 12) + 12) % 12) == targetClass)
+                    return true;
+            }
+
+            return false;
         }
 
         private static IDictionary GetVoiceCache(SamplePlayer player)

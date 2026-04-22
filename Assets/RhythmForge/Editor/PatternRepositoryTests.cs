@@ -301,10 +301,7 @@ namespace RhythmForge.Editor
                 {
                     kind = "harmony",
                     totalSteps = GuidedDefaults.Bars * AppStateFactory.BarSteps,
-                    rootMidi = progression.chords[0].rootMidi,
-                    flavor = progression.chords[0].flavor,
-                    chord = new List<int>(progression.chords[0].voicing),
-                    chordEvents = progression.chords
+                    chordEvents = new List<ChordSlot>(progression.chords)
                 },
                 tags = new List<string> { "guided", "harmony" },
                 color = Color.green,

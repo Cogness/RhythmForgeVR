@@ -33,111 +33,61 @@ namespace RhythmForge.Core.Sequencing.Jazz
             float swing = MathUtils.RoundTo(
                 Mathf.Clamp(SwingBase + sound.grooveInstability * 0.12f + sp.wobble * 0.06f, 0.22f, 0.38f), 2);
 
-            var role = ShapeRoleProvider.Current;
             int barSteps = AppStateFactory.BarSteps;
-            int roleOffset = role.index == 0 ? 0
-                           : role.index == 1 ? barSteps / 4   // step 4 — snare fills the backbeat gap
-                           : barSteps / 2;                     // step 8 — back-half only
-
             var events = new List<RhythmEvent>();
 
             for (int bar = 0; bar < bars; bar++)
             {
                 int offset = bar * barSteps;
-
-                if (role.index == 0)
+                int[] rideSteps = { 0, 4, 8, 12 };
+                foreach (int step in rideSteps)
                 {
-                    // Primary: full jazz pattern — ride + kick + cross-stick snare
-                    int[] rideSteps = { 0, 4, 8, 12 };
-                    foreach (int step in rideSteps)
+                    events.Add(new RhythmEvent
+                    {
+                        step = offset + step,
+                        lane = "hat",
+                        velocity = MathUtils.RoundTo(0.42f + sound.brightness * 0.14f, 2),
+                        microShift = step % 8 == 4 ? MathUtils.RoundTo(swing * 0.04f, 3) : 0f
+                    });
+                }
+
+                if (sp.circularity > 0.55f)
+                {
+                    int[] offSteps = { 2, 6, 10, 14 };
+                    foreach (int step in offSteps)
                     {
                         events.Add(new RhythmEvent
                         {
                             step = offset + step,
                             lane = "hat",
-                            velocity = MathUtils.RoundTo(0.42f + sound.brightness * 0.14f, 2),
-                            microShift = step % 8 == 4 ? MathUtils.RoundTo(swing * 0.04f, 3) : 0f
-                        });
-                    }
-
-                    if (sp.circularity > 0.55f)
-                    {
-                        int[] offSteps = { 2, 6, 10, 14 };
-                        foreach (int step in offSteps)
-                        {
-                            events.Add(new RhythmEvent
-                            {
-                                step = offset + step,
-                                lane = "hat",
-                                velocity = MathUtils.RoundTo(0.22f + (1f - sp.angularity) * 0.1f, 2),
-                                microShift = MathUtils.RoundTo(swing * 0.06f, 3)
-                            });
-                        }
-                    }
-
-                    events.Add(new RhythmEvent { step = offset + 0, lane = "kick", velocity = MathUtils.RoundTo(0.34f + sound.body * 0.18f, 2), microShift = 0f });
-                    if (sp.angularity > 0.45f)
-                        events.Add(new RhythmEvent { step = offset + 8, lane = "kick", velocity = MathUtils.RoundTo(0.22f + sound.body * 0.12f, 2), microShift = 0f });
-
-                    events.Add(new RhythmEvent { step = offset + 8, lane = "snare", velocity = MathUtils.RoundTo(0.44f + sound.transientSharpness * 0.2f, 2), microShift = MathUtils.RoundTo(swing * 0.02f, 3) });
-
-                    if (sizeFactor > 0.52f || sp.wobble > 0.4f)
-                    {
-                        foreach (int step in new[] { 3, 11 })
-                            events.Add(new RhythmEvent { step = offset + step, lane = "snare", velocity = MathUtils.RoundTo(0.16f + sound.drive * 0.1f, 2), microShift = MathUtils.RoundTo(swing * 0.08f, 3) });
-                    }
-
-                    if (sizeFactor > 0.65f && bar == bars - 1)
-                        events.Add(new RhythmEvent { step = offset + 14, lane = "perc", velocity = MathUtils.RoundTo(0.28f + sound.drive * 0.14f, 2), microShift = 0f });
-                }
-                else if (role.index == 1)
-                {
-                    // Counter: ghost snares + sparse hat — no ride, no kick; fills between role-0 hits
-                    foreach (int step in new[] { 3, 7, 11, 15 })
-                    {
-                        int shifted = (step + roleOffset) % barSteps;
-                        events.Add(new RhythmEvent
-                        {
-                            step = offset + shifted,
-                            lane = "snare",
-                            velocity = MathUtils.RoundTo(0.18f + sound.drive * 0.10f, 2),
+                            velocity = MathUtils.RoundTo(0.22f + (1f - sp.angularity) * 0.1f, 2),
                             microShift = MathUtils.RoundTo(swing * 0.06f, 3)
                         });
                     }
+                }
 
-                    foreach (int step in new[] { 2, 10 })
-                    {
-                        int shifted = (step + roleOffset) % barSteps;
-                        events.Add(new RhythmEvent
-                        {
-                            step = offset + shifted,
-                            lane = "hat",
-                            velocity = MathUtils.RoundTo(0.16f + sound.brightness * 0.12f, 2),
-                            microShift = MathUtils.RoundTo(swing * 0.04f, 3)
-                        });
-                    }
-                }
-                else
+                events.Add(new RhythmEvent { step = offset + 0, lane = "kick", velocity = MathUtils.RoundTo(0.34f + sound.body * 0.18f, 2), microShift = 0f });
+                if (sp.angularity > 0.45f)
+                    events.Add(new RhythmEvent { step = offset + 8, lane = "kick", velocity = MathUtils.RoundTo(0.22f + sound.body * 0.12f, 2), microShift = 0f });
+
+                events.Add(new RhythmEvent { step = offset + 8, lane = "snare", velocity = MathUtils.RoundTo(0.44f + sound.transientSharpness * 0.2f, 2), microShift = MathUtils.RoundTo(swing * 0.02f, 3) });
+
+                if (sizeFactor > 0.52f || sp.wobble > 0.4f)
                 {
-                    // Role 2+: perc colour only — once per bar, back half
-                    int shifted = (roleOffset) % barSteps;
-                    events.Add(new RhythmEvent
-                    {
-                        step = offset + shifted,
-                        lane = "perc",
-                        velocity = MathUtils.RoundTo(0.14f + sound.drive * 0.08f, 2),
-                        microShift = MathUtils.RoundTo(swing * 0.04f, 3)
-                    });
+                    foreach (int step in new[] { 3, 11 })
+                        events.Add(new RhythmEvent { step = offset + step, lane = "snare", velocity = MathUtils.RoundTo(0.16f + sound.drive * 0.1f, 2), microShift = MathUtils.RoundTo(swing * 0.08f, 3) });
                 }
+
+                if (sizeFactor > 0.65f && bar == bars - 1)
+                    events.Add(new RhythmEvent { step = offset + 14, lane = "perc", velocity = MathUtils.RoundTo(0.28f + sound.drive * 0.14f, 2), microShift = 0f });
             }
 
-            string roleLabel  = role.index == 0 ? "ride pattern" : role.index == 1 ? "ghost layer" : "perc colour";
             string swingWord  = swing > 0.32f ? "heavy swing" : "light swing";
             return new RhythmDerivationResult
             {
                 bars = bars,
                 presetId = presetId,
-                tags = new List<string> { roleLabel, swingWord, sp.angularity > 0.5f ? "cross-stick" : "smooth" },
+                tags = new List<string> { "ride pattern", swingWord, sp.angularity > 0.5f ? "cross-stick" : "smooth" },
                 derivedSequence = new DerivedSequence
                 {
                     kind = "rhythm",
@@ -145,7 +95,7 @@ namespace RhythmForge.Core.Sequencing.Jazz
                     swing = swing,
                     events = events
                 },
-                summary = $"{sizeWord} jazz {roleLabel}, {bars} bars, {swingWord} ({Mathf.Round(swing * 100f)}%).",
+                summary = $"{sizeWord} jazz ride pattern, {bars} bars, {swingWord} ({Mathf.Round(swing * 100f)}%).",
                 details = "Ride cymbal drives the pulse with jazz swing. Circularity adds off-beat smoothness, angularity brings cross-stick accents and ghost notes."
             };
         }

@@ -94,7 +94,16 @@ namespace RhythmForge.Editor
             {
                 kind = "harmony",
                 totalSteps = AppStateFactory.BarSteps,
-                chord = new System.Collections.Generic.List<int> { 60, 64, 67, 71 }
+                chordEvents = new System.Collections.Generic.List<ChordSlot>
+                {
+                    new ChordSlot
+                    {
+                        barIndex = 0,
+                        rootMidi = 60,
+                        flavor = "maj7",
+                        voicing = new System.Collections.Generic.List<int> { 60, 64, 67, 71 }
+                    }
+                }
             });
             var instance = AddPatternInstance(store, pattern, "scene-a");
 
